@@ -1,6 +1,6 @@
 var routes = require('express').Router();
-const autofill = require('./autofill');
+const autofill = require('./autofill/index.js');
 //
-routes.get('/autofill', autofill);
+routes.use('/autofill', autofill);
 //
 module.exports = routes;

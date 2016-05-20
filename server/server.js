@@ -6,7 +6,7 @@ var environment = process.env.NODE_ENV;
 //  Import modules
 const routes = require('./routes');
 //  Connect all our routes to our application
-app.use('/api', routes);
+app.use('/', routes);
 
 app.listen(port,function(){
 	console.log('Express server listening on port '+ port);
