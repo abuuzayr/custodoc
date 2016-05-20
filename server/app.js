@@ -12,9 +12,9 @@ switch(environment) {
 		console.log('DEV');
 }
 
-app.listen(port function(){
+app.listen(port,function(){
 	console.log('Express server listening on port '+ port);
 	console.log('env = ' + app.get('env') + 
-		'\n_dirname = ' + _dirname + 
+		'\n__dirname = ' + __dirname + 
 		'\nprocess.cwd = ' + process.cwd());
 });
