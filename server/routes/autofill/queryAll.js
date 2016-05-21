@@ -1,8 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
 var url = "mongodb://localhost:27017/test";
 
-module.exports = QueryAll
+module.exports = QueryAll;
 
 function QueryAll(req,res,next){
 	MongoClient.connect(url,function(err,db){
