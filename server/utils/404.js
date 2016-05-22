@@ -1,3 +1,4 @@
+//404 stands for NOT FOUND
 module.exports = function() {
   var service = {
     notFoundMiddleware: notFoundMiddleware,
