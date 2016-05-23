@@ -39,3 +39,22 @@ const autofill = require('./autofill'); //will look for ./autofill/index.js
 //add route to your module
 routes.use('/autofill', autofill);
 ```
+
+##### Token Authentication
+
+If you are integrating Token Authentication to your code, import module `...server\utils\403.js`
+```
+//for example
+
+//Import authentication module
+const Auth = require('../../utils/403.js')();
+//Autenticate token for every http request sent to autofill module
+autofill.use(function(req,res,next){ Auth.authenticateToken(req,res,next)});
+```
+
+**Test your authentication path**
+For testing purpose, generate a toke using `server\_jwttest.js`. Run `node _jwttest.js` and copy the generated token. Note that the token is valid only for 24 hours.
+
+Use postman (in Chrome) to send http request with token. Test your authentication path by sending request with header `X-Access-Token` and set its value to your token.
+
+
