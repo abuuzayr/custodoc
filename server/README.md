@@ -1,9 +1,9 @@
-#Project CustoDoc App Server
+# Project CustoDoc App Server
 
 ## Guide 
-####Installing Packages
+#### Installing Packages
 Before you start, navigate inside `custodoc/server/` folder and run command `npm install`
-####Start Server
+#### Start Server
 To start server, run command `node server.js`
 #### API and Routing
 **Coventions:**
@@ -16,7 +16,7 @@ To start server, run command `node server.js`
 - Inside your module folder create `index.js`
 - Put routes inside `your_module_folder/index.js` 
   
-  ```
+  ```javascript
   // For Example my module name is autofill
   // Under .../server/routes/autofill
   
@@ -33,7 +33,7 @@ To start server, run command `node server.js`
 ##### Put together
 - After you created and exported your module, import your module in `routes\index.js`.
 
-```
+```javascript
 //import your module
 const autofill = require('./autofill'); //will look for ./autofill/index.js
 //add route to your module
@@ -43,7 +43,7 @@ routes.use('/autofill', autofill);
 ##### Token Authentication
 
 If you are integrating Token Authentication to your code, import module `...server\utils\403.js`
-```
+```javascript
 //for example
 
 //Import authentication module
