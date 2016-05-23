@@ -51,7 +51,9 @@ const Auth = require('../../utils/403.js')();
 autofill.use(function(req,res,next){ Auth.authenticateToken(req,res,next)});
 ```
 
-** Test your authentication path **
+**Test your authentication path**
+
+
 For testing purpose, generate a toke using `server\_jwttest.js`. Run `node _jwttest.js` and copy the generated token. Note that the token is valid only for 24 hours.
 
 Use postman (in Chrome) to send http request with token. Test your authentication path by sending request with header `X-Access-Token` and set its value to your token.
