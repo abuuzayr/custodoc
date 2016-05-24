@@ -39,5 +39,4 @@ app.listen(port,function(){
 });
 
 // Export config
-
 module.exports = {'jwt':jwt,'secret':secret};

@@ -9,7 +9,7 @@ module.exports = function(){
 	function authenticateToken(req,res,next){
 		console.log(req.headers);
 		var jsonwebtoken = require('../server.js');
-		var token = req.headers['X-Access-Token'] || req.body.token || req.params.token;
+		var token = req.headers['x-access-token'] || req.body.token || req.params.token;
 		if(!token) send403(req,res,"No token provided");
 		else{
 			jsonwebtoken.jwt.verify(token,jsonwebtoken.secret,function(err,decoded){
