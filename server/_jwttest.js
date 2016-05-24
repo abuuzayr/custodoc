@@ -7,3 +7,4 @@ var token = jwt.sign({
 
 console.log(token);
 
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGFubnkiLCJ1c2VybmFtZSI6ImRhbm55NDYiLCJpYXQiOjE0NjM5MjY1NzMsImV4cCI6MTQ2NDAxMjk3M30.AOxFbnolVAbMaA6MQdRWk5YLthUxsQU0N1ZvVMnVI8k

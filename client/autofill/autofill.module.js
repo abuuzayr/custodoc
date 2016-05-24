@@ -28,11 +28,10 @@ app.controller('autofill.controller',['$http','$scope',function($http,$scope){
         var url = baseUrl + $scope.query;
         
         $http.get(url,config).then(function SuccessCallback(res){
-  
             dataset = [];
             dataset = res.data;
+            console.log(dataset);
             $scope.refresh();
-            console.log($scope.rowCollection);
             return;
         }, function ErrorCallback(err){
  
