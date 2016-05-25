@@ -1,1 +1,7 @@
-{"elements": [{},{},{},{},{}] }
+{"fieldname": "name"}
+{"fieldname": "gender"}
+{"fieldname": "age"}
+{"fieldname": "email"}
+{"fieldname": "HP"}
+{"fieldname": "Tel"}
+{"fieldname": "IC"}

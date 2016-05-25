@@ -44,14 +44,13 @@ var generate1 = function(keys,arr_f,n){
 };
 
 var generate2 = function(keys){
-	var jsonStr = "{ \"elements\": ["
+	var jsonStr = "";
 	for(i=0;i<keys.length;i++){
 		jsonStr += "{\"fieldname\": "+"\""+keys[i]+"\""+"}";
 		if(i!=keys.length-1){
-			jsonStr += ",";
+			jsonStr += "\n";
 		}
 	}
-	jsonStr += "] }";
 	return JSON.parse(JSON.stringify(jsonStr));
 }
 

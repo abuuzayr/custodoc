@@ -17,7 +17,7 @@ const http404 = require('./utils/404')();
 
 
 // Configuration
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use( function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
