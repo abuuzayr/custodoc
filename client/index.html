@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- Stylesheets -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<!-- Color theme -->
+<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.red-orange.min.css">
+<link rel="stylesheet" href="styles.css">
+
+<div id="login-card" class="mdl-layout mdl-js-layout mdl-card">
+    <main class="mdl-layout__content mdl-color--white">
+        <div id="login-heading" class="mdl-card__title mdl-color--primary mdl-color-text--white">
+            <h2 class="mdl-card__title-text">BulletForms Login</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <form id="login-form" action="#">
+                <!-- Username input -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="username" class="mdl-textfield__input" type="text"/>
+                    <label class="mdl-textfield__label" for="username">Username</label>
+                </div>
+                <br>
+                <!-- Password input -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="password" class="mdl-textfield__input" type="password"/>
+                    <label class="mdl-textfield__label" for="password">Password</label>
+                </div>
+                <br><br><br>
+                <!-- Select access type -->
+                <div id="accesstype" class="mdl-selectfield">
+                    <label class="mdl-selectfield__label">Access Type</label>
+                    <select>
+                        <option value="user">User</option>
+                        <option value="userplus">User+</option>
+                        <option value="admin">Admin</option>
+                        <option value="sysadmin">System Admin</option>
+                    </select>
+                </div>
+            </form>
+            <br><br>
+            <!-- Login button -->
+            <div id="login-button" class="mdl-card__actions mdl-card--border"><br>
+                <button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                    Log in
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- JS source files -->
+<script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
+</html>

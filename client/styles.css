@@ -1,0 +1,33 @@
+html, body {
+    font-family: 'Roboto', 'Helvetica', 'sans-serif';
+}
+
+/* Login */
+#login-card {
+    align-items: center;
+    justify-content: center;
+    padding: 20%;
+    background: #FFAB91;
+}
+
+.mdl-card {
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+              -ms-grid-row-align: flex-start;
+          align-items: flex-start;
+  -webkit-align-content: flex-start;
+      -ms-flex-line-pack: start;
+          align-content: flex-start;
+}
+
+select {
+    width: 300px;
+    font-size: 15px;
+    background-color: transparent;
+}
+
+.mdl-selectfield__label {
+    display: none;
+}
+
+
