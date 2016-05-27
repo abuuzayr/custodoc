@@ -4,7 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var config = require('./config');
 // Import packages for Dev
-var morgan = require('morgan');
+//var morgan = require('morgan');
 
 //
 var app = express();

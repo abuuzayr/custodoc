@@ -6,7 +6,32 @@ const query = require('./query')();
 //add routes
 
 //Auth endpoints
-//autofill.use(function(req,res,next){ Auth.authenticateToken(req,res,next)});
+autofill.use(function(req,res,next){ Auth.authenticateToken(req,res,next)});
+//autofill entry crud endpoints
+// autofill.post('/',function)
+autofill.route('/')
+		.delete(function(req,res,next){
+			var MongoClient = require('mongodb').MongoClient;
+			var url = "mongodb://localhost:27017/test";
+			MongoClient.connect(url,function(err,db){
+				if(err){
+					res.status(400).send("error: can not connect to database");
+				}else{
+					var id_arr = req.query.id;
+					console.log(typeof id_arr[1]);
+					console.log(id_arr);
+
+					for(var i = 0 ; i < id_arr.length ; i++){
+						id_arr[i] = config.ObjectId(id_arr[i]);
+					}
+					console.log(typeof id_arr[1]);
+
+					db.collection("autofill").remove({_id:{$in:id_arr}});
+					res.status(200).send("success");	
+				}
+			});
+		});
+
 //element crud endpoints
 autofill.route('/element')
 		.get(function(req,res){
@@ -21,7 +46,7 @@ autofill.route('/element')
 	        			if (err) {
 	            			return res.status(400).send(err);
 	        			} else {
-	        				console.log("element all data:" + data);
+	        				console.log("element all data");
 	        				res.status(200).send(data);
 	        			}
     				});	
@@ -47,11 +72,14 @@ autofill.route('/element')
 					});
 				}});		
 			});
-//entry crud endpoints
-//autofill.route('/')
 //query api endpoints
-autofill.get('/query/:key',query.QueryKeywords);
+autofill.get('/query/:query',query.QueryKeywords);
 autofill.get('/query',query.QueryAll);
+
+
+
+
+
 autofill.use('/*', function(req,res){ http404.notFoundMiddleware(req,res); });
 //export module
 module.exports = autofill;

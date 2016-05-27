@@ -13,7 +13,7 @@ function QueryAll(req,res,next){
 			
 			console.log('Connection established to', url);
 			//TODO
-			var cursor = db.collection("restaurants").find();
+			var cursor = db.collection("autofill").find();
 			cursor.toArray(function(err,data){
         		if (err) {
             		return res.status(400).send(err);
@@ -37,16 +37,27 @@ function QueryKeywords(req,res,next){
 		}else{
 			//TODO
 			var query = req.params.query;
-			var coll = db.collection("restaurants");
-    		var cursor = coll.find({$or: [{'address.building':query},{'cuisine':query},{'name':query}]});
+			var coll = db.collection("autofill");
+    		var cursor = coll.find({});
 			cursor.toArray(function(err,data){
 		        if (err) {
 		            console.log(err);
 		            return res(err);
 		        } else {
-		        	console.log("keywords data2: ");
-		        	console.log(data);
-		            res.send(data);
+		        	//filter based on keywords
+		        	dataArray = data;
+		        	var results = [];
+		        	query = query.trim().toLowerCase();			
+		        	for(var i = 0 ; i < dataArray.length ; i++){
+		        		for(fields in dataArray[i]){
+		        			 if(fields != "_id"){
+		        			 	if(dataArray[i][fields].toString().toLowerCase().indexOf(query)!=-1){
+		        			 		results.push(dataArray[i]);
+		        			 	}
+		        			 }
+		        		}	
+		        	}	
+		            res.send(results);
 		        }
     		});
     	}	//////

@@ -5,5 +5,6 @@ module.exports = {
 	environment : process.env.NODE_ENV,
 	MongoClient : require('mongodb').MongoClient,
 	dbURL :'mongodb://localhost:27017/test',
-	secret : 'gilbert_what_time_is_it_now'
+	secret : 'gilbert_what_time_is_it_now',
+	ObjectId : require('mongodb').ObjectID
 }

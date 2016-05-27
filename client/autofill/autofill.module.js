@@ -34,7 +34,7 @@ app.controller('autofill.controller',['$http','$scope',function($http,$scope){
     }
     //get records from db
     $scope.getRecords = function(){
-        var baseUrl = "http://localhost:8001/api/autofill/query";
+        var baseUrl = "http://localhost:8001/api/autofill/query/";
         var url = baseUrl + $scope.query;
         
         $http.get(url,config).then(function SuccessCallback(res){
@@ -58,7 +58,7 @@ app.controller('autofill.controller',['$http','$scope',function($http,$scope){
     };
 
     $scope.getCols();
-   $scope.getRecords();
+    $scope.getRecords();
 
     //////////////////	
     
