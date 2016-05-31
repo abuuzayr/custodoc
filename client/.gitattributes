@@ -1,0 +1,2 @@
+# Change all line endings to LF
+*.go text eol=lf
