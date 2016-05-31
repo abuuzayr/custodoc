@@ -7,7 +7,7 @@ html, body {
     align-items: center;
     justify-content: center;
     padding: 200px;
-    background: #FFAB91;
+    background: #CCC;
 }
 
 .mdl-card {
@@ -26,8 +26,35 @@ select {
     background-color: transparent;
 }
 
-.mdl-selectfield__label {
+.mdl-selectfield .mdl-selectfield__label {
     display: none;
 }
 
+/* Header row */
+.mdl-layout--fixed-header .mdl-layout__header .mdl-layout__header-row {
+    background: #F44336;
+    color: #FFEBEE;
+}
+
+/* Side bar */
+.mdl-layout__drawer {
+    background: #263238;
+}
+
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link {
+    color: #CFD8DC;
+}
+
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover {
+    background: #455A64;
+}
+
+.personal-information {
+    color: #CFD8DC;
+    padding: 20px 0px 0px 30px;
+}
+
+.mdl-navigation .selected-link {
+    background: #37474F;
+}
 
