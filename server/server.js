@@ -1,18 +1,14 @@
 'use strict';
 // Import packages 
 var express = require('express');
+var https = require('https');
 var bodyParser = require('body-parser');
-var config = require('./config');
-// Import packages for Dev
-//var morgan = require('morgan');
-
-//
 var app = express();
 
-
-//  Import modules
-const routes = require('./api');
-const http404 = require('./utils/404')();
+//  Import custom modules
+var config = require('./config');
+var routes = require('./api');
+var http404 = require('./utils/404')();
 // const http403 = require('./utils/403')();
 
 
@@ -31,6 +27,7 @@ app.use('/api', routes);
 app.use(express.static('../client/autofill/'));
 app.use('/*',express.static('../client/autofill/index.html'));
 
+/*
 app.listen(config.port,function(){
 	console.log('Express server listening on port '+ config.port);
 	console.log('env = ' + app.get('env') + 
@@ -38,3 +35,6 @@ app.listen(config.port,function(){
 		'\nprocess.cwd = ' + process.cwd());
 });
 
+*/
+
+https.createServer(app).listen(config.port);
