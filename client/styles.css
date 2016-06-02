@@ -38,7 +38,7 @@ select {
 
 /* Side bar */
 .mdl-layout__drawer {
-    background: #263238;
+    background: #37474F;
 }
 
 .mdl-layout__drawer .mdl-navigation .mdl-navigation__link {
@@ -46,7 +46,7 @@ select {
 }
 
 .mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover {
-    background: #455A64;
+    background: #263238;
 }
 
 .personal-information {
@@ -55,6 +55,6 @@ select {
 }
 
 .mdl-navigation .selected-link {
-    background: #37474F;
+    background: #263238;
 }
 
