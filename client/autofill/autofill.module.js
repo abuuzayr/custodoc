@@ -2,7 +2,7 @@ var app = angular.module('app', ['ngMaterial','ngTouch', 'ui.grid', 'ui.grid.cel
 
 app.controller('MainCtrl',  ['$scope', '$http', '$timeout', '$interval', 'uiGridConstants', 'uiGridGroupingConstants',function ($scope, $http, uiGridConstants, uiGridGroupingConstants) {
   $scope.query ='';
-  $scope.token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGFubnkiLCJ1c2VybmFtZSI6ImRhbm55NDYiLCJpYXQiOjE0NjQzMTY0MjUsImV4cCI6MTQ2NDQwMjgyNX0.QwiG8TXhSR6rai5R-IiHang5L282lzhkGkAF8OVqxdQ';
+  $scope.token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGFubnkiLCJ1c2VybmFtZSI6ImRhbm55NDYiLCJpYXQiOjE0NjQ5Mjc0MDMsImV4cCI6MTQ2NTAxMzgwM30.ozq0nklQRWkx3J-bAlEGYqX5TsjGNMzxixH9e6wjrxw';
   $scope.myData = [];
   var config = {headers:{ 'X-Access-Token': $scope.token}};
 

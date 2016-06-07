@@ -25,14 +25,27 @@
   <br>
   <br>
   <input type="text" ng-model="query">
-  <strong>{{query}} </strpng>
+  <strong>{{query}} </strong>
   <br> 
   <strong>{{ myData.length }} rows</strong>
   <br>
- 
- 
+  <div id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
   <button ng-click="deleteSelectedRows()">Delete Selected</button>
 </div>
+
+<div ng-controller="MainCtrl">
+  <button id="refreshButton" type="button" ng-click="read()">Refresh Data</button>
+  <br>
+  <br>
+  <input type="text" ng-model="query">
+  <strong>{{query}} </strong>
+  <br> 
+  <strong>{{ myData.length }} rows</strong>
+  <br>
+  <div id="grid2" ui-grid="gridOptions2" ui-grid-cellNav ui-grid-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
+  <button ng-click="deleteSelectedRows()">Delete Selected</button>
+</div>
+
 
 
 
