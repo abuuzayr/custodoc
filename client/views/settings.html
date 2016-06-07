@@ -1,54 +1,57 @@
-<div id="account-settings" class="mmdl-layout mdl-js-layout mdl-card">
-    <main class="mdl-layout__content mdl-color--white">
-        <h3>Account Settings</h3>
-    <div class="mdl-card__supporting-text">
-        <form id="change-settings" action="#">
-            <!-- Username input -->
-            <div class="mdl-textfield mdl-js-textfield">
-                <input id="username" class="mdl-textfield__input" type="text" />
-                <label class="mdl-textfield__label" for="username" required>Username*</label>
-            </div>
-            <br>
-            <!-- Password input -->
-            <div class="mdl-textfield mdl-js-textfield">
-                <input id="password" class="mdl-textfield__input" type="password" />
-                <label class="mdl-textfield__label" for="password" required>Password*</label>
-            </div>
-            <br>
-            <!-- New password input -->
-            <div class="mdl-textfield mdl-js-textfield">
-                <input id="newpassword1" class="mdl-textfield__input" type="password" />
-                <label class="mdl-textfield__label" for="password">New Password</label>
-            </div>
-            <br>
-            <!-- New password input again -->
-            <div class="mdl-textfield mdl-js-textfield">
-                <input id="newpassword2" class="mdl-textfield__input" type="password" />
-                <label class="mdl-textfield__label" for="password">Confirm New Password</label>
-            </div>
-            <br>
-            <!-- Change email -->
-            <div class="mdl-textfield mdl-js-textfield">
-                <input id="email" class="mdl-textfield__input" type="text" />
-                <label class="mdl-textfield__label" for="password">Email</label>
-            </div>
+<header  class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+<div  class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
+<main class="mdl-layout__content">
+    <div id="account-settings" class="mdl-layout mdl-js-layout mdl-card">
+        <main class="mdl-layout__content mdl-color--white">
+            <h3>Account Settings</h3>
+        <div class="mdl-card__supporting-text">
+            <form id="change-settings" action="#">
+                <!-- Username input -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="username" class="mdl-textfield__input" type="text" />
+                    <label class="mdl-textfield__label" for="username" required>Username*</label>
+                </div>
+                <br>
+                <!-- Password input -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="password" class="mdl-textfield__input" type="password" />
+                    <label class="mdl-textfield__label" for="password" required>Password*</label>
+                </div>
+                <br>
+                <!-- New password input -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="newpassword1" class="mdl-textfield__input" type="password" />
+                    <label class="mdl-textfield__label" for="password">New Password</label>
+                </div>
+                <br>
+                <!-- New password input again -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="newpassword2" class="mdl-textfield__input" type="password" />
+                    <label class="mdl-textfield__label" for="password">Confirm New Password</label>
+                </div>
+                <br>
+                <!-- Change email -->
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input id="email" class="mdl-textfield__input" type="text" />
+                    <label class="mdl-textfield__label" for="password">Email</label>
+                </div>
+                <br><br><br>
+                <!-- Change timezone -->
+                <div id="timezone" class="mdl-selectfield">
+                    <label class="mdl-selectfield__label">Timezone</label>
+                    <select>
+                            <option value="singapore">Singapore GMT +8</option>
+                        </select>
+                </div>
+            </form>
             <br><br><br>
-            <!-- Change timezone -->
-            <div id="timezone" class="mdl-selectfield">
-                <label class="mdl-selectfield__label">Timezone</label>
-                <select>
-                        <option value="singapore">Singapore GMT +8</option>
-                    </select>
+            <!-- Submit button -->
+            <div id="login-button" class="mdl-card__actions mdl-card--border"><br>
+                <a ui-sref="forms"><button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                        Save Changes
+                    </button></a>
             </div>
-        </form>
-        <br><br><br>
-        <!-- Submit button -->
-        <div id="login-button" class="mdl-card__actions mdl-card--border"><br>
-            <a ui-sref="forms"><button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect">
-                    Save Changes
-                </button></a>
         </div>
+        </main>
     </div>
-</div>
 </main>
-</div>

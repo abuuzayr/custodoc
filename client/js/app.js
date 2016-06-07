@@ -7,27 +7,9 @@ angular
                 url: '/',
                 templateUrl: 'views/login.html',
                 controller: 'loginCtrl'
-            })
-            // .state('formsPage', {
-            //     url: '/forms',
-            //     views: {
-            //         "topNav": {
-            //             templateUrl: 'views/topNavBar.html',
-            //             children: [
-            //                 {
-            //                     name: 'sideNav',
-            //                     templateUrl: 'views/sideNavBar.html'
-            //                 }
-            //             ]
-            //         },
-            //         "forms": {
-            //             templateUrl: 'views/forms.html',
-            //             controller: 'formsCtrl'
-            //         }
-            //     }
-            // })
+            })          
             .state('newEntry', {
-                url: '/newEntry',
+                url: '/newentry',
                 templateUrl: 'views/newEntry.html',
                 controller: 'newEntry'
             })
@@ -41,7 +23,72 @@ angular
                 templateUrl: 'views/settings.html',
                 controller: 'settingsCtrl'
             })
+            .state('forms', {
+                url: '/forms',
+                templateUrl: 'views/forms.html',
+                controller: 'formsCtrl'
+            });
     }])
+            // .state('formsPage', {
+            //     url: '/forms',
+            //     views: {
+            //         topNav: {
+            //             templateUrl: 'views/topNavBar.html'
+            //         },
+            //         main: {
+            //             templateUrl: 'views/forms.html',
+            //             controller: 'formsCtrl'
+            //         },
+            //         sideNav:{
+            //         	templateUrl: 'views/sideNavBar.html'
+            //         }
+            //     }
+            // })
+            // .state('login', {
+            //     url: '/',
+            //     views: {
+            //         topNav: {
+            //             // templateUrl: 'views/topNavBar.html'
+            //         },
+            //         main: {
+            //             templateUrl: 'views/login.html',
+            //             controller: 'loginCtrl'
+            //         },
+            //         sideNav:{
+            //         	// templateUrl: 'views/sideNavBar.html'
+            //         }
+            //     }
+            // })
+            // .state('entries', {
+            //     url: '/entries',
+            //     views: {
+            //         topNav: {
+            //             templateUrl: 'views/topNavBar.html'
+            //         },
+            //         main: {
+            //             templateUrl: 'views/entries.html',
+            //             controller: 'entriesCtrl'
+            //         },
+            //         sideNav:{
+            //         	templateUrl: 'views/sideNavBar.html'
+            //         }
+            //     }
+            // })  
+            // .state('newEntry', {
+            //     url: '/newEntry',
+            //     views: {
+            //         topNav: {
+            //             templateUrl: 'views/topNavBar.html'
+            //         },
+            //         main: {
+            //             templateUrl: 'views/newEntry.html'
+            //             // controller: 'entriesCtrl'
+            //         },
+            //         sideNav:{
+            //         	templateUrl: 'views/sideNavBar.html'
+            //         }
+            //     }
+            // });
     .controller('navBarCtrl', function ($scope, $interval) {
         $scope.date = new Date();
         $interval(function () {
