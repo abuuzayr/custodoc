@@ -1,0 +1,14 @@
+<div id="entries" class="page-content">
+  <div id="top-row-buttons" class="mdl-grid">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons" role="presentation">add</i> New Entry</button>
+    <div class="divider"></div>
+    <div class="mdl-layout-spacer"></div>
+    <button id="delete-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons" role="presentation">delete</i></button>
+  </div>
+  <!-- Table for forms stub -->
+  <div ng-controller="entriesCtrl">
+    <div id="grid-entries" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+  </div>
+</div>

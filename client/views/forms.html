@@ -1,6 +1,41 @@
-<div id="forms.html" class="page-content">
-  <!-- Table for forms stub -->
-  <div>
-    <div id="grid1" ui-grid="{ data: myData }" class="grid mdl-data-table mdl-js-data-table"></div>
+<main class="mdl-layout__content container">
+  <div id="forms" class="page-content">
+    <div id="top-row-buttons" class="mdl-grid">
+      <button id="newForm" ng-click="openDialog()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons" role="presentation">add</i> New Form</button>
+      <div class="divider"></div>
+      <!-- Dialog for new form -->
+      <dialog id="dialog" class="mdl-dialog">
+        <div class="mdl-dialog__content">
+          <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Create new form</button>
+          <p>
+            Or choose an existing form.
+          </p>
+          <ul>
+            <li ng-repeat="form in forms">
+              <span><a href="">{{ form.formName }}</a></span>
+            </li>
+          </ul>
+        </div>
+        <div class="mdl-dialog__actions">
+          <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog()">Close</button>
+        </div>
+      </dialog>
+      <!-- Dialog for new form -->
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons" role="presentation">add</i> New Entry</button>
+      <div class="divider"></div>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Rename</button>
+      <div class="divider"></div>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
+      <div class="divider"></div>
+      <div class="mdl-layout-spacer"></div>
+      <button id="delete-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons" role="presentation">delete</i></button>
+    </div>
+    <!-- Table for forms stub -->
+    <div ng-controller="formsCtrl">
+      <div id="grid-forms" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+    </div>
   </div>
-</div>
+</main>

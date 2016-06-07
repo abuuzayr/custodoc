@@ -1,0 +1,32 @@
+<div id="side-nav" class="mdl-layout__drawer">
+    <!-- Personal information -->
+    <header class="personal-information">
+        <i class="material-icons">person</i><br>
+        <span>{{ userGroup }}</span><br>
+        <span>{{ date | date: 'medium'}}</span><br>
+        <div class="dropdown-menu">
+            <span>hello@example.com</span>
+            <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+              <i class="material-icons" role="presentation">arrow_drop_down</i>
+              <span class="visuallyhidden">Accounts</span>
+            </button>
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+                <li class="mdl-menu__item mdl-navigation__link" ui-sref="settings"><i class="material-icons">settings</i> Account settings</li>
+                <li class="mdl-menu__item mdl-navigation__link"><i class="material-icons">group</i> User management</li>
+                <li class="mdl-menu__item mdl-navigation__link"><i class="material-icons">exit_to_app</i> Logout</li>
+            </ul>
+        </div>
+    </header>
+    <!-- Navigation links -->
+    <nav class="mdl-navigation">
+        <div class="mdl-menu__item--full-bleed-divider"></div>
+        <a class="mdl-navigation__link"><i class="material-icons" role="presentation">bookmark</i> Important</a>
+        <a class="mdl-navigation__link mdl-menu__item--full-bleed-divider"><i class="material-icons" role="presentation">update</i> Recent</a>
+        <br>
+        <a class="mdl-navigation__link" ui-sref="forms"><i class="material-icons" role="presentation">dashboard</i> Forms</a>
+        <a class="mdl-navigation__link" ui-sref="entries"><i class="material-icons" role="presentation">assessment</i> Entries</a>
+        <a class="mdl-navigation__link"><i class="material-icons" role="presentation">note_add</i> Form Builder</a>
+        <a class="mdl-navigation__link"><i class="material-icons" role="presentation">account_box</i> Autofill</a>
+        <a class="mdl-navigation__link" ui-sref="mediaLibrary"><i class="material-icons" role="presentation">image</i> Media Library</a>
+    </nav>
+</div>
