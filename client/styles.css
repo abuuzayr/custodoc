@@ -27,7 +27,10 @@ select {
     font-size: 15px;
     background-color: transparent;
 }
-
+.md-sidenav-left.md-closed-add,
+.md-sidenav-left.md-closed-remove {
+    transition: 0.2s ease-in all;
+}
 .mdl-selectfield .mdl-selectfield__label {
     display: none;
 }

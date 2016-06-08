@@ -1,5 +1,13 @@
 angular
     .module('user-interface', ['ui.router', 'ui.grid', 'ngTouch', 'ui.grid.selection'])
+	.run(function($rootScope, $location, $timeout) {
+	    $rootScope.$on('$viewContentLoaded', function() {
+	        $timeout(function() {
+	            componentHandler.upgradeAllRegistered();
+	        });
+	    })
+	})  
+
     .config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -8,7 +16,7 @@ angular
                 templateUrl: 'views/login.html',
                 controller: 'loginCtrl'
             })          
-            .state('newEntry', {
+            .state('newentry', {
                 url: '/newentry',
                 templateUrl: 'views/newEntry.html',
                 controller: 'newEntry'
