@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("entriesCtrl", ["$scope", function ($scope) {
+    .controller("entriesCtrl", ["$scope", '$rootScope', '$location', '$timeout', function ($scope,$rootScope, $location, $timeout) {
         $scope.gridOptions = {}
         $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 1;
@@ -155,4 +155,9 @@ angular
                 "emailField": "calvyn@groventure.com"
             }            
         ];
+        $rootScope.$on('$viewContentLoaded', function() {
+            $timeout(function() {
+                componentHandler.upgradeAllRegistered();
+            },10);
+        });
     }]);

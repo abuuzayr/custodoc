@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("formsCtrl", ["$scope", function ($scope) {
+    .controller("formsCtrl", ["$scope", '$rootScope', '$location', '$timeout',function ($scope,$rootScope, $location, $timeout) {
         $scope.gridOptions = {}
         $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 0;
@@ -91,4 +91,9 @@ angular
         $scope.closeDialog = function() {
             dialog.close();
         };
+        $rootScope.$on('$viewContentLoaded', function() {
+            $timeout(function() {
+                componentHandler.upgradeAllRegistered();
+            },10);
+        });
     }]);
