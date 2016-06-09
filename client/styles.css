@@ -1,25 +1,42 @@
 html, body {
     font-family: 'Roboto', 'Helvetica', 'sans-serif';
 }
+/* Color */
+.color > #login-background {
+    height: 100%;
+    width: 100%;
+    background: #66ffff; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left top, #66ffff, #6699ff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, #66ffff, #6699ff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, #66ffff, #6699ff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, #66ffff, #6699ff); /* Standard syntax (must be last) */
+}
+
+/* Header row nav bar */
+.mdl-layout__header-row {
+    background: #303F9F;
+    color: #e6ecff;
+}
+
+/* Header row menu button for side nav */
+.mdl-layout__drawer-button {
+    background-color: #303F9F !important;
+}
+
+/* Side nav bar */
+#side-nav-drawer {
+    background: #37474F;
+}
 
 /* Login */
 #login-card {
     align-items: center;
     justify-content: center;
-    margin: auto auto;
-    background: #CCC;
+    margin: 8% 37%;
 }
 
-.mdl-card {
-  width: auto;
-  height: auto;
-  -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-              -ms-grid-row-align: flex-start;
-          align-items: flex-start;
-  -webkit-align-content: flex-start;
-      -ms-flex-line-pack: start;
-          align-content: flex-start;
+#login-button {
+    width: 100%;
 }
 
 select {
@@ -27,24 +44,16 @@ select {
     font-size: 15px;
     background-color: transparent;
 }
+
 .md-sidenav-left.md-closed-add,
 .md-sidenav-left.md-closed-remove {
     transition: 0.2s ease-in all;
 }
+
 .mdl-selectfield .mdl-selectfield__label {
     display: none;
 }
 
-/* Header row */
-.mdl-layout--fixed-header .mdl-layout__header .mdl-layout__header-row {
-    background: #3366ff;
-    color: #e6ecff;
-}
-
-/* Side bar */
-.mdl-layout__drawer {
-    background: #37474F;
-}
 
 .mdl-layout__drawer .mdl-navigation .mdl-navigation__link {
     color: #CFD8DC;
@@ -99,4 +108,32 @@ li a {
 li a:hover {
     background-color: #555;
     color: white;
+}
+
+/* New entry */
+#elements-drawer {
+    background: white;
+    padding: 10px 0px;
+    position: fixed;
+}
+
+#elements {
+    border: grey 1px solid;
+    padding: 5px;
+    height: 350px;
+    overflow-y: scroll;
+}
+
+.img {
+  padding: 16px 32px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex-start;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#submit-button {
+    width: 100%;
 }

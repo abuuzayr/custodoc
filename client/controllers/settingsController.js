@@ -1,9 +1,16 @@
 angular
     .module("user-interface")
-    .controller("settingsCtrl", ["$scope", '$rootScope', '$location', '$timeout', function ($scope,$rootScope, $location, $timeout) {
-        $rootScope.$on('$viewContentLoaded', function() {
-            $timeout(function() {
+    .controller("settingsCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
+        var viewContentLoaded = $q.defer();
+
+        $scope.$on('$viewContentLoaded', function () {
+            $timeout(function () {
+                viewContentLoaded.resolve();
+            }, 0);
+        });
+        viewContentLoaded.promise.then(function () {
+            $timeout(function () {
                 componentHandler.upgradeAllRegistered();
-            },10);
-        })
+            }, 0);
+        });
     }]);

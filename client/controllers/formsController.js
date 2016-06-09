@@ -1,7 +1,19 @@
 angular
     .module("user-interface")
-    .controller("formsCtrl", ["$scope", '$rootScope', '$location', '$timeout',function ($scope,$rootScope, $location, $timeout) {
-        $scope.gridOptions = {}
+    .controller("newEntryCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
+        var viewContentLoaded = $q.defer();
+        
+        $scope.$on('$viewContentLoaded', function () {
+            $timeout(function () {
+                viewContentLoaded.resolve();
+            }, 0);
+        });
+        viewContentLoaded.promise.then(function () {
+            $timeout(function () {
+                componentHandler.upgradeAllRegistered();
+            }, 0);
+        });
+       $scope.gridOptions = {}
         $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 0;
         $scope.gridOptions.columnDefs = [{
@@ -91,9 +103,4 @@ angular
         $scope.closeDialog = function() {
             dialog.close();
         };
-        $rootScope.$on('$viewContentLoaded', function() {
-            $timeout(function() {
-                componentHandler.upgradeAllRegistered();
-            },10);
-        });
     }]);

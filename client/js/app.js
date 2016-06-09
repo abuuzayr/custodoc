@@ -1,102 +1,39 @@
 angular
     .module('user-interface', ['ui.router', 'ui.grid', 'ngTouch', 'ui.grid.selection'])
-	// .run(function($rootScope, $location, $timeout) {
-	//     $rootScope.$on('$viewContentLoaded', function() {
-	//         $timeout(function() {
-	//             componentHandler.upgradeAllRegistered();
-	//         });
-	//     })
-	// })  
-
     .config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('login', {
                 url: '/',
                 templateUrl: 'views/login.html',
-                controller: 'loginCtrl'
-            })          
+                controller: 'loginCtrl',
+                controllerAs: 'login'
+            })
             .state('newentry', {
                 url: '/newentry',
                 templateUrl: 'views/newEntry.html',
-                controller: 'newEntry'
+                controller: 'newEntryCtrl',
+                controllerAs: 'newEntry'
             })
             .state('entries', {
                 url: '/entries',
                 templateUrl: 'views/entries.html',
-                controller: 'entriesCtrl'
+                controller: 'entriesCtrl',
+                controllerAs: 'entries'
             })
             .state('settings', {
                 url: '/settings',
                 templateUrl: 'views/settings.html',
-                controller: 'settingsCtrl'
+                controller: 'settingsCtrl',
+                controllerAs: 'settings'
             })
             .state('forms', {
                 url: '/forms',
                 templateUrl: 'views/forms.html',
-                controller: 'formsCtrl'
+                controller: 'formsCtrl',
+                controllerAs: 'forms'
             });
     }])
-            // .state('formsPage', {
-            //     url: '/forms',
-            //     views: {
-            //         topNav: {
-            //             templateUrl: 'views/topNavBar.html'
-            //         },
-            //         main: {
-            //             templateUrl: 'views/forms.html',
-            //             controller: 'formsCtrl'
-            //         },
-            //         sideNav:{
-            //         	templateUrl: 'views/sideNavBar.html'
-            //         }
-            //     }
-            // })
-            // .state('login', {
-            //     url: '/',
-            //     views: {
-            //         topNav: {
-            //             // templateUrl: 'views/topNavBar.html'
-            //         },
-            //         main: {
-            //             templateUrl: 'views/login.html',
-            //             controller: 'loginCtrl'
-            //         },
-            //         sideNav:{
-            //         	// templateUrl: 'views/sideNavBar.html'
-            //         }
-            //     }
-            // })
-            // .state('entries', {
-            //     url: '/entries',
-            //     views: {
-            //         topNav: {
-            //             templateUrl: 'views/topNavBar.html'
-            //         },
-            //         main: {
-            //             templateUrl: 'views/entries.html',
-            //             controller: 'entriesCtrl'
-            //         },
-            //         sideNav:{
-            //         	templateUrl: 'views/sideNavBar.html'
-            //         }
-            //     }
-            // })  
-            // .state('newEntry', {
-            //     url: '/newEntry',
-            //     views: {
-            //         topNav: {
-            //             templateUrl: 'views/topNavBar.html'
-            //         },
-            //         main: {
-            //             templateUrl: 'views/newEntry.html'
-            //             // controller: 'entriesCtrl'
-            //         },
-            //         sideNav:{
-            //         	templateUrl: 'views/sideNavBar.html'
-            //         }
-            //     }
-            // });
     .controller('navBarCtrl', function ($scope, $interval) {
         $scope.date = new Date();
         $interval(function () {
