@@ -1,8 +1,8 @@
 angular
     .module("user-interface")
     .controller("formsCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
-        var viewContentLoaded = $q.defer();
         
+        var viewContentLoaded = $q.defer();
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
                 viewContentLoaded.resolve();
