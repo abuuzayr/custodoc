@@ -167,9 +167,4 @@ angular
                 "emailField": "calvyn@groventure.com"
             }            
         ];
-        $rootScope.$on('$viewContentLoaded', function() {
-            $timeout(function() {
-                componentHandler.upgradeAllRegistered();
-            },10);
-        });
     }]);

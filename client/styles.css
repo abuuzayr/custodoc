@@ -1,7 +1,8 @@
 html, body {
     font-family: 'Roboto', 'Helvetica', 'sans-serif';
 }
-/* Color */
+
+/* .color */
 .color > #login-background {
     height: 100%;
     width: 100%;
@@ -20,12 +21,29 @@ html, body {
 
 /* Header row menu button for side nav */
 .mdl-layout__drawer-button {
-    background-color: #303F9F !important;
+    background: #303F9F !important;
 }
 
 /* Side nav bar */
-#side-nav-drawer {
+.color > #side-nav-drawer {
     background: #37474F;
+}
+
+.mdl-layout__drawer .color .mdl-navigation .mdl-navigation__link {
+    color: #CFD8DC;
+}
+
+.mdl-layout__drawer .color .mdl-navigation .mdl-navigation__link:hover {
+    background: #263238;
+}
+
+.mdl-layout__drawer .color #personal-information {
+    color: #CFD8DC;
+    padding: 20px 0px 0px 30px;
+}
+
+.mdl-layout__drawer .color .mdl-navigation .selected-link {
+    background: #263238;
 }
 
 /* Login */
@@ -52,24 +70,6 @@ select {
 
 .mdl-selectfield .mdl-selectfield__label {
     display: none;
-}
-
-
-.mdl-layout__drawer .mdl-navigation .mdl-navigation__link {
-    color: #CFD8DC;
-}
-
-.mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover {
-    background: #263238;
-}
-
-.personal-information {
-    color: #CFD8DC;
-    padding: 20px 0px 0px 30px;
-}
-
-.mdl-navigation .selected-link {
-    background: #263238;
 }
 
 /* Settings */
