@@ -94,13 +94,15 @@ angular
             }
 
         ];
-        $scope.openDialog = function() {
+        $scope.openDialog = function(dialogName) {
+        var dialog = document.querySelector('#' + dialogName);
         if (! dialog.showModal) {
           dialogPolyfill.registerDialog(dialog);
         }
             dialog.showModal();
         };
-        $scope.closeDialog = function() {
+        $scope.closeDialog = function(dialogName) {
+            var dialog = document.querySelector('#' + dialogName);
             dialog.close();
         };
     }]);

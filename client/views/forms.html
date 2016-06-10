@@ -5,33 +5,53 @@
     <main class="mdl-layout__content">
       <div id="forms" class="page-content">
         <div id="top-row-buttons" class="mdl-grid">
-          <button id="newForm" ng-click="openDialog()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+          <button ng-click="openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">add</i> New Form</button>
           <div class="divider"></div>
-          <!-- Dialog for new form -->
-          <dialog id="dialog" class="mdl-dialog">
+           <!--Dialog for new form -->
+          <dialog id="newForm" class="mdl-dialog">
             <div class="mdl-dialog__content">
               <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Create new form</button>
               <p>
                 Or choose an existing form.
               </p>
-              <div id="accesstype" class="mdl-selectfield">
-                <label class="mdl-selectfield__label">Existing form</label>
+              <div id="existing-forms" class="mdl-selectfield">
+                <label class="mdl-selectfield__label">Existing forms</label>
                 <select>
                         <option ng-repeat="formName in formNames">{{ formName.name }}</option>
                 </select>
               </div>
             </div>
             <div class="mdl-dialog__actions">
-              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog()">Close</button>
+              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('newForm')">Close</button>
               <div class="mdl-layout-spacer"></div>
               <button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use existing form</button>
             </div>
           </dialog>
           <!-- Dialog for new form -->
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+          <button ng-click="openDialog('newEntry')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">add</i> New Entry</button>
           <div class="divider"></div>
+          <!-- Dialog for new entry -->
+          <dialog id="newEntry" class="mdl-dialog">
+            <div class="mdl-dialog__content">
+              <p>
+                Choose a form.
+              </p>
+              <div id="existing-forms" class="mdl-selectfield">
+                <label class="mdl-selectfield__label">Existing forms</label>
+                <select>
+                        <option ng-repeat="formName in formNames">{{ formName.name }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="mdl-dialog__actions">
+              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('newEntry')">Close</button>
+              <div class="mdl-layout-spacer"></div>
+              <a ui-sref="newentry"><button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use form</button></a>
+            </div>
+          </dialog>
+          <!-- Dialog for new entry -->
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Rename</button>
           <div class="divider"></div>
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
