@@ -10,7 +10,7 @@ angular
         });
         viewContentLoaded.promise.then(function () {
             $timeout(function () {
-                componentHandler.upgradeAllRegistered();
+                componentHandler.upgradeDom();
             }, 0);
         });
     }]);

@@ -3,6 +3,7 @@ html, body {
 }
 
 /* .color */
+/* Login background */
 .color > #login-background {
     height: 100%;
     width: 100%;
@@ -11,6 +12,11 @@ html, body {
     background: -o-linear-gradient(bottom right, #66ffff, #6699ff); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(bottom right, #66ffff, #6699ff); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to bottom right, #66ffff, #6699ff); /* Standard syntax (must be last) */
+}
+
+/* Login heading */
+#login-heading {
+    background: #3F51BF;
 }
 
 /* Header row nav bar */
@@ -24,9 +30,10 @@ html, body {
     background: #303F9F !important;
 }
 
-/* Side nav bar */
-.color > #side-nav-drawer {
+/* Side nav bar drawer */
+.mdl-layout__drawer .color {
     background: #37474F;
+    height: 100%;
 }
 
 .mdl-layout__drawer .color .mdl-navigation .mdl-navigation__link {
@@ -44,6 +51,16 @@ html, body {
 
 .mdl-layout__drawer .color .mdl-navigation .selected-link {
     background: #263238;
+}
+
+/* New entry elements header .color */
+#elements-heading {
+    background: #3F51BF !important;
+}
+
+/* Delete buttons .color */
+#delete-button {
+    background: #ff0000;
 }
 
 /* Login */
@@ -84,30 +101,14 @@ select {
 .divider {
     width: 10px; 
 }
-
 /* Forms */
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 200px;
-    background-color: #f1f1f1;
-    overflow:hidden;
-    overflow-y:scroll;
-    height: 200px;
+#dialog {
+    height: auto;
+    width: 30%;
 }
 
-li a {
-    display: block;
-    color: #000;
-    padding: 8px 0 8px 16px;
-    text-decoration: none;
-}
-
-/* Change the link color on hover */
-li a:hover {
-    background-color: #555;
-    color: white;
+#grid-forms {
+    height: 80% !important;
 }
 
 /* New entry */
@@ -115,6 +116,11 @@ li a:hover {
     background: white;
     padding: 10px 0px;
     position: fixed;
+}
+
+/* Entries */
+#grid-entries {
+    height: 400px !important;
 }
 
 #elements {

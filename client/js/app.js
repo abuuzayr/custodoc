@@ -32,13 +32,5 @@ angular
                 templateUrl: 'views/forms.html',
                 controller: 'formsCtrl',
                 controllerAs: 'forms'
-            });
-    }])
-    .controller('navBarCtrl', function ($scope, $interval) {
-        $scope.date = new Date();
-        $interval(function () {
-            $scope.date = new Date();
-        }, 1000);
-        $scope.userGroup = 'System Admin';
-        $scope.productName = 'BulletForms';
-    });
+            })
+    }]);

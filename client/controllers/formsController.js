@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("newEntryCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
+    .controller("formsCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
         $scope.$on('$viewContentLoaded', function () {
@@ -10,16 +10,16 @@ angular
         });
         viewContentLoaded.promise.then(function () {
             $timeout(function () {
-                componentHandler.upgradeAllRegistered();
+                componentHandler.upgradeDom();
             }, 0);
         });
-       $scope.gridOptions = {}
+        $scope.gridOptions = {}
         $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 0;
         $scope.gridOptions.columnDefs = [{
             name: 'formName',
             displayName: 'Form Name'
-        },
+            },
             {
                 name: 'isImportant',
                 displayName: 'Important',
@@ -73,24 +73,24 @@ angular
                 "isImportant": true
             }
         ];
-        $scope.forms = [
+        $scope.formNames = [
             {
-                formName: 'Sample Form A'
+                name: 'Sample Form A'
             },
             {
-                formName: 'Form B qwerty plusplussuperlongname'
+                name: 'Form B'
             },
             {
-                formName: 'Form C'
+                name: 'Form C'
             },
             {
-                formName: 'Form D'
+                name: 'Form D'
             },
             {
-                formName: 'Form E'
+                name: 'Form E'
             },
             {
-                formName: 'Form F'
+                name: 'Form F'
             }
 
         ];

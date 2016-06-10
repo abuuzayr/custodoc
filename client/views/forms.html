@@ -15,14 +15,17 @@
               <p>
                 Or choose an existing form.
               </p>
-              <ul>
-                <li ng-repeat="form in forms">
-                  <span><a href="">{{ form.formName }}</a></span>
-                </li>
-              </ul>
+              <div id="accesstype" class="mdl-selectfield">
+                <label class="mdl-selectfield__label">Existing form</label>
+                <select>
+                        <option ng-repeat="formName in formNames">{{ formName.name }}</option>
+                </select>
+              </div>
             </div>
             <div class="mdl-dialog__actions">
               <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog()">Close</button>
+              <div class="mdl-layout-spacer"></div>
+              <button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use existing form</button>
             </div>
           </dialog>
           <!-- Dialog for new form -->
@@ -34,7 +37,7 @@
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
           <div class="divider"></div>
           <div class="mdl-layout-spacer"></div>
-          <button id="delete-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+          <button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">delete</i></button>
         </div>
         <!-- Table for forms stub -->
