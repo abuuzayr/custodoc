@@ -6,29 +6,58 @@
                     <h2 class="mdl-card__title-text">BulletForms Login</h2>
                 </div>
                 <div class="mdl-card__supporting-text">
+                    <div id="fail-feedback-message" ng-if="isEmpty">
+                        <p>Please enter username and password.</p>
+                    </div>
+                    <div id="fail-feedback-message" ng-if="isInvalid">
+                        <p>Invalid username or password.</p>
+                    </div>
+                    <!-- Redirect to auth here -->
                     <form id="login-form" action="#">
                         <!-- Username input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="username" class="mdl-textfield__input" type="text" />
+                            <input ng-model="username" class="mdl-textfield__input" type="text" />
                             <label class="mdl-textfield__label" for="username">Username</label>
                         </div>
                         <br>
                         <!-- Password input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="password" class="mdl-textfield__input" type="password" />
+                            <input ng-model="password" class="mdl-textfield__input" type="password" />
                             <label class="mdl-textfield__label" for="password">Password</label>
                         </div>
-                    <!-- Login button -->
-                    <div class="mdl-card__actions">
-                        <a ui-sref="forms"><button id="login-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                        <!-- Login button -->
+                        <div class="mdl-card__actions">
+                            <button id="login-button" type="submit" ng-click="checkRequired()" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
                         Log in
-                        </button></a>
-                    </div>
+                        </button>
+                        </div>
                     </form>
                     <br>
                     <div class="mdl-card__actions mdl-card--border">
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Forgot password?</a>
+                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" ng-click="openDialog('forgot-password-dialog')">Forgot password?</button>
                     </div>
+                    <dialog id="forgot-password-dialog" class="mdl-dialog">
+                        <div class="mdl-dialog__content">
+                            <div class="forgot-password-email-sent" ng-if="isUsernameConfirmed === true">
+                                <p>Your new password is being sent to {{ email }}.</p>
+                            </div>
+                            <div id="fail-feedback-message" ng-if="isUsernameConfirmed === false">
+                                <p>Invalid username.</p>
+                            </div>
+                            <div id="forgot-password-username-textbox">
+                                <p>Please enter your username.</p>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input ng-model="forgotUser" class="mdl-textfield__input" type="text" />
+                                    <label class="mdl-textfield__label" for="forgotUser">Username</label>
+                                </div>
+                                <div class="mdl-dialog__actions">
+                                    <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('forgot-password-dialog')">Cancel</button>
+                                    <div class="mdl-layout-spacer"></div>
+                                    <button id="next" type="button" class="mdl-button" ng-click="checkUserValid()">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </dialog>
                 </div>
             </main>
         </div>

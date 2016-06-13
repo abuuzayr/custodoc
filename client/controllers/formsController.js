@@ -1,7 +1,7 @@
 angular
     .module("user-interface")
     .controller("formsCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
-        
+        /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -13,6 +13,8 @@ angular
                 componentHandler.upgradeDom();
             }, 0);
         });
+        
+        /* =========================================== UI grid =========================================== */
         $scope.gridOptions = {}
         $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 0;
@@ -44,6 +46,7 @@ angular
                 displayName: 'Last Modified By',
             }];
 
+        /* =========================================== Data stubs =========================================== */
         $scope.gridOptions.data = [
             {
                 "formName": "Sample Form A",
@@ -73,6 +76,8 @@ angular
                 "isImportant": true
             }
         ];
+        
+        /* =========================================== Dialog =========================================== */
         $scope.formNames = [
             {
                 name: 'Sample Form A'
@@ -94,6 +99,7 @@ angular
             }
 
         ];
+        
         $scope.openDialog = function(dialogName) {
         var dialog = document.querySelector('#' + dialogName);
         if (! dialog.showModal) {
@@ -101,6 +107,7 @@ angular
         }
             dialog.showModal();
         };
+        
         $scope.closeDialog = function(dialogName) {
             var dialog = document.querySelector('#' + dialogName);
             dialog.close();

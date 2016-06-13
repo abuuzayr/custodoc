@@ -1,0 +1,38 @@
+#sec1{
+	position: absolute;
+	width:30%;
+	height: 100%;
+}
+
+#previewDialog{
+	background-color: grey;
+	position: absolute;
+	border: 2px solid black;
+	width: 26.25cm;
+	height: 33cm;
+	overflow-y: auto;
+}
+
+#toolbar{
+	border: 2px solid black;
+	width: 100%;
+	height: 110px;
+}
+
+#form{
+	background-color: white;
+	position: absolute;
+	width: 794px;
+	height: 1123px;
+	left: 34%; 
+	border: 2px solid black;
+}
+
+#placeholder{
+	background-color: black;
+}
+
+.page{
+	width: 21cm;
+	height: 29.7cm;
+}

@@ -19,6 +19,11 @@ html, body {
     background: #3F51BF;
 }
 
+/* Login feedback message */
+#fail-feedback-message {
+    color: #ff5050;
+}
+
 /* Header row nav bar */
 .mdl-layout__header-row {
     background: #303F9F;

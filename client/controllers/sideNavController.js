@@ -1,7 +1,7 @@
 angular
     .module("user-interface")
     .controller("sideNavCtrl", ['$scope', '$q', '$interval', '$location', '$timeout', function ($scope, $q, $interval, $location, $timeout) {
-        var sideNav = this;
+    var sideNav = this;
     sideNav.date = new Date();
     $interval(function () {
         console.log('Date function working');
