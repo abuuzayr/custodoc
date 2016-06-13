@@ -3,7 +3,7 @@ angular
     .controller("loginCtrl", ['$scope', '$q', '$location', '$timeout', '$state', function ($scope, $q, $location, $timeout, $state) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
-        
+
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
                 viewContentLoaded.resolve();
@@ -14,46 +14,59 @@ angular
                 componentHandler.upgradeDom();
             }, 0);
         });
-        
+
         /* =========================================== Login =========================================== */
         // If invalid username/password, show feedback message. Else, hide. Auth API here.
         $scope.isInvalid = false;
-        
+
         // Checks if input is empty. If empty, show feedback. Else, hide.
-        $scope.checkRequired = function() {
+        $scope.checkRequired = function () {
             var usr = $scope.username;
             var pwd = $scope.password;
-            $scope.isEmpty = (usr === undefined) || (pwd === undefined);
+
+            $scope.isEmpty = (!checkIsEmpty(usr) || !checkIsEmpty(pwd));
             var redirect = (!$scope.isInvalid && !$scope.isEmpty);
-            if(redirect) {
+            if (redirect) {
                 // Redirect to forms page
                 $state.go('forms');
             }
         };
         
+        var checkIsEmpty = function(str) {
+            if(str != null && str!= undefined && str.length >= 1) {
+                return true;
+            }
+            else return false;
+        };
+
         /* =========================================== Forgot password =========================================== */
+        // Set isUsernameConfirmed to null to hide feedback messages.
         $scope.isUsernameConfirmed = null;
+        
+        // API here. Retrieve user's email.
         $scope.email = 'hello@example.com'
+        
         // Check if username is valid.
-        $scope.checkUserValid = function() {
+        $scope.checkUserValid = function () {
             var usr = $scope.forgotUser;
             // Checking API here.
-            if(true) { // TODO: stub
+            if (true) { // TODO: stub
                 $scope.isUsernameConfirmed = true;
             } else {
                 $scope.isUsernameConfirmed = false;
             }
         }
-        
+
         /* =========================================== Dialog =========================================== */
-        $scope.openDialog = function(dialogName) {
-        var dialog = document.querySelector('#' + dialogName);
-        if (! dialog.showModal) {
-          dialogPolyfill.registerDialog(dialog);
-        }
+        $scope.openDialog = function (dialogName) {
+            var dialog = document.querySelector('#' + dialogName);
+            if (!dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
             dialog.showModal();
         };
-        $scope.closeDialog = function(dialogName) {
+        
+        $scope.closeDialog = function (dialogName) {
             var dialog = document.querySelector('#' + dialogName);
             dialog.close();
             $scope.isUsernameConfirmed = null;

@@ -8,7 +8,7 @@
           <button ng-click="openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">add</i> New Form</button>
           <div class="divider"></div>
-           <!--Dialog for new form -->
+          <!---------------------------------------- Dialog for new form ---------------------------------------->
           <dialog id="newForm" class="mdl-dialog">
             <div class="mdl-dialog__content">
               <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Create new form</button>
@@ -28,11 +28,11 @@
               <button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use existing form</button>
             </div>
           </dialog>
-          <!-- Dialog for new form -->
+          
           <button ng-click="openDialog('newEntry')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">add</i> New Entry</button>
           <div class="divider"></div>
-          <!-- Dialog for new entry -->
+          <!---------------------------------------- Dialog for new entry ---------------------------------------->
           <dialog id="newEntry" class="mdl-dialog">
             <div class="mdl-dialog__content">
               <p>
@@ -51,16 +51,35 @@
               <a ui-sref="newentry"><button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use form</button></a>
             </div>
           </dialog>
-          <!-- Dialog for new entry -->
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Rename</button>
+
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="openDialog('renameForm')">Rename</button>
           <div class="divider"></div>
+          <!---------------------------------------- Dialog for rename ---------------------------------------->
+          <dialog id="renameForm" class="mdl-dialog">
+            <div class="mdl-dialog__content">
+              <p>
+                Please input new name.
+              </p>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input ng-model="formName" class="mdl-textfield__input" type="text" />
+                <label class="mdl-textfield__label" for="formName">Form Name</label>
+              </div>
+            </div>
+            <div class="mdl-dialog__actions">
+              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('renameForm')">Close</button>
+              <div class="mdl-layout-spacer"></div>
+              <button id="confirm-rename" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="renameForm()">Confirm</button>
+            </div>
+          </dialog>
+
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
           <div class="divider"></div>
           <div class="mdl-layout-spacer"></div>
           <button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons" role="presentation">delete</i></button>
         </div>
-        <!-- Table for forms stub -->
+        
+        <!---------------------------------------- Table for forms stub ---------------------------------------->
         <div ng-controller="formsCtrl">
           <div id="grid-forms" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
         </div>

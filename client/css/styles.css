@@ -99,6 +99,15 @@ select {
     padding: 0px 30px;
 }
 
+#settings-grid {
+    padding: 30px;
+}
+
+#progressBarStorage {
+    width: 300px;
+}
+
+/* Commons */
 #top-row-buttons {
     padding: 10px 10px;
 }
@@ -106,6 +115,7 @@ select {
 .divider {
     width: 10px; 
 }
+
 /* Forms */
 .mdl-dialog {
     height: auto;

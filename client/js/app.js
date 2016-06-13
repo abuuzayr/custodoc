@@ -36,8 +36,13 @@ angular
             .state('formBuilder', {
                 url: '/formBuilder',
                 templateUrl: 'views/formBuilder.html',
-                controller: 'formBuilderCtrl as vm',
+                controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
-
+            })
+            .state('autofill', {
+                url: '/autofill',
+                templateUrl: 'views/autofill.html',
+                controller: 'autofillCtrl',
+                controllerAs: 'autofill'
             });
     }]);

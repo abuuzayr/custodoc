@@ -12,7 +12,7 @@
                     <div id="fail-feedback-message" ng-if="isInvalid">
                         <p>Invalid username or password.</p>
                     </div>
-                    <!-- Redirect to auth here -->
+                    <!-- Redirect to auth here @ action -->
                     <form id="login-form" action="#">
                         <!-- Username input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -36,10 +36,11 @@
                     <div class="mdl-card__actions mdl-card--border">
                         <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" ng-click="openDialog('forgot-password-dialog')">Forgot password?</button>
                     </div>
+                    <!-- Forgot password dialog -->
                     <dialog id="forgot-password-dialog" class="mdl-dialog">
                         <div class="mdl-dialog__content">
                             <div class="forgot-password-email-sent" ng-if="isUsernameConfirmed === true">
-                                <p>Your new password is being sent to {{ email }}.</p>
+                                <p>Your new auto-generated password is being sent to {{ email }}.</p>
                             </div>
                             <div id="fail-feedback-message" ng-if="isUsernameConfirmed === false">
                                 <p>Invalid username.</p>

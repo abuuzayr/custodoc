@@ -100,6 +100,17 @@ angular
 
         ];
         
+        // Check if form name is duplicated. If yes, display feedback. Else, change name and close dialog.
+        $scope.renameForm = function() {
+            $scope.isDuplicatedName = null;
+            // TODO: Query with new name to see if form exists.
+            $scope.isDuplicatedName = false;
+            if(isDuplicatedName === false) {
+                // Replace old name with new name.
+                closeDialog('renameForm');
+            } 
+        }
+        
         $scope.openDialog = function(dialogName) {
         var dialog = document.querySelector('#' + dialogName);
         if (! dialog.showModal) {
