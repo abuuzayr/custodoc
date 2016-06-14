@@ -61,11 +61,19 @@ angular
             else{
                 var baseURL = 'http://localhost:8080/api/user/forgetpassword';
                 var email = $scope.forgotUser;
-                $http.get(baseURL + '/' + email);
-                var email = $scope.forgotUser;
-                // Checking API here.
-                    
+                $http.get(baseURL + '/' + email)
+                    .then(function SuccessCallback(res){
+                        //To see the msg do console.log(res)
+                        //console.log(res);
+                        //TODO: What to do when email is sent?
+                    },function ErrorCallback(err){
+                        //To see the msg do console.log(err)
+                        //console.log(err);
+                        //TODO: What to do when call is not successful
+                    });
 
+            }        
+                 // Checking API here.
                 //TODO
             //     if (true) { // TODO: stub
             //         $scope.isUsernameConfirmed = true;
