@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("loginCtrl", ['$http','$scope', '$q', '$location', '$timeout', '$state', function ($scope, $q, $location, $timeout, $state, $http) {
+    .controller("loginCtrl", ['$scope', '$q', '$location', '$timeout', '$state', '$http', function ($scope, $q, $location, $timeout, $state, $http) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
 
@@ -54,21 +54,27 @@ angular
         $scope.email = '';
         
         // Check if username is valid.
-        $scope.checkUserValid = function ($http) {
+        $scope.checkUserValid = function () {
+            //Check for email syntax first before sending.
             if(!checkIsValidEmail($scope.forgotUser))
                  $scope.isUsernameConfirmed = false;
+            else{
+                var baseURL = 'http://localhost:8080/api/user/forgetpassword';
+                var email = $scope.forgotUser;
+                $http.get(baseURL + '/' + email);
+                var email = $scope.forgotUser;
+                // Checking API here.
+                    
 
-
-            $http.get('localhost:8080/api/user/forget_password'+email)
-            var email = $scope.forgotUser;
-            // Checking API here.
-            
-            if (true) { // TODO: stub
-                $scope.isUsernameConfirmed = true;
-            } else {
-                $scope.isUsernameConfirmed = false;
+                //TODO
+            //     if (true) { // TODO: stub
+            //         $scope.isUsernameConfirmed = true;
+            //     } else {
+            //         $scope.isUsernameConfirmed = false;
+            //     }
+            // }
             }
-        };
+        };        
 
         /* =========================================== Dialog =========================================== */
         $scope.openDialog = function (dialogName) {
