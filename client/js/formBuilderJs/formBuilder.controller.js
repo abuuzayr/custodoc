@@ -3,25 +3,27 @@ angular
 	.controller('formBuilderCtrl', [
 		'$scope',
 		'$http',
-		'$window', 
-		'$rootScope', 
+		'$window',
+		'$rootScope',
 		'$q',
 		'$compile',
 		'pdfFactory',
 		'ngProgressFactory',
 		'formBuilderFactory',
+		'$timeout',
 		formBuilderCtrl
 	]);
 function formBuilderCtrl(
-	$scope, 
-	$http, 
-	$window, 
-	$rootScope, 
-	$q, 
+	$scope,
+	$http,
+	$window,
+	$rootScope,
+	$q,
 	$compile,
 	pdfFactory,
 	ngProgressFactory,
-	formBuilderFactory){
+	formBuilderFactory,
+	$timeout){
 	//initialization
 	var vm = this;
 	vm.progressbar = ngProgressFactory.createInstance();
@@ -75,10 +77,13 @@ function formBuilderCtrl(
 	var body=document.getElementById("body");
 	var progressBar = document.getElementById("progressBar");
 	var previewDialog = document.getElementById("previewDialog");
+	var snackbarContainer = document.getElementById("snackbarContainer");
 	vm.previewDialog = previewDialog;
 	var preview = document.getElementById("preview");
 	var imgurl="";
 	var canvas=null;
+	vm.groupName = "test";
+	vm.formName = "test";
 
 	//white div will be attached to each page
 	var whiteDiv=formBuilderFactory.whiteDiv;
@@ -127,11 +132,15 @@ function formBuilderCtrl(
 	//get all the elements data and save the form
 	function saveForm(){
 		formData.numberOfPages = vm.numberOfPages;
-		for(var i=1;i<=vm.numberOfPages;i++){
+		for(var i = 1;i<=vm.numberOfPages;i++){
 			var page = document.getElementById("page"+i);
+			console.log(page);
 			for (var j = 1; j < page.childNodes.length; j++){
 				var node = page.childNodes[j];
+				console.log(node);
 				var id = node.id;
+				console.log(id);
+				elements[id] = {};
 				elements[id].name=node.getAttribute("name");
 				elements[id].page=i;
 				elements[id].width=parseInt(node.style.width);
@@ -159,11 +168,17 @@ function formBuilderCtrl(
 				}
 			}
 		}
-		formData.height=form.style.height;
-		formData.width=form.style.width;
 		formData.elements = elements;
-		formData.lastModificationTime = new Date();
-		formBuilderFactory.saveFormData(formData);
+		formData.group = vm.groupName;
+		formData.name = vm.formName;
+		formBuilderFactory.saveFormData(formData)
+			.then(function(data,status,config,headers){
+				snackbarContainer.MaterialSnackbar.showSnackbar(
+					{message:"Saved the form"});
+			},function(data,status,config,headers){
+				snackbarContainer.MaterialSnackbar.showSnackbar(
+					{message:"Failed to save the form. Please try again."});
+			});
 		console.log(formData);
 	}
 
@@ -253,8 +268,8 @@ function formBuilderCtrl(
 		code = code.replace(/ on\w+=".*?"/g, "");
 		rasterizeHTML.drawHTML(code).then(function (renderResult) {
 		    context.drawImage(renderResult.image, 0, 0);
-		    deferred.resolve(pageNumber);		    
-		});		
+		    deferred.resolve(pageNumber);
+		});
 		return deferred.promise;
 	}
 
@@ -290,7 +305,7 @@ function formBuilderCtrl(
 			return deferred.promise;
 		}
 	}
-	
+
 	function addPage(){
 		if(vm.allowCreate){
 			if(vm.element){
@@ -305,8 +320,10 @@ function formBuilderCtrl(
 			newPage.appendChild(whiteDiv.cloneNode(true));
 			newPage.setAttribute("id","page"+(vm.currentPageNumber+1));
 			newPage.setAttribute("class","page");
-			newPage.setAttribute("ondrop","angular.element(document.getElementById('body')).scope().vm.drop(event)");
-			newPage.setAttribute("ondragover","angular.element(document.getElementById('body')).scope().vm.allowDrop(event)");
+			newPage.setAttribute("ondrop",
+			"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
+			newPage.setAttribute("ondragover",
+			"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
 			currentPage.style.display="none";
 			newPage.style.display="block";
 			form.appendChild(newPage);
@@ -333,8 +350,10 @@ function formBuilderCtrl(
 					var newPage = document.createElement("div");
 					newPage.appendChild(whiteDiv.cloneNode(true));
 					newPage.setAttribute("class","page");
-					newPage.setAttribute("ondrop","angular.element(document.getElementById('body')).scope().vm.drop(event)");
-					newPage.setAttribute("ondragover","angular.element(document.getElementById('body')).scope().vm.allowDrop(event)");
+					newPage.setAttribute("ondrop",
+					"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
+					newPage.setAttribute("ondragover",
+					"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
 					newPage.style.display="block";
 					currentPage.parentNode.removeChild(currentPage);
 					form.appendChild(newPage);
@@ -541,7 +560,7 @@ function formBuilderCtrl(
 			}
 			vm.element = element;
 			document.getElementById("contentPanel").classList.remove('is-active');
-			document.getElementById("content-panel").classList.remove('is-active');	
+			document.getElementById("content-panel").classList.remove('is-active');
 			document.getElementById("backgroundPanel").classList.remove('is-active');
 			document.getElementById("background-panel").classList.remove('is-active');
 			document.getElementById("fontPanel").classList.remove('is-active');
@@ -573,7 +592,7 @@ function formBuilderCtrl(
 				editBackgroundColorLabel.style.display="none";
 				editRequiredLabel.style.display="none";
 			}
-			if (element.getAttribute("name").startsWith("image")|| 
+			if (element.getAttribute("name").startsWith("image")||
 				element.getAttribute("name").startsWith("signature")) {
 				fontPanel.style.display="none";
 			}
@@ -626,10 +645,10 @@ function formBuilderCtrl(
 		newElement.style.borderWidth=vm.BorderWidth;
 		newElement.style.left = newElementPosition.x+"px";
 		newElement.style.top = newElementPosition.y+"px";
-		newElement.style.opacity=vm.Opacity;		
+		newElement.style.opacity=vm.Opacity;
 		currentPage.removeChild(placeholder);
 		currentPage.appendChild(newElement);
-		
+
 	}
 
 	function addImg(){
@@ -719,55 +738,59 @@ function formBuilderCtrl(
 
 	//get the current position of mouse
     function getCrossBrowserElementCoords(mouseEvent){
-	  var result = {
-	    x: 0,
-	    y: 0
-	  };
+		var result = {
+			x: 0,
+			y: 0
+		};
 
-	  if (!mouseEvent)
-	  {
-	    mouseEvent = window.event;
-	  }
+		if (!mouseEvent){
+			mouseEvent = window.event;
+		}
 
-	  if (mouseEvent.pageX || mouseEvent.pageY)
-	  {
-	    result.x = mouseEvent.pageX;
-	    result.y = mouseEvent.pageY;
-	  }
-	  else if (mouseEvent.clientX || mouseEvent.clientY)
-	  {
-	    result.x = mouseEvent.clientX + document.body.scrollLeft +
-	      document.documentElement.scrollLeft;
-	    result.y = mouseEvent.clientY + document.body.scrollTop +
-	      document.documentElement.scrollTop;
-	  }
+		if (mouseEvent.pageX || mouseEvent.pageY){
+			result.x = mouseEvent.pageX;
+			result.y = mouseEvent.pageY;
+		}
+		else if (mouseEvent.clientX || mouseEvent.clientY){
+			result.x = mouseEvent.clientX + document.body.scrollLeft +
+			document.documentElement.scrollLeft;
+			result.y = mouseEvent.clientY + document.body.scrollTop +
+			document.documentElement.scrollTop;
+		}
 
-	  if (mouseEvent.target)
-	  {
-	    var offEl = mouseEvent.target;
-	    var offX = 0;
-	    var offY = 0;
+		if (mouseEvent.target){
+			var offEl = mouseEvent.target;
+			var offX = 0;
+			var offY = 0;
 
-	    if (typeof(offEl.offsetParent) != "undefined")
-	    {
-	      while (offEl)
-	      {
-	        offX += offEl.offsetLeft;
-	        offY += offEl.offsetTop;
+			if (typeof(offEl.offsetParent) != "undefined"){
+				while (offEl){
+				    offX += offEl.offsetLeft;
+				    offY += offEl.offsetTop;
 
-	        offEl = offEl.offsetParent;
-	      }
-	    }
-	    else
-	    {
-	      offX = offEl.x;
-	      offY = offEl.y;
-	    }
+				    offEl = offEl.offsetParent;
+				}
+			}
+			else{
+				offX = offEl.x;
+				offY = offEl.y;
+			}
 
-	    result.x -= offX;
-	    result.y -= offY;
-	  }
+			result.x -= offX;
+			result.y -= offY;
+		}
 
-	  return result;
+		return result;
     }
+    var viewContentLoaded = $q.defer();
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function () {
+            viewContentLoaded.resolve();
+        }, 0);
+    });
+    viewContentLoaded.promise.then(function () {
+        $timeout(function () {
+            componentHandler.upgradeDom();
+        }, 0);
+    });
 }

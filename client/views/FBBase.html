@@ -1,327 +1,54 @@
-<body id="body" ng-controller="formBuilderCtrl as vm">
-<div id="pagebar">
-	<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
-	<form ng-submit="vm.goToPage()" style="display:inline"><label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label><input type="submit" value="Go"></form>
-	<form ng-submit="vm.movePage()" style="display:inline"><label>Move the current Page to page: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label><input type="submit" value="Move"></form>
-	<input type="button" name="addPage" value="Add Page" ng-click="vm.addPage()">
-	<input type="button" name="deletePage" value="Delete This Page" ng-click="vm.deletePage()">
-	<input type="button" name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()">
-	<input type="button" name="toNextPage" value="Next Page" ng-click="vm.toNextPage()">
-	<input type="button" name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()">
-	<input type="button" name="Preview" value="Preview" ng-click="vm.previewStart()">
-	<button name="saveForm" ng-click="vm.saveForm()">Save</button>
-</div>
-<div id="toolbar" style="display:none">
-	<div class="mdl-tabs mdl-js-tabs">
-	    <div class="mdl-tabs__tab-bar">
-	        <a id="borderPanel" href="#border-panel" class="mdl-tabs__tab is-active">Border</a>
-	        <a id="fontPanel" href="#font-panel" class="mdl-tabs__tab">Font</a>
-	        <a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
-	        <a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
-			<label id="editRequiredLabel"><input id="editRequired" type="checkbox" ng-model="vm.element.required">Required field?</label>
-			<input type="button" display="inline-block" name="delete" value="Delete" ng-click="vm.deleteElement()">
-			<input type="button" display="inline-block" value="Hide toolbar" name="hide" ng-click="vm.hideToolbar()">
-	    </div>
-	    <div class="mdl-tabs__panel is-active" id="border-panel">
-		    <label style="display:inline">Select Border Style
-		    	<select id="editBorderStyle" ng-model="vm.element.style.borderStyle">
-		    		<option value="solid">Solid</option>
-		    		<option value="dashed">Dashed</option>
-		    		<option value="dotted">Dotted</option>
-		    		<option value="none">None</option>
-		    	</select>
-		    </label>
-			<label style="display:inline"> Select Border Width: 
-			    <select id="editBorderWidth" ng-model="vm.element.style.borderWidth">
-			      	<option ng-repeat="option in vm.availableBorderWidth" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-			<label style="display:inline"> Select Border Radius: 
-			    <select id="editBorderRadius" ng-model="vm.element.style.borderRadius">
-			      	<option ng-repeat="option in vm.availableBorderRadii" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-			<label style="display:inline"> Select Border Color: 
-			    <select id="editBorderColor" ng-model="vm.element.style.borderColor" style={{"color:"+vm.element.style.borderColor}}>
-			      	<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-	    </div>
-	    <div class="mdl-tabs__panel" id="font-panel">
-			<label style="display:inline"> Select Font-size: 
-			    <select id="editFontSize" ng-model="vm.element.style.fontSize">
-			      	<option ng-repeat="option in vm.availableFontsizes" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-			<label style="display:inline"> Select Font Type: 
-			    <select id="editFontFamily" ng-model="vm.element.style.fontFamily" style={{"font-family:"+vm.element.style.fontFamily}}>
-			      	<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-			<label style="display:inline"> Select Font Color: 
-			    <select id="editFontColor" ng-model="vm.element.style.color" style={{"color:"+vm.element.style.color}}>
-			      	<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-		    <label>Select Text Decoration
-		    	<select id="editTextDecoration" ng-model="vm.element.style.textDecoration">
-		    		<option value="none">None</option>
-		    		<option value="overline">Overline</option>
-		    		<option value="line-through">Line-through</option>
-		    		<option value="underline">Underline</option>
-		    	</select>
-		    </label>
-	    </div>
-	    <div class="mdl-tabs__panel" id="background-panel">
-			<label id="editBackgroundColorLabel" > Select Backgroud Color: 
-			    <select id="editBackgroundColor"
-			      ng-model="vm.element.style.backgroundColor" style={{"background-color:"+vm.element.style.backgroundColor}} >
-			    	<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
-			    </select>
-		    </label>
-		    <label>Opacity:
-		    <input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
-		    </label>
-	    </div>
-	    <div class="mdl-tabs__panel" id="content-panel">
-	    	<label>Content:
-	    		<textarea rows="3"  id="editContent" ng-model="vm.element.innerHTML" style="resize:none;white-space:pre-wrap"></textarea>
-	    	</label>
-	    </div>
-    </div>
-</div>
-<section id="sec1">
-	<input type="button" name="createLabel" value="Create Label" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'label')" draggable="true"><br>
-	<input type="button" name="createTextField" value="Create Text Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'text')" draggable="true"><br>
-	<input type="button" name="createImageField" value="Create Image Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'image field')" draggable="true"><br>
-	<input type="button" name="createSignature" value="Create Signature Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'signature')" draggable="true"><br>
-	<input type="button" name="createImageAttachment" value="Attach Image" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'image upload')" draggable="true"><br>
-	<form  id="labelCreation" name="labelCreation" style="display:none" ng-submit="vm.newElementType = '';vm.createLabel()">
-	<fieldset>
-	<legend>Create Label</legend>
-		<label>Label: <textarea name="labelContent" ng-model="vm.labelContent" style="resize:none" required="true"></textarea></label><br>
-		<label> Select Font Type: 
-		    <select ng-options="option for option in vm.fontsArray"
-		      ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
-	    </label><br>
-		<label> Select Font-size: 
-		    <select ng-options="option for option in vm.availableFontsizes"
-		      ng-model="vm.Fontsize"></select>
-	    </label><br>
-		<label> Select Font Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.FontColor" style={{"color:"+vm.FontColor}} ></select>
-	    </label><br>
-	    <label>Select Text Decoration
-	    	<select ng-model="vm.TextDecoration">
-	    		<option value="none">None</option>
-	    		<option value="overline">Overline</option>
-	    		<option value="line-through">Line-through</option>
-	    		<option value="underline">Underline</option>
-	    	</select>
-	    </label><br>
-		<label> Select Backgroud Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
-	    </label><br>
-	    <label>Opacity:
-	    <input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-	    <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
-	    </label><br>
-	    <label>Select Border Style
-	    	<select ng-model="vm.BorderStyle">
-	    		<option value="solid">Solid</option>
-	    		<option value="dashed">Dashed</option>
-	    		<option value="dotted">Dotted</option>
-	    		<option value="none">None</option>
-	    	</select>
-	    </label><br>
-		<label> Select Border Width: 
-		    <select ng-options="option for option in vm.availableBorderWidth"
-		      ng-model="vm.BorderWidth"></select>
-	    </label><br>
-		<label> Select Border Radius: 
-		    <select ng-options="option for option in vm.availableBorderRadii" 
-		      ng-model="vm.BorderRadius"></select>
-	    </label><br>
-		<label> Select Border Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
-	    </label><br>
-		<input type="submit" value="Create Label"/>
-	</fieldset>
-	</form><br>
+<div class="mdl-layout__container">
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+		<!---------------------------------------- Ng-include nav bars ---------------------------------------->
+		<header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+		<div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
 
-	<form  id="textFieldCreation" name="textFieldCreation" style="display:none" ng-submit="vm.newElementType = ''; vm.createTextField()">
-	<fieldset>
-		<legend>Create Text Field</legend>
-		<label>Text Field Name: <input type="text" name="text" ng-model="vm.textFieldName" required="true"></label><br>
-		<input type="checkbox" ng-checked="vm.required">Required field?<br>
-		<label> Select Font-size: 
-		    <select ng-options="option for option in vm.availableFontsizes"
-		      ng-model="vm.Fontsize"></select>
-	    </label><br>
-		<label> Select Font Type: 
-		    <select ng-options="option for option in vm.fontsArray"
-		      ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
-	    </label><br>
-		<label> Select Font Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
-	    </label><br>
-		<label> Select Backgroud Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
-	    </label><br>
-	    <label>Opacity:
-	    <input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-	    <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
-	    </label><br>
-	    <label>Select Border Style
-	    	<select ng-model="vm.BorderStyle">
-	    		<option value="solid">Solid</option>
-	    		<option value="dashed">Dashed</option>
-	    		<option value="dotted">Dotted</option>
-	    		<option value="none">None</option>
-	    	</select>
-	    </label><br>
-		<label> Select Border Width: 
-		    <select ng-options="option for option in vm.availableBorderWidth"
-		      ng-model="vm.BorderWidth"></select>
-	    </label><br>
-		<label> Select Border Radius: 
-		    <select ng-options="option for option in vm.availableBorderRadii"
-		      ng-model="vm.BorderRadius"></select>
-	    </label><br>
-		<label> Select Border Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
-	    </label><br>
-		<input type="submit" value="Create Text Field" />
-	</fieldset>
-	</form><br>
+		<main class="mdl-layout__content">
+			<div id="forms" class="page-content">
+				<!---------------------------------------- Top row buttons ---------------------------------------->
+				<div id="top-row-buttons" class="mdl-grid">
+					<!-- Add page -->
+					<button name="addPage" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+        			<i class="material-icons" role="presentation">add</i> Add Page</button>
+					<div class="divider"></div>
+					<!-- Previous page -->
+					<button name="toPreviousPage" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+        			<i class="material-icons" role="presentation">keyboard_arrow_up</i> Previous Page</button>
+					<div class="divider"></div>
+					<!-- Next page -->
+					<button name="toNextPage" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+        			<i class="material-icons" role="presentation">keyboard_arrow_down</i> Next Page</button>
+					<div class="divider"></div>
+					<!-- Preview -->
+					<button name="preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+        			Preview</button>
+					<div class="divider"></div>
+					<!-- Download PDF -->
+					<button name="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+        			<i class="material-icons" role="presentation">file_download</i> Download PDF</button>
+					<div class="divider"></div>
+					<div class="mdl-layout-spacer"></div>
+					<!-- Delete -->
+					<button id="delete-button" name="deletePage" ng-click="vm.deletePage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+       				<i class="material-icons" role="presentation">delete</i></button>
+				</div>
 
-	<form id="imageFieldCreation" name="imageFieldCreation"  style="display:none" ng-submit="vm.newElementType = '';vm.createImageField()">
-	<fieldset>
-		<legend>Create Image Field</legend>
-		<label>Image Field Name: <input type="text" name="text" ng-model="vm.imageFieldName" required="true"></label><br>
-	    <label>Opacity:
-	    <input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-	    <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
-	    </label><br>
-		<label> Select Backgroud Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
-	    </label><br>
-	    <label>Select Border Style
-	    	<select ng-model="vm.BorderStyle">
-	    		<option value="solid">Solid</option>
-	    		<option value="dashed">Dashed</option>
-	    		<option value="dotted">Dotted</option>
-	    		<option value="none">None</option>
-	    	</select>
-	    </label><br>
-		<label> Select Border Width: 
-		    <select ng-options="option for option in vm.availableBorderWidth"
-		      ng-model="vm.BorderWidth"></select>
-	    </label><br>
-		<label> Select Border Radius: 
-		    <select ng-options="option for option in vm.availableBorderRadii"
-		      ng-model="vm.BorderRadius"></select>
-	    </label><br>
-		<label> Select Border Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
-	    </label><br>
-		<input type="submit" value="Create Image Field" />
-	</fieldset>
-	</form><br>
+				<div class="mdl-grid" id="newForm-content">
+					<!---------------------------------------- Left elements card ---------------------------------------->
+					<div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
+						
+						<div class="mdl-card__actions">
+							<button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Save</button>
+						</div>
+					</div>
 
-	<form  id="signatureFieldCreation" name="signatureFieldCreation" style="display:none" ng-submit="vm.newElementType = '';vm.createSignatureField()">
-	<fieldset>
-		<legend>Create Signature Field</legend>
-		<label>Signature Field Name: <input type="text" name="text" ng-model="vm.signatureFieldName" required="true"></label><br>
-	    <label>Opacity:
-	    <input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-	    <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
-	    </label><br>
-		<label> Select Backgroud Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
-	    </label><br>
-	    <label>Select Border Style
-	    	<select ng-model="vm.BorderStyle">
-	    		<option value="solid">Solid</option>
-	    		<option value="dashed">Dashed</option>
-	    		<option value="dotted">Dotted</option>
-	    		<option value="none">None</option>
-	    	</select>
-	    </label><br>
-		<label> Select Border Width: 
-		    <select ng-options="option for option in vm.availableBorderWidth"
-		      ng-model="vm.BorderWidth"></select>
-	    </label><br>
-		<label> Select Border Radius: 
-		    <select ng-options="option for option in vm.availableBorderRadii"
-		      ng-model="vm.BorderRadius"></select>
-	    </label><br>
-		<label> Select Border Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
-	    </label><br>
-		<input type="submit" value="Create Signature Field" />
-	</fieldset>
-	</form><br>
+					<!---------------------------------------- Right canvas ---------------------------------------->
+					<div class="mdl-cell mdl-cell--3-offset mdl-cell--9-col">
 
-	<form id="imgUpload" name="imgUpload" style="display:none" ng-submit="vm.newElementType = ''; vm.addImg()">
-	<fieldset >
-		<legend>Upload image attachment</legend>
-		<label for="file" ng-hide="vm.file.base64">Select File:<br>
-		<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input maxsize="2000" accept="image/*"><br>
-		<span>maximun size: 2Mb</span>
-		</label>
-		<div ng-hide="!vm.file.base64">
-		<label>Opacity:
-	    <input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-	    <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
-	    </label><br>
-	    <label>Select Border Style
-	    	<select ng-model="vm.BorderStyle">
-	    		<option value="solid">Solid</option>
-	    		<option value="dashed">Dashed</option>
-	    		<option value="dotted">Dotted</option>
-	    		<option value="none">None</option>
-	    	</select>
-	    </label><br>
-		<label> Select Border Width: 
-		    <select ng-options="option for option in vm.availableBorderWidth"
-		      ng-model="vm.BorderWidth"></select>
-	    </label><br>
-		<label> Select Border Color: 
-		    <select ng-options="option for option in vm.colorsArray"
-		      ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
-	    </label><br>
-		<label> Select Border Radius: 
-		    <select ng-options="option for option in vm.availableBorderRadii" 
-		      ng-model="vm.BorderRadius"></select>
-	    </label><br>
-		<input type="button" ng-click="vm.file=null" value="Clear Input"><br>
-		<button ng-click="vm.newElementType='image upload'">Add Image as Attachment</button><br>
-		<label ng-show="vm.file.base64">Preview: </label><br>
-		<img ng-show="vm.file.base64" width="90%" style={{"opacity:"+vm.Opacity}} src={{'data:image/png;base64,'+vm.file.base64}} /><br>
-		</div>
-	</fieldset>
-	</form>
-</section>
-<section id="form" style="height: 1123px; width: 794px">
-	<div class="page" id="page1" ondrop="angular.element(document.getElementById('body')).scope().vm.drop(event)" ondragover="angular.element(document.getElementById('body')).scope().vm.allowDrop(event)" style="height:1123px;width:794px"><div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div></div>
-</section>
-<dialog id="previewDialog" >
-	<div id="progressBar" style="display:none" class="mdl-progress mdl-js-progress"></div>
-	<div class="dialog__actions" ng-keydown="vm.isESCDeletePreview($event)">
-		<button ng-click="vm.downloadPreview();">Download As PDF</button>
-		<button ng-click="vm.previewDeleteAll();">Close</button>
+					</div>
+				</div>
+			</div>
+		</main>
 	</div>
-	<div id="preview" class="mdl-dialog__content"></div>
-</dialog>
-</body>
+</div>
