@@ -1,4 +1,4 @@
-<div id="formBuilderBody">
+<body id="body" ng-controller="formBuilderCtrl as vm">
 <div id="pagebar">
 	<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
 	<form ng-submit="vm.goToPage()" style="display:inline"><label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label><input type="submit" value="Go"></form>
@@ -91,11 +91,11 @@
     </div>
 </div>
 <section id="sec1">
-	<input type="button" name="createLabel" value="Create Label" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')" draggable="true"><br>
-	<input type="button" name="createTextField" value="Create Text Field" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')" draggable="true"><br>
-	<input type="button" name="createImageField" value="Create Image Field" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'image field')" draggable="true"><br>
-	<input type="button" name="createSignature" value="Create Signature Field" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'signature')" draggable="true"><br>
-	<input type="button" name="createImageAttachment" value="Attach Image" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'image upload')" draggable="true"><br>
+	<input type="button" name="createLabel" value="Create Label" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'label')" draggable="true"><br>
+	<input type="button" name="createTextField" value="Create Text Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'text')" draggable="true"><br>
+	<input type="button" name="createImageField" value="Create Image Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'image field')" draggable="true"><br>
+	<input type="button" name="createSignature" value="Create Signature Field" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'signature')" draggable="true"><br>
+	<input type="button" name="createImageAttachment" value="Attach Image" ondragstart="angular.element(document.getElementById('body')).scope().vm.dragStart(event,'image upload')" draggable="true"><br>
 	<form  id="labelCreation" name="labelCreation" style="display:none" ng-submit="vm.newElementType = '';vm.createLabel()">
 	<fieldset>
 	<legend>Create Label</legend>
@@ -314,7 +314,7 @@
 	</form>
 </section>
 <section id="form" style="height: 1123px; width: 794px">
-	<div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)" ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px"><div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div></div>
+	<div class="page" id="page1" ondrop="angular.element(document.getElementById('body')).scope().vm.drop(event)" ondragover="angular.element(document.getElementById('body')).scope().vm.allowDrop(event)" style="height:1123px;width:794px"><div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div></div>
 </section>
 <dialog id="previewDialog" >
 	<div id="progressBar" style="display:none" class="mdl-progress mdl-js-progress"></div>
@@ -324,4 +324,4 @@
 	</div>
 	<div id="preview" class="mdl-dialog__content"></div>
 </dialog>
-</div>
+</body>

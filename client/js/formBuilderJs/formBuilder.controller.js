@@ -7,7 +7,6 @@ angular
 		'$rootScope', 
 		'$q',
 		'$compile',
-		'$timeout',
 		'pdfFactory',
 		'ngProgressFactory',
 		'formBuilderFactory',
@@ -20,21 +19,9 @@ function formBuilderCtrl(
 	$rootScope, 
 	$q, 
 	$compile,
-	$timeout,
 	pdfFactory,
 	ngProgressFactory,
 	formBuilderFactory){
-        var viewContentLoaded = $q.defer();
-        $scope.$on('$viewContentLoaded', function () {
-            $timeout(function () {
-                viewContentLoaded.resolve();
-            }, 0);
-        });
-        viewContentLoaded.promise.then(function () {
-            $timeout(function () {
-                componentHandler.upgradeDom();
-            }, 0);
-        });
 	//initialization
 	var vm = this;
 	vm.progressbar = ngProgressFactory.createInstance();
@@ -85,7 +72,7 @@ function formBuilderCtrl(
 	var imgUpload=document.getElementById("imgUpload");
 	var newElementPosition = {x:0,y:0};
 	var form=document.getElementById("form");
-	var formBuilderBody=document.getElementById("formBuilderBody");
+	var body=document.getElementById("body");
 	var progressBar = document.getElementById("progressBar");
 	var previewDialog = document.getElementById("previewDialog");
 	vm.previewDialog = previewDialog;
@@ -318,8 +305,8 @@ function formBuilderCtrl(
 			newPage.appendChild(whiteDiv.cloneNode(true));
 			newPage.setAttribute("id","page"+(vm.currentPageNumber+1));
 			newPage.setAttribute("class","page");
-			newPage.setAttribute("ondrop","angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-			newPage.setAttribute("ondragover","angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
+			newPage.setAttribute("ondrop","angular.element(document.getElementById('body')).scope().vm.drop(event)");
+			newPage.setAttribute("ondragover","angular.element(document.getElementById('body')).scope().vm.allowDrop(event)");
 			currentPage.style.display="none";
 			newPage.style.display="block";
 			form.appendChild(newPage);
