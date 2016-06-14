@@ -17,26 +17,48 @@ angular
 
         /* =========================================== Login =========================================== */
         // If invalid username/password, show feedback message. Else, hide. Auth API here.
+        
+        $scope.login = function (email,pwd) {
+            
+        }    
+
         $scope.isInvalid = false;
 
         // Checks if input is empty. If empty, show feedback. Else, hide.
         $scope.checkRequired = function () {
-            var usr = $scope.username;
-            var pwd = $scope.password;
 
-            $scope.isEmpty = (!checkIsEmpty(usr) || !checkIsEmpty(pwd));
-            var redirect = (!$scope.isInvalid && !$scope.isEmpty);
-            if (redirect) {
-                // Redirect to forms page
-                $state.go('forms');
+            if (!$scope.isInvalid && (!checkIsEmpty($scope.username) && !checkIsEmpty($scope.password) && checkIsValidEmail($scope.username))){
+                //Start login
+                var email = $scope.username;
+                var pwd = $scope.password;
+                var baseURL = 'http://localhost:8080/api/userauth';
+                $http.post(baseURL, {
+                    email: email,
+                    password: pwd
+                }) .then(function SuccessCallback(res){
+                    $state.go('forms');
+                    //To see the msg do console.log(res)
+                    console.log(res);
+                    //TODO: What to do when email is sent?
+                },function ErrorCallback(err){
+                    //To see the msg do console.log(err)
+                    console.log(err);
+                    //TODO: What to do when call is not successful
+                });
+                    // Redirect to forms page
+                    //$state.go('forms');
+            }
+            else{
+                //TODO: if inputs are not valid how?
             }
         };
 
+
         var checkIsEmpty = function(str) {
             if(str != null && str!= undefined && str.length >= 1) {
-                return true;
+                return false;
             }
-            else return false;
+            else return true;
         };
 
         var checkIsValidEmail = function(str){
@@ -81,8 +103,8 @@ angular
             //         $scope.isUsernameConfirmed = false;
             //     }
             // }
-            }
-        };        
+        };
+    
 
         /* =========================================== Dialog =========================================== */
         $scope.openDialog = function (dialogName) {
