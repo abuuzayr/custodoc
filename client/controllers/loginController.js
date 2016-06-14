@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("loginCtrl", ['$scope', '$q', '$location', '$timeout', '$state', function ($scope, $q, $location, $timeout, $state) {
+    .controller("loginCtrl", ['$http','$scope', '$q', '$location', '$timeout', '$state', function ($scope, $q, $location, $timeout, $state, $http) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
 
@@ -31,7 +31,7 @@ angular
                 $state.go('forms');
             }
         };
-        
+
         var checkIsEmpty = function(str) {
             if(str != null && str!= undefined && str.length >= 1) {
                 return true;
@@ -39,17 +39,30 @@ angular
             else return false;
         };
 
+        var checkIsValidEmail = function(str){
+            var emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return emailPattern.test(str);
+        };
+
+        /* ===========================================    HTTP CALLS   =========================================== */
+
         /* =========================================== Forgot password =========================================== */
         // Set isUsernameConfirmed to null to hide feedback messages.
         $scope.isUsernameConfirmed = null;
         
         // API here. Retrieve user's email.
-        $scope.email = 'hello@example.com'
+        $scope.email = '';
         
         // Check if username is valid.
-        $scope.checkUserValid = function () {
-            var usr = $scope.forgotUser;
+        $scope.checkUserValid = function ($http) {
+            if(!checkIsValidEmail($scope.forgotUser))
+                 $scope.isUsernameConfirmed = false;
+
+
+            $http.get('localhost:8080/api/user/forget_password'+email)
+            var email = $scope.forgotUser;
             // Checking API here.
+            
             if (true) { // TODO: stub
                 $scope.isUsernameConfirmed = true;
             } else {
