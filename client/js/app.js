@@ -15,6 +15,12 @@ angular
                 controller: 'newEntryCtrl',
                 controllerAs: 'newEntry'
             })
+            .state('users', {
+                url: '/users',
+                templateUrl: 'views/users.html',
+                controller: 'usersCtrl',
+                controllerAs: 'users'
+            })
             .state('entries', {
                 url: '/entries',
                 templateUrl: 'views/entries.html',
@@ -36,6 +42,12 @@ angular
             .state('formBuilder', {
                 url: '/formBuilder',
                 templateUrl: 'views/formBuilder.html',
+                controller: 'formBuilderCtrl',
+                controllerAs: 'vm'
+            })
+            .state('formBuilderBase', {
+                url: '/formBuilderBase',
+                templateUrl: 'views/FBBase.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
             })

@@ -55,7 +55,7 @@ angular
             } else {
                 $scope.isUsernameConfirmed = false;
             }
-        }
+        };
 
         /* =========================================== Dialog =========================================== */
         $scope.openDialog = function (dialogName) {

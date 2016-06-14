@@ -1,6 +1,6 @@
 angular
     .module("user-interface")
-    .controller("autofillCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
+    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
         $scope.$on('$viewContentLoaded', function () {
@@ -16,26 +16,23 @@ angular
 
         /* =========================================== UI grid =========================================== */
         $scope.gridOptions = {}
-        $scope.gridOptions.enableHorizontalScrollbar = 1;
+        $scope.gridOptions.enableHorizontalScrollbar = 0;
         $scope.gridOptions.enableVerticalScrollbar = 1;
         $scope.gridOptions.columnDefs = [{
-            name: 'name',
-            displayName: 'Name'
+            name: 'username',
+            displayName: 'Username'
         }, {
-                name: 'gender',
-                displayName: 'Gender',
-            }, {
-                name: 'dateOfBirth',
-                displayName: 'Date of Birth',
-            }, {
-                name: 'nric',
-                displayName: 'NRIC'
-            }, {
-                name: 'contact',
-                displayName: 'Contact',
+                name: 'name',
+                displayName: 'Name',
             }, {
                 name: 'email',
-                displayName: 'Email'
+                displayName: 'Email',
+            }, {
+                name: 'contact',
+                displayName: 'Contact'
+            }, {
+                name: 'accessType',
+                displayName: 'Access Type',
             }];
 
         /* =========================================== Data stubs =========================================== */
