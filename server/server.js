@@ -20,8 +20,11 @@ app.use( function(req, res, next) {
   next();
 });
 // Connect all our routes to our application
+app.use(express.static(__dirname + '/../client/autofill'));
+app.use('/static',express.static(__dirname + '/../client/autofill'));
+
 app.use('/api', routes);
-app.use('*',http404.notFoundMiddleware);
+//app.use('*',http404.notFoundMiddleware);
 // Open one database connection
 // one connection handles all request
 MongoClient.connectAsync(config.dbURL)
@@ -30,7 +33,8 @@ MongoClient.connectAsync(config.dbURL)
 
 		app.listen(config.port,function(){
 			console.log('Express server listening on port '+ config.port);
-			console.log('env = ' + app.get('env') + 
+			console.log('env = ' + app
+				.get('env') + 
 				'\n__dirname = ' + __dirname + 
 				'\nprocess.cwd = ' + process.cwd());
 		});

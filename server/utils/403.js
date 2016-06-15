@@ -1,4 +1,6 @@
-//403 stands for request forbidden. 
+//Include autentication module, 
+//access level verification module,
+//and 403 ACCESS FORBIDDEN handler.
 module.exports = function(){
 
 	var service = {
@@ -10,19 +12,22 @@ module.exports = function(){
 
 	function authenticateToken(req,res,next){
 		var config = require('../config.js');
-		var jwt = require('jsonwebtoken');
+		var Promise = require('bluebird');
+		var jwtVerifyAsync = Promise.promisify(jwt.verify);
 		var token = req.headers['x-access-token'];
 
-		if(!token) send403(req,res,"No token provided");
-		else{
-				jwt.verify(token,config.secret,function(err,decoded){
-				if(err) send403(req,res,"Failed to authenticate token: " + err);
-				else{
+		if(!token) 
+			send403(req,res,"No token provided");
+		
+			jwtVerifyAsync(token,config.secret)
+				.then(function(decoded){
 					req.decoded = decoded;
 					next();
-				}
-			});
-		}
+				})
+				.catch(function(err){
+					send403(req,res,"Authentication failed: " + err );
+				});
+		
 	}
 
 	function verifyAccess(req,res,next){
