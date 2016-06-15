@@ -31,13 +31,98 @@
 					<div class="mdl-layout-spacer"></div>
 					<!-- Delete -->
 					<button id="delete-button" name="deletePage" ng-click="vm.deletePage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-       				<i class="material-icons" role="presentation">delete</i></button>
+       				<i class="material-icons" role="presentation">delete</i> Delete Page</button>
 				</div>
 
 				<div class="mdl-grid" id="newForm-content">
+					<!---------------------------------------- Top elements card ---------------------------------------->
+					<div id="toolbar" >
+						<div class="mdl-tabs mdl-js-tabs">
+							<div class="mdl-tabs__tab-bar">
+								<a id="borderPanel" href="#border-panel" class="mdl-tabs__tab is-active">Border</a>
+								<a id="fontPanel" href="#font-panel" class="mdl-tabs__tab">Font</a>
+								<a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
+								<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
+								<div class="mdl-layout-spacer"></div>
+								<!-- Hide Toolbar -->
+								<button name="hide" id="hideToolbar" ng-click="vm.hideToolbar()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+       							Hide</button>
+							</div>
+							<div class="mdl-tabs__panel is-active" id="border-panel">
+								<label>Border Style:
+		    						<select id="editBorderStyle" ng-model="vm.element.style.borderStyle">
+		    							<option value="solid">Solid</option>
+		    							<option value="dashed">Dashed</option>
+		    							<option value="dotted">Dotted</option>
+		    							<option value="none">None</option>
+		    						</select>
+		    					</label>
+								<label>Border Width:
+								<select id="editBorderWidth" ng-model="vm.element.style.borderWidth">
+									<option ng-repeat="option in vm.availableBorderWidth" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+								<label>Border Radius:
+								<select id="editBorderRadius" ng-model="vm.element.style.borderRadius">
+									<option ng-repeat="option in vm.availableBorderRadii" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+								<label>Border Color:
+								<select id="editBorderColor" ng-model="vm.element.style.borderColor" style={{"color:"+vm.element.style.borderColor}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+							</div>
+							<div class="mdl-tabs__panel" id="font-panel">
+								<label>Font Size:
+								<select id="editFontSize" ng-model="vm.element.style.fontSize">
+									<option ng-repeat="option in vm.availableFontsizes" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+								<label>Font Type:
+								<select id="editFontFamily" ng-model="vm.element.style.fontFamily" style={{"font-family:"+vm.element.style.fontFamily}}>
+									<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+								<label>Font Color:
+								<select id="editFontColor" ng-model="vm.element.style.color" style={{"color:"+vm.element.style.color}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+								<label>Text Decoration:
+								<select id="editTextDecoration" ng-model="vm.element.style.textDecoration">
+									<option value="none">None</option>
+									<option value="overline">Overline</option>
+									<option value="line-through">Line-through</option>
+									<option value="underline">Underline</option>
+								</select>
+								</label>
+							</div>
+							<div class="mdl-tabs__panel" id="background-panel">
+								<label id="editBackgroundColorLabel">Background Color:
+								<select id="editBackgroundColor"
+								ng-model="vm.element.style.backgroundColor" style={{"background-color:"+vm.element.style.backgroundColor}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+							</label>
+								<label>Opacity:
+								<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
+								</label>
+							</div>
+							<div class="mdl-tabs__panel" id="content-panel">
+								<label>Content:
+	    						<textarea rows="3"  id="editContent" ng-model="vm.element.innerHTML"></textarea>
+	    						</label>
+								<label id="editRequiredLabel"><input id="editRequired" type="checkbox" ng-model="vm.element.required"> Required field?</label>
+								<!-- Delete element -->
+								<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+								<i class="material-icons" role="presentation">delete</i> Delete Element</button>
+							</div>
+						</div>
+					</div>
 					<!---------------------------------------- Left elements card ---------------------------------------->
 					<div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
-						
+
 						<div class="mdl-card__actions">
 							<button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Save</button>
 						</div>
