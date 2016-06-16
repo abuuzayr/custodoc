@@ -84,22 +84,41 @@ autofill.route('/:record_id')
 				});
 		})
 	})
-	//TODO: verify promise
-	.put(function(req,res){
+
+	.delete(function(req,res){
 		connection.Do(function(db){
 			var id = config.ObjectId(req.params.record_id);
 			db.collection('autofill')
+				.findOneAndDelete({_id:id})
+				.then(function(result){
+					console.log(result)
+					res.send(200).send(result);
+				})
+				.catch(function(err){
+					return res.status(400).send(err);
+				})
+		});
+	})
+
+
+	//TODO: verify promise
+	.put(function(req,res){
+		connection.Do(function(db){
+			var recordData = req.body;
+			recordData._id = config.ObjectId(req.params.record_id);
+
+			db.collection('autofill')
 			.findOneAndUpdate(
 			{
-				_id: id
+				_id: recordData._id
 			},
-			req.body.recordData,
+			recordData,
 			{
 				upsert:true,
 				returnOriginal:false
 			})
 			.then(function(newDoc){
-				return res.status(200).send('Records updated:' + docs);
+				return res.status(200).send('Records updated:' + newDoc.value);
 			})
 			.catch(function(err){
 				console.log(err);
@@ -142,18 +161,15 @@ autofill.route('/')
 	.delete(function(req,res){
 		connection.Do(function(db){
 			var id_arr = req.query.id;
-			// console.log(req.query);
-			// console.log(req.params);
-			// console.log(req.body);
 			for(var i = 0 ; i < id_arr.length ; i++){
 				id_arr[i] = config.ObjectId(id_arr[i]);
 			}
-			// db.collection('autofill').remove({_id:{$in:id_arr}});
+
 			// res.status(200).send('success');	
 			db.collection('autofill')
 				.deleteMany({_id:{$in:id_arr}})
 				.then(function(results){
-					res.status(200).send('success: ' + results + 'documents removed');	
+					res.status(200).send('success: ' + results.n + 'documents removed');	
 				})
 				.catch(function(err){
 					return res.status(400).send(err);
