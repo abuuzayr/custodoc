@@ -15,8 +15,9 @@
 
 #toolbar{
 	border: 2px solid lightslategrey;
-	width: 95%;
-	height: 123px;
+	width: 96%;
+	height: 30%; 
+	margin: 2%;
 }
 
 #form{
@@ -63,3 +64,31 @@
 	vertical-align: middle;
 }
 
+#newElement-panel {
+	padding: 10px;
+}
+
+#newElement-panel button {
+	width: 80%;
+}
+
+#hidden-pagebar {
+	padding: 5px;
+	text-align: center;
+}
+
+#labelCreation textarea, #labelCreation select, #labelCreation #editOpacity,
+#textFieldCreation #textFieldName, #textFieldCreation select, #textFieldCreation #editOpacity,
+#imageFieldCreation #imageFieldName, #imageFieldCreation #editOpacity {
+	width: 80%;
+	border: 1px solid grey;
+	-ms-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing:content-box; 
+	box-sizing:content-box;
+}
+
+#label, #text {
+	height: auto;
+	width: 60%;
+}

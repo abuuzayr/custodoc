@@ -6,28 +6,26 @@
                     <h2 class="mdl-card__title-text">BulletForms Login</h2>
                 </div>
                 <div class="mdl-card__supporting-text">
-                    <div id="fail-feedback-message" ng-if="isEmpty">
-                        <p>Please enter username and password.</p>
-                    </div>
-                    <div id="fail-feedback-message" ng-if="isInvalid">
-                        <p>Invalid username or password.</p>
+                    <!-- Feedback message -->
+                    <div class="fail-feedback-message" ng-bind="vm.loginFeedbackMessage">
+                        <p>{{ vm.loginFeedbackMessage }}</p>
                     </div>
                     <!-- Redirect to auth here @ action -->
                     <form id="login-form" action="#">
-                        <!-- Username input -->
+                        <!-- Email input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input ng-model="username" class="mdl-textfield__input" type="text" />
-                            <label class="mdl-textfield__label" for="username">Username</label>
+                            <input ng-model="vm.email" class="mdl-textfield__input" type="text" />
+                            <label class="mdl-textfield__label" for="vm.email">Email</label>
                         </div>
                         <br>
                         <!-- Password input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input ng-model="password" class="mdl-textfield__input" type="password" />
-                            <label class="mdl-textfield__label" for="password">Password</label>
+                            <input ng-model="vm.password" class="mdl-textfield__input" type="password" />
+                            <label class="mdl-textfield__label" for="vm.password">Password</label>
                         </div>
                         <!-- Login button -->
                         <div class="mdl-card__actions">
-                            <button id="login-button" type="submit" ng-click="checkRequired()" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                            <button id="login-button" type="submit" ng-click="vm.login()" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
                         Log in
                         </button>
                         </div>
@@ -39,7 +37,7 @@
                     <!-- Forgot password dialog -->
                     <dialog id="forgot-password-dialog" class="mdl-dialog">
                         <div class="mdl-dialog__content">
-                            <div class="forgot-password-email-sent" ng-if="isUsernameConfirmed === true">
+                            <div class="success-feedback-message" ng-if="isUsernameConfirmed === true">
                                 <p>Your new auto-generated password is being sent to {{ email }}.</p>
                             </div>
                             <div id="fail-feedback-message" ng-if="isUsernameConfirmed === false">
