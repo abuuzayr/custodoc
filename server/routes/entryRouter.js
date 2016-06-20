@@ -8,6 +8,8 @@ var url = 'mongodb://localhost:27017/custodoc';
 var entryRouter = express.Router();
 
 entryRouter.route('/')
+
+	// display all entries in the database
 	.get(function(req,res,next){
 		MongoClient.connect(url, function (err, db){
 			assert.equal(null,err);
@@ -21,6 +23,7 @@ entryRouter.route('/')
 		});
 	})
 
+	// updating an entry
 	.put(function(req,res,next){
 		MongoClient.connect(url, function (err, db){
 			assert.equal(null, err);
@@ -42,35 +45,45 @@ entryRouter.route('/')
 		});
 	})
 
+	// creating an entry
 	.post(function(req,res,next){
 		MongoClient.connect(url, function (err, db){
 			assert.equal(null, err);
 			console.log("Connected correctly to server");
 			var coll = db.collection("entries");
-			var formName = req.body.formName;
-			coll.findOne({formName: formName}, function(err, item) {
+			var formDb = db.collection("forms");  
+			var groupName = req.body.groupName;
+			coll.findOne({groupName: groupName}, function(err, item) {
 				assert.equal(null, err);
 				if(item){
 					res.send("Existed");
 					db.close();
 				} else{
-					var entryData={
-						formName: formName,
-						creationDate:Date(),
-						lastModified:Date()
-					}
-					coll.insert(entryData, function(err, result) {
-						assert.equal(err, null);
-						console.log("Created new form");
-						db.close();
-					});
+					formDb.findOne({groupName: groupName}, function(err, data) {
+						assert.equal(null, err);
+						
+						var entryData={
+							groupName     : groupName,
+							formName      : data.formName,
+							elements      : data.elements,
+							numberOfPages : data.numberOfPages,
+							creationDate  : Date(),
+							lastModified  : Date()
+						}
+						coll.insert(entryData, function(err, result) {
+							assert.equal(err, null);
+							console.log("Created new form");
+							db.close();
+						});
 
-					res.send(entryData);
+						res.send(entryData);
+					});
 				}
 			});
 		});
 	})
 	
+	// deleting an entry
 	.delete(function(req,res){
 		MongoClient.connect(url, function(err, db){
 			assert.equal(null, err);
