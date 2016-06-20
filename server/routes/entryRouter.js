@@ -45,7 +45,7 @@ entryRouter.route('/')
 		});
 	})
 
-	// creating an entry
+	// creating an entry by specifying the group name that contains the forms that are to be filled by user
 	.post(function(req,res,next){
 		MongoClient.connect(url, function (err, db){
 			assert.equal(null, err);
@@ -53,7 +53,7 @@ entryRouter.route('/')
 			var coll = db.collection("entries");
 			var formDb = db.collection("forms");  
 			var groupName = req.body.groupName;
-			formDb.find({groupName: groupName}, function(err, data){
+			formDb.findOne({groupName: groupName}, function(err, data){
 				assert.equal(null, err);
 						
 				var entryData={
