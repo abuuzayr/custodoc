@@ -31,7 +31,7 @@ entryRouter.route('/')
 			var coll = db.collection("entries");
 			//var formData = req.body.formData;
 			coll.updateOne(
-				{"formName" : req.body.formName},
+				{"groupName" : req.body.groupName},
 				{
 					$set: {
 						"lastModified": Date()
@@ -39,7 +39,7 @@ entryRouter.route('/')
 				},function(err,result){
 					assert.equal(err, null);
 					console.log("Updated the form");
-					res.send('Saved the form' + req.body.formName);
+					res.send('Saved the form' + req.body.groupName);
 					db.close();
 				});
 		});
@@ -53,32 +53,24 @@ entryRouter.route('/')
 			var coll = db.collection("entries");
 			var formDb = db.collection("forms");  
 			var groupName = req.body.groupName;
-			coll.findOne({groupName: groupName}, function(err, item) {
+			formDb.find({groupName: groupName}, function(err, data){
 				assert.equal(null, err);
-				if(item){
-					res.send("Existed");
-					db.close();
-				} else{
-					formDb.findOne({groupName: groupName}, function(err, data) {
-						assert.equal(null, err);
 						
-						var entryData={
-							groupName     : groupName,
-							formName      : data.formName,
-							elements      : data.elements,
-							numberOfPages : data.numberOfPages,
-							creationDate  : Date(),
-							lastModified  : Date()
-						}
-						coll.insert(entryData, function(err, result) {
-							assert.equal(err, null);
-							console.log("Created new form");
-							db.close();
-						});
-
-						res.send(entryData);
-					});
+				var entryData={
+					groupName     : groupName,
+					formName      : data.formName,
+					elements      : data.elements,
+					numberOfPages : data.numberOfPages,
+					creationDate  : Date(),
+					lastModified  : Date()
 				}
+				coll.insert(entryData, function(err, result) {
+					assert.equal(err, null);
+					console.log("Created new form");
+					db.close();
+				});
+
+				res.send(entryData);
 			});
 		});
 	})
@@ -89,9 +81,10 @@ entryRouter.route('/')
 			assert.equal(null, err);
 			console.log("Connected correctly to server");
 			var coll = db.collection("entries");
-			coll.remove({formName: req.body.formName}, function(err) {
+			coll.remove({groupName: req.body.groupName}, function(err) {
 				assert.equal(null, err);
-				res.send("Deleted entry: " + req.body.formName);
+				res.send("Deleted entry: " + req.body.groupName);
+				console.log("Deleted entry: " + req.body.groupName);
 			});
 		});
 	});
