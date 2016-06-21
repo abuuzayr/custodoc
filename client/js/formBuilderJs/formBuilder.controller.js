@@ -476,6 +476,7 @@ function formBuilderCtrl(
 		vm.imageString = "";
 		vm.imgChosen = false;
 		vm.newElementType = "";
+		vm.allowCreate = true;
 	}
 
 	function dragStart(event, type) {
@@ -486,24 +487,7 @@ function formBuilderCtrl(
 	function drop(event) {
 		event.preventDefault();
 		if (vm.allowCreate) {
-			switch (vm.newElementType) {
-				case "label":
-					labelCreation.style.display = "block";
-					break;
-				case "text":
-					textFieldCreation.style.display = "block";
-					break;
-				case "imageField":
-					imageFieldCreation.style.display = "block";
-					break;
-				case "signature":
-					signatureFieldCreation.style.display = "block";
-					break;
-				case "image upload":
-					imgUpload.style.display = "block";
-					break;
-			}
-			// createPlaceholder();
+			createPlaceholder();
 			openDialog(vm.newElementType);
 			console.log('Open one: ' + vm.newElementType);
 		}
@@ -745,41 +729,43 @@ function formBuilderCtrl(
 	}
 
 	//get the current position of mouse
-    function getCrossBrowserElementCoords(mouseEvent) {
+	//get the current position of mouse
+    function getCrossBrowserElementCoords(mouseEvent){
 		var result = {
 			x: 0,
 			y: 0
 		};
 
-		if (!mouseEvent) {
+		if (!mouseEvent){
 			mouseEvent = window.event;
 		}
 
-		if (mouseEvent.pageX || mouseEvent.pageY) {
+		if (mouseEvent.pageX || mouseEvent.pageY){
 			result.x = mouseEvent.pageX;
 			result.y = mouseEvent.pageY;
 		}
-		else if (mouseEvent.clientX || mouseEvent.clientY) {
+		else if (mouseEvent.clientX || mouseEvent.clientY){
 			result.x = mouseEvent.clientX + document.body.scrollLeft +
-				document.documentElement.scrollLeft;
+			document.documentElement.scrollLeft;
 			result.y = mouseEvent.clientY + document.body.scrollTop +
-				document.documentElement.scrollTop;
+			document.documentElement.scrollTop;
 		}
 
-		if (mouseEvent.target) {
+		if (mouseEvent.target){
 			var offEl = mouseEvent.target;
 			var offX = 0;
 			var offY = 0;
-
-			if (typeof (offEl.offsetParent) != "undefined") {
-				while (offEl) {
-					offX += offEl.offsetLeft;
-					offY += offEl.offsetTop;
-
-					offEl = offEl.offsetParent;
+			if(!offEl.getAttribute('id').startsWith('page')){
+				offEl = offEl.parentElement;
+			}
+			if (typeof(offEl.offsetParent) != "undefined"){
+				while (offEl){
+				    offX += offEl.offsetLeft;
+				    offY += offEl.offsetTop;
+				    offEl = offEl.offsetParent;
 				}
 			}
-			else {
+			else{
 				offX = offEl.x;
 				offY = offEl.y;
 			}
@@ -790,6 +776,7 @@ function formBuilderCtrl(
 
 		return result;
     }
+
     var viewContentLoaded = $q.defer();
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function () {
@@ -814,10 +801,12 @@ function formBuilderCtrl(
     };
 
     function closeDialog() {
+    	if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
 		console.log('Enter close function: ' + vm.newElementType);
         var dialog = document.querySelector('#' + vm.newElementType);
         dialog.close();
 		console.log('Close one: ' + vm.newElementType);
+		reset();
 	};
 
 	// TODO

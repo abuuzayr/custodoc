@@ -132,7 +132,7 @@
 			</div>
 			<!---------------------------------------- Create label ---------------------------------------->
 			<dialog id="label" class="mdl-dialog">
-				<form novalidate id="labelCreation" name="labelCreation" style="display:none" ng-submit="vm.closeDialog();vm.createPlaceholder();vm.newElementType = '';vm.createLabel();">
+				<form novalidate id="labelCreation" name="labelCreation" ng-submit="vm.closeDialog();vm.createPlaceholder();vm.newElementType = '';vm.createLabel();">
 					<div class="mdl-dialog__content mdl-grid">
 					<div class="mdl-cell mdl-cell--6-col">
 					<legend><h4>Create Label</h4></legend>
@@ -189,7 +189,7 @@
 		</label><br>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
 					<!-- Dialog cancel button here HELLO -->
-					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog();vm.reset();">Cancel</button>
+					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()">Cancel</button>
 					<div class="mdl-layout-spacer"></div>
 					<button type="submit" value="Create Label" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create label</button>
 					</div>
@@ -199,7 +199,7 @@
 			</dialog>
 			<!---------------------------------------- Create text field ---------------------------------------->
 			<dialog id="text" class="mdl-dialog">
-			<form id="textFieldCreation" name="textFieldCreation" style="display:none" ng-submit="vm.closeDialog();vm.createPlaceholder();vm.newElementType = ''; vm.createTextField();vm.createLabel();">
+			<form id="textFieldCreation" name="textFieldCreation" ng-submit="vm.closeDialog();vm.createPlaceholder();vm.newElementType = ''; vm.createTextField();vm.createLabel();">
 				<div class="mdl-dialog__content mdl-grid">
 				<div class="mdl-cell mdl-cell--6-col">
 					<legend><h4>Create Text Field</h4></legend>
@@ -247,13 +247,15 @@
 			<select ng-options="option for option in vm.colorsArray"
 			  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
 		</label><br>
+		</div>
+		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
 					<!-- Dialog cancel button here HELLO -->
-					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog();vm.reset();">Cancel</button>
+					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()">Cancel</button>
 					<div class="mdl-layout-spacer"></div>
 					<button type="submit" value="Create Text Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create text field</button>
 					</div>
-				</div>
+				
 			</form>
 			</dialog>
 			<!---------------------------------------- Create image field ---------------------------------------->
@@ -290,13 +292,14 @@
 			<select ng-options="option for option in vm.colorsArray"
 			  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}}></select>
 		</label><br>
+		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
 					<!-- Dialog cancel button here HELLO -->
-					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog();reset();">Cancel</button>
+					<button id="cancel" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()">Cancel</button>
 					<div class="mdl-layout-spacer"></div>
 					<button type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create image field</button>
 					</div>
-				</div>
+				
 			</form>
 			</dialog>
 			<!---------------------------------------- Create signature field ---------------------------------------->
