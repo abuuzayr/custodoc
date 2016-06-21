@@ -17,6 +17,7 @@ entryRouter.route('/')
 			var coll = db.collection("entries");
 			coll.find().toArray(function(err, documents){
 				assert.equal(null,err);
+				console.log(JSON.stringify(documents));
 				res.send(documents);
 				db.close();
 			});
@@ -51,27 +52,43 @@ entryRouter.route('/')
 			assert.equal(null, err);
 			console.log("Connected correctly to server");
 			var coll = db.collection("entries");
-			var formDb = db.collection("forms");  
+			var formDb = db.collection("forms"); 
 			var groupName = req.body.groupName;
+			console.log(formDb);
+			var entryData={
+				groupName     : groupName,	
+				creationDate  : Date(),
+				lastModified  : Date()
+			};
+
 			formDb.findOne({groupName: groupName}, function(err, data){
 				assert.equal(null, err);
-						
-				var entryData={
-					groupName     : groupName,
-					formName      : data.formName,
-					elements      : data.elements,
-					numberOfPages : data.numberOfPages,
-					creationDate  : Date(),
-					lastModified  : Date()
+				console.log('wat here ' +data);
+				var key;
+				var elements = data.elements;
+				
+				console.log(data.formName);	
+				for (key in elements) {
+					var element = elements[key];
+					console.log("did i come here?");	
+					if (element.name.startsWith('text_')) {
+						var index = element.name.indexOf('_');
+						var fieldName = element.name.substring(index + 1, element.name.length);
+					//	if (fieldName == 	
+						entryData.fieldName = req.body.fieldName;
+						console.log(entryData.fieldName);
+					}
 				}
+
 				coll.insert(entryData, function(err, result) {
 					assert.equal(err, null);
+					console.log("entryData: " + JSON.stringify(entryData));
 					console.log("Created new form");
+					res.send(entryData);
 					db.close();
 				});
-
-				res.send(entryData);
 			});
+
 		});
 	})
 	
