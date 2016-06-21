@@ -1,25 +1,25 @@
 var express = require('express');
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
+//var morgan = require('morgan');
+//var bodyParser = require('body-parser');
+var url = 'mongodb://localhost:27017/custodoc';
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var url = 'mongodb://localhost:27017/custodoc';
-
+// var connection = require('./connection.js')();
 var entryRouter = express.Router();
-
 entryRouter.route('/')
-
+	
 	// display all entries in the database
 	.get(function(req,res,next){
-		MongoClient.connect(url, function (err, db){
-			assert.equal(null,err);
-			console.log("Connected correctly to server");
-			var coll = db.collection("entries");
-			coll.find().toArray(function(err, documents){
+		connection.Do(function(db){
+			// MongoClient.connect(url, function (err, db){
+			// 	assert.equal(null,err);
+			// 	console.log("Connected correctly to server");
+			//var coll = db.collection("entries");
+			db.collection("entries").find().toArray(function(err, documents){
 				assert.equal(null,err);
 				console.log(JSON.stringify(documents));
 				res.send(documents);
-				db.close();
+				//db.close();
 			});
 		});
 	})
