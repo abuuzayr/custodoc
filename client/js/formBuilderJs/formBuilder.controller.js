@@ -639,8 +639,8 @@ function formBuilderCtrl(
 		newElement.style.left = newElementPosition.x + "px";
 		newElement.style.top = newElementPosition.y + "px";
 		newElement.style.opacity = vm.Opacity;
-		currentPage.removeChild(placeholder);
 		currentPage.appendChild(newElement);
+		vm.closeDialog();
 	}
 
 	function addImg() {
@@ -652,13 +652,11 @@ function formBuilderCtrl(
 		img.setAttribute("id", "background_" + i);
 		img.setAttribute("name", "background_" + i);
 		elements["background_" + i] = {};
-		setNewElement(img);
 		vm.imageString = 'data:image/png;base64,' + vm.file.base64;
 		img.setAttribute("src", vm.imageString);
-		imgUpload.style.display = "none";
 		img.style.zIndex = "2";
 		vm.file = null;
-		reset();
+		setNewElement(img);
 	}
 
 	function createTextField() {
@@ -672,10 +670,7 @@ function formBuilderCtrl(
 			textarea.setAttribute("name", "text_" + vm.textFieldName);
 			textarea.setAttribute("id", "text_" + vm.textFieldName);
 			setNewElement(textarea);
-			console.log(elements);
 		}
-		textFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createImageField() {
@@ -691,8 +686,6 @@ function formBuilderCtrl(
 			setNewElement(image);
 			console.log(elements);
 		}
-		imageFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createSignatureField() {
@@ -708,8 +701,6 @@ function formBuilderCtrl(
 			setNewElement(image);
 			console.log(elements);
 		}
-		signatureFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createLabel() {
@@ -722,10 +713,8 @@ function formBuilderCtrl(
 		label.setAttribute("name", "label_" + i);
 		elements["label_" + i] = {};
 		label.style.whiteSpace = "pre-wrap";
-		setNewElement(label);
 		label.innerHTML = vm.labelContent;
-		labelCreation.style.display = "none";
-		reset();
+		setNewElement(label);
 	}
 
 	//get the current position of mouse
