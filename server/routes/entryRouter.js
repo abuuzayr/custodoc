@@ -56,7 +56,7 @@ entryRouter.route('/')
 			// var coll = db.collection("entries");
 			// var formDb = db.collection("forms"); 
 			//console.log(formDb);
-			var groupName = req.body.groupName;
+			var groupName=req.body.groupName;
 			var entryData={
 				groupName     : groupName,	
 				creationDate  : Date(),
@@ -67,33 +67,48 @@ entryRouter.route('/')
 
 				// assert.equal(null, err);
 				// console.log('wat here ' + data);
-			db.collection("forms").find({})
+			db.collection("forms").find({groupName: groupName})
 				.toArray()
 				.then(function(docs){
-					console.log(docs);
-	        		res.status(200).send(docs);
+					if(!docs)
+						throw new Error('no documents find')
+					else{
+						for (var i = 0; i < docs.length ; i++){
+							var data = docs[i];
+							var elements = data.elements;
+							for (key in elements) {
+							var element = elements[key];
+							if (element.name.startsWith('text_')) {
+								var index = element.name.indexOf('_');
+								var fieldName = element.name.substring(index + 1, element.name.length);
+								//TODO: check duplication
+								
+								entryData.fieldName = req.body.fieldName;
+								console.log(entryData.fieldName);
+							}
+						}
+					}	
+						console.log(entryData);
+						return db.collection("entries").insert(entryData)
+					}
+						
+				})
+				.then(function(result){
+					return res.status(200).send('saved:' + result);
 				})
 				.catch(function(err){
-					return res.status(400).send(err);
+					return res.status(400).send(''+err);
 				});
 
-			// 	var key;
-			// 	var elements = data.elements;
-			// 	console.log(data);
-			// 	console.log(elements);	
-			// 	for (key in elements) {
-			// 		var element = elements[key];
-			// 		console.log("did i come here?");	
-			// 		if (element.name.startsWith('text_')) {
-			// 			var index = element.name.indexOf('_');
-			// 			var fieldName = element.name.substring(index + 1, element.name.length);
-			// 		//	if (fieldName == 	
-			// 			entryData.fieldName = req.body.fieldName;
-			// 			console.log(entryData.fieldName);
-			// 		}
-			// 	}
+				var key;
+				
+				// console.log(data);
+				// console.log(elements);	
 
-			// db.collection("entries").insert(entryData, function(err, result) {
+
+				
+
+			// , function(err, result) {
 			// 		assert.equal(err, null);
 			// 		console.log("entryData: " + JSON.stringify(entryData));
 			// 		console.log("Created new form");
