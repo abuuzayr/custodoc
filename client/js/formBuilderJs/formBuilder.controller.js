@@ -85,8 +85,8 @@ function formBuilderCtrl(
 	vm.groupName = "test";
 	vm.formName = "test";
 
-	//white div will be attached to each page
-	var whiteDiv = formBuilderFactory.whiteDiv;
+	//page node
+	var newPageTemplate = formBuilderFactory.newPage;
 
 	var defaultWidth = 300;
 	var defaultHeight = 150;
@@ -309,73 +309,61 @@ function formBuilderCtrl(
 		}
 	}
 
-	function addPage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
+	function addPage(){
+		if(vm.allowCreate){
+			if(vm.element){
+				vm.element.style.boxShadow="none";
 			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			for (var i = vm.numberOfPages; i > vm.currentPageNumber; i--) {
-				document.getElementById("page" + i).setAttribute("id", "page" + (i + 1).toString());
+			vm.element=null;
+			toolbar.style.display="none";
+			for(var i=vm.numberOfPages; i>vm.currentPageNumber; i--){
+				document.getElementById("page"+i).setAttribute("id","page"+(i+1).toString());
 			}
-			var newPage = document.createElement("div");
-			newPage.appendChild(whiteDiv.cloneNode(true));
-			newPage.setAttribute("id", "page" + (vm.currentPageNumber + 1));
-			newPage.setAttribute("class", "page");
-			newPage.setAttribute("ondrop",
-				"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-			newPage.setAttribute("ondragover",
-				"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
-			currentPage.style.display = "none";
-			newPage.style.display = "block";
+			var newPage = newPageTemplate.cloneNode(true);
+			newPage.setAttribute("id","page"+(vm.currentPageNumber+1));
+			currentPage.style.display="none";
+			newPage.style.display="block";
 			form.appendChild(newPage);
 			vm.currentPageNumber++;
 			vm.numberOfPages++;
-			currentPage = newPage;
-			newPage = null;
+			currentPage=newPage;
+			newPage=null;
 		}
 	}
 
-	function deletePage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
+	function deletePage(){
+		if(vm.allowCreate){
+			if(vm.element){
+				vm.element.style.boxShadow="none";
 			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			if (confirm("Do you really want to delete this page?")) {
-				while (currentPage.firstChild) {
+			vm.element=null;
+			toolbar.style.display="none";
+			if(confirm("Do you really want to delete this page?")){
+				while(currentPage.firstChild){
 					delete elements[currentPage.firstChild.id];
 					currentPage.removeChild(currentPage.firstChild);
 				}
-				if (vm.numberOfPages == 1) {
-					var newPage = document.createElement("div");
-					newPage.appendChild(whiteDiv.cloneNode(true));
-					newPage.setAttribute("class", "page");
-					newPage.setAttribute("ondrop",
-						"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-					newPage.setAttribute("ondragover",
-						"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
-					newPage.style.display = "block";
+				if (vm.numberOfPages==1) {
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.style.display="block";
 					currentPage.parentNode.removeChild(currentPage);
 					form.appendChild(newPage);
-					currentPage = newPage;
-					currentPage.setAttribute("id", "page1");
-					newPage = null;
-					vm.numberOfPages = 1;
-					vm.currentPageNumber = 1;
-				} else {
+					currentPage=newPage;
+					currentPage.setAttribute("id","page1");
+					newPage=null;
+					vm.numberOfPages=1;
+					vm.currentPageNumber=1;
+				}else{
 					currentPage.parentNode.removeChild(currentPage);
-					for (var i = vm.currentPageNumber + 1; i <= vm.numberOfPages; i++) {
-						document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i - 1).toString());
+					for(var i=vm.currentPageNumber+1;i<=vm.numberOfPages;i++){
+						document.getElementById("page"+i.toString()).setAttribute("id","page"+(i-1).toString());
 					}
-					if (vm.currentPageNumber == vm.numberOfPages) {
+					if (vm.currentPageNumber==vm.numberOfPages){
 						vm.currentPageNumber--;
 					}
 					vm.numberOfPages--;
-					currentPage = document.getElementById("page" + vm.currentPageNumber.toString());
-					currentPage.style.display = "block";
+					currentPage=document.getElementById("page"+vm.currentPageNumber.toString());
+					currentPage.style.display="block";
 				}
 			}
 		}
@@ -717,7 +705,6 @@ function formBuilderCtrl(
 		setNewElement(label);
 	}
 
-	//get the current position of mouse
 	//get the current position of mouse
     function getCrossBrowserElementCoords(mouseEvent){
 		var result = {
