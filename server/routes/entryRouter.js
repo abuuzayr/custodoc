@@ -63,33 +63,44 @@ entryRouter.route('/')
 				lastModified  : Date()
 			};
 
-			db.collection("forms").findOne({groupName: groupName}, function(err, data){
-				assert.equal(null, err);
-				console.log('wat here ' + data);
-				var key;
-				var elements = data.elements;
-				
-				console.log(data.formName);	
-				for (key in elements) {
-					var element = elements[key];
-					console.log("did i come here?");	
-					if (element.name.startsWith('text_')) {
-						var index = element.name.indexOf('_');
-						var fieldName = element.name.substring(index + 1, element.name.length);
-					//	if (fieldName == 	
-						entryData.fieldName = req.body.fieldName;
-						console.log(entryData.fieldName);
-					}
-				}
+			//db.collection("forms").findOne({groupName: groupName}, function(err, data){
 
-			db.collection("entries").insert(entryData, function(err, result) {
-					assert.equal(err, null);
-					console.log("entryData: " + JSON.stringify(entryData));
-					console.log("Created new form");
-					res.send(entryData);
-					db.close();
+				// assert.equal(null, err);
+				// console.log('wat here ' + data);
+			db.collection("forms").find({})
+				.toArray()
+				.then(function(docs){
+					console.log(docs);
+	        		res.status(200).send(docs);
+				})
+				.catch(function(err){
+					return res.status(400).send(err);
 				});
-			});
+
+			// 	var key;
+			// 	var elements = data.elements;
+			// 	console.log(data);
+			// 	console.log(elements);	
+			// 	for (key in elements) {
+			// 		var element = elements[key];
+			// 		console.log("did i come here?");	
+			// 		if (element.name.startsWith('text_')) {
+			// 			var index = element.name.indexOf('_');
+			// 			var fieldName = element.name.substring(index + 1, element.name.length);
+			// 		//	if (fieldName == 	
+			// 			entryData.fieldName = req.body.fieldName;
+			// 			console.log(entryData.fieldName);
+			// 		}
+			// 	}
+
+			// db.collection("entries").insert(entryData, function(err, result) {
+			// 		assert.equal(err, null);
+			// 		console.log("entryData: " + JSON.stringify(entryData));
+			// 		console.log("Created new form");
+			// 		res.send(entryData);
+			// 		db.close();
+			// 	});
+			// });
 
 		});
 	})
