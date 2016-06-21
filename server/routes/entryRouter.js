@@ -11,27 +11,18 @@ entryRouter.route('/')
 	// display all entries in the database
 	.get(function(req,res,next){
 		connection.Do(function(db){
-			// MongoClient.connect(url, function (err, db){
-			// 	assert.equal(null,err);
-			// 	console.log("Connected correctly to server");
-			//var coll = db.collection("entries");
 			db.collection("entries").find().toArray(function(err, documents){
 				assert.equal(null,err);
 				console.log(JSON.stringify(documents));
 				res.send(documents);
-				//db.close();
 			});
 		});
 	})
-
+	/*TODO: UPDATE INCOMPLETE
 	// updating an entry
 	.put(function(req,res,next){
 		connection.Do(function(db){
-			// 	MongoClient.connect(url, function (err, db){
-			// 	assert.equal(null, err);
-			// 	console.log("Connected correctly to server");
 			var coll = db.collection("entries");
-			//var formData = req.body.formData;
 			coll.updateOne(
 				{"groupName" : req.body.groupName},
 				{
@@ -45,86 +36,39 @@ entryRouter.route('/')
 					db.close();
 				});
 		});
-	})
+	}) */
 
 	// creating an entry by specifying the group name that contains the forms that are to be filled by user
 	.post(function(req,res,next){
 		connection.Do(function(db){
-			// MongoClient.connect(url, function (err, db){
-			// 	assert.equal(null, err);
-			// console.log("Connected correctly to server");
-			// var coll = db.collection("entries");
-			// var formDb = db.collection("forms"); 
-			//console.log(formDb);
 			var groupName=req.body.groupName;
 			var entryData={
 				groupName     : groupName,	
 				creationDate  : Date(),
 				lastModified  : Date()
 			};
+			var country = 'Country';
+			console.log(req.body.country);
+			entryData[country] = req.body.country;
 
-			//db.collection("forms").findOne({groupName: groupName}, function(err, data){
-
-				// assert.equal(null, err);
-				// console.log('wat here ' + data);
-			db.collection("forms").find({groupName: groupName})
-				.toArray()
-				.then(function(docs){
-					if(!docs)
-						throw new Error('no documents find')
-					else{
-						for (var i = 0; i < docs.length ; i++){
-							var data = docs[i];
-							var elements = data.elements;
-							for (key in elements) {
-							var element = elements[key];
-							if (element.name.startsWith('text_')) {
-								var index = element.name.indexOf('_');
-								var fieldName = element.name.substring(index + 1, element.name.length);
-								//TODO: check duplication
-								
-								entryData.fieldName = req.body.fieldName;
-								console.log(entryData.fieldName);
-							}
-						}
-					}	
-						console.log(entryData);
-						return db.collection("entries").insert(entryData)
-					}
-						
-				})
-				.then(function(result){
-					return res.status(200).send('saved:' + result);
-				})
-				.catch(function(err){
-					return res.status(400).send(''+err);
-				});
-
-				var key;
-				
-				// console.log(data);
-				// console.log(elements);	
-
-
-				
-
-			// , function(err, result) {
-			// 		assert.equal(err, null);
-			// 		console.log("entryData: " + JSON.stringify(entryData));
-			// 		console.log("Created new form");
-			// 		res.send(entryData);
-			// 		db.close();
-			// 	});
-			// });
-
+			//TODO: retrieve arrayOfKeys from somewhere
+			//TODO: get the respective req.body.fieldName for each fieldName, 
+			/*for (var i=0; i<arrayOfKeys.length; i++) {
+				entryData[arrayOfKeys[i]] = req.body.fieldName;
+			}*/
+			return db.collection("entries").insert(entryData)			
+		})
+		.then(function(result){
+			return res.status(200).send('saved:' + result);
+		})
+		.catch(function(err){
+			return res.status(400).send(''+err);
 		});
 	})
 	
 	// deleting an entry
 	.delete(function(req,res){
 		connection.Do(function(db){
-		// MongoClient.connect(url, function(err, db){
-		// 	console.log("Connected correctly to server");
 			db.collection("entries").remove({groupName: req.body.groupName}, function(err) {
 				assert.equal(null, err);
 				res.send("Deleted entry: " + req.body.groupName);
@@ -132,5 +76,52 @@ entryRouter.route('/')
 			});
 		});
 	});
+
+// route that contains funtions such as retrieving keys, etc
+entryRouter.route('/functions')
+
+	// get the keys a.k.a field names from the forms database
+	.post(function(req,res,next){
+		connection.Do(function(db){
+			var groupName = req.body.groupName;
+			console.log(groupName);
+			db.collection("forms").find({groupName: groupName})
+			.toArray()
+			.then(function(docs){
+				if(docs.length == 0 || !docs)
+					throw new Error('No documents found!')
+				else{
+					console.log('wat is docs: '+docs.length);
+					var key;
+					var arrayOfKeys = [];
+					for (var i = 0; i < docs.length ; i++){
+						var data = docs[i];
+						var elements = data.elements;
+						for (key in elements) {
+							var element = elements[key];
+							if (element.name.startsWith('text_')) {
+								var index = element.name.indexOf('_');
+								var fieldName = element.name.substring(index+1, element.name.length);
+								//TODO: check duplication
+								console.log(fieldName);
+								arrayOfKeys.push(fieldName);
+							}
+						}
+					}
+					return arrayOfKeys;
+				}
+			})
+			.then(function(result){
+				console.log('did i come here ' + result);
+				res.status(200).send(result);
+			})
+			.catch(function(err){
+				return res.status(400).send(''+err);
+			});
+
+		});
+	})
 	
+	
+						
 module.exports = entryRouter;
