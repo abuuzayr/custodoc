@@ -23,37 +23,31 @@
 
 
 
-<div ng-controller="MainCtrl">
+<div ng-controller="MainCtrl as vm">
     <div>
         <!-- ========================================= Buttons =============================================== -->
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="read()" >
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.read()" >
             Reset
         </button>
 
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="importCSV()">
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.importCSV()">
             Import
         </button>
 
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="clearSelected()" ng-if="hasSelection">
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.clearSelected()" ng-if="vm.hasSelection">
             Clear Selection
         </button>
 
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="deleteSelected()" ng-if="hasSelection">
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.deleteSelected()" ng-if="vm.hasSelection">
             <i class="material-icons">delete</i>
             Delete Selected
         </button>
 
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="exportCSV()" ng-if="hasSelection">
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.vm.exportCSV()" ng-if="vm.hasSelection">
             Export
         </button>
-
-
-
-
-        
-
+    </div>
     <div>
-        <!-- ======================================== Search Bar ============================================== -->
     <form ng-submit="read()">
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
               mdl-textfield--floating-label mdl-textfield--align-right">
@@ -61,18 +55,19 @@
                 <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
-                <input class="mdl-textfield__input" type="text" name="search-bar" id="fixed-header-drawer-exp" ng-model="query">
+                <input class="mdl-textfield__input" type="text" name="search-bar" id="fixed-header-drawer-exp" ng-model="vm.query">
             </div>
         </div>
     </form>
 
-    <p>{{hasSelection}}</p>
-    <strong>{{query}}</strong>
+    <p>{{vm.hasSelection}}</p>
+    <strong>{{vm.query}}</strong>
     <br> 
-    <strong>{{ myData.length }} rows</strong>
+    <strong>{{ vm.gridOptions.data.length }} rows</strong>
     <br>
-    <div id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
+    <div id="grid1" ui-grid="vm.gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
   
+    </div>
 </div>
 
 

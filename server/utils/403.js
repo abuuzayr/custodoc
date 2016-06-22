@@ -5,6 +5,8 @@ module.exports = function(){
 
 	var service = {
 		authenticateToken: authenticateToken,
+		checkStroage: checkStroage,
+		checkExpiration: checkExpiration,
 		verifyAccess: verifyAccess, 
 		send403:send403
 	};
@@ -26,9 +28,18 @@ module.exports = function(){
 				})
 				.catch(function(err){
 					send403(req,res,"Authentication failed: " + err );
-				});
-		
+				});	
 	}
+
+	function checkStroage(req,res,next){
+		var connection = require('./connection')();
+		connection.Do(function(db){
+		})
+	}
+
+	function checkExpiration(req,res,next){
+	}
+
 
 	function verifyAccess(req,res,next){
 		var decoded = req.decoded;

@@ -1,7 +1,7 @@
 var autofill = require('express').Router();
 //import modules
 var config = require('../config.js');
-var connection = require('./connection.js')();
+var connection = require('../utils/connection.js')();
 var http404 = require('../utils/404.js')();
 
 //autofill records QUERY
@@ -9,30 +9,33 @@ autofill.get('/query/:query',function(req,res){
 	connection.Do(function(db){
 		var query = req.params.query;
     		db.collection('autofill')
-    			.find({})
-				.toArray(function(err,data){
-			        if (err) {
-			            console.log(err);
-			            return res(err);
-			        } else {
-			        	//filter based on keywords
-			        	dataArray = data;
-			        	var results = [];
-			        	query = query.trim().toLowerCase();			
-			        	for(var i = 0 ; i < dataArray.length ; i++){
-			        		for(fields in dataArray[i]){
-			        			 if(fields != '_id'){
-			        			 	if(dataArray[i][fields].toString().toLowerCase().indexOf(query)!=-1){
-			        			 		results.push(dataArray[i]);
-			        			 	}
-			        			 }
-			        		}	
-			        	}	
-			            res.send(results);
-		        }
-    		});
+			.find({})
+			.toArray()
+			.then(function(data){
+				if (!data || data.length === 0 ) {
+		            throw new Error('no data found');
+		        } else {
+		        	var results = [];
+		        	query = query.trim().toLowerCase();			
+		        	for(var i = 0 ; i < data.length ; i++){
+		        		for(fields in data[i]){
+		        			if(fields != '_id'){
+		        			 	if(data[i][fields].toString().toLowerCase().indexOf(query)!=-1){
+		        			 		results.push(data[i]);
+		        			 	}
+		        			}
+		        		}	
+		        	}	
+		            return res.send(results);
+				}
+			})
+			.catch(function(err){
+				res.send(err+'');
+			});		
+
 	});
 });
+
 //element CRUD endpoints
 autofill.route('/element')
 	.get(function(req,res){
@@ -153,7 +156,7 @@ autofill.route('/')
 				res.status(200).send('success: ' + savedDoc + 'documents removed');		
 			})
 			.catch(function(err){
-					return res.status(400).send(err);
+				return res.status(400).send(err);
 			});
 	})
 
@@ -164,7 +167,6 @@ autofill.route('/')
 			for(var i = 0 ; i < id_arr.length ; i++){
 				id_arr[i] = config.ObjectId(id_arr[i]);
 			}
-
 			// res.status(200).send('success');	
 			db.collection('autofill')
 				.deleteMany({_id:{$in:id_arr}})

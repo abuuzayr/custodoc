@@ -1,9 +1,6 @@
-//connection.js
-//Handles database connection
-
+//connection.js //Handles database connection 
 module.exports = function(){
-	return {Do: Do} ;
-
+	return {Do: Do};
 	function Do(dbOperation){
 		var db = require('../server.js').db
 		console.log("db: " + db);

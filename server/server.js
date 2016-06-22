@@ -3,8 +3,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var CookieParser = require('cookie-parser');
-var Promise = require('bluebird')
-var MongoClient = Promise.promisifyAll(require('mongodb').MongoClient);
+
+
 var app = express();
 //  Import custom modules
 var config = require('./config');
