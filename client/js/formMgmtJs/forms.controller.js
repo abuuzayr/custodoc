@@ -21,6 +21,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	vm.showNewEntry = showNewEntry;
 	vm.downloadAsOne = downloadAsOne;
 	vm.downloadSeparate = downloadSeparate;
+	vm.getTableHeight = getTableHeight;
 
 	//view controll
 
@@ -381,11 +382,11 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		vm.gridApi = gridApi;
 	};
 	vm.gridOptions.rowHeight= 30;
-    vm.getTableHeight = function() {
-       var rowHeight = 30; // your row height
-       var headerHeight = 240; // your header height
+    function getTableHeight() {
+       var rowHeight = 37; // your row height
+       var headerHeight = 170; // your header height
        return {
-          height: (vm.gridOptions.data.length * rowHeight + headerHeight) + "px"
+          height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length* rowHeight + headerHeight) + "px"
        };
     };
 	vm.gridOptions.showGridFooter = true;
@@ -395,7 +396,8 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	vm.gridOptions.enableVerticalScrollbar = 0;
 	vm.gridOptions.enableSorting = true;
 	vm.gridOptions.enableFiltering = true;
-	vm.gridOptions.paginationPageSize = 50;
+	vm.gridOptions.paginationPageSize = 10;
+	vm.gridOptions.paginationPageSizes= [ 10, 25,30,50,100,250,500,1000,5000,10000];
 	vm.gridOptions.enablePaginationControls = true;
 	vm.gridOptions.columnDefs = [
 		{

@@ -150,7 +150,7 @@ formsRouter.route('/duplicate')
 							delete newItem["_id"];
 							newItem.groupName = duplicateTo;
 							newItem.formName = duplicateName;
-							newItem.isImportant = false;
+							newItem.isImportant = 'Normal';
 							newItem.creationDate = Date();
 							newItem.lastModified = Date();
 							coll.insert(newItem, function(err, result) {
