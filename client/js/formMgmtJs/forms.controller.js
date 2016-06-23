@@ -1,8 +1,8 @@
 angular
 	.module("formsApp")
-	.controller("formsCtrl", ['$scope', '$q', '$location', '$timeout','$http','uiGridConstants','formsFactory', formsCtrl]);
+	.controller("formsCtrl", ['$scope', '$q', '$location', '$timeout','$http','uiGridConstants','formsFactory','$state', formsCtrl]);
 
-function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsFactory) {
+function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsFactory,$state) {
 	var vm = this;
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
@@ -15,6 +15,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	vm.renameGroup = renameGroup;
 	vm.renameForm = renameForm;
 	vm.duplicateForm = duplicateForm;
+	vm.showRecent = showRecent;
 	vm.showImportant = showImportant;
 	vm.setImportant = setImportant;
 	vm.setNormal = setNormal;
@@ -289,9 +290,8 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 				if(res.data==="Existed"){
 					alert("This form name already exists in the selected group.");
 				}else{
-					vm.getFormData();
+					$state.go('formBuilder', {groupName:res.data.groupName,formName:res.data.formName});
 				}
-				vm.gridApi.core.refresh();
 			});
 	}
 
@@ -382,13 +382,18 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		vm.gridApi = gridApi;
 	};
 	vm.gridOptions.rowHeight= 30;
-    function getTableHeight() {
-       var rowHeight = 37; // your row height
-       var headerHeight = 170; // your header height
-       return {
-          height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length* rowHeight + headerHeight) + "px"
-       };
-    };
+
+	vm.goEditForm=function(groupName,formName){
+		$state.go('formBuilder', {groupName:groupName,formName:formName});
+	}
+
+	function getTableHeight() {
+		 var rowHeight = 37; // your row height
+		 var headerHeight = 210; // your header height
+		 return {
+			height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length* rowHeight + headerHeight) + "px"
+		 };
+	};
 	vm.gridOptions.showGridFooter = true;
 	vm.gridOptions.enableColumnMenus = false;
 	vm.gridOptions.enableGridMenu = true;
@@ -417,9 +422,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			name: 'formName',
 			displayName: 'Form Name',
 			resizable: true,
-			cellTooltip: function( row, col ) {
-				return row.entity.formName;
-			}
+			cellTemplate:'<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
 		 },
 		 {
 			name:'isImportant',
@@ -431,6 +434,27 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			displayName: 'Creation Date',
 			type: 'date',
 			resizable: true,
+			filters: [{
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					return valueDate > termDate;
+				},
+				placeholder: 'From:'
+				
+				}, {
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					termDate.setDate(termDate.getDate() + 1);
+					return valueDate < termDate;
+				},
+				placeholder: 'To:'
+			}],
 			cellTooltip: function( row, col ) {
 				return row.entity.creationDate;
 			}
@@ -445,6 +469,27 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			name: 'lastRecord',
 			displayName: 'Last Record',
 			type: 'date',
+			filters: [{
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					return valueDate > termDate;
+				},
+				placeholder: 'From:'
+				
+				}, {
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					termDate.setDate(termDate.getDate() + 1);
+					return valueDate < termDate;
+				},
+				placeholder: 'To:'
+			}],
 			resizable: true,
 			cellTooltip: function( row, col ) {
 				return row.entity.lastRecord;
@@ -453,7 +498,29 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			name: 'lastModified',
 			displayName: 'Last Modified',
 			type: 'date',
+			cellFilter: 'date:"dd.MMM.yy"',
 			resizable: true,
+			filters: [{
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					return valueDate > termDate;
+				},
+				placeholder: 'From:'
+				
+				}, {
+				condition: function(term, value){
+					if (!term) return true;
+					var valueDate = new Date(value);
+					var replaced = term.replace(/\\/g,'');
+					var termDate = new Date(replaced);
+					termDate.setDate(termDate.getDate() + 1);
+					return valueDate < termDate;
+				},
+				placeholder: 'To:'
+			}],
 			cellTooltip: function( row, col ) {
 				return row.entity.lastModified;
 			}
@@ -468,13 +535,25 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 
 	//sorting and filtering
 
+	function showRecent(){
+		if(vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term='';
+		else{
+			var termDate = new Date();
+			termDate.setDate(termDate.getDate()-10);
+			console.log(termDate);
+			vm.gridApi.grid.columns[7].filters[0].term=termDate.toString().substring(4,15);
+		}
+	}
+
 	function showImportant(){
 		if(vm.gridApi.grid.columns[3].filters[0].term!=='Important'){
 			vm.gridApi.grid.columns[3].filters[0] = {
 				term: 'Important'
 			};
 		}else{
-			vm.gridApi.grid.clearAllFilters();
+			vm.gridApi.grid.columns[3].filters[0] = {
+					term: ''
+				};
 		}
 	}
 
@@ -486,7 +565,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	 vm.openDialog = function(dialogName) {
 	 var dialog = document.querySelector('#' + dialogName);
 	 if (! dialog.showModal) {
-	   dialogPolyfill.registerDialog(dialog);
+		 dialogPolyfill.registerDialog(dialog);
 	 }
 		 dialog.showModal();
 	 };

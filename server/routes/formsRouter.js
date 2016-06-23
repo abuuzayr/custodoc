@@ -30,7 +30,7 @@ formsRouter.route('/')
 			var coll = db.collection("forms");
 			var formData = req.body.formData;
 			coll.updateOne(
-				{"formName" : formData.formName},
+				{"formName" : formData.formName, "groupName":formData.groupName},
 				{
 					$set: {
 						"numberOfPages": formData.numberOfPages,
@@ -69,7 +69,7 @@ formsRouter.route('/')
 					}
 					coll.insert(formData, function(err, result) {
 						assert.equal(err, null);
-						res.send("Create:"+formName);
+						res.send({groupName:groupName,formName:formName});
 						console.log("Created new form");
 						db.close();
 					});

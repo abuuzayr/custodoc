@@ -11,6 +11,7 @@ angular
 		'ngProgressFactory',
 		'formBuilderFactory',
 		'$timeout',
+		'$stateParams',
 		formBuilderCtrl
 	]);
 function formBuilderCtrl(
@@ -23,7 +24,22 @@ function formBuilderCtrl(
 	pdfFactory,
 	ngProgressFactory,
 	formBuilderFactory,
-	$timeout) {
+	$timeout,
+	$stateParams
+	) {
+
+    var viewContentLoaded = $q.defer();
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function () {
+            viewContentLoaded.resolve();
+        }, 0);
+    });
+    viewContentLoaded.promise.then(function () {
+        $timeout(function () {
+            componentHandler.upgradeDom();
+        }, 0);
+    });
+
 	//initialization
 	var vm = this;
 	vm.progressbar = ngProgressFactory.createInstance();
@@ -82,9 +98,8 @@ function formBuilderCtrl(
 	var preview = document.getElementById("preview");
 	var imgurl = "";
 	var canvas = null;
-	vm.groupName = "test";
-	vm.formName = "test";
-
+	vm.groupName = $stateParams.groupName;
+	vm.formName = $stateParams.formName;
 	//page node
 	var newPageTemplate = formBuilderFactory.newPage;
 
@@ -132,17 +147,92 @@ function formBuilderCtrl(
 	vm.openDialog = openDialog;
 	vm.closeDialog = closeDialog;
 
+	formBuilderFactory.getFormData(vm.groupName,vm.formName)
+		.then(function(res){
+			var formData = res.data;
+			elements = formData.elements;
+			vm.numberOfPages = formData.numberOfPages;
+			if (vm.numberOfPages >1){
+				for(var i=2;i<=vm.numberOfPages;i++){
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.setAttribute("id","page"+i);
+					newPage.style.display="none";
+					form.appendChild(newPage);
+				}
+			}
+			for (key in elements){
+				var element = elements[key];
+				if(element.name.startsWith('background_')){
+					var node = document.createElement('img');
+					node.src = element.src;
+					node.style.zIndex="0";
+				}else if(element.name.startsWith('label_')){
+					var node = document.createElement('div');
+					node.innerHTML = element.content;
+					node.style.whiteSpace="pre-wrap";
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('text_')){
+					var node = document.createElement('div');
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.setAttribute('required',element.required);
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('signature_')){
+					var node = document.createElement('canvas');
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.zIndex="1";
+				}else if (element.name.startsWith('image_')) {
+					var node = document.createElement('canvas');
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.zIndex="1";
+				}
+				node.style.opacity = element.opacity;
+				node.style.border = element.border;
+				node.style.borderRadius = element.borderRadius;
+				node.setAttribute("data-x","0");
+				node.setAttribute("data-y","0");
+				node.setAttribute("class","resize-drag");
+				node.setAttribute("ng-dblclick","vm.elementOnclick($event)");
+				$compile(node)($scope);
+				node.id = key;
+				node.setAttribute('name',element.name);
+				node.style.overflow = "hidden";
+				node.style.lineHeight="100%";
+				node.style.position="absolute";
+				node.style.overflow = "hidden";
+				node.style.width = element.width+'px';
+				node.style.height = element.height+'px';
+				node.style.top = element.top+'px';
+				node.style.left = element.left+'px';
+				node.style.position = "absolute";
+				var page = document.getElementById('page'+element.page);
+				page.appendChild(node);
+			}
+		},function(res){
+			snackbarContainer.MaterialSnackbar.showSnackbar(
+				{message:"Failed to load the form"});
+		});
+
 	//get all the elements data and save the form
 	function saveForm() {
 		formData.numberOfPages = vm.numberOfPages;
 		for (var i = 1; i <= vm.numberOfPages; i++) {
 			var page = document.getElementById("page" + i);
-			console.log(page);
 			for (var j = 1; j < page.childNodes.length; j++) {
 				var node = page.childNodes[j];
-				console.log(node);
+				if((node.nodeType!==1)||(!node.hasAttribute('name'))) {
+					console.log(node);
+					continue;
+				}
 				var id = node.id;
-				console.log(id);
 				elements[id] = {};
 				elements[id].name = node.getAttribute("name");
 				elements[id].page = i;
@@ -171,9 +261,10 @@ function formBuilderCtrl(
 				}
 			}
 		}
+		console.log(elements);
 		formData.elements = elements;
-		formData.group = vm.groupName;
-		formData.name = vm.formName;
+		formData.groupName = vm.groupName;
+		formData.formName = vm.formName;
 		formBuilderFactory.saveFormData(formData)
 			.then(function (data, status, config, headers) {
 				snackbarContainer.MaterialSnackbar.showSnackbar(
@@ -753,17 +844,6 @@ function formBuilderCtrl(
 		return result;
     }
 
-    var viewContentLoaded = $q.defer();
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();
-        }, 0);
-    });
 
 	function openDialog(dialogName) {
         var dialog = document.querySelector('#' + dialogName);

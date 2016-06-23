@@ -40,7 +40,7 @@ angular
                 controllerAs: 'vm'
             })
             .state('formBuilder', {
-                url: '/formBuilder',
+                url: '/formBuilder/:groupName/:formName',
                 templateUrl: 'views/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
