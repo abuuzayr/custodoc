@@ -28,17 +28,17 @@ function formBuilderCtrl(
 	$stateParams
 	) {
 
-    var viewContentLoaded = $q.defer();
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();
-        }, 0);
-    });
+	 var viewContentLoaded = $q.defer();
+	 $scope.$on('$viewContentLoaded', function () {
+		  $timeout(function () {
+				viewContentLoaded.resolve();
+		  }, 0);
+	 });
+	 viewContentLoaded.promise.then(function () {
+		  $timeout(function () {
+				componentHandler.upgradeDom();
+		  }, 0);
+	 });
 
 	//initialization
 	var vm = this;
@@ -117,6 +117,7 @@ function formBuilderCtrl(
 	vm.previewStart = previewStart;
 	vm.downloadPreview = downloadPreview;
 	vm.previewDeleteAll = previewDeleteAll;
+	vm.isESCCloseDialog = isESCCloseDialog;
 	vm.isESCDeletePreview = isESCDeletePreview;
 	vm.addPagePromise = addPagePromise;
 	vm.generateImagePromise = generateImagePromise;
@@ -331,6 +332,15 @@ function formBuilderCtrl(
 		}
 		previewDialog.close();
 		pdfFactory.resetData();
+	}
+
+	function isESCCloseDialog(e){
+		var pressedKeyValue = e.keyCode;
+		console.log(1);
+		if (pressedKeyValue === 27) {
+			if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
+			reset();
+		}
 	}
 
 	function isESCDeletePreview(e) {
@@ -564,11 +574,9 @@ function formBuilderCtrl(
 	}
 
 	function drop(event) {
-		event.preventDefault();
 		if (vm.allowCreate) {
 			createPlaceholder();
 			openDialog(vm.newElementType);
-			console.log('Open one: ' + vm.newElementType);
 		}
 	}
 
@@ -704,7 +712,7 @@ function formBuilderCtrl(
 		newElement.style.overflow = "hidden";
 		newElement.style.lineHeight = "100%";
 		newElement.style.position = "absolute";
-		newElement.style.zIndex = "3";
+		newElement.style.zIndex = "1";
 		newElement.style.overflow = "hidden";
 		newElement.style.fontSize = vm.Fontsize;
 		newElement.style.fontFamily = vm.FontType;
@@ -733,15 +741,15 @@ function formBuilderCtrl(
 		elements["background_" + i] = {};
 		vm.imageString = 'data:image/png;base64,' + vm.file.base64;
 		img.setAttribute("src", vm.imageString);
-		img.style.zIndex = "2";
-		vm.file = null;
 		setNewElement(img);
+		img.style.zIndex = "0";
+		vm.file = null;
+		
 	}
 
 	function createTextField() {
 		if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var textarea = document.createElement("div");
@@ -755,7 +763,6 @@ function formBuilderCtrl(
 	function createImageField() {
 		if (elements.hasOwnProperty("image_" + vm.imageFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var image = document.createElement("canvas");
@@ -770,7 +777,6 @@ function formBuilderCtrl(
 	function createSignatureField() {
 		if (elements.hasOwnProperty("signature_" + vm.signatureFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var image = document.createElement("canvas");
@@ -797,7 +803,7 @@ function formBuilderCtrl(
 	}
 
 	//get the current position of mouse
-    function getCrossBrowserElementCoords(mouseEvent){
+	 function getCrossBrowserElementCoords(mouseEvent){
 		var result = {
 			x: 0,
 			y: 0
@@ -827,9 +833,9 @@ function formBuilderCtrl(
 			}
 			if (typeof(offEl.offsetParent) != "undefined"){
 				while (offEl){
-				    offX += offEl.offsetLeft;
-				    offY += offEl.offsetTop;
-				    offEl = offEl.offsetParent;
+					 offX += offEl.offsetLeft;
+					 offY += offEl.offsetTop;
+					 offEl = offEl.offsetParent;
 				}
 			}
 			else{
@@ -842,51 +848,21 @@ function formBuilderCtrl(
 		}
 
 		return result;
-    }
+	 }
 
 
 	function openDialog(dialogName) {
-        var dialog = document.querySelector('#' + dialogName);
-        if (!dialog.showModal) {
-            dialogPolyfill.registerDialog(dialog);
-        }
-		console.log(dialog);
-		console.log(imageFieldCreation);
-        dialog.showModal();
-		console.log('Show one: ' + vm.newElementType);
-    };
-
-    function closeDialog() {
-    	if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
-		console.log('Enter close function: ' + vm.newElementType);
-        var dialog = document.querySelector('#' + vm.newElementType);
-        dialog.close();
-		console.log('Close one: ' + vm.newElementType);
-		reset();
+		var dialog = document.querySelector('#' + dialogName);
+		if (!dialog.showModal) {
+			dialogPolyfill.registerDialog(dialog);
+		}
+		dialog.showModal();
 	};
 
-	// TODO
-	function submitDialogForm() {
-		vm.closeDialog();
-		switch (vm.newElementType) {
-			case "label":
-				labelCreation.style.display = "block";
-				break;
-			case "text":
-				textFieldCreation.style.display = "block";
-				break;
-			case "imageField":
-				imageFieldCreation.style.display = "block";
-				break;
-			case "signature":
-				signatureFieldCreation.style.display = "block";
-				break;
-			case "image upload":
-				imgUpload.style.display = "block";
-				break;
-		}
-		vm.createPlaceholder();
-		vm.newElementType = '';
-		vm.createLabel();
+	function closeDialog() {
+		if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
+		var dialog = document.querySelector('#' + vm.newElementType);
+		dialog.close();
+		reset();
 	};
 }
