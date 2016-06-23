@@ -6,5 +6,6 @@ angular
         'ui.grid.resizeColumns',
         'ui.grid.moveColumns',
         'ngTouch',
-        'ui.grid.selection'
+        'ui.grid.selection',
+        'angularSpinner'
     ]);

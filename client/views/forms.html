@@ -4,6 +4,7 @@
 		<div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
 		<main class="mdl-layout__content">
 	<div id="forms" class="page-content">
+		<span us-spinner="{radius:30, width:8, length: 30,speed:1.5,opacity:0.15,scale:1.5}" spinner-key="spinner-1"></span>
 		<div id="top-row-buttons" class="mdl-grid">
 			<button ng-click="vm.openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
 			<i class="material-icons" role="presentation">add</i> New Form</button>

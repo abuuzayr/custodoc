@@ -1,8 +1,8 @@
 angular
 	.module("formsApp")
-	.controller("formsCtrl", ['$scope', '$q', '$location', '$timeout','$http','uiGridConstants','formsFactory','$state', formsCtrl]);
+	.controller("formsCtrl", ['$scope', '$q', '$location', '$timeout','$http','uiGridConstants','formsFactory','$state', 'usSpinnerService',formsCtrl]);
 
-function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsFactory,$state) {
+function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsFactory,$state,usSpinnerService) {
 	var vm = this;
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
@@ -100,6 +100,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	var rows=[];
 
 	function downloadSeparate(){
+		usSpinnerService.spin('spinner-1');
 		rows = vm.gridApi.selection.getSelectedRows();
 		var deferred = $q.defer();
 		deferred.resolve(1);
@@ -120,6 +121,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 				}
 				pdf.save();
 			}
+			usSpinnerService.stop('spinner-1');
 			var pages=Array.from(document.getElementsByClassName('page'));
 			pages.forEach(function(item,index){
 				item.parentNode.removeChild(item);
@@ -130,6 +132,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 	}
 
 	function downloadAsOne(){
+		usSpinnerService.spin('spinner-1');
 		rows = vm.gridApi.selection.getSelectedRows();
 		var pdf = new jsPDF();
 		var deferred = $q.defer();
@@ -148,6 +151,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 					pdf.addImage(pagesImage[j][k],"JPEG",0,0);
 				}
 			}
+			usSpinnerService.stop('spinner-1');
 			pdf.save();
 			var pages=Array.from(document.getElementsByClassName('page'));
 			pages.forEach(function(item,index){
