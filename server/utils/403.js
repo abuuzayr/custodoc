@@ -33,7 +33,8 @@ module.exports = function(){
 
 	function checkStroage(req,res,next){
 		var connection = require('./connection')();
-		connection.Do(function(db){
+			connection.Do(function(db){
+
 		})
 	}
 

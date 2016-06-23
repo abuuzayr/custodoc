@@ -21,11 +21,19 @@ app.controller('MainCtrl',  ['$scope', '$http', '$q' , '$timeout', '$interval', 
 	vm.gridOptions.multiSelect = true;
 	vm.gridOptions.gridMenuShowHideColumns = false;
 	vm.gridOptions.importerShowMenu = false;
+
+	vm.editRow = editRow;
+	vm.deleteRow = deleteRow;
 	
 // ===========================================   	UI 	  	=========================================== //
 vm.hasSelection = false;
 		
 // ===========================================   UI Buttons  =========================================== //
+function gridRowClick(row){
+	console.log(row);
+}
+
+
 
 vm.clearSelected = function() {
 	vm.gridApi.selection.clearSelectedRows();
