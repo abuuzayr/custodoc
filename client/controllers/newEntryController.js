@@ -45,6 +45,7 @@ angular
 		}); */
 	    return keys;
 	};
+	//TODO: NEED TO CALL RETRIEVEKEYS IN HTML
 
 	vm.createEntry = function() {
 	    var name = vm.entData.groupName;
