@@ -56,10 +56,22 @@ autofill.route('/element')
 		connection.Do(function(db){
 			var fieldName = req.body.fieldName;
 			db.collection('element')
-				.insert({fieldName:fieldName})
-				.then(function(docs){
-					console.log('Records added: ' + docs);
-					return res.status(200).send('Records added:' + docs);
+				.findOne({fieldName:fieldName})
+				.then(function(element){
+					if (element) {
+						res.status(409).send('Already exists');
+					}else{
+						db.collection('element')
+							.insert({fieldName:fieldName})
+							.then(function(docs){
+								console.log('Records added: ' + docs);
+								return res.status(200).send('Records added:' + docs);
+							})
+							.catch(function(err){
+								console.log(err);
+								return res.status(400).send(err);
+							});
+						}
 				})
 				.catch(function(err){
 					console.log(err);

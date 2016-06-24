@@ -243,7 +243,8 @@ function formBuilderCtrl(
 				snackbarContainer.MaterialSnackbar.showSnackbar(
 					{ message: "Added new element." });
 			},function(res){
-				alert('Failed to add new element.');
+				if (res.status===409) alert('Autofill element already exists.');
+				else alert('Failed to add new element.');
 			});
 	}
 
