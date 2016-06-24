@@ -13,7 +13,7 @@ angular
                 url: '/newentry',
                 templateUrl: 'views/newEntry.html',
                 controller: 'newEntryCtrl',
-                controllerAs: 'newEntry'
+                controllerAs: 'vm'
             })
             .state('users', {
                 url: '/users',

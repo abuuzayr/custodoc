@@ -1,6 +1,6 @@
 angular.module('entryService', [])
 
-.factory('entry', function($http) {
+.factory('entryService', function($http) {
 
 	var entryFactory = {};
 	
@@ -15,7 +15,7 @@ angular.module('entryService', [])
 
 	// get all entries
 	entryFactory.getAllEntries = function() {
-		return $http.get('/entryRouter/entries');
+		return $http.get('http://10.4.1.171:3001/api/entries');
 	};
 
 	// create an entry
@@ -39,5 +39,7 @@ angular.module('entryService', [])
 	entryFactory.retrieveInput = function(entData) {
 		return $http.get('/entryRouter/functions', entData);
 	};
+
+	return entryFactory;
 
 });

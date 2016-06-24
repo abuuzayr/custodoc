@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" ng-app="user-interface">
+
+<head>
+    <!-- AngularJS and MDL -->
+    <script src="node_modules/angular/angular.js"</script>
+    
+    <!-- Controllers -->
+    <script src="js/app.js"></script>
+    <script src="controllers/newEntryController.js"></script>
+    <script src="services/entryService.js"></script>
+	
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+       <title>BulletForms</title>
+</head>
+
+<body id="body" ng-controller='newEntryCtrl as vm'>
+
+<div>
+<h2>Field Names</h2>
+<ul>
+<li ng-repeat="fieldName in vm.retrieveKeys()"> {{ fieldName }} </li>
+</ul>
+</div>  
+
+<h2>Test</h2>
+<ul>
+<li ng-repeat='entry in vm.entry'>{{ entry.Country }}</li>
+</ul>
+
+<!--- TODO: INPUT FOR USER VALUES -->
+
+
+</body>
+</html>

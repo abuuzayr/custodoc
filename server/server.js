@@ -1,5 +1,5 @@
 var hostname = 'localhost';
-var port = 3000;
+var port = 3001;
 var dbURL = 'mongodb://localhost:27017/custodoc';
 var express = require('express');
 var path = require('path');
@@ -8,13 +8,18 @@ var bodyParser = require('body-parser');
 var assert = require('assert');
 var app = express();
 var entryRouter = require('./routes/entryRouter');
-var Promise = require('bluebird')
+var Promise = require('bluebird');
 var MongoClient = Promise.promisifyAll(require('mongodb').MongoClient);
 app.use(logger('dev'));
 
 app.use(bodyParser.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({limit: '500mb', extended: true}));
 app.use(bodyParser.json());
+
+app.use(express.static(__dirname + '../client'))
+app.use('/', express.static(__dirname + '/../client'));
+
+app.use('/api', entryRouter);
 
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -23,7 +28,6 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.use('/', entryRouter);
 app.use(function(req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;

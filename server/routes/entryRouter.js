@@ -1,8 +1,8 @@
 var express = require('express');
 //var morgan = require('morgan');
 //var bodyParser = require('body-parser');
-var url = 'mongodb://localhost:27017/custodoc';
-var MongoClient = require('mongodb').MongoClient;
+//var url = 'mongodb://localhost:27017/custodoc';
+//var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var connection = require('./connection.js')();
 var entryRouter = express.Router();
@@ -11,12 +11,14 @@ entryRouter.route('/entries')
 	// display all entries in the database
 	.get(function(req,res,next){
 	    connection.Do(function(db){
-		db.collection("entries").find().toArray(function(err, documents){
-	  	    assert.equal(null,err);
-		    console.log(JSON.stringify(documents));
-		    res.send(documents);
-		});
-	    });
+		db.collection("entries").find().toArray()
+	        .then(function(result) {
+		    return res.status(200).send(result);
+	        })
+	        .catch(function(err) {
+		    return res.status(400).send(''+err);
+	        });
+	    })
 	})
 	/*TODO: UPDATE INCOMPLETE
 	// updating an entry

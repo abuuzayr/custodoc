@@ -1,6 +1,6 @@
 angular
     .module("user-interface", ['entryService'])
-    .controller("newEntryCtrl", ['$scope', '$q', '$location', '$timeout', function (entry, $scope, $q, $location, $timeout) {
+    .controller("newEntryCtrl", ['entryService', '$scope', '$q', '$location', '$timeout', function (entryService, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
 	var vm = this;
@@ -18,18 +18,27 @@ angular
         });
 	
 	// initialize the data to contain all entries and lets the htmlview retrieve this data
-	entry.getAllEntries()
-	    .success(function(data) {
-		    vm.entries = data;
-	});
-
+	vm.getEntries = function() {
+	    entryService.getAllEntries()
+		.then(function(res) {
+                        vm.entry = res.data;
+			console.log(JSON.stringify(res));
+                })
+                .catch(function(err) {
+                    console.log("Error " + JSON.stringify(err));
+                });
+	};
+	
+	vm.getEntries();
+	vm.entryData = vm.getEntries();
+	
 	// function to delete an entry
 	vm.deleteEntry = function() {
-	    entry.delete(vm.entData)
+	    entryService.delete(vm.entData)
 		.success(function(data) {
 		
 		    // after deleting, get the new list of entries and return it for display
-		    entry.getAllEntries()
+		    entryService.getAllEntries()
 			.success(function(data) { 
 			    vm.entries = data;
 			});
@@ -45,14 +54,15 @@ angular
 		}); */
 	    return keys;
 	};
-	//TODO: NEED TO CALL RETRIEVEKEYS IN HTML
 
 	vm.createEntry = function() {
-	    var name = vm.entData.groupName;
+	    //var name = vm.entData.groupName;
+	
+	    //TODO: INCLUDE USER INPUT VALUES INSIDE ENTRYDATA
 	    var entryData2 = {
-		groupName    = name,
-		creationDate = Date(),
-		lastModified = Date()
+		groupName    : 'test',
+		creationDate : Date(),
+		lastModified : Date()
 	    };
 	    
            vm.entryData.merge(entryData2); 
@@ -73,11 +83,12 @@ angular
 //		entryData[keys[i]] = input[i];    
 //	    }
 
-	    entry.create(entryData)  
-	        .success(function(data)) {
+	    entryService.create(entryData)  
+	        .success(function(data) {
 		    // clear the form
 		    vm.entData = {};
 		    vm.message = data.message;
+	    });
 	};
 
     }]);
