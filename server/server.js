@@ -5,11 +5,15 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var assert = require('assert');
+var Promise = require('bluebird');
 var MongoClient = require('mongodb').MongoClient;
+Promise.promisifyAll(MongoClient);
 var assert = require('assert');
 var app = express();
+var url = 'mongodb://localhost:27017/custodoc';
 var formsRouter = require('./routes/formsRouter');
 var groupsRouter = require('./routes/groupsRouter');
+var autofillRouter = require('./routes/autofill');
 app.use(logger('dev'));
 app.use(bodyParser.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({limit: '500mb', extended: true}));
@@ -22,12 +26,21 @@ app.use(function(req, res, next) {
 });
 app.use('/forms', formsRouter);
 app.use('/groups', groupsRouter);
+app.use('/autofill', autofillRouter);
 app.use(function(req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });
 
-app.listen(port, hostname, function(){
-	console.log(`Server running at http://${hostname}:${port}/`);
-});
+MongoClient.connectAsync(url)
+	.then(function (db){
+		module.exports = {db: db};
+		app.listen(port, hostname, function(){
+			console.log(`Server running at http://${hostname}:${port}/`);
+		});
+	})
+	.catch(function(err){
+		console.log(err);
+	});
+

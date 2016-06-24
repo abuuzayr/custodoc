@@ -12,6 +12,7 @@ angular
 		'formBuilderFactory',
 		'$timeout',
 		'$stateParams',
+		'$state',
 		formBuilderCtrl
 	]);
 function formBuilderCtrl(
@@ -25,7 +26,8 @@ function formBuilderCtrl(
 	ngProgressFactory,
 	formBuilderFactory,
 	$timeout,
-	$stateParams
+	$stateParams,
+	$state
 	) {
 
 	 var viewContentLoaded = $q.defer();
@@ -60,6 +62,7 @@ function formBuilderCtrl(
 	vm.signatureFieldName = "";
 	var elements = {};
 	var formData = {};
+	vm.autofillElements = [];
 	vm.required = true;
 	vm.imageFieldName = "";
 	vm.textFieldName = "";
@@ -100,6 +103,10 @@ function formBuilderCtrl(
 	var canvas = null;
 	vm.groupName = $stateParams.groupName;
 	vm.formName = $stateParams.formName;
+	if(vm.formName==''||vm.groupName==''){
+			alert('Cannot find the form.');
+			$state.go('forms');
+	}
 	//page node
 	var newPageTemplate = formBuilderFactory.newPage;
 
@@ -112,6 +119,7 @@ function formBuilderCtrl(
 	dragIcon.src = 'images/logo.png';
 
 	//define all the functions
+	vm.getAutofillElements = getAutofillElements;
 	vm.saveForm = saveForm;
 	vm.downloadPDF = downloadPDF;
 	vm.previewStart = previewStart;
@@ -147,6 +155,7 @@ function formBuilderCtrl(
 	vm.getCrossBrowserElementCoords = getCrossBrowserElementCoords;
 	vm.openDialog = openDialog;
 	vm.closeDialog = closeDialog;
+	vm.addNewAutofillElement = addNewAutofillElement;
 
 	formBuilderFactory.getFormData(vm.groupName,vm.formName)
 		.then(function(res){
@@ -218,9 +227,36 @@ function formBuilderCtrl(
 				page.appendChild(node);
 			}
 		},function(res){
-			snackbarContainer.MaterialSnackbar.showSnackbar(
-				{message:"Failed to load the form"});
+			alert('Cannot find the form.');
+			$state.go('forms');
 		});
+
+	vm.getAutofillElements();
+	
+	//autofill element management
+
+	function addNewAutofillElement(){
+		console.log(vm.newAutofillElementName)
+		$http.post("http://localhost:3000/autofill/element", {fieldName:vm.newAutofillElementName}, {headers: {'Content-Type': 'application/json'} })
+			.then(function(res){
+				vm.getAutofillElements();
+				snackbarContainer.MaterialSnackbar.showSnackbar(
+					{ message: "Added new element." });
+			},function(res){
+				alert('Failed to add new element.');
+			});
+	}
+
+	function getAutofillElements(){
+		$http.get("http://localhost:3000/autofill/element")
+			.then(function(res){
+				var data = res.data;
+				vm.autofillElements=[];
+				for(var i=0;i<data.length;i++) vm.autofillElements.push(data[i]);
+			},function(res){
+				alert('Failed to retrieve autofill elements.');
+			});
+	}
 
 	//get all the elements data and save the form
 	function saveForm() {

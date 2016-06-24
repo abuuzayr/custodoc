@@ -128,6 +128,13 @@
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</button><br>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
+					<label>Add new element: <input type="text" ng-model="vm.newAutofillElementName"><input type="button" ng-click="vm.addNewAutofillElement()" value="Add"></label><br>
+					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
+					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
+						<div class="divider"></div>
+						<input type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')"
+						draggable="true" value={{element.fieldName}}>
+					</div>
 				</div>
 			</div>
 			<!---------------------------------------- Create label ---------------------------------------->
@@ -193,7 +200,7 @@
 					<!-- Dialog cancel button here HELLO -->
 					<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cacel">
 					<div class="mdl-layout-spacer"></div>
-					<input type="submit" value="Create Label" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create label">
+					<input type="submit" value="Create Label" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 					</div>
 						
 					</form>
