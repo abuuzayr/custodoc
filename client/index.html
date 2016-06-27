@@ -16,22 +16,31 @@
        <title>BulletForms</title>
 </head>
 
-<body id="body" ng-controller='newEntryCtrl as vm'>
-
-<div>
-<h2>Field Names</h2>
-<ul>
-<li ng-repeat="fieldName in vm.retrieveKeys()"> {{ fieldName }} </li>
-</ul>
-</div>  
-
-<h2>Test</h2>
-<ul>
-<li ng-repeat='entry in vm.entry'>{{ entry.Country }}</li>
-</ul>
+<body ng-controller='newEntryCtrl as vm'>
+<form name="myForm" class="form-horizontal" role="form" ng-submit="vm.createEntry()">
 
 <!--- TODO: INPUT FOR USER VALUES -->
 
+<div ng-repeat="key in vm.entryData.fields">
+    <ng-form name="form">
+	<div ng-if="key.type=='text'">
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6">
+		<input class="form-control" type="text" placeholder="{{key.name}}" ng-model="key.data">
+	    </div>
+	</div>
+	
+	<div ng-if="key.type=='image'">
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6">
+		<input class="form-control" type="file" placeholder="{{key.name}}" ng-model="key.data">
+	    </div>
+	</div>
+</ng-form>
+</div>
 
+<button type="submit"> Create </button>
+
+</form>
 </body>
 </html>

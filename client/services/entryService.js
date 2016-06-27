@@ -19,8 +19,8 @@ angular.module('entryService', [])
 	};
 
 	// create an entry
-	entryFactory.create = function(entryData) {
-		return $http.post('/entryRouter/entries', entryData);
+	entryFactory.create = function(finalData) {
+		return $http.post('http://10.4.1.171:3001/api/entries', finalData);
 	};
 
 	// delete an entry, entData contains groupName

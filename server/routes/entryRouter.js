@@ -40,19 +40,19 @@ entryRouter.route('/entries')
 		});
 	}) */
 
-	//TODO: Requires front-end service and controller
 	// creating an entry by specifying the group name that contains the forms that are to be filled by user
 	.post(function(req,res,next){
+		console.log("Final Data: " + JSON.stringify(req.body));
 	    connection.Do(function(db){
-		return db.collection("entries").insert(req.body.entryData);			
+		db.collection("entries").insert(req.body)
+	    	    .then(function(result){
+			result.message = 'Successfully created the user!';
+			return res.status(200).send('saved:' + result);
+	    	    })
+	    	    .catch(function(err){
+			return res.status(400).send(''+err);
+	    	    });
 	    })
-	    .then(function(result){
-		result.message = 'Successfully created the user!';
-		    return res.status(200).send('saved:' + result);
-	    })
-	    .catch(function(err){
-		return res.status(400).send(''+err);
-	    });
 	})
 	
 	// deleting an entry
@@ -60,7 +60,7 @@ entryRouter.route('/entries')
 	    connection.Do(function(db){
 		db.collection("entries").remove({groupName: req.body.groupName}, function(err) {
 		    assert.equal(null, err);
-		    res.send("Deleted entry: " + req.body.groupName);
+		    res.send("Deleted entry: " + req.body);
 		});
 	    });
 	})

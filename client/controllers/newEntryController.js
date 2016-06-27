@@ -4,7 +4,7 @@ angular
         var viewContentLoaded = $q.defer();
         
 	var vm = this;
-	vm.entryData = {};
+	vm.entryData = [];
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -30,7 +30,21 @@ angular
 	};
 	
 	vm.getEntries();
-	vm.entryData = vm.getEntries();
+
+	vm.entryData = {
+	    fields : 
+	    [
+		{type: "text", name: "Name", label: "Name", data:"SugarContent"},
+		{type: "text", name: "Country", label: "Country", data:"Singapore"},
+		{type: "text", name: "State", label: "State", data:"Tampines"},
+		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
+		{type: "text", name: "Gender", label: "Gender", data:"Male"},
+		{type: "image", name: "Picture", label: "Picture", data:""}
+	    ]
+	
+	}
+	
+	/**** UNDER CONSTRUCTION  ****
 	
 	// function to delete an entry
 	vm.deleteEntry = function() {
@@ -43,7 +57,7 @@ angular
 			    vm.entries = data;
 			});
 		});
-	};
+	};    */
 	
 	// call this function first before creating an entry
 	vm.retrieveKeys = function() {
@@ -54,40 +68,34 @@ angular
 		}); */
 	    return keys;
 	};
+	
+	vm.myKeys = vm.retrieveKeys();
 
 	vm.createEntry = function() {
 	    //var name = vm.entData.groupName;
 	
+	   console.log(vm.entryData);	     	
+
 	    //TODO: INCLUDE USER INPUT VALUES INSIDE ENTRYDATA
-	    var entryData2 = {
+	    var entryData2 = [{
 		groupName    : 'test',
 		creationDate : Date(),
 		lastModified : Date()
-	    };
-	    
-           vm.entryData.merge(entryData2); 
+	    }];
+	   
+	    // finalData is the object that contains vm.entryData and entryData2 
+	    var finalData = {};
+	    for (var x in vm.entryData) { finalData[x] = vm.entryData[x]; }
+	    for (var x in entryData2) { finalData[x] = entryData2[x]; }	   
+ 
+	   console.log("Next log: " + JSON.stringify(finalData));	     	
 
-	   // var keys = retrieveKeys();
-		
-	    // call this function after retrieving keys to get user input values to bind the keys with	
-	//    var retrieveInput = function() {
-	 //       entry.retrieveInput(vm.entData)
-	//	.success(function(input) {
-//		    return input;
-//		});
-//	    };   
-	
-//	    var input = retrieveInput(); 
-
-//	    for(var i=0; i<keys.length; i++) {
-//		entryData[keys[i]] = input[i];    
-//	    }
-
-	    entryService.create(entryData)  
+	   entryService.create(finalData)  
 	        .success(function(data) {
 		    // clear the form
-		    vm.entData = {};
+		    vm.entryData = {};
 		    vm.message = data.message;
+		    location.reload()
 	    });
 	};
 
