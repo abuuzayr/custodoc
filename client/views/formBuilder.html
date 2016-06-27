@@ -3,7 +3,7 @@
 	<header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
 	<div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
 
-	<div id="formBuilderBody">
+	<div id="formBuilderBody" class="mdl-layout__content">
 		<div id="pagebar" class="mdl-grid">
 			<button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
 			<div class="divider"></div>
@@ -28,10 +28,12 @@
 					<a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
 					<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
 					<div style="padding: 5px; vertical-align:middle;">
-					<label id="editRequiredLabel" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"><input id="editRequired" type="checkbox" ng-model="vm.element.required" ng-click="vm.toggleRequired()" class="mdl-checkbox__input">Required field?</label>
+					<label id="editRequiredLabel">
+					<span>Required field?</span>
+					<input id="editRequired" type="checkbox" ng-model="vm.element.required"></label>
 					<!-- Delete element -->
 					<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="margin-left: 35px;">
-								<i class="material-icons" role="presentation">delete</i> Delete Element</button>
+						<i class="material-icons" role="presentation">delete</i> Delete Element</button>
 					</div>
 					<div class="mdl-layout-spacer"></div>
 					<!-- Hide Toolbar -->
@@ -128,11 +130,19 @@
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</button><br>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
-					<label>Add new element: <input type="text" ng-model="vm.newAutofillElementName"><input type="button" ng-click="vm.addNewAutofillElement()" value="Add"></label><br>
+					<form ng-submit="vm.addNewAutofillElement()">
+						<label>Add new element: <input type="text" ng-model="vm.newAutofillElementName" required></label><br>
+						<label>Type: 
+							<select ng-init="vm.newAutofillElementType='text'" ng-model="vm.newAutofillElementType" required>
+								<option value="text">Text</option> 
+							</select>
+							<input type="submit" value="Add">
+						</label><br>
+					</form>
 					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
-						<input type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')"
+						<input type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'auto')"
 						draggable="true" value={{element.fieldName}}>
 					</div>
 				</div>
@@ -213,7 +223,7 @@
 					<legend><h4>Create Text Field</h4></legend>
 					<label>Text Field Name:<br>
 					<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true"></label><br>
-					<input type="checkbox" ng-checked="vm.required">Required field?<br>
+					<input type="checkbox" ng-model="vm.required">Required field?<br>
 					<label>Font Size:<br>
 			<select ng-options="option for option in vm.availableFontsizes"
 			  ng-model="vm.Fontsize"></select>
@@ -359,14 +369,15 @@
 			<form name="imgUpload" ng-submit="vm.addImg()">
 			<div class="mdl-dialog__content mdl-grid">
 					<legend>Upload image attachment</legend>
-					<label for="file" ng-hide="vm.file.base64">Select File:<br>
-		<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input maxsize="2000" accept="image/*"><br>
-		<span>maximun size: 2Mb</span>
+					<label for="file">Select File:<br>
+		<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" ><br>
 		</label>
-					<div ng-hide="!vm.file.base64">
-						<label>Opacity:
-		<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
-		<span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
+		
+		<div>
+		<span ng-style="vm.maxSizeWarning()">maximun size: 2Mb</span><br>
+		<label>Opacity:
+			<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+			<span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
 		</label><br>
 						<label>Select Border Style
 			<select ng-model="vm.BorderStyle">
@@ -388,17 +399,14 @@
 			<select ng-options="option for option in vm.availableBorderRadii"
 			  ng-model="vm.BorderRadius"></select>
 		</label><br>
-		<label>Preview: </label><br>
-		<img width="90%" style='opacity:{{vm.Opacity}}' ng-src='data:image/png;base64,{{vm.file.base64}}'/>
+		<label ng-if="vm.file">Preview: <br>
+		<img width="90%"  style='opacity:{{vm.Opacity}}' ng-src='data:image/png;base64,{{vm.file.base64}}'/>
+		</label>
 		</div>
 		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
-			<div ng-show="vm.file.base64">
-			<input type="button" ng-click="vm.file=null" value="Clear Input"><br>
 			<input type="submit" value="Add Image as Attachment"><br>
-			</div>
-			<br>
-			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.file=null;vm.closeDialog()" value="Cancel">
 		</div>
 			</form>
 			</dialog>

@@ -44,6 +44,7 @@ function formBuilderCtrl(
 
 	//initialization
 	var vm = this;
+	vm.saved = true;
 	vm.progressbar = ngProgressFactory.createInstance();
 	vm.progressbar.setHeight("3px");
 	var pdf = new jsPDF();
@@ -60,6 +61,7 @@ function formBuilderCtrl(
 	vm.fontsArray = formBuilderFactory.fontsArray;
 	vm.labelContent = "";
 	vm.signatureFieldName = "";
+	vm.newAutofillElementId = "";
 	var elements = {};
 	var formData = {};
 	vm.autofillElements = [];
@@ -119,6 +121,7 @@ function formBuilderCtrl(
 	dragIcon.src = 'images/logo.png';
 
 	//define all the functions
+	vm.maxSizeWarning = maxSizeWarning;
 	vm.getAutofillElements = getAutofillElements;
 	vm.saveForm = saveForm;
 	vm.downloadPDF = downloadPDF;
@@ -145,7 +148,6 @@ function formBuilderCtrl(
 	vm.hideToolbar = hideToolbar;
 	vm.deleteElement = deleteElement;
 	vm.elementOnclick = elementOnclick;
-	vm.toggleRequired = toggleRequired;
 	vm.setNewElement = setNewElement;
 	vm.addImg = addImg;
 	vm.createTextField = createTextField;
@@ -156,6 +158,20 @@ function formBuilderCtrl(
 	vm.openDialog = openDialog;
 	vm.closeDialog = closeDialog;
 	vm.addNewAutofillElement = addNewAutofillElement;
+
+
+	$scope.$on('$stateChangeStart', function( event ) {
+		if(!vm.saved){
+			var answer = confirm("Do you want to save the form before you leave this page?")
+			if (answer) {
+				saveForm();
+			}
+		}
+	});
+	
+	window.onbeforeunload = function (event) {
+		if(!vm.saved) return "Are you sure to reload?";
+	}
 
 	formBuilderFactory.getFormData(vm.groupName,vm.formName)
 		.then(function(res){
@@ -186,14 +202,17 @@ function formBuilderCtrl(
 					node.style.fontSize = element.fontSize;
 					node.style.textDecoration = element.textDecoration;
 					node.style.zIndex="1";
-				}else if(element.name.startsWith('text_')){
-					var node = document.createElement('div');
+				}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
+					var node = document.createElement('input');
+					node.type='text';
+					node.setAttribute('readonly','readonly');
 					node.style.color = element.color;
 					node.style.backgroundColor = element.backgroundColor;
 					node.style.fontFamily = element.fontFamily;
 					node.style.fontSize = element.fontSize;
 					node.style.textDecoration = element.textDecoration;
-					node.setAttribute('required',element.required);
+					node.required = element.required;
+					console.log(node.required,element.required);
 					node.style.zIndex="1";
 				}else if(element.name.startsWith('signature_')){
 					var node = document.createElement('canvas');
@@ -232,12 +251,20 @@ function formBuilderCtrl(
 		});
 
 	vm.getAutofillElements();
-	
+
+	function maxSizeWarning(){
+		if(vm.file && vm.file.filesize>2000000){
+			return {color:'red'};
+		}
+	}
+
 	//autofill element management
 
 	function addNewAutofillElement(){
 		console.log(vm.newAutofillElementName)
-		$http.post("http://localhost:3000/autofill/element", {fieldName:vm.newAutofillElementName}, {headers: {'Content-Type': 'application/json'} })
+		$http.post("http://localhost:3000/autofill/element", 
+			{fieldName:vm.newAutofillElementName,type:vm.newAutofillElementType},
+			{headers: {'Content-Type': 'application/json'} })
 			.then(function(res){
 				vm.getAutofillElements();
 				snackbarContainer.MaterialSnackbar.showSnackbar(
@@ -286,20 +313,19 @@ function formBuilderCtrl(
 				} else {
 					elements[id].backgroundColor = node.style.backgroundColor;
 				}
-				if (id.startsWith("text") || id.startsWith("label")) {
+				if (id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
 					elements[id].fontSize = node.style.fontSize;
 					elements[id].color = node.style.color;
 					elements[id].fontFamily = node.style.fontFamily;
 					elements[id].textDecoration = node.style.textDecoration;
-					if (id.startsWith("text")) {
-						elements[id].required = node.getAttribute("required");
+					if (id.startsWith("auto_text") || id.startsWith("text")) {
+						elements[id].required = node.required;
 					} else {
 						elements[id].content = node.innerHTML;
 					}
 				}
 			}
 		}
-		console.log(elements);
 		formData.elements = elements;
 		formData.groupName = vm.groupName;
 		formData.formName = vm.formName;
@@ -307,11 +333,19 @@ function formBuilderCtrl(
 			.then(function (data, status, config, headers) {
 				snackbarContainer.MaterialSnackbar.showSnackbar(
 					{ message: "Saved the form" });
-			}, function (data, status, config, headers) {
-				snackbarContainer.MaterialSnackbar.showSnackbar(
-					{ message: "Failed to save the form. Please try again." });
+				vm.saved = true;
+			}, function (data) {
+				if(data.status===404){
+					var formData = {groupName:vm.groupName,formName:vm.formName};
+					$http.post("http://localhost:3000/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} })
+						.then(function(res){
+							saveForm();
+						});
+				} else{
+					snackbarContainer.MaterialSnackbar.showSnackbar(
+						{ message: "Failed to save the form. Please try again." });
+				}
 			});
-		console.log(formData);
 	}
 
 	function downloadPDF() {
@@ -582,13 +616,14 @@ function formBuilderCtrl(
 	}
 
 	function reset() {
+		vm.file = null;
+		vm.newAutofillElementId = "";
+		vm.selectedAutofillElement = null;
 		vm.labelContent = "";
 		vm.signatureFieldName = "";
 		vm.required = true;
 		vm.imageFieldName = "";
-		vm.required = true;
 		vm.textFieldName = "";
-		vm.required = true;
 		vm.Fontsize = "16px";
 		vm.FontType = "Arial";
 		vm.FontColor = "black";
@@ -611,9 +646,22 @@ function formBuilderCtrl(
 	}
 
 	function drop(event) {
-		if (vm.allowCreate) {
-			createPlaceholder();
-			openDialog(vm.newElementType);
+		if (vm.allowCreate && vm.newElementType!=='') {
+			if(vm.newElementType==='auto'){
+				var i = 0;
+				while (elements.hasOwnProperty("auto_" +vm.selectedAutofillElement.type+'_'+vm.selectedAutofillElement.fieldName+ i)) {
+					i++;
+				}
+				vm.newAutofillElementId = "auto_" + vm.selectedAutofillElement.type+'_'+vm.selectedAutofillElement.fieldName+i;
+				elements[vm.newAutofillElementId] = {};
+				console.log(elements);
+				if(vm.selectedAutofillElement.type==='text'){
+					createTextField();
+				}
+			}else{
+				createPlaceholder();
+				openDialog(vm.newElementType);
+			}
 		}
 	}
 
@@ -670,8 +718,8 @@ function formBuilderCtrl(
 		if (element != vm.element) {
 			if (vm.element) {
 				vm.element.style.boxShadow = "none";
-			}
-			vm.element = element;
+			}	
+			vm.saved = false;
 			document.getElementById("contentPanel").classList.remove('is-active');
 			document.getElementById("content-panel").classList.remove('is-active');
 			document.getElementById("backgroundPanel").classList.remove('is-active');
@@ -680,7 +728,7 @@ function formBuilderCtrl(
 			document.getElementById("borderPanel").classList.add('is-active');
 			document.getElementById("font-panel").classList.remove('is-active');
 			document.getElementById("border-panel").classList.add('is-active');
-			document.getElementById("editRequired").checked = element.required;
+			document.getElementById("editRequired").checked=element.required;
 			document.getElementById("editTextDecoration").value = element.style.textDecoration;
 			document.getElementById("editFontColor").style.color = element.style.color;
 			document.getElementById("editFontColor").value = element.style.color;
@@ -695,6 +743,7 @@ function formBuilderCtrl(
 			document.getElementById("editOpacity").value = element.style.opacity;
 			document.getElementById("editBackgroundColor").value = element.style.backgroundColor;
 			document.getElementById("editBackgroundColor").style.backgroundColor = element.style.backgroundColor;
+			vm.element = element;
 			element.style.boxShadow = "10px 10px 30px #888888";
 			fontPanel.style.display = "inline";
 			editRequiredLabel.style.display = "none";
@@ -709,7 +758,7 @@ function formBuilderCtrl(
 				element.getAttribute("name").startsWith("signature")) {
 				fontPanel.style.display = "none";
 			}
-			if (element.getAttribute("name").startsWith("text")) {
+			if (element.getAttribute("name").startsWith("text") || element.getAttribute("name").startsWith("auto_text")) {
 				editRequiredLabel.style.display = "inline";
 			}
 			if (element.getAttribute("name").startsWith("label")) {
@@ -721,12 +770,9 @@ function formBuilderCtrl(
 			vm.hideToolbar();
 		}
 	}
-	
-	function toggleRequired(){
-		vm.element.setAttribute("required",document.getElementById("editRequired").checked); 
-	}
 
 	function setNewElement(newElement) {
+		vm.saved = false;
 		var formWidth = form.offsetWidth;
 		var formHeight = form.offsetHeight;
 		vm.allowCreate = true;
@@ -743,7 +789,7 @@ function formBuilderCtrl(
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
 		newElement.setAttribute("class", "resize-drag");
-		newElement.setAttribute("required", vm.required);
+		newElement.required=Boolean(vm.required);
 		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
 		$compile(newElement)($scope);
 		newElement.style.overflow = "hidden";
@@ -764,37 +810,50 @@ function formBuilderCtrl(
 		newElement.style.top = newElementPosition.y + "px";
 		newElement.style.opacity = vm.Opacity;
 		currentPage.appendChild(newElement);
-		vm.closeDialog();
+		if(vm.newElementType!=='auto') vm.closeDialog();
 	}
 
 	function addImg() {
-		var img = document.createElement("img");
-		var i = 0;
-		while (elements.hasOwnProperty("background_" + i)) {
-			i++;
-		}
-		img.setAttribute("id", "background_" + i);
-		img.setAttribute("name", "background_" + i);
-		elements["background_" + i] = {};
-		vm.imageString = 'data:image/png;base64,' + vm.file.base64;
-		img.setAttribute("src", vm.imageString);
-		setNewElement(img);
-		img.style.zIndex = "0";
-		vm.file = null;
-		
+		if(!vm.file){
+			alert('Please upload an image');
+		}else if (vm.file && vm.file.filesize>2000000) {
+			alert('Maximum size allowed is 2Mb');
+		}else{
+			var img = document.createElement("img");
+			var i = 0;
+			while (elements.hasOwnProperty("background_" + i)) {
+				i++;
+			}
+			img.setAttribute("id", "background_" + i);
+			img.setAttribute("name", "background_" + i);
+			elements["background_" + i] = {};
+			vm.imageString = 'data:image/png;base64,' + vm.file.base64;
+			img.setAttribute("src", vm.imageString);
+			setNewElement(img);
+			img.style.zIndex = "0";
+			vm.file = null;
+		}		
 	}
 
 	function createTextField() {
-		if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
-			alert("Field name already exists, please change another one");
-			vm.allowCreate = true;
-		} else {
-			var textarea = document.createElement("div");
+		vm.saved
+		var textarea = document.createElement("input");
+		textarea.setAttribute('type','text');
+		textarea.setAttribute('readonly','readonly');
+		if (vm.newElementType==='auto') {
+			textarea.setAttribute("name", 'auto_text_'+vm.selectedAutofillElement.fieldName);
+			textarea.setAttribute("id", vm.newAutofillElementId);
+		}else{
+			if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
+				alert("Field name already exists, please change another one");
+				vm.allowCreate = true;
+				return ;
+			} 
 			elements["text_" + vm.textFieldName] = {};
 			textarea.setAttribute("name", "text_" + vm.textFieldName);
 			textarea.setAttribute("id", "text_" + vm.textFieldName);
-			setNewElement(textarea);
 		}
+		setNewElement(textarea);
 	}
 
 	function createImageField() {
@@ -902,4 +961,98 @@ function formBuilderCtrl(
 		dialog.close();
 		reset();
 	};
+
+	function dragMoveListener (event) {
+		if(event.interaction.downEvent.button == 2) {
+			return false;
+		}
+		var target = event.target,
+			// keep the dragged position in the data-x/data-y attributes
+			x = (parseInt(target.getAttribute('data-x')) ) + event.dx,
+			y = (parseInt(target.getAttribute('data-y')) ) + event.dy;
+
+		// translate the element
+		target.style.webkitTransform =
+		target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+		// update the posiion attributes
+		target.setAttribute('data-x', x);
+		target.setAttribute('data-y', y);
+	}
+
+
+
+	interact('.resize-drag')
+		.draggable({
+			onstart: function(event){
+				if(event.interaction.downEvent.button == 2) {
+					return false;
+				}
+				vm.saved = false;
+				var target = event.target,
+					// keep the dragged position in the data-x/data-y attributes
+					x = (parseInt(target.getAttribute('data-x')) ) + event.dx,
+					y = (parseInt(target.getAttribute('data-y')) ) + event.dy;
+			},
+			onmove: dragMoveListener,
+			restrict: {
+				elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+				restriction:"parent",
+				endOnly:false
+			},
+			// enable autoScroll
+			autoScroll: true
+		})
+		.resizable({
+			edges: { left: true, right: true, bottom: true, top: true }
+		})
+		.on('resizemove', function (event) {
+			if(event.interaction.downEvent.button == 2) {
+				return false;
+			}
+			vm.saved = false;
+			var target = event.target,
+				x = (parseInt(target.getAttribute('data-x')) ),
+				y = (parseInt(target.getAttribute('data-y')));
+			if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
+			if (event.edges.right && (parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width))&&event.dx>0) return false;
+			if(event.edges.left && parseInt(target.style.width)===0 && event.dx>0) return false;
+			if(event.edges.top && (parseInt(target.style.top)+y<0) && (event.dy<0)) return false;
+			if (event.edges.bottom && (parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height))&&event.dy>0) return false;
+			if(event.edges.top && parseInt(target.style.height)===0 && event.dy>0) return false;
+			// translate when resizing from top or left edges
+			if(event.edges.left && parseInt(target.style.width)-event.dx>=0) x += event.dx;
+			if(event.edges.top && parseInt(target.style.height)-event.dy>=0) y += event.dy;
+
+			if(event.edges.left && (parseInt(target.style.left)+x<30) && (event.dx<0)) {
+				target.style.width=parseInt(target.style.width)+x+parseInt(target.style.left)+'px';
+				x=-parseInt(target.style.left);
+			}
+			if(event.edges.top && (parseInt(target.style.top)+y<30) && (event.dy<0)) {
+				target.style.height=parseInt(target.style.height)+y+parseInt(target.style.top)+'px';
+				y=-parseInt(target.style.top);
+			}
+
+			if (event.edges.right&&(parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width)-30)&&event.dx>0) {
+				target.style.width=(parseInt(target.parentNode.style.width)-parseInt(target.style.left)-parseInt(target.style.borderWidth)*2-x)+'px';
+				return false;
+			}
+
+			if (event.edges.bottom&&(parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height)-30)&&event.dy>0) {
+				target.style.height=(parseInt(target.parentNode.style.height)-parseInt(target.style.top)-parseInt(target.style.borderWidth)*2-y)+'px';
+				return false;
+			}
+
+			// update the element's style
+
+			if(event.edges.right) target.style.width  = parseInt(target.style.width)+event.dx + 'px';
+			if(event.edges.left) target.style.width  = parseInt(target.style.width)-event.dx + 'px';
+			if(event.edges.bottom) target.style.height  = parseInt(target.style.height)+event.dy + 'px';
+			if(event.edges.top) target.style.height  = parseInt(target.style.height)-event.dy + 'px';
+			// target.style.height = event.rect.height + 'px';
+			target.setAttribute('data-x', x);
+			target.setAttribute('data-y', y);
+			target.style.webkitTransform = target.style.transform =
+					'translate(' + x + 'px,' + y + 'px)';
+		});
 }

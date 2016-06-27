@@ -71,7 +71,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		if(confirm("Do you really want to delete this group? All the forms and entries data of this group will be deleted?")){
 			$http.delete("http://localhost:3000/groups/"+vm.deleteGroupName)
 				.then(function(res){
-					console.log(vm.groups);
 					vm.getGroupData();
 					vm.getFormData();
 				});
@@ -113,7 +112,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			for(var j=0; j<pagesImage.length; j++){
 				var pdf = new jsPDF();
 				for(var k=0; k<pagesImage[j].length; k++){
-					console.log("j:"+j+" k:"+k);
 					if(k!=0) {
 						pdf.addPage();
 					}
@@ -166,7 +164,19 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		var deferred = $q.defer();
 		var pageNumber=1;
 		pagesImage.push([]);
-		while(document.getElementById('form'+formNumber+"page"+pageNumber)){			canvas=document.createElement("canvas");
+		var deferred2 = $q.defer();
+		deferred2.resolve(1);
+		var p2=deferred2.promise;
+		while(document.getElementById('form'+formNumber+"page"+pageNumber)){			
+			p2=p2.then(function(pageNumber){return generateImagePromise(pageNumber);});
+			pageNumber++;
+		}
+		
+		return deferred.promise;
+
+		function generateImagePromise(pageNumber){
+			var deferred2 = $q.defer();
+			var canvas=document.createElement("canvas");
 			canvas.width=794;
 			canvas.height=1123;
 			canvas.style.width = '794px';
@@ -176,16 +186,15 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 			rasterizeHTML.drawHTML(code).then(function (renderResult) {
 				context.drawImage(renderResult.image, 0, 0);
 				imgurl = canvas.toDataURL('image/jpeg',1);
-				pagesImage[formNumber-1].push(imgurl);
-				if(!document.getElementById('form'+formNumber+"page"+pageNumber)){
+				pagesImage[formNumber-1].push(imgurl);	
+				if(!document.getElementById('form'+formNumber+"page"+(pageNumber+1))){
 					deferred.resolve(formNumber+1);
 					return;
 				}
+				deferred2.resolve(pageNumber+1);
 			});
-			pageNumber++;
+			return deferred2.promise;
 		}
-		
-		return deferred.promise;
 	}
 
 	function generateForm(formNumber){
@@ -219,14 +228,14 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
-					}else if(element.name.startsWith('text_')){
-						var node = document.createElement('div');
+					}else if(element.name.startsWith('text_') || element.name.startsWith('auto_text_')){
+						var node = document.createElement('input');
+						node.type='text';
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
-						node.setAttribute('required',element.required);
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
 						var node = document.createElement('canvas');
@@ -249,12 +258,9 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 					node.style.top = element.top+'px';
 					node.style.left = element.left+'px';
 					node.style.position = "absolute";
-					console.log('form'+formNumber+'page'+element.page);
 					var page = document.getElementById('form'+formNumber+'page'+element.page);
 					page.appendChild(node);
-					console.log(page);
 				}
-				console.log("resolve");
 				deferred.resolve(formNumber);
 				
 			},function(res){
@@ -269,7 +275,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		$http.get("http://localhost:3000/forms")
 			.then(function(result){
 				vm.formsData = result.data;
-				console.log(vm.formsData);
 				for(var i=0; i<vm.formsData.length; i++){
 					var formData = vm.formsData[i];
 					vm.gridOptions.data.push({
@@ -544,7 +549,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 		else{
 			var termDate = new Date();
 			termDate.setDate(termDate.getDate()-10);
-			console.log(termDate);
 			vm.gridApi.grid.columns[7].filters[0].term=termDate.toString().substring(4,15);
 		}
 	}
