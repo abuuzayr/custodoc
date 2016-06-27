@@ -1,5 +1,5 @@
 angular
-    .module('user-interface', ['ui.router', 'ui.grid', 'ngTouch', 'ui.grid.selection', 'formBuilderApp'])
+    .module('user-interface', ['ui.router', 'ui.grid','ui.grid.autoResize','ui.grid.pagination','ui.grid.resizeColumns','ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp','formsApp'])
     .config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -37,10 +37,10 @@ angular
                 url: '/forms',
                 templateUrl: 'views/forms.html',
                 controller: 'formsCtrl',
-                controllerAs: 'forms'
+                controllerAs: 'vm'
             })
             .state('formBuilder', {
-                url: '/formBuilder',
+                url: '/formBuilder/:groupName/:formName',
                 templateUrl: 'views/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'

@@ -11,6 +11,8 @@ angular
 		'ngProgressFactory',
 		'formBuilderFactory',
 		'$timeout',
+		'$stateParams',
+		'$state',
 		formBuilderCtrl
 	]);
 function formBuilderCtrl(
@@ -23,7 +25,23 @@ function formBuilderCtrl(
 	pdfFactory,
 	ngProgressFactory,
 	formBuilderFactory,
-	$timeout) {
+	$timeout,
+	$stateParams,
+	$state
+	) {
+
+	 var viewContentLoaded = $q.defer();
+	 $scope.$on('$viewContentLoaded', function () {
+		  $timeout(function () {
+				viewContentLoaded.resolve();
+		  }, 0);
+	 });
+	 viewContentLoaded.promise.then(function () {
+		  $timeout(function () {
+				componentHandler.upgradeDom();
+		  }, 0);
+	 });
+
 	//initialization
 	var vm = this;
 	vm.progressbar = ngProgressFactory.createInstance();
@@ -44,6 +62,7 @@ function formBuilderCtrl(
 	vm.signatureFieldName = "";
 	var elements = {};
 	var formData = {};
+	vm.autofillElements = [];
 	vm.required = true;
 	vm.imageFieldName = "";
 	vm.textFieldName = "";
@@ -82,11 +101,14 @@ function formBuilderCtrl(
 	var preview = document.getElementById("preview");
 	var imgurl = "";
 	var canvas = null;
-	vm.groupName = "test";
-	vm.formName = "test";
-
-	//white div will be attached to each page
-	var whiteDiv = formBuilderFactory.whiteDiv;
+	vm.groupName = $stateParams.groupName;
+	vm.formName = $stateParams.formName;
+	if(vm.formName==''||vm.groupName==''){
+			alert('Cannot find the form.');
+			$state.go('forms');
+	}
+	//page node
+	var newPageTemplate = formBuilderFactory.newPage;
 
 	var defaultWidth = 300;
 	var defaultHeight = 150;
@@ -97,11 +119,13 @@ function formBuilderCtrl(
 	dragIcon.src = 'images/logo.png';
 
 	//define all the functions
+	vm.getAutofillElements = getAutofillElements;
 	vm.saveForm = saveForm;
 	vm.downloadPDF = downloadPDF;
 	vm.previewStart = previewStart;
 	vm.downloadPreview = downloadPreview;
 	vm.previewDeleteAll = previewDeleteAll;
+	vm.isESCCloseDialog = isESCCloseDialog;
 	vm.isESCDeletePreview = isESCDeletePreview;
 	vm.addPagePromise = addPagePromise;
 	vm.generateImagePromise = generateImagePromise;
@@ -131,18 +155,122 @@ function formBuilderCtrl(
 	vm.getCrossBrowserElementCoords = getCrossBrowserElementCoords;
 	vm.openDialog = openDialog;
 	vm.closeDialog = closeDialog;
+	vm.addNewAutofillElement = addNewAutofillElement;
+
+	formBuilderFactory.getFormData(vm.groupName,vm.formName)
+		.then(function(res){
+			var formData = res.data;
+			elements = formData.elements;
+			vm.numberOfPages = formData.numberOfPages;
+			if (vm.numberOfPages >1){
+				for(var i=2;i<=vm.numberOfPages;i++){
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.setAttribute("id","page"+i);
+					newPage.style.display="none";
+					form.appendChild(newPage);
+				}
+			}
+			for (key in elements){
+				var element = elements[key];
+				if(element.name.startsWith('background_')){
+					var node = document.createElement('img');
+					node.src = element.src;
+					node.style.zIndex="0";
+				}else if(element.name.startsWith('label_')){
+					var node = document.createElement('div');
+					node.innerHTML = element.content;
+					node.style.whiteSpace="pre-wrap";
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('text_')){
+					var node = document.createElement('div');
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.setAttribute('required',element.required);
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('signature_')){
+					var node = document.createElement('canvas');
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.zIndex="1";
+				}else if (element.name.startsWith('image_')) {
+					var node = document.createElement('canvas');
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.zIndex="1";
+				}
+				node.style.opacity = element.opacity;
+				node.style.border = element.border;
+				node.style.borderRadius = element.borderRadius;
+				node.setAttribute("data-x","0");
+				node.setAttribute("data-y","0");
+				node.setAttribute("class","resize-drag");
+				node.setAttribute("ng-dblclick","vm.elementOnclick($event)");
+				$compile(node)($scope);
+				node.id = key;
+				node.setAttribute('name',element.name);
+				node.style.overflow = "hidden";
+				node.style.lineHeight="100%";
+				node.style.position="absolute";
+				node.style.overflow = "hidden";
+				node.style.width = element.width+'px';
+				node.style.height = element.height+'px';
+				node.style.top = element.top+'px';
+				node.style.left = element.left+'px';
+				node.style.position = "absolute";
+				var page = document.getElementById('page'+element.page);
+				page.appendChild(node);
+			}
+		},function(res){
+			alert('Cannot find the form.');
+			$state.go('forms');
+		});
+
+	vm.getAutofillElements();
+	
+	//autofill element management
+
+	function addNewAutofillElement(){
+		console.log(vm.newAutofillElementName)
+		$http.post("http://localhost:3000/autofill/element", {fieldName:vm.newAutofillElementName}, {headers: {'Content-Type': 'application/json'} })
+			.then(function(res){
+				vm.getAutofillElements();
+				snackbarContainer.MaterialSnackbar.showSnackbar(
+					{ message: "Added new element." });
+			},function(res){
+				if (res.status===409) alert('Autofill element already exists.');
+				else alert('Failed to add new element.');
+			});
+	}
+
+	function getAutofillElements(){
+		$http.get("http://localhost:3000/autofill/element")
+			.then(function(res){
+				var data = res.data;
+				vm.autofillElements=[];
+				for(var i=0;i<data.length;i++) vm.autofillElements.push(data[i]);
+			},function(res){
+				alert('Failed to retrieve autofill elements.');
+			});
+	}
 
 	//get all the elements data and save the form
 	function saveForm() {
 		formData.numberOfPages = vm.numberOfPages;
 		for (var i = 1; i <= vm.numberOfPages; i++) {
 			var page = document.getElementById("page" + i);
-			console.log(page);
 			for (var j = 1; j < page.childNodes.length; j++) {
 				var node = page.childNodes[j];
-				console.log(node);
+				if((node.nodeType!==1)||(!node.hasAttribute('name'))) {
+					console.log(node);
+					continue;
+				}
 				var id = node.id;
-				console.log(id);
 				elements[id] = {};
 				elements[id].name = node.getAttribute("name");
 				elements[id].page = i;
@@ -171,9 +299,10 @@ function formBuilderCtrl(
 				}
 			}
 		}
+		console.log(elements);
 		formData.elements = elements;
-		formData.group = vm.groupName;
-		formData.name = vm.formName;
+		formData.groupName = vm.groupName;
+		formData.formName = vm.formName;
 		formBuilderFactory.saveFormData(formData)
 			.then(function (data, status, config, headers) {
 				snackbarContainer.MaterialSnackbar.showSnackbar(
@@ -240,6 +369,15 @@ function formBuilderCtrl(
 		}
 		previewDialog.close();
 		pdfFactory.resetData();
+	}
+
+	function isESCCloseDialog(e){
+		var pressedKeyValue = e.keyCode;
+		console.log(1);
+		if (pressedKeyValue === 27) {
+			if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
+			reset();
+		}
 	}
 
 	function isESCDeletePreview(e) {
@@ -309,73 +447,61 @@ function formBuilderCtrl(
 		}
 	}
 
-	function addPage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
+	function addPage(){
+		if(vm.allowCreate){
+			if(vm.element){
+				vm.element.style.boxShadow="none";
 			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			for (var i = vm.numberOfPages; i > vm.currentPageNumber; i--) {
-				document.getElementById("page" + i).setAttribute("id", "page" + (i + 1).toString());
+			vm.element=null;
+			toolbar.style.display="none";
+			for(var i=vm.numberOfPages; i>vm.currentPageNumber; i--){
+				document.getElementById("page"+i).setAttribute("id","page"+(i+1).toString());
 			}
-			var newPage = document.createElement("div");
-			newPage.appendChild(whiteDiv.cloneNode(true));
-			newPage.setAttribute("id", "page" + (vm.currentPageNumber + 1));
-			newPage.setAttribute("class", "page");
-			newPage.setAttribute("ondrop",
-				"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-			newPage.setAttribute("ondragover",
-				"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
-			currentPage.style.display = "none";
-			newPage.style.display = "block";
+			var newPage = newPageTemplate.cloneNode(true);
+			newPage.setAttribute("id","page"+(vm.currentPageNumber+1));
+			currentPage.style.display="none";
+			newPage.style.display="block";
 			form.appendChild(newPage);
 			vm.currentPageNumber++;
 			vm.numberOfPages++;
-			currentPage = newPage;
-			newPage = null;
+			currentPage=newPage;
+			newPage=null;
 		}
 	}
 
-	function deletePage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
+	function deletePage(){
+		if(vm.allowCreate){
+			if(vm.element){
+				vm.element.style.boxShadow="none";
 			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			if (confirm("Do you really want to delete this page?")) {
-				while (currentPage.firstChild) {
+			vm.element=null;
+			toolbar.style.display="none";
+			if(confirm("Do you really want to delete this page?")){
+				while(currentPage.firstChild){
 					delete elements[currentPage.firstChild.id];
 					currentPage.removeChild(currentPage.firstChild);
 				}
-				if (vm.numberOfPages == 1) {
-					var newPage = document.createElement("div");
-					newPage.appendChild(whiteDiv.cloneNode(true));
-					newPage.setAttribute("class", "page");
-					newPage.setAttribute("ondrop",
-						"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-					newPage.setAttribute("ondragover",
-						"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
-					newPage.style.display = "block";
+				if (vm.numberOfPages==1) {
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.style.display="block";
 					currentPage.parentNode.removeChild(currentPage);
 					form.appendChild(newPage);
-					currentPage = newPage;
-					currentPage.setAttribute("id", "page1");
-					newPage = null;
-					vm.numberOfPages = 1;
-					vm.currentPageNumber = 1;
-				} else {
+					currentPage=newPage;
+					currentPage.setAttribute("id","page1");
+					newPage=null;
+					vm.numberOfPages=1;
+					vm.currentPageNumber=1;
+				}else{
 					currentPage.parentNode.removeChild(currentPage);
-					for (var i = vm.currentPageNumber + 1; i <= vm.numberOfPages; i++) {
-						document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i - 1).toString());
+					for(var i=vm.currentPageNumber+1;i<=vm.numberOfPages;i++){
+						document.getElementById("page"+i.toString()).setAttribute("id","page"+(i-1).toString());
 					}
-					if (vm.currentPageNumber == vm.numberOfPages) {
+					if (vm.currentPageNumber==vm.numberOfPages){
 						vm.currentPageNumber--;
 					}
 					vm.numberOfPages--;
-					currentPage = document.getElementById("page" + vm.currentPageNumber.toString());
-					currentPage.style.display = "block";
+					currentPage=document.getElementById("page"+vm.currentPageNumber.toString());
+					currentPage.style.display="block";
 				}
 			}
 		}
@@ -476,6 +602,7 @@ function formBuilderCtrl(
 		vm.imageString = "";
 		vm.imgChosen = false;
 		vm.newElementType = "";
+		vm.allowCreate = true;
 	}
 
 	function dragStart(event, type) {
@@ -484,28 +611,9 @@ function formBuilderCtrl(
 	}
 
 	function drop(event) {
-		event.preventDefault();
 		if (vm.allowCreate) {
-			switch (vm.newElementType) {
-				case "label":
-					labelCreation.style.display = "block";
-					break;
-				case "text":
-					textFieldCreation.style.display = "block";
-					break;
-				case "imageField":
-					imageFieldCreation.style.display = "block";
-					break;
-				case "signature":
-					signatureFieldCreation.style.display = "block";
-					break;
-				case "image upload":
-					imgUpload.style.display = "block";
-					break;
-			}
-			// createPlaceholder();
+			createPlaceholder();
 			openDialog(vm.newElementType);
-			console.log('Open one: ' + vm.newElementType);
 		}
 	}
 
@@ -641,7 +749,7 @@ function formBuilderCtrl(
 		newElement.style.overflow = "hidden";
 		newElement.style.lineHeight = "100%";
 		newElement.style.position = "absolute";
-		newElement.style.zIndex = "3";
+		newElement.style.zIndex = "1";
 		newElement.style.overflow = "hidden";
 		newElement.style.fontSize = vm.Fontsize;
 		newElement.style.fontFamily = vm.FontType;
@@ -655,8 +763,8 @@ function formBuilderCtrl(
 		newElement.style.left = newElementPosition.x + "px";
 		newElement.style.top = newElementPosition.y + "px";
 		newElement.style.opacity = vm.Opacity;
-		currentPage.removeChild(placeholder);
 		currentPage.appendChild(newElement);
+		vm.closeDialog();
 	}
 
 	function addImg() {
@@ -668,19 +776,17 @@ function formBuilderCtrl(
 		img.setAttribute("id", "background_" + i);
 		img.setAttribute("name", "background_" + i);
 		elements["background_" + i] = {};
-		setNewElement(img);
 		vm.imageString = 'data:image/png;base64,' + vm.file.base64;
 		img.setAttribute("src", vm.imageString);
-		imgUpload.style.display = "none";
-		img.style.zIndex = "2";
+		setNewElement(img);
+		img.style.zIndex = "0";
 		vm.file = null;
-		reset();
+		
 	}
 
 	function createTextField() {
 		if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var textarea = document.createElement("div");
@@ -688,16 +794,12 @@ function formBuilderCtrl(
 			textarea.setAttribute("name", "text_" + vm.textFieldName);
 			textarea.setAttribute("id", "text_" + vm.textFieldName);
 			setNewElement(textarea);
-			console.log(elements);
 		}
-		textFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createImageField() {
 		if (elements.hasOwnProperty("image_" + vm.imageFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var image = document.createElement("canvas");
@@ -707,14 +809,11 @@ function formBuilderCtrl(
 			setNewElement(image);
 			console.log(elements);
 		}
-		imageFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createSignatureField() {
 		if (elements.hasOwnProperty("signature_" + vm.signatureFieldName)) {
 			alert("Field name already exists, please change another one");
-			currentPage.removeChild(placeholder);
 			vm.allowCreate = true;
 		} else {
 			var image = document.createElement("canvas");
@@ -724,8 +823,6 @@ function formBuilderCtrl(
 			setNewElement(image);
 			console.log(elements);
 		}
-		signatureFieldCreation.style.display = "none";
-		reset();
 	}
 
 	function createLabel() {
@@ -738,48 +835,47 @@ function formBuilderCtrl(
 		label.setAttribute("name", "label_" + i);
 		elements["label_" + i] = {};
 		label.style.whiteSpace = "pre-wrap";
-		setNewElement(label);
 		label.innerHTML = vm.labelContent;
-		labelCreation.style.display = "none";
-		reset();
+		setNewElement(label);
 	}
 
 	//get the current position of mouse
-    function getCrossBrowserElementCoords(mouseEvent) {
+	 function getCrossBrowserElementCoords(mouseEvent){
 		var result = {
 			x: 0,
 			y: 0
 		};
 
-		if (!mouseEvent) {
+		if (!mouseEvent){
 			mouseEvent = window.event;
 		}
 
-		if (mouseEvent.pageX || mouseEvent.pageY) {
+		if (mouseEvent.pageX || mouseEvent.pageY){
 			result.x = mouseEvent.pageX;
 			result.y = mouseEvent.pageY;
 		}
-		else if (mouseEvent.clientX || mouseEvent.clientY) {
+		else if (mouseEvent.clientX || mouseEvent.clientY){
 			result.x = mouseEvent.clientX + document.body.scrollLeft +
-				document.documentElement.scrollLeft;
+			document.documentElement.scrollLeft;
 			result.y = mouseEvent.clientY + document.body.scrollTop +
-				document.documentElement.scrollTop;
+			document.documentElement.scrollTop;
 		}
 
-		if (mouseEvent.target) {
+		if (mouseEvent.target){
 			var offEl = mouseEvent.target;
 			var offX = 0;
 			var offY = 0;
-
-			if (typeof (offEl.offsetParent) != "undefined") {
-				while (offEl) {
-					offX += offEl.offsetLeft;
-					offY += offEl.offsetTop;
-
-					offEl = offEl.offsetParent;
+			if(!offEl.getAttribute('id').startsWith('page')){
+				offEl = offEl.parentElement;
+			}
+			if (typeof(offEl.offsetParent) != "undefined"){
+				while (offEl){
+					 offX += offEl.offsetLeft;
+					 offY += offEl.offsetTop;
+					 offEl = offEl.offsetParent;
 				}
 			}
-			else {
+			else{
 				offX = offEl.x;
 				offY = offEl.y;
 			}
@@ -789,59 +885,21 @@ function formBuilderCtrl(
 		}
 
 		return result;
-    }
-    var viewContentLoaded = $q.defer();
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();
-        }, 0);
-    });
+	 }
+
 
 	function openDialog(dialogName) {
-        var dialog = document.querySelector('#' + dialogName);
-        if (!dialog.showModal) {
-            dialogPolyfill.registerDialog(dialog);
-        }
-		console.log(dialog);
-		console.log(imageFieldCreation);
-        dialog.showModal();
-		console.log('Show one: ' + vm.newElementType);
-    };
-
-    function closeDialog() {
-		console.log('Enter close function: ' + vm.newElementType);
-        var dialog = document.querySelector('#' + vm.newElementType);
-        dialog.close();
-		console.log('Close one: ' + vm.newElementType);
+		var dialog = document.querySelector('#' + dialogName);
+		if (!dialog.showModal) {
+			dialogPolyfill.registerDialog(dialog);
+		}
+		dialog.showModal();
 	};
 
-	// TODO
-	function submitDialogForm() {
-		vm.closeDialog();
-		switch (vm.newElementType) {
-			case "label":
-				labelCreation.style.display = "block";
-				break;
-			case "text":
-				textFieldCreation.style.display = "block";
-				break;
-			case "imageField":
-				imageFieldCreation.style.display = "block";
-				break;
-			case "signature":
-				signatureFieldCreation.style.display = "block";
-				break;
-			case "image upload":
-				imgUpload.style.display = "block";
-				break;
-		}
-		vm.createPlaceholder();
-		vm.newElementType = '';
-		vm.createLabel();
+	function closeDialog() {
+		if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
+		var dialog = document.querySelector('#' + vm.newElementType);
+		dialog.close();
+		reset();
 	};
 }

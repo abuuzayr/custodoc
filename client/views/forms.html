@@ -1,89 +1,128 @@
 <div class="mdl-layout__container">
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
-    <div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
-    <main class="mdl-layout__content">
-      <div id="forms" class="page-content">
-        <div id="top-row-buttons" class="mdl-grid">
-          <button ng-click="openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons" role="presentation">add</i> New Form</button>
-          <div class="divider"></div>
-          <!---------------------------------------- Dialog for new form ---------------------------------------->
-          <dialog id="newForm" class="mdl-dialog">
-            <div class="mdl-dialog__content">
-              <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Create new form</button>
-              <p>
-                Or choose an existing form.
-              </p>
-              <div id="existing-forms" class="mdl-selectfield">
-                <label class="mdl-selectfield__label">Existing forms</label>
-                <select>
-                        <option ng-repeat="formName in formNames">{{ formName.name }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="mdl-dialog__actions">
-              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('newForm')">Close</button>
-              <div class="mdl-layout-spacer"></div>
-              <button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use existing form</button>
-            </div>
-          </dialog>
-          
-          <button ng-click="openDialog('newEntry')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons" role="presentation">add</i> New Entry</button>
-          <div class="divider"></div>
-          <!---------------------------------------- Dialog for new entry ---------------------------------------->
-          <dialog id="newEntry" class="mdl-dialog">
-            <div class="mdl-dialog__content">
-              <p>
-                Choose a form.
-              </p>
-              <div id="existing-forms" class="mdl-selectfield">
-                <label class="mdl-selectfield__label">Existing forms</label>
-                <select>
-                        <option ng-repeat="formName in formNames">{{ formName.name }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="mdl-dialog__actions">
-              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('newEntry')">Close</button>
-              <div class="mdl-layout-spacer"></div>
-              <a ui-sref="newentry"><button id="use-existing" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Use form</button></a>
-            </div>
-          </dialog>
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+		<header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+		<div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
+		<main class="mdl-layout__content">
+	<div id="forms" class="page-content">
+		<span us-spinner="{radius:30, width:8, length: 30,speed:1.5,opacity:0.15,scale:1.5}" spinner-key="spinner-1"></span>
+		<div id="top-row-buttons" class="mdl-grid">
+			<button ng-click="vm.openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+			<i class="material-icons" role="presentation">add</i> New Form</button>
+		  <div class="divider"></div>
+		<!-- dialog for new form -->
+		<dialog id="newForm" class="mdl-dialog">
+			<div class="mdl-dialog__content">
+				<form ng-submit="vm.createForm()">
+					<label class="mdl-selectfield__label">Select group</label>
+					<select ng-model="vm.newFormGroup" required>
+							<option ng-repeat="data in vm.groups">{{ data }}</option>
+					</select><br>
+					<label>New Form Name:<input type="text" ng-model="vm.newFormName" required></label>
+					<input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"  value="Create new form">
+				</form>
 
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="openDialog('renameForm')">Rename</button>
-          <div class="divider"></div>
-          <!---------------------------------------- Dialog for rename ---------------------------------------->
-          <dialog id="renameForm" class="mdl-dialog">
-            <div class="mdl-dialog__content">
-              <p>
-                Please input new name.
-              </p>
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input ng-model="formName" class="mdl-textfield__input" type="text" />
-                <label class="mdl-textfield__label" for="formName">Form Name</label>
-              </div>
-            </div>
-            <div class="mdl-dialog__actions">
-              <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('renameForm')">Close</button>
-              <div class="mdl-layout-spacer"></div>
-              <button id="confirm-rename" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="renameForm()">Confirm</button>
-            </div>
-          </dialog>
+			</div>
+			<div class="mdl-dialog__actions">
+			  <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('newForm')">Close</button>
+			</div>
+		  </dialog>
 
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
-          <div class="divider"></div>
-          <div class="mdl-layout-spacer"></div>
-          <button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons" role="presentation">delete</i></button>
-        </div>
-        
-        <!---------------------------------------- Table for forms stub ---------------------------------------->
-        <div>
-          <div id="grid-forms" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
-        </div>
-      </div>
-    </main>
-  </div>
+		<button ng-click="vm.openDialog('groups')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons" role="presentation">add</i>Groups</button>
+		  <div class="divider"></div>
+		  <!-- Dialog for groups -->
+		  <dialog id="groups" class="mdl-dialog">
+			<div class="mdl-dialog__content">
+				<label>New Group Name</label>
+				<input type="text" ng-model="vm.newGroupName">
+				<button ng-click="vm.addNewGroup()">Add Group</button><br>
+				<label>Delete Group</label>
+				<select ng-model="vm.deleteGroupName" ng-init="vm.deleteGroupName = vm.groups[0]">
+						<option ng-repeat="data in vm.groups">{{ data }}</option>
+				</select>
+				<button ng-click="vm.deleteGroup()">Delete</button><br>
+				<form ng-submit="vm.renameGroup()">
+					<label>Rename</label>
+					<select ng-model="vm.renameGroupOld"  required>
+							<option ng-repeat="data in vm.groups">{{ data }}</option>
+					</select>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input ng-model="vm.renameGroupNew" class="mdl-textfield__input" type="text" required />
+						<label class="mdl-textfield__label" for="renameGroupNew">New Group Name</label>
+					</div>
+					<button>Rename</button>
+				</form>
+			</div>
+			<div class="mdl-dialog__actions">
+			  <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('groups')">Close</button>
+			</div>
+		  </dialog>
+
+		  <button ng-click="vm.downloadAsOne()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridApi.selection.getSelectedRows().length">Download As One</button>
+		  <button ng-click="vm.downloadSeparate()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridApi.selection.getSelectedRows().length">Download Separately</button>
+		  <button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
+		<i class="material-icons" role="presentation">add</i> New Entry</button>
+		  <div class="divider"></div>
+		  
+		  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('renameForm')" 
+		  ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Rename Form</button>
+		  <div class="divider"></div>
+		  <!-- Dialog for rename -->
+		  <dialog id="renameForm" class="mdl-dialog">
+			<div class="mdl-dialog__content">
+			  <p>
+				Please input new name.
+			  </p>
+			  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input ng-model="vm.renameFormNew" class="mdl-textfield__input" type="text" />
+				<label class="mdl-textfield__label" for="formName">New Form Name</label>
+			  </div>
+			</div>
+			<div class="mdl-dialog__actions">
+			  <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('renameForm')">Close</button>
+			  <div class="mdl-layout-spacer"></div>
+			  <button id="confirm-rename" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.renameForm()">Confirm</button>
+			</div>
+		  </dialog>
+
+		  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" 
+		  ng-click="vm.openDialog('duplicateForm')"
+		  ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>
+		  <div class="divider"></div>
+		  <!-- Dialog for Duplicate -->
+		  <dialog id="duplicateForm">
+			  <label>Selected Form</label><br>
+			  <p>{{"Group: "+vm.gridApi.selection.getSelectedRows()[0].groupName+" Form: "+vm.gridApi.selection.getSelectedRows()[0].formName;}}</p>
+			  <form ng-submit="vm.duplicateForm()">
+			  <label>Duplicate to group:</label>
+				<select ng-model="vm.duplicateTo" required>
+						<option ng-repeat="data in vm.groups">{{ data }}</option>
+				</select><br>
+			  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input ng-model="vm.duplicateName" class="mdl-textfield__input" type="text" required />
+				<label class="mdl-textfield__label" for="duplicateName">New Form Name</label>
+				<input type="submit" value="Duplicate">
+			  </div>
+			  </form>
+		  </dialog>
+		  <div class="mdl-layout-spacer"></div>
+		  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
+		  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set Normal</button>
+		  <button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
+		<i class="material-icons" role="presentation">delete</i>Delete</button>
+		</div>
+
+		<!-- Table for forms stub -->
+		<div ng-style="vm.getTableHeight()">
+		  <div id="grid-forms"  ui-grid="vm.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection ui-grid-pagination ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div>
+		</div>
+		<button ng-click="vm.showImportant()">Show Important</button>
+		<button ng-click="vm.showRecent()">Show Recent</button>	
+		<!-- Snack Bar -->
+		<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+			<div class="mdl-snackbar__text"></div>
+			<button class="mdl-snackbar__action" type="button"></button>
+		</div>
+	</div>
+		</main>
+	</div>
 </div>
