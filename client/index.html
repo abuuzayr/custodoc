@@ -24,6 +24,8 @@
 
 <div ng-repeat="key in vm.entryData.fields">
     <ng-form name="form">
+
+	<!-- TEXT FIELDS -->
 	<div ng-if="key.type=='text'">
 	    <label class="col-sm-2 control-label">{{key.label}}</label>
 	    <div class="col-sm-6">
@@ -31,16 +33,43 @@
 	    </div>
 	</div>
 	
+	<!-- IMAGE FIELDS -->
 	<div ng-if="key.type=='image'">
-	    <label class="col-sm-2 control-label" ng-hide="vm.file.base64">{{key.label}}</label>
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
 	    <div class="col-sm-6">
-		<input class="form-control" type="file" ng-model="vm.file" base-sixty-four-input maxsize="2000" accept="image/*"><br>
+		<input class="form-control" type="file" ng-model="vm.file" base-sixty-four-input maxsize="2000" accept="image/*">
 	    </div>
 	</div>
-</ng-form>
+
+	<!-- DROPDOWN FIELDS -->
+	<div ng-if="key.type=='dropdown'">
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6">
+		<select form="form" class="form-control" ng-model="key.data" ng-options="option for option in key.options"> </select>
+	    </div>
+	</div>
+	
+	<!-- CHECKBOX FIELDS -->
+	<div ng-if="key.type=='checkbox'">
+	   <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6">
+		<input type="checkbox" class="form-control" ng-model="key.data" value="true">
+	    </div>
+	</div>
+
+	<!-- EMAIL FIELDS -->
+	<div ng-if="key.type=='email'">
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6">
+		<input type="email" ng-model="key.data" class="form-control">
+      	    </div>
+    	</div>
+
+    </ng-form>
 </div>
 
 <button type="submit"> Create </button>
+</br>
 
 </form>
 </body>

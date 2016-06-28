@@ -36,11 +36,13 @@ angular
 	    fields : 
 	    [
 		{type: "text", name: "Name", label: "Name", data:"SugarContent"},
+		{type: "email", name: "Email", label: "Email", data:""},
 		{type: "text", name: "Country", label: "Country", data:"Singapore"},
 		{type: "text", name: "State", label: "State", data:"Tampines"},
 		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
-		{type: "text", name: "Gender", label: "Gender", data:"Male"},
-		{type: "image", name: "Picture", label: "Picture", data:""}
+		{type: "dropdown", name: "Gender", label: "Gender", options: ["Male", "Female"], data:""},
+		{type: "image", name: "Picture", label: "Picture", data:""},
+		{type: "checkbox", name: "Are you Human", label: "Are you Human?", data:"false"}  // true/false questions
 	    ]
 	
 	}
