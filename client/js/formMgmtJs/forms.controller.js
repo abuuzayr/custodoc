@@ -237,6 +237,20 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
+						var node = document.createElement('button');
+						var options = element.options;
+						for(var i = 0; i<options.length; i++){
+							var option = document.createElement('option');
+							option.innerHTML=options[i];
+							node.appendChild(option);
+						}
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;

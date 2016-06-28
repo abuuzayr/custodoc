@@ -65,6 +65,10 @@ function formBuilderCtrl(
 	var elements = {};
 	var formData = {};
 	vm.autofillElements = [];
+	vm.options = [];
+	vm.editOptions = [];
+	vm.editNewOption = ""
+	vm.newOption = "";
 	vm.required = true;
 	vm.imageFieldName = "";
 	vm.textFieldName = "";
@@ -84,6 +88,7 @@ function formBuilderCtrl(
 	vm.newElementType = "";
 	var fontPanel = document.getElementById("fontPanel");
 	var contentPanel = document.getElementById("contentPanel");
+	var optionsPanel = document.getElementById("optionsPanel");
 	var editBackgroundColorLabel = document.getElementById("editBackgroundColorLabel");
 	var editRequiredLabel = document.getElementById("editRequiredLabel");
 	var placeholder = null;
@@ -118,7 +123,7 @@ function formBuilderCtrl(
 	//drag icon initialization
 
 	var dragIcon = document.createElement("img");
-	dragIcon.src = 'images/logo.png';
+	dragIcon.src = 'images/image.jpg';
 
 	//define all the functions
 	vm.maxSizeWarning = maxSizeWarning;
@@ -128,7 +133,6 @@ function formBuilderCtrl(
 	vm.previewStart = previewStart;
 	vm.downloadPreview = downloadPreview;
 	vm.previewDeleteAll = previewDeleteAll;
-	vm.isESCCloseDialog = isESCCloseDialog;
 	vm.isESCDeletePreview = isESCDeletePreview;
 	vm.addPagePromise = addPagePromise;
 	vm.generateImagePromise = generateImagePromise;
@@ -148,8 +152,13 @@ function formBuilderCtrl(
 	vm.hideToolbar = hideToolbar;
 	vm.deleteElement = deleteElement;
 	vm.elementOnclick = elementOnclick;
+	vm.editAddNewOption = editAddNewOption;
+	vm.editDeleteOption = editDeleteOption;
 	vm.setNewElement = setNewElement;
+	vm.addNewOption = addNewOption;
+	vm.deleteOption = deleteOption;
 	vm.addImg = addImg;
+	vm.createDropdownList = createDropdownList;
 	vm.createTextField = createTextField;
 	vm.createImageField = createImageField;
 	vm.createSignatureField = createSignatureField;
@@ -157,9 +166,10 @@ function formBuilderCtrl(
 	vm.getCrossBrowserElementCoords = getCrossBrowserElementCoords;
 	vm.openDialog = openDialog;
 	vm.closeDialog = closeDialog;
+	vm.removePlaceholder = removePlaceholder;
 	vm.addNewAutofillElement = addNewAutofillElement;
 
-
+	//warn the user when changing state or refreshing without saving the form
 	$scope.$on('$stateChangeStart', function( event ) {
 		if(!vm.saved){
 			var answer = confirm("Do you want to save the form before you leave this page?")
@@ -172,6 +182,14 @@ function formBuilderCtrl(
 	window.onbeforeunload = function (event) {
 		if(!vm.saved) return "Are you sure to reload?";
 	}
+
+	//remove place holder when close dialog
+	document.getElementById('label').addEventListener("close", removePlaceholder);
+	document.getElementById('text').addEventListener("close", removePlaceholder);
+	document.getElementById('dropdown').addEventListener("close", removePlaceholder);
+	document.getElementById('imageField').addEventListener("close", removePlaceholder);
+	document.getElementById('signatureField').addEventListener("close", removePlaceholder);
+	document.getElementById('imgUpload').addEventListener("close", removePlaceholder);
 
 	formBuilderFactory.getFormData(vm.groupName,vm.formName)
 		.then(function(res){
@@ -212,7 +230,22 @@ function formBuilderCtrl(
 					node.style.fontSize = element.fontSize;
 					node.style.textDecoration = element.textDecoration;
 					node.required = element.required;
-					console.log(node.required,element.required);
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
+					var node = document.createElement('button');
+					var options = element.options;
+					if(options.length>0){
+						for(var i = 0; i<options.length; i++){
+							var option = document.createElement('option');
+							option.innerHTML=options[i];
+							node.appendChild(option);
+						}
+					}
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
 					node.style.zIndex="1";
 				}else if(element.name.startsWith('signature_')){
 					var node = document.createElement('canvas');
@@ -261,7 +294,6 @@ function formBuilderCtrl(
 	//autofill element management
 
 	function addNewAutofillElement(){
-		console.log(vm.newAutofillElementName)
 		$http.post("http://localhost:3000/autofill/element", 
 			{fieldName:vm.newAutofillElementName,type:vm.newAutofillElementType},
 			{headers: {'Content-Type': 'application/json'} })
@@ -294,7 +326,6 @@ function formBuilderCtrl(
 			for (var j = 1; j < page.childNodes.length; j++) {
 				var node = page.childNodes[j];
 				if((node.nodeType!==1)||(!node.hasAttribute('name'))) {
-					console.log(node);
 					continue;
 				}
 				var id = node.id;
@@ -309,19 +340,37 @@ function formBuilderCtrl(
 				elements[id].top = parseInt(node.style.top) + parseInt(node.getAttribute("data-y"));
 				elements[id].left = parseInt(node.style.left) + parseInt(node.getAttribute("data-x"));
 				if (id.startsWith("background")) {
+					elements[id].type = "background";
 					elements[id].src = node.getAttribute("src");
 				} else {
 					elements[id].backgroundColor = node.style.backgroundColor;
 				}
-				if (id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
+				if(id.startsWith("signature")){
+					elements[id].type = "signature";
+				}
+				if(id.startsWith("image")){
+					elements[id].type = "image";
+				}
+				if (id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
 					elements[id].fontSize = node.style.fontSize;
 					elements[id].color = node.style.color;
 					elements[id].fontFamily = node.style.fontFamily;
 					elements[id].textDecoration = node.style.textDecoration;
 					if (id.startsWith("auto_text") || id.startsWith("text")) {
 						elements[id].required = node.required;
-					} else {
+						elements[id].type = "text";
+					} else if(id.startsWith("label")){
 						elements[id].content = node.innerHTML;
+						elements[id].type = "label";
+					}else if (id.startsWith("dropdown") || id.startsWith("auto_dropdown")) {
+						elements[id].options=[];
+						elements[id].type = "dropdown";
+						if (node.lastChild) {
+							for(var k=0; k<node.childNodes.length; k++){
+								var option = node.childNodes[k];
+								if(option.tagName && option.tagName ==='OPTION') elements[id].options.push(option.innerHTML);
+							}
+						}
 					}
 				}
 			}
@@ -405,15 +454,6 @@ function formBuilderCtrl(
 		pdfFactory.resetData();
 	}
 
-	function isESCCloseDialog(e){
-		var pressedKeyValue = e.keyCode;
-		console.log(1);
-		if (pressedKeyValue === 27) {
-			if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
-			reset();
-		}
-	}
-
 	function isESCDeletePreview(e) {
 		var pressedKeyValue = e.keyCode;
 		if (pressedKeyValue === 27) {
@@ -461,7 +501,7 @@ function formBuilderCtrl(
 		newImg.style.height = "1123px";
 		if (pageNumber === vm.numberOfPages) {
 			vm.progressbar.complete();
-			previewDialog.showModal();
+			openDialog('previewDialog');
 		} else {
 			deferred.resolve(pageNumber + 1);
 			return deferred.promise;
@@ -617,6 +657,8 @@ function formBuilderCtrl(
 
 	function reset() {
 		vm.file = null;
+		vm.options = [];
+		vm.newOption = "";
 		vm.newAutofillElementId = "";
 		vm.selectedAutofillElement = null;
 		vm.labelContent = "";
@@ -624,6 +666,7 @@ function formBuilderCtrl(
 		vm.required = true;
 		vm.imageFieldName = "";
 		vm.textFieldName = "";
+		vm.dropdownListName = "";
 		vm.Fontsize = "16px";
 		vm.FontType = "Arial";
 		vm.FontColor = "black";
@@ -641,6 +684,7 @@ function formBuilderCtrl(
 	}
 
 	function dragStart(event, type) {
+		event.dataTransfer.setData('text/plain', '');
 		vm.newElementType = type;
 		event.dataTransfer.setDragImage(dragIcon, 0, 0);
 	}
@@ -654,9 +698,11 @@ function formBuilderCtrl(
 				}
 				vm.newAutofillElementId = "auto_" + vm.selectedAutofillElement.type+'_'+vm.selectedAutofillElement.fieldName+i;
 				elements[vm.newAutofillElementId] = {};
-				console.log(elements);
 				if(vm.selectedAutofillElement.type==='text'){
 					createTextField();
+				}
+				if (vm.selectedAutofillElement.type==='dropdown') {
+					createDropdownList();
 				}
 			}else{
 				createPlaceholder();
@@ -713,6 +759,20 @@ function formBuilderCtrl(
 		}
 	}
 
+	function editAddNewOption(){
+		vm.editOptions.push(vm.editNewOption);
+		var option = document.createElement("option");
+		option.innerHTML=vm.editNewOption;
+		option.value=vm.editNewOption;
+		vm.element.appendChild(option);
+		vm.editNewOption = "";
+	}
+
+	function editDeleteOption(){
+		vm.editOptions.pop();
+		if(vm.element.lastChild && vm.element.lastChild.tagName && vm.element.lastChild.tagName ==='OPTION') vm.element.removeChild(vm.element.lastChild);
+	}
+
 	function elementOnclick(event) {
 		var element = event.currentTarget;
 		if (element != vm.element) {
@@ -720,6 +780,8 @@ function formBuilderCtrl(
 				vm.element.style.boxShadow = "none";
 			}	
 			vm.saved = false;
+			document.getElementById("optionsPanel").classList.remove('is-active');
+			document.getElementById("options-panel").classList.remove('is-active');
 			document.getElementById("contentPanel").classList.remove('is-active');
 			document.getElementById("content-panel").classList.remove('is-active');
 			document.getElementById("backgroundPanel").classList.remove('is-active');
@@ -748,6 +810,7 @@ function formBuilderCtrl(
 			fontPanel.style.display = "inline";
 			editRequiredLabel.style.display = "none";
 			contentPanel.style.display = "none";
+			optionsPanel.style.display = 'none';
 			editBackgroundColorLabel.style.display = "inline";
 			if (element.getAttribute("name").startsWith("background")) {
 				fontPanel.style.display = "none";
@@ -757,6 +820,17 @@ function formBuilderCtrl(
 			if (element.getAttribute("name").startsWith("image") ||
 				element.getAttribute("name").startsWith("signature")) {
 				fontPanel.style.display = "none";
+			}
+			if(element.getAttribute('name').startsWith('dropdown') || element.getAttribute('name').startsWith('auto_dropdown_')){
+				optionsPanel.style.display='inline';
+				var childNodes = element.childNodes;
+				vm.editOptions = [];
+				vm.editNewOption = "";
+				for(var i=0; i<childNodes.length; i++){
+					console.log(childNodes[i].tagName);
+					if(childNodes[i].tagName==='OPTION') vm.editOptions.push(childNodes[i].innerHTML);
+				}
+				console.log(vm.editOptions);
 			}
 			if (element.getAttribute("name").startsWith("text") || element.getAttribute("name").startsWith("auto_text")) {
 				editRequiredLabel.style.display = "inline";
@@ -813,6 +887,15 @@ function formBuilderCtrl(
 		if(vm.newElementType!=='auto') vm.closeDialog();
 	}
 
+	function addNewOption(){
+		vm.options.push(vm.newOption);
+		vm.newOption = '';
+	}
+
+	function deleteOption(){
+		vm.options.pop();
+	}
+
 	function addImg() {
 		if(!vm.file){
 			alert('Please upload an image');
@@ -835,8 +918,32 @@ function formBuilderCtrl(
 		}		
 	}
 
+	function createDropdownList(){
+		var dropdown = document.createElement("button");
+		vm.saved = false;
+		for(var i=0; i<vm.options.length; i++){
+			var option = document.createElement("option");
+			option.setAttribute("onclick","function(e){e.preventDefault;}")
+			option.innerHTML = vm.options[i];
+			dropdown.appendChild(option);
+		}
+		if (vm.newElementType==='auto') {
+			dropdown.setAttribute("name", 'auto_dropdown_'+vm.selectedAutofillElement.fieldName);
+			dropdown.setAttribute("id", vm.newAutofillElementId);
+		}else{
+			if (elements.hasOwnProperty("dropdown_" + vm.dropdownListName)) {
+				alert("Field name already exists, please change another one");
+				vm.allowCreate = true;
+				return ;
+			} 
+			elements["dropdown_" + vm.dropdownListName] = {};
+			dropdown.setAttribute("name", "dropdown_" + vm.dropdownListName);
+			dropdown.setAttribute("id", "dropdown_" + vm.dropdownListName);
+		}
+		setNewElement(dropdown);
+	}
+
 	function createTextField() {
-		vm.saved
 		var textarea = document.createElement("input");
 		textarea.setAttribute('type','text');
 		textarea.setAttribute('readonly','readonly');
@@ -866,7 +973,6 @@ function formBuilderCtrl(
 			image.setAttribute("name", "image_" + vm.imageFieldName);
 			image.setAttribute("id", "image_" + vm.imageFieldName);
 			setNewElement(image);
-			console.log(elements);
 		}
 	}
 
@@ -880,7 +986,6 @@ function formBuilderCtrl(
 			image.setAttribute("id", "signature_" + vm.signatureFieldName);
 			image.setAttribute("name", "signature_" + vm.signatureFieldName);
 			setNewElement(image);
-			console.log(elements);
 		}
 	}
 
@@ -924,7 +1029,7 @@ function formBuilderCtrl(
 			var offEl = mouseEvent.target;
 			var offX = 0;
 			var offY = 0;
-			if(!offEl.getAttribute('id').startsWith('page')){
+			if(offEl.id && !offEl.getAttribute('id').startsWith('page')){
 				offEl = offEl.parentElement;
 			}
 			if (typeof(offEl.offsetParent) != "undefined"){
@@ -952,11 +1057,17 @@ function formBuilderCtrl(
 		if (!dialog.showModal) {
 			dialogPolyfill.registerDialog(dialog);
 		}
+		console.log(dialog.open);
 		dialog.showModal();
 	};
 
-	function closeDialog() {
+	function removePlaceholder(){
 		if(placeholder && placeholder.parentNode===currentPage) currentPage.removeChild(placeholder);
+		vm.allowCreate = true;
+		reset();
+	}
+
+	function closeDialog() {
 		var dialog = document.querySelector('#' + vm.newElementType);
 		dialog.close();
 		reset();
@@ -1014,45 +1125,47 @@ function formBuilderCtrl(
 			var target = event.target,
 				x = (parseInt(target.getAttribute('data-x')) ),
 				y = (parseInt(target.getAttribute('data-y')));
-			if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
-			if (event.edges.right && (parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width))&&event.dx>0) return false;
-			if(event.edges.left && parseInt(target.style.width)===0 && event.dx>0) return false;
-			if(event.edges.top && (parseInt(target.style.top)+y<0) && (event.dy<0)) return false;
-			if (event.edges.bottom && (parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height))&&event.dy>0) return false;
-			if(event.edges.top && parseInt(target.style.height)===0 && event.dy>0) return false;
-			// translate when resizing from top or left edges
-			if(event.edges.left && parseInt(target.style.width)-event.dx>=0) x += event.dx;
-			if(event.edges.top && parseInt(target.style.height)-event.dy>=0) y += event.dy;
-
-			if(event.edges.left && (parseInt(target.style.left)+x<30) && (event.dx<0)) {
-				target.style.width=parseInt(target.style.width)+x+parseInt(target.style.left)+'px';
-				x=-parseInt(target.style.left);
-			}
-			if(event.edges.top && (parseInt(target.style.top)+y<30) && (event.dy<0)) {
-				target.style.height=parseInt(target.style.height)+y+parseInt(target.style.top)+'px';
-				y=-parseInt(target.style.top);
-			}
-
-			if (event.edges.right&&(parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width)-30)&&event.dx>0) {
-				target.style.width=(parseInt(target.parentNode.style.width)-parseInt(target.style.left)-parseInt(target.style.borderWidth)*2-x)+'px';
-				return false;
-			}
-
-			if (event.edges.bottom&&(parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height)-30)&&event.dy>0) {
-				target.style.height=(parseInt(target.parentNode.style.height)-parseInt(target.style.top)-parseInt(target.style.borderWidth)*2-y)+'px';
-				return false;
+			horizontal();
+			vertical();
+				
+			function horizontal(){
+				if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
+				if (event.edges.right && (parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width))&&event.dx>0) return false;
+				if(event.edges.left && parseInt(target.style.width)===0 && event.dx>0) return false;
+				if(event.edges.left && parseInt(target.style.width)-event.dx>=0) x += event.dx;
+				if(event.edges.left && (parseInt(target.style.left)+x<30) && (event.dx<0)) {
+					target.style.width=parseInt(target.style.width)+x+parseInt(target.style.left)+'px';
+					x=-parseInt(target.style.left);
+				}
+				if (event.edges.right&&(parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width)-30)&&event.dx>0) {
+					target.style.width=(parseInt(target.parentNode.style.width)-parseInt(target.style.left)-parseInt(target.style.borderWidth)*2-x)+'px';
+					return false;
+				}
+				if(event.edges.right) target.style.width  = parseInt(target.style.width)+event.dx + 'px';
+				if(event.edges.left) target.style.width  = parseInt(target.style.width)-event.dx + 'px';
+				target.setAttribute('data-x', x);
+				target.style.webkitTransform = target.style.transform =
+						'translate(' + x + 'px,' + y + 'px)';
 			}
 
-			// update the element's style
-
-			if(event.edges.right) target.style.width  = parseInt(target.style.width)+event.dx + 'px';
-			if(event.edges.left) target.style.width  = parseInt(target.style.width)-event.dx + 'px';
-			if(event.edges.bottom) target.style.height  = parseInt(target.style.height)+event.dy + 'px';
-			if(event.edges.top) target.style.height  = parseInt(target.style.height)-event.dy + 'px';
-			// target.style.height = event.rect.height + 'px';
-			target.setAttribute('data-x', x);
-			target.setAttribute('data-y', y);
-			target.style.webkitTransform = target.style.transform =
-					'translate(' + x + 'px,' + y + 'px)';
+			function vertical(){
+				if(event.edges.top && (parseInt(target.style.top)+y<0) && (event.dy<0)) return false;
+				if (event.edges.bottom && (parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height))&&event.dy>0) return false;
+				if(event.edges.top && parseInt(target.style.height)===0 && event.dy>0) return false;
+				if(event.edges.top && parseInt(target.style.height)-event.dy>=0) y += event.dy;
+				if(event.edges.top && (parseInt(target.style.top)+y<30) && (event.dy<0)) {
+					target.style.height=parseInt(target.style.height)+y+parseInt(target.style.top)+'px';
+					y=-parseInt(target.style.top);
+				}
+				if (event.edges.bottom&&(parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height)-30)&&event.dy>0) {
+					target.style.height=(parseInt(target.parentNode.style.height)-parseInt(target.style.top)-parseInt(target.style.borderWidth)*2-y)+'px';
+					return false;
+				}
+				if(event.edges.bottom) target.style.height  = parseInt(target.style.height)+event.dy + 'px';
+				if(event.edges.top) target.style.height  = parseInt(target.style.height)-event.dy + 'px';
+				target.setAttribute('data-y', y);
+				target.style.webkitTransform = target.style.transform =
+						'translate(' + x + 'px,' + y + 'px)';
+			}
 		});
 }
