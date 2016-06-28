@@ -4,7 +4,8 @@
 <head>
     <!-- AngularJS and MDL -->
     <script src="node_modules/angular/angular.js"</script>
-    
+    <script type="text/javascript" src="https://cdn.rawgit.com/adonespitogo/angular-base64-upload/master/src/angular-base64-upload.js"></script>    
+
     <!-- Controllers -->
     <script src="js/app.js"></script>
     <script src="controllers/newEntryController.js"></script>
@@ -31,9 +32,9 @@
 	</div>
 	
 	<div ng-if="key.type=='image'">
-	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <label class="col-sm-2 control-label" ng-hide="vm.file.base64">{{key.label}}</label>
 	    <div class="col-sm-6">
-		<input class="form-control" type="file" placeholder="{{key.name}}" ng-model="key.data">
+		<input class="form-control" type="file" ng-model="vm.file" base-sixty-four-input maxsize="2000" accept="image/*"><br>
 	    </div>
 	</div>
 </ng-form>

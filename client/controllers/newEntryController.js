@@ -5,6 +5,7 @@ angular
         
 	var vm = this;
 	vm.entryData = [];
+	vm.file = null;
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -44,6 +45,8 @@ angular
 	
 	}
 	
+	console.log("Hey hey" + JSON.stringify(vm.file));	     	
+
 	/**** UNDER CONSTRUCTION  ****
 	
 	// function to delete an entry
@@ -74,7 +77,6 @@ angular
 	vm.createEntry = function() {
 	    //var name = vm.entData.groupName;
 	
-	   console.log(vm.entryData);	     	
 
 	    //TODO: INCLUDE USER INPUT VALUES INSIDE ENTRYDATA
 	    var entryData2 = [{
