@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- AngularJS and MDL -->
+    <script src="resources/angular.min.js"></script>
+    <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+    <!-- UI router -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.0/angular-ui-router.min.js"></script>
+
+    <!-- UI grid -->
+    <script src="resources/angular-touch.js"></script>
+    <script src="resources/angular-animate.js"></script>
+    <script src="resources/csv.js"></script>
+    <script src="resources/pdfmake.js"></script>
+    <script src="resources/vfs_fonts.js"></script>
+    <script src="resources/ui-grid.js"></script>
+    <link rel="stylesheet" href="resources/ui-grid.css" type="text/css">
+
+    <!-- Controllers -->
+    <script src="js/app.js"></script>
+    <script src="controllers/sideNavController.js"></script>
+    <script src="controllers/loginController.js"></script>
+    <script src="controllers/entriesController.js"></script>
+    <script src="controllers/settingsController.js"></script>
+    <script src="controllers/mediaLibraryController.js"></script>
+    <script src="controllers/newEntryController.js"></script>
+    <script src="controllers/autofillController.js"></script>
+    <script src="controllers/usersController.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-indigo.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Dialogs MDL -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.js"></script>
+        
+    <!-- Form builder imports -->
+	<link rel="stylesheet" type="text/css" href="css/formBuilder.css">
+
+	<script type="text/javascript" src="https://cdn.rawgit.com/adonespitogo/angular-base64-upload/master/src/angular-base64-upload.js"></script>
+	<script src="js/formBuilderJs/interact.min.js"></script>
+	<script src="js/formBuilderJs/app.formBuilder.js"></script>
+	<script src="js/formBuilderJs/formBuilder.factory.js"></script>
+	<script src="js/formBuilderJs/formBuilder.controller.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+	<script src="js/formBuilderJs/pdf.factory.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.2.2/rasterizeHTML.allinone.js"></script>
+	<script src="js/formBuilderJs/ngprogress.min.js"></script>
+	<link rel="stylesheet" href="css/ngProgress.css">
+
+	<!-- Form Management imports -->
+	<script src="js/formMgmtJs/app.forms.js"></script>
+	<script src="js/formMgmtJs/forms.controller.js"></script>
+	<script src="js/formMgmtJs/forms.factory.js"></script>
+    <script src="resources/spin.min.js"></script>
+    <script src="resources/angular-spinner.min.js"></script>
+
+    <title>BulletForms</title>
+</head>
+
+<body id="body" ng-app="user-interface" ng-cloak> 
+
+<div ui-view></div>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<!---------------------------------------- Ng-include nav bars ---------------------------------------->
+	<header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+	<div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
+
+	<div id="formBuilderBody" class="mdl-layout__content">
+		<div id="pagebar" class="mdl-grid">
+			<button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
+			<div class="divider"></div>
+			<button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
+			<div class="divider"></div>
+			<button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
+			<div class="divider"></div>
+			<button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
+			<div class="divider"></div>
+			<button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
+			<div class="divider"></div>
+			<button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i>Save</button>
+			<div class="mdl-layout-spacer"></div>
+			<button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">delete</i> Delete page</button>
+		</div>
+		<!---------------------------------------- Top elements card ---------------------------------------->
+		<div id="toolbar" style="display:none">
+			<div class="mdl-tabs mdl-js-tabs">
+				<div class="mdl-tabs__tab-bar">
+					<a id="borderPanel" href="#border-panel" class="mdl-tabs__tab is-active">Border</a>
+					<a id="fontPanel" href="#font-panel" class="mdl-tabs__tab">Font</a>
+					<a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
+					<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
+					<a id="optionsPanel" href="#options-panel" class="mdl-tabs__tab">Options</a>
+					<div style="padding: 5px; vertical-align:middle;">
+					<!-- Delete element -->
+					<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="margin-left: 35px;">
+						<i class="material-icons" role="presentation">delete</i> Delete Element</button>
+					</div>
+					<div class="mdl-layout-spacer"></div>
+					<!-- Hide Toolbar -->
+					<button name="hide" id="hideToolbar" ng-click="vm.hideToolbar()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+	   							Hide</button>
+				</div>
+				<div class="mdl-tabs__panel is-active" id="border-panel">
+					<label>Border Style:
+									<select id="editBorderStyle" ng-model="vm.element.style.borderStyle">
+										<option value="solid">Solid</option>
+										<option value="dashed">Dashed</option>
+										<option value="dotted">Dotted</option>
+										<option value="none">None</option>
+									</select>
+								</label>
+					<label>Border Width:
+								<select id="editBorderWidth" ng-model="vm.element.style.borderWidth">
+									<option ng-repeat="option in vm.availableBorderWidth" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+					<label>Border Radius:
+								<select id="editBorderRadius" ng-model="vm.element.style.borderRadius">
+									<option ng-repeat="option in vm.availableBorderRadii" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+					<label>Border Color:
+								<select id="editBorderColor" ng-model="vm.element.style.borderColor" style={{"color:"+vm.element.style.borderColor}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+				</div>
+				<div class="mdl-tabs__panel" id="font-panel">
+					<label>Font Size:
+								<select id="editFontSize" ng-model="vm.element.style.fontSize">
+									<option ng-repeat="option in vm.availableFontsizes" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+					<label>Font Type:
+								<select id="editFontFamily" ng-model="vm.element.style.fontFamily" style={{"font-family:"+vm.element.style.fontFamily}}>
+									<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+					<label>Font Color:
+								<select id="editFontColor" ng-model="vm.element.style.color" style={{"color:"+vm.element.style.color}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+								</label>
+					<label>Text Decoration:
+								<select id="editTextDecoration" ng-model="vm.element.style.textDecoration">
+									<option value="none">None</option>
+									<option value="overline">Overline</option>
+									<option value="line-through">Line-through</option>
+									<option value="underline">Underline</option>
+								</select>
+								</label>
+				</div>
+				<div class="mdl-tabs__panel" id="background-panel">
+					<label id="editBackgroundColorLabel">Background Color:
+								<select id="editBackgroundColor"
+								ng-model="vm.element.style.backgroundColor" style={{"background-color:"+vm.element.style.backgroundColor}}>
+									<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
+								</select>
+							</label>
+					<label>Opacity:
+								<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
+								</label>
+				</div>
+				<div class="mdl-tabs__panel" id="content-panel">
+					<label  id="editContent">Content: <textarea rows="3"  ng-model="vm.element.innerHTML"></textarea></label>
+					<label id="editTextFieldDefault">Default Value: 
+						<input type="text" ng-model="vm.element.placeholder">
+					</label>
+					<label id="editCheckboxDefault">Default Value: 
+						<select ng-model="vm.element.firstChild.checked"  ng-options="vm.boolToStr(item) for item in [true, false]"></select>
+					</label>
+				</div>
+				<div class="mdl-tabs__panel" id="options-panel">
+					<label>{{"Options: " + vm.editOptions.join(', ')}}</label><br>
+					<input type="text" ng-model="vm.editNewOption">
+					<input type="button" value="Add" ng-click="vm.editAddNewOption()">
+					<input type="button" value="Delete" ng-click="vm.editDeleteOption()"><br>
+					<label>Drop-down List Default Value:
+						<select type="text" name="text" ng-model="vm.element.value" ><option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option></select>
+					</label>
+				</div>
+			</div>
+		</div>
+		<!---------------------------------------- Left elements card ---------------------------------------->
+		<section id="sec1">
+			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+				<div class="mdl-tabs__tab-bar">
+					<a href="#newElement-panel" class="mdl-tabs__tab is-active">New Elements</a>
+					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill Elements</a>
+				</div>
+				<div class="mdl-tabs__panel is-active" id="newElement-panel">
+					<a name="createLabel" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
+					<div class="divider"></div>
+					<a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+					<div class="divider"></div>
+					<a name="createCheckbox" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'checkbox')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
+					<div class="divider"></div>
+					<a name="createRadio" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'radio')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
+					<div class="divider"></div>
+					<a name="createDropdown" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'dropdown')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
+					<div class="divider"></div>
+					<a name="createImageField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imageField')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
+					<div class="divider"></div>
+					<a name="createSignature" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'signatureField')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
+					<div class="divider"></div>
+					<a name="createImageAttachment" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imgUpload')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+				</div>
+				<div class="mdl-tabs__panel" id="autofillElement-panel">
+					<form ng-submit="vm.addNewAutofillElement()">
+						<label>Add new element: <input type="text" ng-model="vm.newAutofillElementName" required></label><br>
+						<label>Type: 
+							<select ng-init="vm.newAutofillElementType='text'" ng-model="vm.newAutofillElementType" required>
+								<option value="text">Text</option> 
+								<option value="dropdown">Drop-down List</option>
+							</select>
+							<input type="submit" value="Add">
+						</label><br>
+					</form>
+					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
+					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
+						<div class="divider"></div>
+						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'auto')"
+						draggable="true">{{element.fieldName}}</a>
+					</div>
+				</div>
+			</div>
+
+		</section>
+
+		<div ng-init="displayPageBar = false"></div>
+		<section id="form" style="height: 1123px; width: 794px">
+			<div class="container" style="height:50px; width: 794px;z-index=1000;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
+					<div id="hidden-pagebar" ng-show="displayPagebar">
+					<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+					<form ng-submit="vm.goToPage()" style="display:inline">
+						<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+						<input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					</form>
+					<form ng-submit="vm.movePage()" style="display:inline">
+						<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+						<input type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					</form>
+				</div>
+			</div>
+
+			<div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)"
+				ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px">
+				<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
+			</div>
+		</section>
+
+		<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+			<div class="mdl-snackbar__text"></div>
+			<button class="mdl-snackbar__action" type="button"></button>
+		</div>
+	</div>
+</div>
+
+		<dialog id="previewDialog" class="mdl-dialog">
+			<div class="dialog__actions" ng-keydown="vm.isESCDeletePreview($event)">
+				<button ng-click="vm.downloadPreview();">Download As PDF</button>
+				<button ng-click="vm.previewDeleteAll();">Close</button>
+			</div>
+			<div id="preview" class="mdl-dialog__content"></div>
+		</dialog>
+
+			<!---------------------------------------- Create label ---------------------------------------->
+			<dialog id="label" class="mdl-dialog" >
+				<form novalidate id="labelCreation" name="labelCreation" ng-submit="vm.createLabel()">
+					<div class="mdl-dialog__content mdl-grid">
+					<div class="mdl-cell mdl-cell--6-col">
+					<legend><h4>Create Label</h4></legend>
+					<label for="labelContent">Label Name:<br> 
+					<textarea name="labelContent" ng-model="vm.labelContent" style="resize:none" required="true"></textarea></label><br>
+					<label>Font Type:<br>
+						<select ng-options="option for option in vm.fontsArray"
+						  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+					</label><br>
+					<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+					<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.FontColor" style={{"color:"+vm.FontColor}} ></select>
+		</label><br>
+					<label>Text Decoration:<br>
+			<select ng-model="vm.TextDecoration">
+				<option value="none">None</option>
+				<option value="overline">Overline</option>
+				<option value="line-through">Line-through</option>
+				<option value="underline">Underline</option>
+			</select>
+		</label><br>
+		</div>
+		<div class="mdl-cell mdl-cell--6-col">
+					<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+					<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+		<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+					<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+					<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth"
+			  ng-model="vm.BorderWidth"></select>
+		</label><br>
+					<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii"
+			  ng-model="vm.BorderRadius"></select>
+		</label><br>
+					<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+		</div>
+		</div>
+		<div class="mdl-dialog__actions" style="padding-left:0px;" >
+					<!-- Dialog cancel button here HELLO -->
+					<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+					<div class="mdl-layout-spacer"></div>
+					<input type="submit" value="Create Label" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+					</div>
+						
+					</form>
+			</dialog>
+			<!---------------------------------------- Create text field ---------------------------------------->
+<dialog id="text" class="mdl-dialog" >
+<form id="textFieldCreation" name="textFieldCreation" ng-submit="vm.createTextField()">
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<legend><h4>Create Text Field</h4></legend>
+		<label>Text Field Name:<br>
+		<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true"></label><br>
+		<label>Defalut Value:<br>
+		<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault" required="true"></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" value="Create Text Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+	</div>	
+</form>
+</dialog>
+
+<!-- create checkbox -->
+
+<dialog id="checkbox" class="mdl-dialog" >
+<form id="checkboxCreation" name="checkboxCreation" ng-submit="vm.createCheckbox()">
+	<legend><h4>Create Checkbox</h4></legend>
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Checkbox Field Name:<br>
+		<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true"></label><br>
+		<label>Checked by default?<br>
+			<select ng-model="vm.checkboxdefault" ng-init="vm.checkboxdefault=true" ng-options="vm.boolToStr(item) for item in [true, false]">
+			</select>
+		</label><br>
+		<label>Checkbox Label:<br>
+		<input type="text" name="text" id="checkboxLabel" ng-model="vm.checkboxLabel" required="true"></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" value="Create Checkbox" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+	</div>	
+</form>
+</dialog>
+
+<!-- create radio button -->
+<dialog id='radio' >
+<form id="radioCreation" name="radioCreation" ng-submit="vm.createRadio()">
+	<legend><h4>Create Radio Button</h4></legend>
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Radio Button Name:<br>
+		<input type="text" name="text" id="radioName" ng-model="vm.radioName" required="true"></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+		<label>Display: <br>
+			<select ng-init="vm.radioDisplay = 'radioInline'" ng-model="vm.radioDisplay">
+				<option value="radioInline">In-line</option>
+				<option value="radioMultiline">Multiple-line</option>
+			</select>
+		</label><br>
+		<label>Add option:<br>
+		<input type="text" ng-model="vm.newOption">
+		<input type="button" value="Add" ng-click="vm.addNewOption()">
+		<input type="button" value="Delete" ng-click="vm.deleteOption()"><br></label>
+		<label>Radio Button Default Value:<br>
+			<select type="text" name="text" id="radioDefault" ng-model="vm.radioDefault" >
+				<option ng-repeat="option in vm.options" value={{option}}>{{option}}</option>
+			</select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<label>Options: </label>
+		<h4>{{vm.options.join(', ')}}</h4>
+		<br>
+	</div>
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create drop-down list">
+	</div>	
+</form>
+</dialog>
+
+			<!-- Create drop-down list -->
+<dialog id='dropdown' >
+<form id="dropdownCreation" name="dropdownCreation" ng-submit="vm.createDropdownList()">
+	<legend><h4>Create Drop-down List</h4></legend>
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Drop-down List Name:<br>
+		<input type="text" name="text" id="dropdownListName" ng-model="vm.dropdownListName" required="true"></label><br>
+		<label>Drop-down List Default Value:<br>
+		<select type="text" name="text" id="dropdownListDefault" ng-model="vm.dropdownListDefault" ><option ng-repeat="option in vm.options" value={{option}}>{{option}}</option></select></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+		<label>Add option:<br>
+		<input type="text" ng-model="vm.newOption">
+		<input type="button" value="Add" ng-click="vm.addNewOption()">
+		<input type="button" value="Delete" ng-click="vm.deleteOption()"><br></label>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<label>Options: </label>
+		<h4>{{vm.options.join(', ')}}</h4>
+		<br>
+
+	</div>
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create drop-down list">
+	</div>	
+</form>
+</dialog>
+			<!---------------------------------------- Create image field ---------------------------------------->
+			<dialog id="imageField" class="mdl-dialog" >
+			<form id="imageFieldCreation" name="imageFieldCreation" ng-submit="vm.createImageField()">
+				<div class="mdl-dialog__content">
+					<legend><h4>Create Image Field</h4></legend>
+					<label>Image Field Name:<br>
+					<input type="text" name="text" id="imageFieldName" ng-model="vm.imageFieldName" required="true"></label><br>
+					<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+						<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					</label><br>
+					<label>Backgroud Color:<br>
+						<select ng-options="option for option in vm.colorsArray" 
+						ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+					</label><br>
+					<label>Border Style:<br>
+						<select ng-model="vm.BorderStyle">
+							<option value="solid">Solid</option>
+							<option value="dashed">Dashed</option>
+							<option value="dotted">Dotted</option>
+							<option value="none">None</option>
+						</select>
+					</label><br>
+					<label>Border Width:<br>
+						<select ng-options="option for option in vm.availableBorderWidth"
+						  ng-model="vm.BorderWidth"></select>
+					</label><br>
+					<label>Border Radius:<br>
+						<select ng-options="option for option in vm.availableBorderRadii"
+						  ng-model="vm.BorderRadius"></select>
+					</label><br>
+					<label>Border Color:<br>
+						<select ng-options="option for option in vm.colorsArray"
+						  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}}></select>
+					</label><br>
+				</div>
+				<div class="mdl-dialog__actions" style="padding-left:0px;">
+					<!-- Dialog cancel button here HELLO -->
+					<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+					<div class="mdl-layout-spacer"></div>
+					<div class="mdl-layout-spacer"></div>
+					<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create image field">
+				</div>	
+			</form>
+			</dialog>
+			<!---------------------------------------- Create signature field ---------------------------------------->
+			<dialog id="signatureField" class="mdl-dialog">
+			<form id="signatureFieldCreation" name="signatureFieldCreation"  ng-submit="vm.createSignatureField()">
+				<div class="mdl-dialog__content">
+					<legend><h4>Create Signature Field</h4></legend>
+					<label>Signature Field Name: 
+					<input type="text" name="text" id="signatureFieldName" ng-model="vm.signatureFieldName" required="true"></label><br>
+					<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+		<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+					<label>Background Color:
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+					<label>Border Style:
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+					<label>Border Width:
+			<select ng-options="option for option in vm.availableBorderWidth"
+			  ng-model="vm.BorderWidth"></select>
+		</label><br>
+					<label>Border Radius:
+			<select ng-options="option for option in vm.availableBorderRadii"
+			  ng-model="vm.BorderRadius"></select>
+		</label><br>
+					<label>Border Color:
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+		</div>
+		<div class="divider"></div>
+		<div class="mdl-dialog__actions" style="padding-left:0px;">
+					<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+					<div class="mdl-layout-spacer"></div>
+					<input type="submit" value="Create Signature Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create signature field">
+					</div>
+			</form><br>
+			</dialog>
+			<!---------------------------------------- Image upload ---------------------------------------->
+			<dialog id="imgUpload" class="mdl-dialog" >
+			<form name="imgUpload" ng-submit="vm.addImg()">
+			<div class="mdl-dialog__content mdl-grid">
+					<legend>Upload image attachment</legend>
+					<label for="file">Select File:<br>
+		<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" ><br>
+		</label>
+		
+		<div>
+		<span ng-style="vm.maxSizeWarning()">maximun size: 2Mb</span><br>
+		<label>Opacity:
+			<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+			<span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span>
+		</label><br>
+						<label>Select Border Style
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+						<label> Select Border Width:
+			<select ng-options="option for option in vm.availableBorderWidth"
+			  ng-model="vm.BorderWidth"></select>
+		</label><br>
+						<label> Select Border Color:
+			<select ng-options="option for option in vm.colorsArray"
+			  ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+						<label> Select Border Radius:
+			<select ng-options="option for option in vm.availableBorderRadii"
+			  ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label ng-if="vm.file">Preview: <br>
+		<img width="90%"  style='opacity:{{vm.Opacity}}' ng-src='data:image/png;base64,{{vm.file.base64}}'/>
+		</label>
+		</div>
+		</div>
+		<div class="mdl-dialog__actions" style="padding-left:0px;">
+			<input type="submit" value="Add Image as Attachment"><br>
+			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.file=null;vm.closeDialog()" value="Cancel">
+		</div>
+			</form>
+			</dialog>

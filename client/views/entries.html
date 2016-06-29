@@ -1,0 +1,22 @@
+<div class="mdl-layout__container">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header  class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+  <div  class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
+  <main class="mdl-layout__content">
+    <div id="entries" class="page-content">
+      <div id="top-row-buttons" class="mdl-grid">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons" role="presentation">add</i> New Entry</button>
+        <div class="divider"></div>
+        <div class="mdl-layout-spacer"></div>
+        <button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons" role="presentation">delete</i></button>
+      </div>
+      <!-- Table for forms stub -->
+      <div ng-controller="entriesCtrl">
+        <div id="grid-entries" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
