@@ -45,7 +45,8 @@
 			</select>
 			<br>to
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input ng-model="vm.renameGroupNew" class="mdl-textfield__input" type="text" placeholder="New group name" ng-required="true" />
+				<input ng-model="vm.renameGroupNew" class="mdl-textfield__input" type="text" placeholder="New group name" ng-required="true"
+				/>
 				<label class="mdl-textfield__label" for="renameGroupNew">New group name</label>
 			</div>
 		</form>
@@ -67,8 +68,8 @@
 	</div>
 	<div class="mdl-dialog__actions">
 		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('deleteGroup')">Close</button>
-			<div class="mdl-layout-spacer"></div>
-			<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.deleteGroup()">Delete</button><br>
+		<div class="mdl-layout-spacer"></div>
+		<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.deleteGroup()">Delete</button><br>
 	</div>
 </dialog>
 
@@ -145,7 +146,12 @@
 						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>
 					<div class="divider"></div>
 					<div class="mdl-layout-spacer"></div>
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+					<label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="setImportantToggle">
+  <input type="checkbox" id="setImportantToggle" class="mdl-icon-toggle__input" ng-click="vm.toggleImportantIcon">
+  <i class="mdl-icon-toggle__label material-icons">star</i>
+</label> 
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set Normal</button>
 					<button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
 		<i class="material-icons" role="presentation">delete</i>Delete</button>
