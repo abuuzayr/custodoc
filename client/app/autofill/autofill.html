@@ -123,7 +123,12 @@
         <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.importCSV()">
             Import
         </button>
-
+        <form>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+            <input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFile" readonly/>
+            <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+            <i class="material-icons">attach_file</i><input type="file" id="uploadBtn">
+        </form>
         <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.clearSelected()" ng-if="vm.hasSelection">
             Clear Selection
         </button>

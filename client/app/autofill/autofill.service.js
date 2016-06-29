@@ -28,7 +28,7 @@ angular.module('app')
 
 		}
 
-		this.updateRecords = function(rowEntity){
+		this.updateRecord = function(rowEntity){
 			var path = '/protected/autofill/';
 			var req = {
 					method: 'PUT',
@@ -43,6 +43,20 @@ angular.module('app')
 			return $http(req);	
 		}
 
+		this.createRecord = function(rowEntity){
+			var path = '/protected/autofill/';
+			var req = {
+				method: 'POST',
+				url: appConfig.API_URL + path,
+				headers:{ 'X-Access-Token': appConfig.TOKEN },
+				data: {recordData: rowEntity} 
+			}
+			return $http(req);
+		}
+
+
+
+
 		this.deleteOneRecord = function(selectedId){
 			var path = '/protected/autofill/';
 			var req = {
@@ -54,12 +68,18 @@ angular.module('app')
 
 			return $http(req);
 		}
+
+		
+
+
+
+
 		this.deleteRecords = function( rgSelectedId ){
 			var path = '/protected/autofill';
 			var req = {
 				method: 'DELETE',
 				url: appConfig.API_URL + path,
-				headers:{ 'X-Access-Token': vm.token},
+				headers:{ 'X-Access-Token': appConfig.TOKEN},
 				params: { id: rgSelectedId }
 			}
 
