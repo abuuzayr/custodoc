@@ -3,14 +3,11 @@ var routes = require('express').Router();
 var auth = require('./utils/403.js')();
 var http404 = require('./utils/404.js')();
 //add routes
-var autofillRoutes = require('./modules/autofill');
-var entryrecordsRoutes = require('./modules/entryRecords');
+var protectedRoutes = require('./modules/protected');
 
 //AUTH
 //routes.use('/',auth.authenticateToken);
-
-routes.use('/autofill', autofillRoutes);
-routes.use('/entryrecords', entryrecordsRoutes);
+routes.use('/protected', protectedRoutes)
 
 //UNDEFINED ROUTES
 routes.use('*', http404.notFoundMiddleware);

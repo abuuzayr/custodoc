@@ -1,8 +1,8 @@
 var entryrecordsRoutes = require('express').Router();
 //import modules
-var config = require('../config.js');
-var connection = require('../utils/connection.js')();
-var http404 = require('../utils/404.js')();
+var config = require('../../config.js');
+var connection = require('../../utils/connection.js')();
+var http404 = require('../../utils/404.js')();
 
 //CRUD
 entryrecordsRoutes.route('/')

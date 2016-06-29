@@ -1,8 +1,9 @@
 var autofill = require('express').Router();
 //import modules
-var config = require('../config.js');
-var connection = require('../utils/connection.js')();
-var http404 = require('../utils/404.js')();
+var config = require('../../config.js');
+var sendError = require('../../utils/connection.js');
+var connection = require('../../utils/connection.js')();
+var http404 = require('../../utils/404.js')();
 
 //autofill records QUERY
 autofill.get('/query/:query',function(req,res){
@@ -30,7 +31,7 @@ autofill.get('/query/:query',function(req,res){
 				}
 			})
 			.catch(function(err){
-				res.send(err+'');
+				sendError(req,res,400,err.message,'Unsuccessful');
 			});		
 
 	});
@@ -41,17 +42,20 @@ autofill.route('/element')
 	.get(function(req,res){
 		connection.Do(function(db){
 			db.collection('element')
-				.find({}, {fieldname:1, _id:0})
+				.find({}, {_id:0})
 				.toArray()
 				.then(function(data){
-					console.log('element all data');
-					res.status(200).send(data);
+					if(data){
+						console.log('autofill element retrieved');
+						res.status(200).send(data);
+					}
+					else
+						throw new Error('no autofill element')
 				})
 				.catch(function(err){
 					console.log(err);
-					return res.status(400).send(err);
+					sendError(req,res,400,err.message,'Unsuccessful');
 				});
-			
 			});	
 	})	
 
@@ -66,7 +70,7 @@ autofill.route('/element')
 				})
 				.catch(function(err){
 					console.log(err);
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 		});
 	});
@@ -83,7 +87,7 @@ autofill.route('/:record_id')
 					res.status(200).send(doc);	
 				})
 				.catch(function(err){
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 		})
 	})
@@ -98,7 +102,7 @@ autofill.route('/:record_id')
 					res.send(200).send(result);
 				})
 				.catch(function(err){
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				})
 		});
 	})
@@ -125,7 +129,7 @@ autofill.route('/:record_id')
 			})
 			.catch(function(err){
 				console.log(err);
-				return res.status(400).send(err);
+				return sendError(req,res,400,err.message,'Unsuccessful');
 			})
 		})		
 	});
@@ -143,7 +147,7 @@ autofill.route('/')
 	        		res.status(200).send(docs);
 				})
 				.catch(function(err){
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 		});
 	})
@@ -156,7 +160,7 @@ autofill.route('/')
 				res.status(200).send('success: ' + savedDoc + 'documents removed');		
 			})
 			.catch(function(err){
-				return res.status(400).send(err);
+				return sendError(req,res,400,err.message,'Unsuccessful');
 			});
 	})
 
@@ -174,7 +178,7 @@ autofill.route('/')
 					res.status(200).send('success: ' + results.n + 'documents removed');	
 				})
 				.catch(function(err){
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 		});
 	});

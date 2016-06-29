@@ -22,8 +22,9 @@ app.use( function(req, res, next) {
   next();
 });
 // Connect all our routes to our application
-app.use(express.static(__dirname + '/../client/autofill'));
-app.use('/static',express.static(__dirname + '/../client/autofill'));
+app.use(express.static(__dirname + '/../client/app/autofill'));
+app.use(express.static(__dirname + '/../client/app/'));
+app.use('/static',express.static(__dirname + '/../client/app/autofill'));
 
 app.use('/api', routes);
 //app.use('*',http404.notFoundMiddleware);
