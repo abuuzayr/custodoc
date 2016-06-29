@@ -1,3 +1,13 @@
+[draggable=true] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
 #sec1{
 	position: absolute;
 	width:30%;
@@ -34,8 +44,8 @@
 }
 
 .page{
-	width: 21cm;
-	height: 29.7cm;
+	width: 794px;
+	height: 1123px;
 }
 
 #border-panel, #font-panel, #background-panel {
@@ -77,6 +87,8 @@
 	text-align: center;
 }
 
+#dropdownCreation #dropdownName, #dropdownCreation select, #dropdownCreation #editOpacity, 
+#checkboxCreation #checkboxName,#checkboxCreation #checkboxLabel, #checkboxCreation select, #checkboxCreation #editOpacity,
 #labelCreation textarea, #labelCreation select, #labelCreation #editOpacity,
 #textFieldCreation #textFieldName, #textFieldCreation select, #textFieldCreation #editOpacity,
 #imageFieldCreation #imageFieldName, #imageFieldCreation #editOpacity {

@@ -33,8 +33,9 @@ formsRouter.route('/')
 				}
 			},function(err,result){
 				assert.equal(err, null);
-				console.log("Updated the form");
-				res.send('Saved the form: ' + req.body.formData.formName);
+				console.log(result);
+				if(result.matchedCount === 0) res.status(404).send('Not found');
+				else res.send('Saved the form: ' + req.body.formData.formName);
 			});
 	})
 	.post(function(req, res, next){

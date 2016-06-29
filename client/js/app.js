@@ -1,6 +1,6 @@
 angular
     .module('user-interface', ['ui.router', 'ui.grid','ui.grid.autoResize','ui.grid.pagination','ui.grid.resizeColumns','ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp','formsApp'])
-    .config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+    .config(['$urlRouterProvider', '$stateProvider','$locationProvider', function ($urlRouterProvider, $stateProvider,$locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('login', {

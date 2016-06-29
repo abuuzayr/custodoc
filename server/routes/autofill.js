@@ -55,6 +55,7 @@ autofill.route('/element')
 	.post(function(req,res){
 		connection.Do(function(db){
 			var fieldName = req.body.fieldName;
+			var type = req.body.type;
 			db.collection('element')
 				.findOne({fieldName:fieldName})
 				.then(function(element){
@@ -62,7 +63,7 @@ autofill.route('/element')
 						res.status(409).send('Already exists');
 					}else{
 						db.collection('element')
-							.insert({fieldName:fieldName})
+							.insert({fieldName:fieldName, type:type})
 							.then(function(docs){
 								console.log('Records added: ' + docs);
 								return res.status(200).send('Records added:' + docs);
