@@ -113,8 +113,23 @@
 					<input type="text" ng-model="vm.editNewOption">
 					<input type="button" value="Add" ng-click="vm.editAddNewOption()">
 					<input type="button" value="Delete" ng-click="vm.editDeleteOption()"><br>
-					<label>Drop-down List Default Value:
-						<select type="text" name="text" ng-model="vm.element.value" ><option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option></select>
+					<label id="editDropdownDefault">Drop-down List Default Value:
+						<select  ng-model="vm.element.value" >
+							<option value=""></option>
+							<option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option>
+						</select>
+					</label>
+					<label id="editRadioDefault">Default Value:
+						<select ng-model="vm.editRadioDefaultValue">
+							<option value=""></option>
+							<option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option>
+						</select>
+					</label>
+					<label id="editRadioDisplay">Display Style:
+						<select ng-model="vm.editRadioDisplayClass">
+							<option value="radioInline">In-line</option>
+							<option value="radioMultiline">Multiple lines</option>
+						</select>
 					</label>
 				</div>
 			</div>
@@ -287,7 +302,7 @@
 		<label>Text Field Name:<br>
 		<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true"></label><br>
 		<label>Defalut Value:<br>
-		<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault" required="true"></label><br>
+		<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault"></label><br>
 		<label>Font Size:<br>
 			<select ng-options="option for option in vm.availableFontsizes"
 			  ng-model="vm.Fontsize"></select>
@@ -419,7 +434,7 @@
 		<label>Display: <br>
 			<select ng-init="vm.radioDisplay = 'radioInline'" ng-model="vm.radioDisplay">
 				<option value="radioInline">In-line</option>
-				<option value="radioMultiline">Multiple-line</option>
+				<option value="radioMultiline">Multiple lines</option>
 			</select>
 		</label><br>
 		<label>Add option:<br>
@@ -467,7 +482,7 @@
 		<!-- Dialog cancel button here HELLO -->
 		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 		<div class="mdl-layout-spacer"></div>
-		<input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create drop-down list">
+		<input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create radio button">
 	</div>	
 </form>
 </dialog>

@@ -94,8 +94,11 @@ function formBuilderCtrl(
 	var fontPanel = document.getElementById("fontPanel");
 	var contentPanel = document.getElementById("contentPanel");
 	var editContent = document.getElementById("editContent");
+	var editRadioDefault = document.getElementById("editRadioDefault");
 	var editCheckboxDefault = document.getElementById("editCheckboxDefault");
 	var editTextFieldDefault = document.getElementById("editTextFieldDefault");
+	var editDropdownDefault = document.getElementById("editDropdownDefault");
+	var editRadioDisplay = document.getElementById("editRadioDisplay");
 	var optionsPanel = document.getElementById("optionsPanel");
 	var editBackgroundColorLabel = document.getElementById("editBackgroundColorLabel");
 	var placeholder = null;
@@ -814,13 +817,25 @@ function formBuilderCtrl(
 	}
 
 	function editAddNewOption(){
-		if(vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")){
-			if(vm.editOptions.indexOf(vm.editNewOption)<0){
-				vm.editOptions.push(vm.editNewOption);
+		if(vm.editOptions.indexOf(vm.editNewOption)<0){
+			vm.editOptions.push(vm.editNewOption);
+			if(vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")){		
 				var option = document.createElement("option");
 				option.innerHTML=vm.editNewOption;
 				option.value=vm.editNewOption;
 				vm.element.appendChild(option);
+				vm.editNewOption = "";
+			}else if(vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio")){
+				var label = document.createElement("label");
+				var option = document.createElement("input");
+				option.type = "radio";
+				option.name = vm.element.name;
+				option.value = vm.editNewOption;
+				var span = document.createElement("span");
+				span.innerHTML=vm.editNewOption+" ";
+				label.appendChild(option);
+				label.appendChild(span);
+				vm.element.appendChild(label);
 				vm.editNewOption = "";
 			}
 		}
@@ -828,8 +843,20 @@ function formBuilderCtrl(
 
 	function editDeleteOption(){
 		vm.editOptions.pop();
-		if(vm.element.lastChild && vm.element.lastChild.tagName && vm.element.lastChild.tagName ==='OPTION') vm.element.removeChild(vm.element.lastChild);
+		if(vm.element.lastChild && vm.element.lastChild.tagName && (vm.element.lastChild.tagName ==='OPTION' || vm.element.lastChild.tagName ==='LABEL')) vm.element.removeChild(vm.element.lastChild);
 	}
+
+	$scope.$watch("vm.editRadioDefaultValue", 
+		function( newValue, oldValue ) {
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+				var childNodes = vm.element.childNodes;
+				for(var i=0; i<childNodes.length;i++){
+					if (childNodes[i].firstChild.value === newValue) childNodes[i].firstChild.checked=true;
+				}
+			}
+		}
+	);
+
 
 	function elementOnclick(event) {
 		var element = event.currentTarget;
@@ -869,8 +896,11 @@ function formBuilderCtrl(
 			editContent.style.display = "none";
 			optionsPanel.style.display = 'none';
 			editTextFieldDefault.style.display="none";
+			editDropdownDefault.style.display = "none";
 			editBackgroundColorLabel.style.display = "inline";
 			editCheckboxDefault.style.display = "none";
+			editRadioDefault.style.display = "none";
+			editRadioDisplay.style.display="none";
 			if (element.getAttribute("name").startsWith("background")) {
 				fontPanel.style.display = "none";
 				editBackgroundColorLabel.style.display = "none";
@@ -881,6 +911,7 @@ function formBuilderCtrl(
 			}
 			if(element.getAttribute('name').startsWith('dropdown') || element.getAttribute('name').startsWith('auto_dropdown_')){
 				optionsPanel.style.display='inline';
+				editDropdownDefault.style.display='inline';
 				var childNodes = element.childNodes;
 				vm.editOptions = [];
 				vm.editNewOption = "";
@@ -890,12 +921,17 @@ function formBuilderCtrl(
 			}
 			if(element.getAttribute('name').startsWith('radio') || element.getAttribute('name').startsWith('auto_radio_')){
 				optionsPanel.style.display='inline';
+				editRadioDefault.style.display='inline';
+				editRadioDisplay.style.display="inline";
+				if(element.className.includes("radioInline")) vm.editRadioDisplayClass="radioInline";
+				else vm.editRadioDisplayClass = "radioMultiline";
 				var childNodes = element.childNodes;
 				vm.editOptions = [];
 				vm.editNewOption = "";
 				for(var i=0; i<childNodes.length; i++){
 					if(childNodes[i].tagName!=="LABEL") continue;
 					var option = childNodes[i].firstChild;
+					if(option.checked) vm.editRadioDefaultValue = option.value;
 					vm.editOptions.push(option.value);
 				}
 			}
@@ -1027,7 +1063,7 @@ function formBuilderCtrl(
 			option.value = vm.options[i];
 			if(vm.options[i]===vm.radioDefault) option.checked = true;
 			var span = document.createElement("span");
-			span.innerHTML=" "+vm.options[i];
+			span.innerHTML=vm.options[i]+" ";
 			label.appendChild(option);
 			label.appendChild(span);
 			radio.appendChild(label);
