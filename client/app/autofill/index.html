@@ -29,32 +29,38 @@
 
 <div ng-controller="MainCtrl as vm">
     <!-- ========================================= DIALOG ========================================= -->
-    <dialog id="create-element-dialog" class="mdl-dialog">
-        <form ng-submit="vm.saveElement()">
-            <div class="mdl-dialog__content">   
+    <dialog id="create-element-dialog" class="mdl-dialog" >
+        <form ng-submit="vm.saveElement(vm.elementType)">
+            <div class="mdl-dialog__title" style="padding: 24px 24px 10px">
+                <h5>Create {{ vm.elementType == 'text' ? 'textfield' : vm.elementType }}</h5>
+            </div>
+            <div class="mdl-dialog__content" style="height: 200px ;overflow-y: auto"> <!-- CSS STYLE!!!!!!! -->
                 <div id="create-element-dialog-text">
-                    <h5>Create Element</h6>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="dialog-input-type" class="mdl-textfield__input" ng-required="true" disabled></input>
-                        <label class="mdl-textfield__label" for="dialog-input-type">{{vm.elementType}}</label>
-                    </div>
                     <!-- ============================================== textfield ============================================ -->
-                    <div id="create-text" ng-if =" vm.elementType == 'textfield' ">
+                    <div id="create-text" ng-if =" vm.elementType == 'text' ">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="dialog-input-textfield-fieldname" class="mdl-textfield__input" ng-model='vm.text.fieldname' type="text" ng-required="true"/>
                             <label class="mdl-textfield__label" for="dialog-input-textfield-fieldname">Name</label>
                         </div>
+                        
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="dialog-input-default" class="mdl-textfield__input" ng-required="true"></input>
+                            <input id="dialog-input-default" class="mdl-textfield__input" ng-model='vm.text.default' />
                             <label class="mdl-textfield__label" for="dialog-input-default">Default</label>
                         </div>
                     </div>
                     <!-- ============================================== checkbox ============================================ -->
                     <div id="create-checkbox" ng-if ="vm.elementType == 'checkbox' ">
+                        
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="dialog-input-checkbox-fieldname" class="mdl-textfield__input" ng-model='vm.checkbox.fieldname' type="text" ng-required="true"/>
                             <label class="mdl-textfield__label" for="dialog-input-checkbox-fieldname">Name</label>
                         </div>
+                        
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="dialog-input-checkbox-fieldname" class="mdl-textfield__input" ng-model='vm.checkbox.label' type="text" ng-required="true"/>
+                            <label class="mdl-textfield__label" for="dialog-input-checkbox-fieldname">Display label</label>
+                        </div>
+                        
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <label for="dialog-input-checkbox-default">Default: </label>
                             <label class="mdl-checkbox mdl-js-checkbox" for="dialog-input-checkbox-default">
@@ -65,20 +71,38 @@
                     </div>
                     <!-- ============================================== radio ============================================ -->
                     <div id="create-radio" ng-if ="vm.elementType == 'radio' ">
+                        
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="dialog-input-radio-fieldname" class="mdl-textfield__input" ng-model='vm.radio.fieldname' type="text" ng-required="true"/>
                             <label class="mdl-textfield__label" for="dialog-input-radio-fieldname">Name</label>
                         </div>
+                        
                         <div>
                             <label for="dialog-input-radio-options">Options: </label>
-                            <div>
-                                <input type="checkbox" ng-repeat='' id="dialog-input-checkbox-default" class="mdl-checkbox__input" ng-model='vm.checkbox.default'/>
+                            <button type="button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.addOption()">
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button type="button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.removeOption()">
+                                <i class="material-icons">remove</i>
+                            </button>
+    
+                            <div ng-repeat = 'index in vm.getTimes(vm.numOfOptions) track by $index'>
+                                     <input id="dialog-input-radio-fieldname" placeholder="option {{$index+1}}" class="mdl-textfield__input" ng-model='vm.radio.options[$index]' type="text" ng-required="true"/>
                             </div>
                         </div>
+
                         <div>
-                            <label for="dialog-input-radio-display">Default: </label>
-                            <select id="dialog-input-radio-display" ng-model="vm.radio.display" ng-required="true">
-                                <option ng-repeat="option in vm.radio.options" value="'option'">{{option}}</option>
+                            <label for="dialog-input-radio-default">Default: </label>
+                            <select id="dialog-input-radio-default" ng-model="vm.radio.default" ng-required="true">
+                                <option ng-repeat="option in vm.radio.options" value="{{option}}">{{option == null}}</option> 
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="dialog-input-radio-display">Display: </label>
+                            <select id="dialog-input-radio-display" ng-model="vm.radio.default" ng-required="true">
+                                <option value="'inline'" >inline</option>
+                                <option value="'multiline'" >vertical</option> 
                             </select>
                         </div>
                     </div>
@@ -88,12 +112,28 @@
                             <input id="dialog-input-dropdown-fieldname" class="mdl-textfield-input" ng-model='vm.dropdown.fieldname' type="text" ng-required="true"/>
                             <label class="mdl-textfield__label" for="dialog-input-dropdown-fieldname">Name</label>
                         </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="dialog-input-default" class="mdl-textfield__input" ng-required="true"></input>
-                            <label class="mdl-textfield__label" for="dialog-input-default">Default</label>
+
+                        <div>
+                            <label for="dialog-input-dropdown-options">Options: </label>
+                            <button type="button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.addOption()">
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button type="button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.removeOption()">
+                                <i class="material-icons">remove</i>
+                            </button>
+    
+                            <div ng-repeat = 'index in vm.getTimes(vm.numOfOptions) track by $index'>
+                                     <input id="dialog-input-dropdown-fieldname" placeholder="option {{$index+1}}" class="mdl-textfield__input" ng-model='vm.dropdown.options[$index]' type="text" ng-required="true"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="dialog-input-dropdown-default">Default: </label>
+                            <select id="dialog-input-dropdown-default" ng-model="vm.dropdown.default" ng-required="true">
+                                <option ng-repeat="option in vm.dropdown.options" value="{{option}}" >{{option}}</option> 
+                            </select>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="mdl-dialog__actions">

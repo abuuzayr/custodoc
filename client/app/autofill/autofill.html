@@ -1,0 +1,175 @@
+<!Doctype html>
+<html ng-app="app">
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-touch.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-grid/3.1.1/ui-grid.js"></script>
+        <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css"> 
+              
+        <link rel="stylesheet" href="/node_modules/material-design-lite/material.css">
+        <script src="/node_modules/material-design-lite/material.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="node_modules/angular-aria/angular-aria.min.js"></script>
+
+        <script src="autofill.module.js"></script>
+        <script type="text/javascript" src="../shared/dialog/dialog.service.js"></script>
+        <script type="text/javascript" src="../shared/feedback/feedback.service.js"></script>
+        <script type="text/javascript" src="autofill.service.js"></script>
+        <script type="text/javascript" src="../app.config.js"></script>
+
+
+    </head>
+<body> 
+<dialog id="create-element-dialog" class="mdl-dialog">
+    <form ng-submit="vm.saveElement()">
+        <div class="mdl-dialog__content">   
+            <div id="create-element-dialog-text">
+                <h5>Create Element</h6>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="dialog-input-type" class="mdl-textfield__input" ng-required="true" disabled></input>
+                    <label class="mdl-textfield__label" for="dialog-input-type">{{vm.elementType}}</label>
+                </div>
+                <!-- ============================================== textfield ============================================ -->
+                <div id="create-text" ng-if =" vm.elementType == 'textfield' ">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-textfield-fieldname" class="mdl-textfield__input" ng-model='vm.text.fieldname' type="text" ng-required="true"/>
+                        <label class="mdl-textfield__label" for="dialog-input-textfield-fieldname">Name</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-default" class="mdl-textfield__input" ng-required="true"></input>
+                        <label class="mdl-textfield__label" for="dialog-input-default">Default</label>
+                    </div>
+                </div>
+                <!-- ============================================== checkbox ============================================ -->
+                <div id="create-checkbox" ng-if ="vm.elementType == 'checkbox' ">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-checkbox-fieldname" class="mdl-textfield__input" ng-model='vm.checkbox.fieldname' type="text" ng-required="true"/>
+                        <label class="mdl-textfield__label" for="dialog-input-checkbox-fieldname">Name</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <label for="dialog-input-checkbox-default">Default: </label>
+                        <label class="mdl-checkbox mdl-js-checkbox" for="dialog-input-checkbox-default">
+                            <input type="checkbox" id="dialog-input-checkbox-default" class="mdl-checkbox__input" ng-model='vm.checkbox.default'>
+                            <span class="mdl-checkbox__label">Checked {{vm.checkbox.default}}</span>
+                        </label>
+                    </div>
+                </div>
+                <!-- ============================================== radio ============================================ -->
+                <div id="create-radio" ng-if ="vm.elementType == 'radio' ">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-radio-fieldname" class="mdl-textfield__input" ng-model='vm.radio.fieldname' type="text" ng-required="true"/>
+                        <label class="mdl-textfield__label" for="dialog-input-radio-fieldname">Name</label>
+                    </div>
+                    <div>
+                        <label for="dialog-input-radio-options">Options: </label>
+                        <div>
+                            <input type="checkbox" ng-repeat='' id="dialog-input-checkbox-default" class="mdl-checkbox__input" ng-model='vm.checkbox.default'/>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="dialog-input-radio-display">Default: </label>
+                        <select id="dialog-input-radio-display" ng-model="vm.radio.display" ng-required="true">
+                            <option ng-repeat="option in vm.radio.options" value="'option'">{{option}}</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- ============================================== dropdown ============================================ -->
+                <div id="create-dropdown" ng-if ="vm.elementType == 'dropdown' ">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-dropdown-fieldname" class="mdl-textfield-input" ng-model='vm.dropdown.fieldname' type="text" ng-required="true"/>
+                        <label class="mdl-textfield__label" for="dialog-input-dropdown-fieldname">Name</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="dialog-input-default" class="mdl-textfield__input" ng-required="true"></input>
+                        <label class="mdl-textfield__label" for="dialog-input-default">Default</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog()">Cancel</button>
+            <div class="mdl-layout-spacer"></div>
+            <button id="next" type="submit" class="mdl-button">Save</button>
+        </div>
+    </form>
+</dialog>
+    
+<div class="mdl-layout__container">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+    <!-- ========================================= DIALOG ========================================= -->
+    
+    <!-- ========================================= SNACK BAR ========================================= -->
+    <div id="autofill-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+
+
+
+
+    <div>
+        <!-- ========================================= Buttons =============================================== -->
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.read()" >
+            Reset
+        </button>
+
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.importCSV()">
+            Import
+        </button>
+
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.clearSelected()" ng-if="vm.hasSelection">
+            Clear Selection
+        </button>
+
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.deleteSelected()" ng-if="vm.hasSelection">
+            <i class="material-icons">delete</i>
+            Delete Selected
+        </button>
+
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.exportCSV()" ng-if="vm.hasSelection">
+            Export
+        </button>
+
+        <button id="create-menu-lower-left" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+            <i class="material-icons">add</i> Create
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="create-menu-lower-left">
+            <li class="mdl-menu__item" ng-click="vm.createTextfield()"> Textfield</li>
+            <li class="mdl-menu__item" ng-click="vm.createCheckbox()"> Checkbox</li>
+            <li class="mdl-menu__item" ng-click="vm.createRadio()"> Radio</li>
+            <li class="mdl-menu__item" ng-click="vm.createDropdown()"> Dropdown</li>
+        </ul>
+        <div id='search-bar-wrapper'>
+            <form ng-submit="read()">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                      mdl-textfield--floating-label mdl-textfield--align-right">
+                    <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                        <i class="material-icons">search</i>
+                    </label>
+                    <div class="mdl-textfield__expandable-holder">
+                        <input class="mdl-textfield__input" type="text" name="search-bar" id="fixed-header-drawer-exp" ng-model="vm.query">
+                    </div>
+                </div>
+            </form>
+        </div>    
+
+    </div>
+
+    <div>
+        <strong>{{ vm.gridOptions.data.length }} rows</strong>
+        <br>
+        <div id="grid1" ui-grid="vm.gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
+    </div>
+        
+    </div>
+</div>
+
+  </body>
+</html>

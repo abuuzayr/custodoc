@@ -61,15 +61,15 @@ autofill.route('/element')
 
 	.post(function(req,res){
 		connection.Do(function(db){
-			var fieldname = req.params.fieldname;
 			db.collection('element')
-				.insert({fieldname:fieldname})
-				.then(function(savedDoc){
-					console.log('Records added: ' + docs);
-					return res.status(200).send('Records added:' + docs);
+				.insert(req.body.elementData)
+				.then(function(savedElement){
+					console.log('Records added');//
+					console.log(savedElement);//
+					return res.status(200).send('Element saved');
 				})
 				.catch(function(err){
-					console.log(err);
+					console.log(err);//
 					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 		});
