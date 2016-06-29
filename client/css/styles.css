@@ -118,14 +118,10 @@ select {
 }
 
 /* Forms */
-.mdl-dialog {
+/*.mdl-dialog {
     height: auto;
     width: 30%;
-}
-
-#grid-forms {
-    height: 80% !important;
-}
+}*/
 
 /* New entry */
 #elements-drawer {
@@ -158,4 +154,17 @@ select {
 
 #submit-button {
     width: 100%;
+}
+
+.selectInDialog {
+	width: 80%;
+	border: 1px solid grey;
+	-ms-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing:content-box; 
+	box-sizing:content-box;
+}
+
+.mdl-menu__item {
+    line-height: 48px !important;
 }
