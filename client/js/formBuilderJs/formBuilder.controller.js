@@ -290,9 +290,9 @@ function formBuilderCtrl(
 				node.style.borderRadius = element.borderRadius;
 				node.setAttribute("data-x","0");
 				node.setAttribute("data-y","0");
-				node.setAttribute("class","resize-drag");
 				node.setAttribute("ng-dblclick","vm.elementOnclick($event)");
 				$compile(node)($scope);
+				node.setAttribute("class","resize-drag");
 				node.id = key;
 				node.setAttribute('name',element.name);
 				node.style.overflow = "hidden";
@@ -814,13 +814,15 @@ function formBuilderCtrl(
 	}
 
 	function editAddNewOption(){
-		if(vm.editOptions.indexOf(vm.editNewOption)<0){
-			vm.editOptions.push(vm.editNewOption);
-			var option = document.createElement("option");
-			option.innerHTML=vm.editNewOption;
-			option.value=vm.editNewOption;
-			vm.element.appendChild(option);
-			vm.editNewOption = "";
+		if(vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")){
+			if(vm.editOptions.indexOf(vm.editNewOption)<0){
+				vm.editOptions.push(vm.editNewOption);
+				var option = document.createElement("option");
+				option.innerHTML=vm.editNewOption;
+				option.value=vm.editNewOption;
+				vm.element.appendChild(option);
+				vm.editNewOption = "";
+			}
 		}
 	}
 
@@ -883,10 +885,19 @@ function formBuilderCtrl(
 				vm.editOptions = [];
 				vm.editNewOption = "";
 				for(var i=0; i<childNodes.length; i++){
-					console.log(childNodes[i].tagName);
 					if(childNodes[i].tagName==='OPTION') vm.editOptions.push(childNodes[i].innerHTML);
 				}
-				console.log(vm.editOptions);
+			}
+			if(element.getAttribute('name').startsWith('radio') || element.getAttribute('name').startsWith('auto_radio_')){
+				optionsPanel.style.display='inline';
+				var childNodes = element.childNodes;
+				vm.editOptions = [];
+				vm.editNewOption = "";
+				for(var i=0; i<childNodes.length; i++){
+					if(childNodes[i].tagName!=="LABEL") continue;
+					var option = childNodes[i].firstChild;
+					vm.editOptions.push(option.value);
+				}
 			}
 			if (element.getAttribute("name").startsWith("text") || element.getAttribute("name").startsWith("auto_text")) {
 				contentPanel.style.display = "inline";
@@ -932,9 +943,10 @@ function formBuilderCtrl(
 		}
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
-		newElement.setAttribute("class", "resize-drag");
 		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
 		$compile(newElement)($scope);
+		newElement.setAttribute("class", "resize-drag");
+		if(vm.newElementType.startsWith('radio')) newElement.className +=" "+ vm.radioDisplay;
 		newElement.style.overflow = "hidden";
 		newElement.style.lineHeight = "100%";
 		newElement.style.position = "absolute";
@@ -991,22 +1003,10 @@ function formBuilderCtrl(
 
 	function createRadio(){
 		var radio = document.createElement("form");
-		radio.className = vm.radioDisplay;
-		radio.onclick = function(){return false;}
-		for(var i=0; i<vm.options.length; i++){
-			var label = document.createElement("label");
-			var option = document.createElement("input");
-			option.type = "radio";
-			option.value = vm.options[i];
-			var span = document.createElement("span");
-			span.innerHTML=" "+vm.options[i];
-			label.appendChild(option);
-			label.appendChild(span);
-			radio.appendChild(label);
-		}
-		radio.value = vm.radioDefault;
+		radio.onclick = function(){return false;};
 		if (vm.newElementType==='auto') {
-			radio.setAttribute("name", 'auto_radio_'+vm.selectedAutofillElement.fieldName);
+			var name = 'auto_radio_'+vm.selectedAutofillElement.fieldName;
+			radio.setAttribute("name", name);
 			radio.setAttribute("id", vm.newAutofillElementId);
 		}else{
 			if (elements.hasOwnProperty("radio_" + vm.radioName)) {
@@ -1014,9 +1014,23 @@ function formBuilderCtrl(
 				vm.allowCreate = true;
 				return ;
 			} 
-			elements["radio_" + vm.radioName] = {};
-			radio.setAttribute("name", "radio_" + vm.radioName);
-			radio.setAttribute("id", "radio_" + vm.radioName);
+			var name = "radio_" + vm.radioName;
+			elements[name] = {};
+			radio.setAttribute("name", name);
+			radio.setAttribute("id", name);
+		}
+		for(var i=0; i<vm.options.length; i++){
+			var label = document.createElement("label");
+			var option = document.createElement("input");
+			option.type = "radio";
+			option.name = name;
+			option.value = vm.options[i];
+			if(vm.options[i]===vm.radioDefault) option.checked = true;
+			var span = document.createElement("span");
+			span.innerHTML=" "+vm.options[i];
+			label.appendChild(option);
+			label.appendChild(span);
+			radio.appendChild(label);
 		}
 		setNewElement(radio);
 	}

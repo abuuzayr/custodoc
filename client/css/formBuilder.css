@@ -8,6 +8,14 @@
   -webkit-user-drag: element;
 }
 
+.radioInline label{
+	display: inline;
+}
+
+.radioMultiline label{
+	display: block;
+}
+
 #sec1{
 	position: absolute;
 	width:30%;

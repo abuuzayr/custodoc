@@ -165,10 +165,10 @@ formsRouter.route('/important')
 			$set: { 
 				"isImportant": 'Important'
 			}
-		},function(){
+		},function(err,results){
 			assert.equal(err, null);
-			console.log("Set important");
-			res.send('Set important');
+			console.log(results);
+			res.send(results);
 		});
 	})
 	.all(function(req,res,next) {		
@@ -190,10 +190,10 @@ formsRouter.route('/normal')
 			$set: { 
 				"isImportant": 'Normal'
 			}
-		},function(){
+		},function(err,results){
 			assert.equal(err, null);
-			console.log("Set normal");
-			res.send('Set normal');
+			console.log(results);
+			res.send(results);
 		});
 	})
 	.all(function(req,res,next) {		
