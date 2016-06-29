@@ -22,6 +22,9 @@ var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gr
 	vm.gridOptions.importerShowMenu = false;
 
 	vm.elementType = '';
+	vm.options = [];
+	vm.numOfOption = 0;
+
 	vm.textfield = {
 		fieldname:'',
 		type:'text',
@@ -71,6 +74,18 @@ var viewContentLoaded = $q.defer();
 function gridRowClick(row){
 	console.log(row);
 }
+
+vm.addOption  = function(){
+	vm.numOfOption++;
+}
+
+vm.removeOption = function(){
+	if(vm.numOfOption > 0)
+		vm.numOfOption--
+	else 
+		vm.numOfOption = 0;
+}
+
 
 vm.clearSelected = function() {
 	vm.gridApi.selection.clearSelectedRows();
@@ -146,6 +161,10 @@ vm.closeDialog = function(){
 // ============================================== Helper Func ============================================== //
 function getElementData(){
 
+}
+
+function getNumber(number){
+	return new Array(num); 
 }
 
 // ============================================== API ============================================== //
