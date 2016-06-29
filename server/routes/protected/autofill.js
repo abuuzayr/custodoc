@@ -1,4 +1,4 @@
-var autofill = require('express').Router();
+var autofillRoutes = require('express').Router();
 //import modules
 var config = require('../../config.js');
 var sendError = require('../../utils/connection.js');
@@ -6,7 +6,7 @@ var connection = require('../../utils/connection.js')();
 var http404 = require('../../utils/404.js')();
 
 //autofill records QUERY
-autofill.get('/query/:query',function(req,res){
+autofillRoutes.get('/query/:query',function(req,res){
 	connection.Do(function(db){
 		var query = req.params.query;
     		db.collection('autofill')
@@ -38,7 +38,7 @@ autofill.get('/query/:query',function(req,res){
 });
 
 //element CRUD endpoints
-autofill.route('/element')
+autofillRoutes.route('/element')
 	.get(function(req,res){
 		connection.Do(function(db){
 			db.collection('element')
@@ -54,29 +54,36 @@ autofill.route('/element')
 				})
 				.catch(function(err){
 					console.log(err);
-					sendError(req,res,400,err.message,'Unsuccessful');
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
 			});	
 	})	
 
-	.post(function(req,res){
-		connection.Do(function(db){
-			var fieldname = req.params.fieldname;
-			db.collection('element')
-				.insert({fieldname:fieldname})
-				.then(function(savedDoc){
+		.post(function(req,res){
+			connection.Do(function(db){
+				var fieldName = req.body.fieldName;
+				var type = req.body.type;
+				db.collection('element')
+				.findOne({fieldName:fieldName})
+				.then(function(element){
+					if (element)
+						sendError(req,res,409,'Already exists','Unsuccessful');
+					else
+						return db.collection('element').insert({fieldName:fieldName, type:type});
+				})	
+				.then(function(docs){
 					console.log('Records added: ' + docs);
 					return res.status(200).send('Records added:' + docs);
 				})
 				.catch(function(err){
 					console.log(err);
-					return sendError(req,res,400,err.message,'Unsuccessful');
+					return res.status(400).send(err);
 				});
 		});
 	});
 
 //update delete by id
-autofill.route('/:record_id')
+autofillRoutes.route('/:record_id')
 	//TODO: verify promise	
 	.get(function(req,res){
 		connection.Do(function(db){
@@ -135,7 +142,7 @@ autofill.route('/:record_id')
 	});
 		
 //autofill entry CRUD endpoints
-autofill.route('/')
+autofillRoutes.route('/')
 	//Get all
 	.get(function(req,res){
 		connection.Do( function(db) { 
@@ -184,8 +191,8 @@ autofill.route('/')
 	});
 
 //UNDEFINED API END POINTS
-autofill.use('*',http404.notFoundMiddleware);
+autofillRoutes.use('*',http404.notFoundMiddleware);
 
 //export module
-module.exports = autofill;
+module.exports = autofillRoutes;
 

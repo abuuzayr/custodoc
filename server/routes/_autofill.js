@@ -3,6 +3,7 @@ var autofill = require('express').Router();
 var config = require('../config.js');
 var connection = require('./connection.js')();
 var http404 = require('../utils/404.js')();
+var sendError = require('../../utils/connection.js');
 
 //autofill records QUERY
 autofill.get('/query/:query',function(req,res){
@@ -41,14 +42,17 @@ autofill.route('/element')
 				.find()
 				.toArray()
 				.then(function(data){
-					console.log('element all data');
-					res.status(200).send(data);
+					if(data){
+						console.log('autofill element retrieved');
+						res.status(200).send(data);
+					}
+					else
+						throw new Error('no autofill element')
 				})
 				.catch(function(err){
 					console.log(err);
-					return res.status(400).send(err);
+					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
-			
 			});	
 	})	
 
@@ -60,7 +64,7 @@ autofill.route('/element')
 				.findOne({fieldName:fieldName})
 				.then(function(element){
 					if (element) {
-						res.status(409).send('Already exists');
+						return res.status(409).send('Already exists');
 					}else{
 						db.collection('element')
 							.insert({fieldName:fieldName, type:type})

@@ -1,12 +1,8 @@
 var express = require('express');
-//var morgan = require('morgan');
-//var bodyParser = require('body-parser');
-//var url = 'mongodb://localhost:27017/custodoc';
-//var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var connection = require('./connection.js')();
-var entryRouter = express.Router();
-entryRouter.route('/entries')
+var connection = require('../../utils/connection')();
+var entryRoutes = express.Router();
+entryRoutes.route('/entries')
 	
 	// display all entries in the database
 	.get(function(req,res,next){
@@ -66,7 +62,7 @@ entryRouter.route('/entries')
 	})
 
 // route that contains funtions such as retrieving keys, etc
-entryRouter.route('/functions')
+entryRoutes.route('/functions')
 
 	// get the keys a.k.a field names from the forms database
 	.post(function(req,res,next){
@@ -121,7 +117,7 @@ entryRouter.route('/functions')
 		});
 	})
 
-entryRouter.route('/input')	
+entryRoutes.route('/input')	
 	// get user input
 	.post(function(req,res,next){
 	    connection.Do(function(db){
@@ -130,4 +126,4 @@ entryRouter.route('/input')
   	    });
 	});
 						
-module.exports = entryRouter;
+module.exports = entryRoutes;

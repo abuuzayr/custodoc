@@ -5,18 +5,15 @@ var bodyParser = require('body-parser');
 var CookieParser = require('cookie-parser');
 var MongoClient = require('mongodb').MongoClient;
 var Promise = require('bluebird');
-Promise.promisifyAll(MongoClient);
-var assert = require('assert');
-var path = require('path');
-var logger = require('morgan');
+var assert = require('assert'); //DELETE?
+var path = require('path'); //DELETE?
+var logger = require('morgan'); //DELETE?
 var app = express();
+
+Promise.promisifyAll(MongoClient);
 //  Import custom modules
 var config = require('./config');
 var routes = require('./api');
-var formsRouter = require('./routes/formsRouter');
-var groupsRouter = require('./routes/groupsRouter');
-var autofillRouter = require('./routes/autofill');
-var entryRouter = require('./routes/entryRouter');
 var http404 = require('./utils/404')();
 // Configuration
 app.use(logger('dev'));
@@ -28,19 +25,23 @@ app.use( function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, X-Access-Token');
-  next();
+  if(req.method === 'OPTIONS')
+    return res.status(200).send('Preflight get response');
+  else
+  	return next();
 });
-// Connect all our routes to our application
-app.use(express.static(__dirname + '/../client/app/autofill'));
-app.use(express.static(__dirname + '/../client/app/'));
-app.use('/static',express.static(__dirname + '/../client/app/autofill'));
 
-app.use('/forms', formsRouter);
-app.use('/groups', groupsRouter);
-app.use('/autofill', autofillRouter);
-app.use('/entryRouter', entryRouter);
+// STATIC SERVER
+// app.use(express.static(__dirname + '/../client/app/autofill'));
+// app.use(express.static(__dirname + '/../client/app/'));
+// app.use('/static',express.static(__dirname + '/../client/app/autofill'));
+
+// ROUTES
+// Connect all our routes to our application
 app.use('/api', routes);
 //app.use('*',http404.notFoundMiddleware);
+
+// STARTING SERVER
 // Open one database connection
 // one connection handles all request
 MongoClient.connectAsync(config.dbURL)
