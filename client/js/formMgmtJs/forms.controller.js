@@ -23,7 +23,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, form
 	vm.downloadAsOne = downloadAsOne;
 	vm.downloadSeparate = downloadSeparate;
 	vm.getTableHeight = getTableHeight;
-	vm.toggleImportantIcon = toggleImportantIcon;
 
 	//view controll
 
@@ -599,15 +598,6 @@ function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, form
 			};
 		}
 	}
-
-	function toggleImportantIcon() {
-		if (vm.gridApi.grid.columns[3].filters[0].term == 'Important') {
-			setNormal();
-		} else {
-			setImportant();
-		}
-	}
-
 
 	/* =========================================== Dialog =========================================== */
 

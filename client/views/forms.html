@@ -119,8 +119,15 @@
 			<div id="forms" class="page-content">
 				<span us-spinner="{radius:30, width:8, length: 30,speed:1.5,opacity:0.15,scale:1.5}" spinner-key="spinner-1"></span>
 				<div id="top-row-buttons" class="mdl-grid">
-					<button ng-click="vm.openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-			<i class="material-icons" role="presentation">add</i> New Form</button>
+					<button id="manageForms" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Manage forms</button>
+					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageForms">
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newForm')"><i class="material-icons">add</i> New form</li>
+						<li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridApi.selection.getSelectedRows().length===1;" ng-click="vm.openDialog('renameForm')"><i class="material-icons">edit</i> Rename form</li>
+						<li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridApi.selection.getSelectedRows().length===1;" ng-click="vm.openDialog('duplicateForm')"><i class="material-icons">content_copy</i> Duplicate form</li>
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.deleteForms()"><i class="material-icons">delete</i> Delete form</li>
+					</ul>
+					<!--<button ng-click="vm.openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+			<i class="material-icons" role="presentation">add</i> New Form</button>-->
 					<div class="divider"></div>
 
 					<button id="manageGroups" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons" role="presentation"></i>Manage groups</button>
@@ -130,31 +137,38 @@
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
 					</ul>
 					<div class="divider"></div>
-
-					<button ng-click="vm.downloadAsOne()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-						ng-show="vm.gridApi.selection.getSelectedRows().length">Download As One</button>
-					<button ng-click="vm.downloadSeparate()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-						ng-show="vm.gridApi.selection.getSelectedRows().length">Download Separately</button>
-					<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
+										<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
 		<i class="material-icons" role="presentation">add</i> New Entry</button>
 					<div class="divider"></div>
-
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('renameForm')"
-						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Rename Form</button>
+					<button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridApi.selection.getSelectedRows().length"><i class="material-icons">vertical_align_bottom</i> Download</button>
+					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="downloadMenu">
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadAsOne()">Download one</li>
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadSeparate()">Download separately</li>
+					</ul>
 					<div class="divider"></div>
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('duplicateForm')"
-						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>
+					<!--<button ng-click="vm.downloadAsOne()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
+						ng-show="vm.gridApi.selection.getSelectedRows().length">Download As One</button>
+					<button ng-click="vm.downloadSeparate()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
+						ng-show="vm.gridApi.selection.getSelectedRows().length">Download Separately</button>-->
+					<div class="divider"></div>
+
+					<!--<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('renameForm')"
+						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Rename Form</button>-->
+					<div class="divider"></div>
+					<!--<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('duplicateForm')"
+						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>-->
 					<div class="divider"></div>
 					<div class="mdl-layout-spacer"></div>
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.toggleImportantIcon()">
-						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term == 'Important'">bookmark</i>
-						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term !== 'Important'">bookmark_outline</i>
+					<!-- Toggle importance button KIV -->
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term == 'Important'" ng-click="vm.setNormal()">bookmark</i>
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term != 'Important'" ng-click="vm.setImportant()">bookmark_outline</i>
 						</button>
 
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set Normal</button>
-					<button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
-		<i class="material-icons" role="presentation">delete</i>Delete</button>
+					<!--<button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
+		<i class="material-icons" role="presentation">delete</i>Delete</button>-->
 				</div>
 
 				<!-- Table for forms stub -->
