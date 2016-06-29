@@ -1,7 +1,7 @@
 <!---------------------------------------- Dialog for newForm ---------------------------------------->
 <dialog id="newForm" class="mdl-dialog">
-	<div class="mdl-dialog__content">
-		<form id="createForm-form" ng-submit="vm.createForm()">
+	<form id="createForm-form" ng-submit="vm.createForm()">
+		<div class="mdl-dialog__content">
 			<label class="mdl-selectfield__label">Select form group</label>
 			<select class="selectInDialog" ng-model="vm.newFormGroup" required>
 							<option ng-repeat="data in vm.groups">{{ data }}</option>
@@ -10,13 +10,13 @@
 				<input id="newFormName" class="mdl-textfield__input" type="text" ng-model="vm.newFormName" placeholder="Form name" ng-required="true">
 				<label class="mdl-textfield__label" for="newFormName">Form name</label>
 			</div>
-		</form>
-	</div>
-	<div class="mdl-dialog__actions">
-		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('newForm')">Close</button>
-		<div class="mdl-layout-spacer"></div>
-		<input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" value="Create form" for="createForm-form">
-	</div>
+		</div>
+		<div class="mdl-dialog__actions">
+			<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('newForm')">Close</button>
+			<div class="mdl-layout-spacer"></div>
+			<input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" value="Create form" for="createForm-form">
+		</div>
+	</form>
 </dialog>
 
 <!---------------------------------------- Dialog for newGroup ---------------------------------------->
@@ -137,7 +137,7 @@
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
 					</ul>
 					<div class="divider"></div>
-										<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
+					<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
 		<i class="material-icons" role="presentation">add</i> New Entry</button>
 					<div class="divider"></div>
 					<button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridApi.selection.getSelectedRows().length"><i class="material-icons">vertical_align_bottom</i> Download</button>
