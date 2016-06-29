@@ -146,12 +146,12 @@
 						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>
 					<div class="divider"></div>
 					<div class="mdl-layout-spacer"></div>
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-					<label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="setImportantToggle">
-  <input type="checkbox" id="setImportantToggle" class="mdl-icon-toggle__input" ng-click="vm.toggleImportantIcon">
-  <i class="mdl-icon-toggle__label material-icons">star</i>
-</label> 
-<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.toggleImportantIcon()">
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term == 'Important'">bookmark</i>
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term !== 'Important'">bookmark_outline</i>
+						</button>
+
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set Normal</button>
 					<button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
 		<i class="material-icons" role="presentation">delete</i>Delete</button>
