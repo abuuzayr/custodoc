@@ -39,7 +39,6 @@ angular
 		{type: "email", name: "Email", label: "Email", data:""},
 		{type: "text", name: "Country", label: "Country", data:"Singapore"},
 		{type: "text", name: "State", label: "State", data:"Tampines"},
-		{type: "text", name: "Max", label: "Max", data:""},
 		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
 		{type: "dropdown", name: "Gender", label: "Gender", options: ["Male", "Female"], data:"Male"},
 		{type: "image", name: "Picture", label: "Picture", data:""},
@@ -47,12 +46,11 @@ angular
 	    ]
 	
 	}
-	
-	console.log("Hey hey" + JSON.stringify(vm.file));	     	
+	setTimeout(function(){console.log(vm.file)},10000);
 
-	/**** UNDER CONSTRUCTION  ****
+	/**** UNDER CONSTRUCTION  ***f
 	
-	// function to delete an entry
+	// function to delete ntry
 	vm.deleteEntry = function() {
 	    entryService.delete(vm.entData)
 		.success(function(data) {
@@ -103,5 +101,4 @@ angular
 		    location.reload()
 	    });
 	};
-
     }]);
