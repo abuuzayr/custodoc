@@ -29,9 +29,6 @@
 					<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
 					<a id="optionsPanel" href="#options-panel" class="mdl-tabs__tab">Options</a>
 					<div style="padding: 5px; vertical-align:middle;">
-					<label id="editRequiredLabel">
-					<span>Required field?</span>
-					<input id="editRequired" type="checkbox" ng-model="vm.element.required"></label>
 					<!-- Delete element -->
 					<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="margin-left: 35px;">
 						<i class="material-icons" role="presentation">delete</i> Delete Element</button>
@@ -103,13 +100,22 @@
 								</label>
 				</div>
 				<div class="mdl-tabs__panel" id="content-panel">
-					<label>Content: <textarea rows="3"  id="editContent" ng-model="vm.element.innerHTML"></textarea></label>
+					<label  id="editContent">Content: <textarea rows="3"  ng-model="vm.element.innerHTML"></textarea></label>
+					<label id="editTextFieldDefault">Default Value: 
+						<input type="text" ng-model="vm.element.placeholder">
+					</label>
+					<label id="editCheckboxDefault">Default Value: 
+						<select ng-model="vm.element.firstChild.checked"  ng-options="vm.boolToStr(item) for item in [true, false]"></select>
+					</label>
 				</div>
 				<div class="mdl-tabs__panel" id="options-panel">
 					<label>{{"Options: " + vm.editOptions.join(', ')}}</label><br>
 					<input type="text" ng-model="vm.editNewOption">
 					<input type="button" value="Add" ng-click="vm.editAddNewOption()">
-					<input type="button" value="Delete" ng-click="vm.editDeleteOption()">
+					<input type="button" value="Delete" ng-click="vm.editDeleteOption()"><br>
+					<label>Drop-down List Default Value:
+						<select type="text" name="text" ng-model="vm.element.value" ><option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option></select>
+					</label>
 				</div>
 			</div>
 		</div>
@@ -126,6 +132,12 @@
 					<div class="divider"></div>
 					<a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')"
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+					<div class="divider"></div>
+					<a name="createCheckbox" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'checkbox')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
+					<div class="divider"></div>
+					<a name="createRadio" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'radio')"
+						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
 					<div class="divider"></div>
 					<a name="createDropdown" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'dropdown')"
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
@@ -274,7 +286,8 @@
 		<legend><h4>Create Text Field</h4></legend>
 		<label>Text Field Name:<br>
 		<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true"></label><br>
-		<input type="checkbox" ng-model="vm.required">Required field?<br>
+		<label>Defalut Value:<br>
+		<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault" required="true"></label><br>
 		<label>Font Size:<br>
 			<select ng-options="option for option in vm.availableFontsizes"
 			  ng-model="vm.Fontsize"></select>
@@ -317,19 +330,26 @@
 		<!-- Dialog cancel button here HELLO -->
 		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 		<div class="mdl-layout-spacer"></div>
-		<input type="submit" value="Create Text Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create text field">
+		<input type="submit" value="Create Text Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 	</div>	
 </form>
 </dialog>
 
-			<!-- Create drop-down list -->
-<dialog id='dropdown' >
-<form id="dropdownCreation" name="dropdownCreation" ng-submit="vm.createDropdownList()">
+<!-- create checkbox -->
+
+<dialog id="checkbox" class="mdl-dialog" >
+<form id="checkboxCreation" name="checkboxCreation" ng-submit="vm.createCheckbox()">
+	<legend><h4>Create Checkbox</h4></legend>
 	<div class="mdl-dialog__content mdl-grid">
 	<div class="mdl-cell mdl-cell--6-col">
-		<legend><h4>Create Drop-down List</h4></legend>
-		<label>Drop-down List Name:<br>
-		<input type="text" name="text" id="dropdownListName" ng-model="vm.dropdownListName" required="true"></label><br>
+		<label>Checkbox Field Name:<br>
+		<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true"></label><br>
+		<label>Checked by default?<br>
+			<select ng-model="vm.checkboxdefault" ng-init="vm.checkboxdefault=true" ng-options="vm.boolToStr(item) for item in [true, false]">
+			</select>
+		</label><br>
+		<label>Checkbox Label:<br>
+		<input type="text" name="text" id="checkboxLabel" ng-model="vm.checkboxLabel" required="true"></label><br>
 		<label>Font Size:<br>
 			<select ng-options="option for option in vm.availableFontsizes"
 			  ng-model="vm.Fontsize"></select>
@@ -367,14 +387,147 @@
 			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
 		</label><br>
 	</div>
-	<div class="mdl-cell mdl-cell--12-col">
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" value="Create Checkbox" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+	</div>	
+</form>
+</dialog>
+
+<!-- create radio button -->
+<dialog id='radio' >
+<form id="radioCreation" name="radioCreation" ng-submit="vm.createRadio()">
+	<legend><h4>Create Radio Button</h4></legend>
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Radio Button Name:<br>
+		<input type="text" name="text" id="radioName" ng-model="vm.radioName" required="true"></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+		<label>Display: <br>
+			<select ng-init="vm.radioDisplay = 'radioInline'" ng-model="vm.radioDisplay">
+				<option value="radioInline">In-line</option>
+				<option value="radioMultiline">Multiple-line</option>
+			</select>
+		</label><br>
+		<label>Add option:<br>
 		<input type="text" ng-model="vm.newOption">
 		<input type="button" value="Add" ng-click="vm.addNewOption()">
-		<input type="button" value="Delete" ng-click="vm.deleteOption()">
-		<br>
+		<input type="button" value="Delete" ng-click="vm.deleteOption()"><br></label>
+		<label>Radio Button Default Value:<br>
+			<select type="text" name="text" id="radioDefault" ng-model="vm.radioDefault" >
+				<option ng-repeat="option in vm.options" value={{option}}>{{option}}</option>
+			</select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
 		<label>Options: </label>
 		<h4>{{vm.options.join(', ')}}</h4>
 		<br>
+	</div>
+	</div>
+	<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<!-- Dialog cancel button here HELLO -->
+		<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+		<div class="mdl-layout-spacer"></div>
+		<input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create drop-down list">
+	</div>	
+</form>
+</dialog>
+
+			<!-- Create drop-down list -->
+<dialog id='dropdown' >
+<form id="dropdownCreation" name="dropdownCreation" ng-submit="vm.createDropdownList()">
+	<legend><h4>Create Drop-down List</h4></legend>
+	<div class="mdl-dialog__content mdl-grid">
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Drop-down List Name:<br>
+		<input type="text" name="text" id="dropdownListName" ng-model="vm.dropdownListName" required="true"></label><br>
+		<label>Drop-down List Default Value:<br>
+		<select type="text" name="text" id="dropdownListDefault" ng-model="vm.dropdownListDefault" ><option ng-repeat="option in vm.options" value={{option}}>{{option}}</option></select></label><br>
+		<label>Font Size:<br>
+			<select ng-options="option for option in vm.availableFontsizes"
+			  ng-model="vm.Fontsize"></select>
+		</label><br>
+		<label>Font Type:<br>
+			<select ng-options="option for option in vm.fontsArray"
+			  ng-model="vm.FontType" style={{"font-family:"+vm.FontType}}></select>
+		</label><br>
+		<label>Font Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" style={{"color:"+vm.FontColor}}></select>
+		</label><br>
+		<label>Add option:<br>
+		<input type="text" ng-model="vm.newOption">
+		<input type="button" value="Add" ng-click="vm.addNewOption()">
+		<input type="button" value="Delete" ng-click="vm.deleteOption()"><br></label>
+	</div>
+	<div class="mdl-cell mdl-cell--6-col">
+		<label>Background Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" style={{"background-color:"+vm.BackgroundColor}} ></select>
+		</label><br>
+		<label>Opacity: <span style={{"opacity:"+vm.Opacity}}>{{vm.Opacity | number:2}}</span><br>
+			<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+		</label><br>
+		<label>Border Style:<br>
+			<select ng-model="vm.BorderStyle">
+				<option value="solid">Solid</option>
+				<option value="dashed">Dashed</option>
+				<option value="dotted">Dotted</option>
+				<option value="none">None</option>
+			</select>
+		</label><br>
+		<label>Border Width:<br>
+			<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+		</label><br>
+		<label>Border Radius:<br>
+			<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+		</label><br>
+		<label>Border Color:<br>
+			<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" style={{"color:"+vm.BorderColor}} ></select>
+		</label><br>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<label>Options: </label>
+		<h4>{{vm.options.join(', ')}}</h4>
+		<br>
+
 	</div>
 	</div>
 	<div class="mdl-dialog__actions" style="padding-left:0px;">

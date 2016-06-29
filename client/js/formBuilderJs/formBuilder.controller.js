@@ -45,6 +45,7 @@ function formBuilderCtrl(
 	//initialization
 	var vm = this;
 	vm.saved = true;
+	vm.boolToStr = function(arg) {return arg ? 'Checked' : 'Unchecked'};
 	vm.progressbar = ngProgressFactory.createInstance();
 	vm.progressbar.setHeight("3px");
 	var pdf = new jsPDF();
@@ -60,8 +61,13 @@ function formBuilderCtrl(
 	vm.colorsArray = formBuilderFactory.colorsArray;
 	vm.fontsArray = formBuilderFactory.fontsArray;
 	vm.labelContent = "";
+	vm.textFieldDefault = "";
+	vm.checkboxDefault = true;
+	vm.dropdownListDefault = "";
 	vm.signatureFieldName = "";
 	vm.newAutofillElementId = "";
+	vm.radioDisplay = "radioInline";
+	vm.radioName = "";
 	var elements = {};
 	var formData = {};
 	vm.autofillElements = [];
@@ -69,7 +75,6 @@ function formBuilderCtrl(
 	vm.editOptions = [];
 	vm.editNewOption = ""
 	vm.newOption = "";
-	vm.required = true;
 	vm.imageFieldName = "";
 	vm.textFieldName = "";
 	vm.Fontsize = "16px";
@@ -88,9 +93,11 @@ function formBuilderCtrl(
 	vm.newElementType = "";
 	var fontPanel = document.getElementById("fontPanel");
 	var contentPanel = document.getElementById("contentPanel");
+	var editContent = document.getElementById("editContent");
+	var editCheckboxDefault = document.getElementById("editCheckboxDefault");
+	var editTextFieldDefault = document.getElementById("editTextFieldDefault");
 	var optionsPanel = document.getElementById("optionsPanel");
 	var editBackgroundColorLabel = document.getElementById("editBackgroundColorLabel");
-	var editRequiredLabel = document.getElementById("editRequiredLabel");
 	var placeholder = null;
 	var toolbar = document.getElementById("toolbar");
 	var labelCreation = document.getElementById("labelCreation");
@@ -117,8 +124,8 @@ function formBuilderCtrl(
 	//page node
 	var newPageTemplate = formBuilderFactory.newPage;
 
-	var defaultWidth = 300;
-	var defaultHeight = 150;
+	var defaultWidth = 200;
+	var defaultHeight = 50;
 
 	//drag icon initialization
 
@@ -159,6 +166,8 @@ function formBuilderCtrl(
 	vm.deleteOption = deleteOption;
 	vm.addImg = addImg;
 	vm.createDropdownList = createDropdownList;
+	vm.createRadio = createRadio;
+	vm.createCheckbox = createCheckbox;
 	vm.createTextField = createTextField;
 	vm.createImageField = createImageField;
 	vm.createSignatureField = createSignatureField;
@@ -186,6 +195,8 @@ function formBuilderCtrl(
 	//remove place holder when close dialog
 	document.getElementById('label').addEventListener("close", removePlaceholder);
 	document.getElementById('text').addEventListener("close", removePlaceholder);
+	document.getElementById('checkbox').addEventListener("close", removePlaceholder);
+	document.getElementById('radio').addEventListener("close", removePlaceholder);
 	document.getElementById('dropdown').addEventListener("close", removePlaceholder);
 	document.getElementById('imageField').addEventListener("close", removePlaceholder);
 	document.getElementById('signatureField').addEventListener("close", removePlaceholder);
@@ -223,16 +234,33 @@ function formBuilderCtrl(
 				}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 					var node = document.createElement('input');
 					node.type='text';
+					node.placeholder=element.default;
 					node.setAttribute('readonly','readonly');
 					node.style.color = element.color;
 					node.style.backgroundColor = element.backgroundColor;
 					node.style.fontFamily = element.fontFamily;
 					node.style.fontSize = element.fontSize;
 					node.style.textDecoration = element.textDecoration;
-					node.required = element.required;
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
+					var node = document.createElement('label');
+					var span = document.createElement('span');
+					var checkbox = document.createElement('input');
+					checkbox.type="checkbox";
+					checkbox.checked = element.default;
+					checkbox.onclick = function(){return false;};
+					span.innerHTML = element.label;
+					node.appendChild(checkbox);
+					node.appendChild(span);
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
 					node.style.zIndex="1";
 				}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
-					var node = document.createElement('button');
+					var node = document.createElement('select');
+					node.onmousedown = function(){return false;};
 					var options = element.options;
 					if(options.length>0){
 						for(var i = 0; i<options.length; i++){
@@ -241,6 +269,7 @@ function formBuilderCtrl(
 							node.appendChild(option);
 						}
 					}
+					node.value = element.default;
 					node.style.color = element.color;
 					node.style.backgroundColor = element.backgroundColor;
 					node.style.fontFamily = element.fontFamily;
@@ -329,6 +358,7 @@ function formBuilderCtrl(
 					continue;
 				}
 				var id = node.id;
+				console.log(id);
 				elements[id] = {};
 				elements[id].name = node.getAttribute("name");
 				elements[id].page = i;
@@ -351,19 +381,20 @@ function formBuilderCtrl(
 				if(id.startsWith("image")){
 					elements[id].type = "image";
 				}
-				if (id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
+				if (id.startsWith("checkbox") || id.startsWith("auto_checkbox") || id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
 					elements[id].fontSize = node.style.fontSize;
 					elements[id].color = node.style.color;
 					elements[id].fontFamily = node.style.fontFamily;
 					elements[id].textDecoration = node.style.textDecoration;
 					if (id.startsWith("auto_text") || id.startsWith("text")) {
-						elements[id].required = node.required;
 						elements[id].type = "text";
+						elements[id].default = node.placeholder;
 					} else if(id.startsWith("label")){
 						elements[id].content = node.innerHTML;
 						elements[id].type = "label";
 					}else if (id.startsWith("dropdown") || id.startsWith("auto_dropdown")) {
 						elements[id].options=[];
+						elements[id].default = node.value;
 						elements[id].type = "dropdown";
 						if (node.lastChild) {
 							for(var k=0; k<node.childNodes.length; k++){
@@ -371,6 +402,13 @@ function formBuilderCtrl(
 								if(option.tagName && option.tagName ==='OPTION') elements[id].options.push(option.innerHTML);
 							}
 						}
+					}else if(id.startsWith("checkbox") || id.startsWith("auto_checkbox")){
+						for(var k=0;k<node.childNodes.length;k++){
+							if(node.childNodes[k].tagName && node.childNodes[k].tagName==="SPAN") var span = node.childNodes[k];
+							if(node.childNodes[k].tagName && node.childNodes[k].tagName==="INPUT") var checkbox = node.childNodes[k];
+						}
+						elements[id].default = checkbox.checked;
+						elements[id].label = span.innerHTML;
 					}
 				}
 			}
@@ -657,13 +695,19 @@ function formBuilderCtrl(
 
 	function reset() {
 		vm.file = null;
+		vm.radioDisplay = "radioInline";
+		vm.radioName = "";
+		vm.textFieldDefault = "";
+		vm.checkboxDefault = true;
+		vm.dropdownListDefault = "";
+		vm.checkboxName = "";
+		vm.checkboxLabel = "";
 		vm.options = [];
 		vm.newOption = "";
 		vm.newAutofillElementId = "";
 		vm.selectedAutofillElement = null;
 		vm.labelContent = "";
 		vm.signatureFieldName = "";
-		vm.required = true;
 		vm.imageFieldName = "";
 		vm.textFieldName = "";
 		vm.dropdownListName = "";
@@ -704,6 +748,9 @@ function formBuilderCtrl(
 				if (vm.selectedAutofillElement.type==='dropdown') {
 					createDropdownList();
 				}
+				if (vm.selectedAutofillElement.type==='checkbox') {
+					createCheckbox();
+				}
 			}else{
 				createPlaceholder();
 				openDialog(vm.newElementType);
@@ -721,6 +768,13 @@ function formBuilderCtrl(
 
 	function createPlaceholder() {
 		if (vm.newElementType) {
+			if(vm.newElementType==="imageField" || vm.newElementType==="imgUpload" || vm.newElementType==="signatureField"){
+				defaultWidth = 300;
+				defaultHeight = 150;
+			}else{
+				defaultWidth = 200;
+				defaultHeight = 50;
+			}
 			placeholder = document.createElement("div");
 			placeholder.setAttribute("id", "placeholder");
 			placeholder.setAttribute("style", "position:absolute");
@@ -760,12 +814,14 @@ function formBuilderCtrl(
 	}
 
 	function editAddNewOption(){
-		vm.editOptions.push(vm.editNewOption);
-		var option = document.createElement("option");
-		option.innerHTML=vm.editNewOption;
-		option.value=vm.editNewOption;
-		vm.element.appendChild(option);
-		vm.editNewOption = "";
+		if(vm.editOptions.indexOf(vm.editNewOption)<0){
+			vm.editOptions.push(vm.editNewOption);
+			var option = document.createElement("option");
+			option.innerHTML=vm.editNewOption;
+			option.value=vm.editNewOption;
+			vm.element.appendChild(option);
+			vm.editNewOption = "";
+		}
 	}
 
 	function editDeleteOption(){
@@ -780,6 +836,7 @@ function formBuilderCtrl(
 				vm.element.style.boxShadow = "none";
 			}	
 			vm.saved = false;
+			vm.element = element;
 			document.getElementById("optionsPanel").classList.remove('is-active');
 			document.getElementById("options-panel").classList.remove('is-active');
 			document.getElementById("contentPanel").classList.remove('is-active');
@@ -790,7 +847,6 @@ function formBuilderCtrl(
 			document.getElementById("borderPanel").classList.add('is-active');
 			document.getElementById("font-panel").classList.remove('is-active');
 			document.getElementById("border-panel").classList.add('is-active');
-			document.getElementById("editRequired").checked=element.required;
 			document.getElementById("editTextDecoration").value = element.style.textDecoration;
 			document.getElementById("editFontColor").style.color = element.style.color;
 			document.getElementById("editFontColor").value = element.style.color;
@@ -805,17 +861,17 @@ function formBuilderCtrl(
 			document.getElementById("editOpacity").value = element.style.opacity;
 			document.getElementById("editBackgroundColor").value = element.style.backgroundColor;
 			document.getElementById("editBackgroundColor").style.backgroundColor = element.style.backgroundColor;
-			vm.element = element;
 			element.style.boxShadow = "10px 10px 30px #888888";
 			fontPanel.style.display = "inline";
-			editRequiredLabel.style.display = "none";
 			contentPanel.style.display = "none";
+			editContent.style.display = "none";
 			optionsPanel.style.display = 'none';
+			editTextFieldDefault.style.display="none";
 			editBackgroundColorLabel.style.display = "inline";
+			editCheckboxDefault.style.display = "none";
 			if (element.getAttribute("name").startsWith("background")) {
 				fontPanel.style.display = "none";
 				editBackgroundColorLabel.style.display = "none";
-				editRequiredLabel.style.display = "none";
 			}
 			if (element.getAttribute("name").startsWith("image") ||
 				element.getAttribute("name").startsWith("signature")) {
@@ -833,10 +889,16 @@ function formBuilderCtrl(
 				console.log(vm.editOptions);
 			}
 			if (element.getAttribute("name").startsWith("text") || element.getAttribute("name").startsWith("auto_text")) {
-				editRequiredLabel.style.display = "inline";
+				contentPanel.style.display = "inline";
+				editTextFieldDefault.style.display = "inline";
+			}
+			if (element.getAttribute("name").startsWith("checkbox") || element.getAttribute("name").startsWith("auto_checkbox")) {
+				contentPanel.style.display = "inline";
+				editCheckboxDefault.style.display = "inline";
 			}
 			if (element.getAttribute("name").startsWith("label")) {
 				contentPanel.style.display = "inline";
+				editContent.style.display = "inline";
 				document.getElementById("editContent").value = element.innerHTML;
 			}
 			toolbar.style.display = "block";
@@ -850,9 +912,17 @@ function formBuilderCtrl(
 		var formWidth = form.offsetWidth;
 		var formHeight = form.offsetHeight;
 		vm.allowCreate = true;
+		var fieldName = newElement.getAttribute("name");
+		if(fieldName.startsWith("image") || fieldName.startsWith("background_") || fieldName.startsWith("signature")){
+			defaultWidth = 300;
+			defaultHeight = 150;
+		}else{
+			defaultWidth = 200;
+			defaultHeight = 50;
+		}
 		if ((newElementPosition.x + defaultWidth) >= formWidth) {
 			newElement.style.width = (formWidth - newElementPosition.x - 1) + "px";
-		} else {
+		} else{
 			newElement.style.width = defaultWidth + "px";
 		}
 		if ((newElementPosition.y + defaultHeight) >= formHeight) {
@@ -863,7 +933,6 @@ function formBuilderCtrl(
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
 		newElement.setAttribute("class", "resize-drag");
-		newElement.required=Boolean(vm.required);
 		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
 		$compile(newElement)($scope);
 		newElement.style.overflow = "hidden";
@@ -888,8 +957,10 @@ function formBuilderCtrl(
 	}
 
 	function addNewOption(){
-		vm.options.push(vm.newOption);
-		vm.newOption = '';
+		if(vm.options.indexOf(vm.newOption)<0){
+			vm.options.push(vm.newOption);
+			vm.newOption = '';
+		}
 	}
 
 	function deleteOption(){
@@ -918,15 +989,47 @@ function formBuilderCtrl(
 		}		
 	}
 
+	function createRadio(){
+		var radio = document.createElement("form");
+		radio.className = vm.radioDisplay;
+		radio.onclick = function(){return false;}
+		for(var i=0; i<vm.options.length; i++){
+			var label = document.createElement("label");
+			var option = document.createElement("input");
+			option.type = "radio";
+			option.value = vm.options[i];
+			var span = document.createElement("span");
+			span.innerHTML=" "+vm.options[i];
+			label.appendChild(option);
+			label.appendChild(span);
+			radio.appendChild(label);
+		}
+		radio.value = vm.radioDefault;
+		if (vm.newElementType==='auto') {
+			radio.setAttribute("name", 'auto_radio_'+vm.selectedAutofillElement.fieldName);
+			radio.setAttribute("id", vm.newAutofillElementId);
+		}else{
+			if (elements.hasOwnProperty("radio_" + vm.radioName)) {
+				alert("Field name already exists, please change another one");
+				vm.allowCreate = true;
+				return ;
+			} 
+			elements["radio_" + vm.radioName] = {};
+			radio.setAttribute("name", "radio_" + vm.radioName);
+			radio.setAttribute("id", "radio_" + vm.radioName);
+		}
+		setNewElement(radio);
+	}
+
 	function createDropdownList(){
-		var dropdown = document.createElement("button");
-		vm.saved = false;
+		var dropdown = document.createElement("select");
+		dropdown.onmousedown = function(){return false;}
 		for(var i=0; i<vm.options.length; i++){
 			var option = document.createElement("option");
-			option.setAttribute("onclick","function(e){e.preventDefault;}")
 			option.innerHTML = vm.options[i];
 			dropdown.appendChild(option);
 		}
+		dropdown.value = vm.dropdownListDefault;
 		if (vm.newElementType==='auto') {
 			dropdown.setAttribute("name", 'auto_dropdown_'+vm.selectedAutofillElement.fieldName);
 			dropdown.setAttribute("id", vm.newAutofillElementId);
@@ -943,10 +1046,37 @@ function formBuilderCtrl(
 		setNewElement(dropdown);
 	}
 
+	function createCheckbox(){
+		var label = document.createElement("label");
+		var checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.checked = vm.checkboxdefault;
+		checkbox.onclick = function(){return false;}
+		var span = document.createElement("span");
+		span.innerHTML = vm.checkboxLabel;
+		label.appendChild(checkbox);
+		label.appendChild(span);
+		if (vm.newElementType==='auto') {
+			label.setAttribute("name", 'auto_checkbox_'+vm.selectedAutofillElement.fieldName);
+			label.setAttribute("id", vm.newAutofillElementId);
+		}else{
+			if (elements.hasOwnProperty("checkbox_" + vm.checkboxName)) {
+				alert("Field name already exists, please change another one");
+				vm.allowCreate = true;
+				return ;
+			} 
+			elements["checkbox_" + vm.checkboxName] = {};
+			label.setAttribute("name", "checkbox_" + vm.checkboxName);
+			label.setAttribute("id", "checkbox_" + vm.checkboxName);
+		}
+		setNewElement(label);
+	}
+
 	function createTextField() {
 		var textarea = document.createElement("input");
 		textarea.setAttribute('type','text');
 		textarea.setAttribute('readonly','readonly');
+		textarea.placeholder = vm.textFieldDefault;
 		if (vm.newElementType==='auto') {
 			textarea.setAttribute("name", 'auto_text_'+vm.selectedAutofillElement.fieldName);
 			textarea.setAttribute("id", vm.newAutofillElementId);

@@ -231,6 +231,7 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 					}else if(element.name.startsWith('text_') || element.name.startsWith('auto_text_')){
 						var node = document.createElement('input');
 						node.type='text';
+						node.placeholder=element.default;
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
@@ -238,7 +239,8 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
-						var node = document.createElement('button');
+						var node = document.createElement('select');
+						node.onmousedown = function(){return false;};
 						var options = element.options;
 						for(var i = 0; i<options.length; i++){
 							var option = document.createElement('option');
@@ -258,6 +260,22 @@ function formsCtrl($scope, $q, $location, $timeout, $http,uiGridConstants,formsF
 					}else if (element.name.startsWith('image_')) {
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
+						var node = document.createElement('label');
+						var span = document.createElement('span');
+						var checkbox = document.createElement('input');
+						checkbox.type="checkbox";
+						checkbox.checked = element.default;
+						checkbox.onclick = function(){return false;};
+						span.innerHTML = element.label;
+						node.appendChild(checkbox);
+						node.appendChild(span);
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}
 					node.style.opacity = element.opacity;

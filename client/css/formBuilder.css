@@ -87,6 +87,8 @@
 	text-align: center;
 }
 
+#dropdownCreation #dropdownName, #dropdownCreation select, #dropdownCreation #editOpacity, 
+#checkboxCreation #checkboxName,#checkboxCreation #checkboxLabel, #checkboxCreation select, #checkboxCreation #editOpacity,
 #labelCreation textarea, #labelCreation select, #labelCreation #editOpacity,
 #textFieldCreation #textFieldName, #textFieldCreation select, #textFieldCreation #editOpacity,
 #imageFieldCreation #imageFieldName, #imageFieldCreation #editOpacity {
