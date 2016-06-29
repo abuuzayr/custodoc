@@ -54,8 +54,10 @@
 	<!-- CHECKBOX FIELDS -->
 	<div ng-if="key.type=='checkbox'">
 	   <label class="col-sm-2 control-label">{{key.label}}</label>
-	    <div class="col-sm-6">
-		<input type="checkbox" class="form-control" ng-model="key.data" value="true">
+	    <div class="col-sm-6" ng-repeat="option in key.options">
+		<label>
+		<input type="checkbox" class="form-control" name="selected[]" ng-model="key.data" value={{option}} ng-checked="vm.selected.indexOf(option) > -1" ng-click="toggleSelection(option)">
+	    	{{option}} </label>
 	    </div>
 	</div>
 
@@ -63,8 +65,18 @@
 	<div ng-if="key.type=='email'">
 	    <label class="col-sm-2 control-label">{{key.label}}</label>
 	    <div class="col-sm-6">
-		<input type="email" ng-model="key.data" class="form-control">
+		<input type="email" ng-model="key.data" class="form-control" placeholder={{key.name}}>
       	    </div>
+    	</div>
+
+	<!-- RADIO FIELDS -->
+	<div ng-if="key.type=='radio'">
+	    <label class="col-sm-2 control-label">{{key.label}}</label>
+	    <div class="col-sm-6" ng-repeat="option in key.options">
+		<label>
+		<input type="radio" name="key.name" value={{option}} ng-model="key.data" class="form-control">
+      	    	{{option}} </label>
+	    </div>
     	</div>
 
     </ng-form>

@@ -17,7 +17,25 @@ angular
                 componentHandler.upgradeDom();
             }, 0);
         });
+
+	/*****   FOR CHECKBOX   *****/
 	
+	vm.selected = [];
+	
+	console.log(JSON.stringify(vm.selected));
+
+	vm.toggleSelection = function (option) {
+	    var idx = vm.selected.indexOf(option);
+	
+	    if (idx > -1) {
+		vm.selected.splice(idx, 1);
+	    } else { 
+		vm.selected.push(option);	
+	    }
+	};
+	
+	/****************************/
+
 	// initialize the data to contain all entries and lets the htmlview retrieve this data
 	vm.getEntries = function() {
 	    entryService.getAllEntries()
@@ -42,7 +60,8 @@ angular
 		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
 		{type: "dropdown", name: "Gender", label: "Gender", options: ["Male", "Female"], data:"Male"},
 		{type: "image", name: "Picture", label: "Picture", data:""},
-		{type: "checkbox", name: "Are you Human", label: "Are you Human?", data:"false"}  // true/false questions
+		{type: "checkbox",  name: "Illnesses", label:"Any medical conditions?", options:["Asthma", "High-blood pressure", "Diabetes"], data:""},
+		{type: "radio", name: "Are you Human", label: "Are you Human?", options:["true", "false"], data:""}  // true/false questions
 	    ]
 	
 	}
