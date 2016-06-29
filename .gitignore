@@ -33,6 +33,8 @@ build/Release
 client/node_modules
 server/node_modules
 jspm_packages
+_dev_only/
+.DS_Store/
 
 # Optional npm cache directory
 .npm
@@ -42,4 +44,3 @@ jspm_packages
 
 # Visual Studio settings
 .vscode
-
