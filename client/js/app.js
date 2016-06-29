@@ -1,5 +1,5 @@
 angular
-    .module('user-interface', ['ui.router', 'ui.grid','ui.grid.autoResize','ui.grid.pagination','ui.grid.resizeColumns','ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp','formsApp'])
+    .module('user-interface', ['naif.base64','ui.router', 'ui.grid','ui.grid.autoResize','ui.grid.pagination','ui.grid.resizeColumns','ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp','formsApp'])
     .config(['$urlRouterProvider', '$stateProvider','$locationProvider', function ($urlRouterProvider, $stateProvider,$locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -13,7 +13,7 @@ angular
                 url: '/newentry',
                 templateUrl: 'views/newEntry.html',
                 controller: 'newEntryCtrl',
-                controllerAs: 'newEntry'
+                controllerAs: 'vm'
             })
             .state('users', {
                 url: '/users',

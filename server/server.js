@@ -16,6 +16,7 @@ var routes = require('./api');
 var formsRouter = require('./routes/formsRouter');
 var groupsRouter = require('./routes/groupsRouter');
 var autofillRouter = require('./routes/autofill');
+var entryRouter = require('./routes/entryRouter');
 var http404 = require('./utils/404')();
 // Configuration
 app.use(logger('dev'));
@@ -37,6 +38,7 @@ app.use('/static',express.static(__dirname + '/../client/app/autofill'));
 app.use('/forms', formsRouter);
 app.use('/groups', groupsRouter);
 app.use('/autofill', autofillRouter);
+app.use('/entryRouter', entryRouter);
 app.use('/api', routes);
 //app.use('*',http404.notFoundMiddleware);
 // Open one database connection
@@ -47,14 +49,8 @@ MongoClient.connectAsync(config.dbURL)
 
 		app.listen(config.port,function(){
 			console.log('Express server listening on port '+ config.port);
-			console.log('env = ' + app
-				.get('env') + 
-				'\n__dirname = ' + __dirname + 
-				'\nprocess.cwd = ' + process.cwd());
->>>>>>> autofill
 		});
 	})
 	.catch(function(err){
 		console.log(err);
 	});
-
