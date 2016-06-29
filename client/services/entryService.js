@@ -15,12 +15,12 @@ angular.module('entryService', [])
 
 	// get all entries
 	entryFactory.getAllEntries = function() {
-		return $http.get('http://10.4.1.171:3001/api/entries');
+		return $http.get('http://10.4.1.171:3001/api/entry');
 	};
 
 	// create an entry
 	entryFactory.create = function(finalData) {
-		return $http.post('http://10.4.1.171:3001/api/entries', finalData);
+		return $http.post('http://10.4.1.171:3001/api/entry', finalData);
 	};
 
 	// delete an entry, entData contains groupName
