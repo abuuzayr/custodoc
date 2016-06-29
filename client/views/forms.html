@@ -161,8 +161,8 @@
 					<div class="mdl-layout-spacer"></div>
 					<!-- Toggle importance button KIV -->
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term == 'Important'" ng-click="vm.setNormal()">bookmark</i>
-						<i class="material-icons" role="presentation" ng-if="vm.gridApi.grid.columns[3].filters[0].term != 'Important'" ng-click="vm.setImportant()">bookmark_outline</i>
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.selection.selectedRows[0]().isImportant == 'important'" ng-click="vm.setNormal()">bookmark</i>
+						<i class="material-icons" role="presentation" ng-if="vm.gridApi.selection.selectedRows[0]().isImportant != 'important'" ng-click="vm.setImportant()">bookmark_outline</i>
 						</button>
 
 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
