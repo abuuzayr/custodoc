@@ -51,16 +51,6 @@ angular
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
             })
-            // .state('important', {
-            //     url: '/important',
-            //     templateUrl: 'views/forms.html',
-            //     controller: 'formsCtrl', function() {
-            //         vm.gridApi.grid.columns[3].filters[0] = {
-            //             term: 'Important'
-            //         };
-            //     },
-            //     controllerAs: 'vm',
-            // })
             .state('autofill', {
                 url: '/autofill',
                 templateUrl: 'views/autofill.html',

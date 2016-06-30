@@ -9,10 +9,10 @@
 >>>>>>> fffe0cc5f35bb4fedad87ea7f32d2e579ef34b5c
 			<label class="mdl-selectfield__label">Select form group</label>
 			<select class="selectInDialog" ng-model="vm.newFormGroup" required>
-							<option ng-repeat="data in vm.groups">{{ data }}</option>
-					</select><br>
+				<option ng-repeat="data in vm.groups">{{ data }}</option>
+			</select><br>
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input id="newFormName" class="mdl-textfield__input" type="text" ng-model="vm.newFormName" placeholder="Form name" ng-required="true">
+				<input id="newFormName" class="mdl-textfield__input" type="text" ng-model="vm.newFormName" placeholder="Form name" ng-required="true" required>
 				<label class="mdl-textfield__label" for="newFormName">Form name</label>
 <<<<<<< HEAD
 			</div>	
@@ -40,7 +40,7 @@
 	<div class="mdl-dialog__content">
 		<label>Input new group name</label>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input id="newGroupName" class="mdl-textfield__input" type="text" ng-model="vm.newGroupName" placeholder="Group name" ng-required="true">
+			<input id="newGroupName" class="mdl-textfield__input" type="text" ng-model="vm.newGroupName" placeholder="Group name" ng-required="true" required>
 			<label class="mdl-textfield__label" for="newGroupName">Group name</label>
 		</div>
 	</div>
@@ -53,11 +53,11 @@
 
 <!---------------------------------------- Dialog for renameGroup ---------------------------------------->
 <dialog id="renameGroup" class="mdl-dialog">
-	<div class="mdl-dialog__content">
-		<form id="renameGroup-form" ng-submit="vm.renameGroup()">
+	<form id="renameGroup-form" ng-submit="vm.renameGroup()">
+		<div class="mdl-dialog__content">
 			<label>Rename old group name</label>
-			<select class="selectInDialog" ng-model="vm.renameGroupOld" ng-required="true">
-							<option ng-repeat="data in vm.groups">{{ data }}</option>
+			<select class="selectInDialog" ng-model="vm.renameGroupOld" ng-required="true" required>
+				<option ng-repeat="data in vm.groups">{{ data }}</option>
 			</select>
 			<br>to
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -65,13 +65,13 @@
 				/>
 				<label class="mdl-textfield__label" for="renameGroupNew">New group name</label>
 			</div>
-		</form>
 	</div>
 	<div class="mdl-dialog__actions">
 		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('renameGroup')">Close</button>
 		<div class="mdl-layout-spacer"></div>
 		<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" for="renameGroup-form">Rename</button>
 	</div>
+	</form>
 </dialog>
 
 <!---------------------------------------- Dialog for deleteGroup ---------------------------------------->
@@ -79,8 +79,8 @@
 	<div class="mdl-dialog__content">
 		<label>Select group to delete</label>
 		<select class="selectInDialog" ng-model="vm.deleteGroupName" ng-init="vm.deleteGroupName = vm.groups[0]">
-						<option ng-repeat="data in vm.groups">{{ data }}</option>
-				</select>
+			<option ng-repeat="data in vm.groups">{{ data }}</option>
+		</select>
 	</div>
 	<div class="mdl-dialog__actions">
 		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('deleteGroup')">Close</button>
@@ -108,19 +108,25 @@
 </dialog>
 
 <!---------------------------------------- Dialog for duplicateForm ---------------------------------------->
-<dialog id="duplicateForm">
+<dialog id="duplicateForm" class="mdl-dialog">
+	<form ng-submit="vm.duplicateForm()">
+	<div class="mdl-dialog__content">
 	<label>Selected Form</label><br>
 	<p>{{"Group: "+vm.gridApi.selection.getSelectedRows()[0].groupName+" Form: "+vm.gridApi.selection.getSelectedRows()[0].formName;}}</p>
-	<form ng-submit="vm.duplicateForm()">
 		<label>Duplicate to group:</label>
-		<select ng-model="vm.duplicateTo" required>
-						<option ng-repeat="data in vm.groups">{{ data }}</option>
-				</select><br>
+		<select class="selectInDialog" ng-model="vm.duplicateTo" required>
+			<option ng-repeat="data in vm.groups">{{ data }}</option>
+		</select><br>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			<input ng-model="vm.duplicateName" class="mdl-textfield__input" type="text" required />
-			<label class="mdl-textfield__label" for="duplicateName">New Form Name</label>
-			<input type="submit" value="Duplicate">
+			<label class="mdl-textfield__label" for="duplicateName">New form name</label>
 		</div>
+	</div>
+		<div class="mdl-dialog__actions">
+		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('duplicateForm')">Close</button>
+		<div class="mdl-layout-spacer"></div>
+		<button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">Duplicate</button>
+	</div>
 	</form>
 </dialog>
 
@@ -142,10 +148,7 @@
 						<li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridApi.selection.getSelectedRows().length===1;" ng-click="vm.openDialog('duplicateForm')"><i class="material-icons">content_copy</i> Duplicate form</li>
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.deleteForms()"><i class="material-icons">delete</i> Delete form</li>
 					</ul>
-					<!--<button ng-click="vm.openDialog('newForm')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-			<i class="material-icons" role="presentation">add</i> New Form</button>-->
 					<div class="divider"></div>
-
 					<button id="manageGroups" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons" role="presentation"></i>Manage groups</button>
 					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageGroups">
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newGroup')"><i class="material-icons">add</i> New group</li>
@@ -153,8 +156,7 @@
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
 					</ul>
 					<div class="divider"></div>
-					<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()">
-		<i class="material-icons" role="presentation">add</i> New Entry</button>
+					<button ng-click="" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()"><i class="material-icons" role="presentation">add</i> New Entry</button>
 					<div class="divider"></div>
 					<button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridApi.selection.getSelectedRows().length"><i class="material-icons">vertical_align_bottom</i> Download</button>
 					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="downloadMenu">
@@ -162,38 +164,33 @@
 						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadSeparate()">Download separately</li>
 					</ul>
 					<div class="divider"></div>
-					<!--<button ng-click="vm.downloadAsOne()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-						ng-show="vm.gridApi.selection.getSelectedRows().length">Download As One</button>
-					<button ng-click="vm.downloadSeparate()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-						ng-show="vm.gridApi.selection.getSelectedRows().length">Download Separately</button>-->
-					<div class="divider"></div>
 
-					<!--<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('renameForm')"
-						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Rename Form</button>-->
-					<div class="divider"></div>
-					<!--<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.openDialog('duplicateForm')"
-						ng-show="vm.gridApi.selection.getSelectedRows().length===1;">Duplicate</button>-->
-					<div class="divider"></div>
 					<div class="mdl-layout-spacer"></div>
 					<!-- Toggle importance button KIV -->
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+<!-- 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
 						<i class="material-icons" role="presentation" ng-if="vm.gridApi.selection.selectedRows[0]().isImportant == 'important'" ng-click="vm.setNormal()">bookmark</i>
 						<i class="material-icons" role="presentation" ng-if="vm.gridApi.selection.selectedRows[0]().isImportant != 'important'" ng-click="vm.setImportant()">bookmark_outline</i>
 						</button>
+					-->
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showImportant()">Show Important</button>
+					<div class="divider"></div>
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showRecent()">Show Recent</button>
+					<div class="divider"></div>
+					<button id="importance" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Importance</button>
+					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="importance">
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">bookmark</i>Set important</li>
+						<li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setNormal()"><i class="material-icons" role="presentation">bookmark_outline</i>Set normal</li>
+					</ul>
 
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">star</i>Set Important</button>
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set Normal</button>
-					<!--<button id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.deleteForms()">
-		<i class="material-icons" role="presentation">delete</i>Delete</button>-->
-				</div>
+<!-- 					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">bookmark</i>Set important</button>
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.setNormal()">Set normal</button>
+ -->				</div>
 
 				<!-- Table for forms stub -->
 				<div ng-style="vm.getTableHeight()">
 					<div id="grid-forms" ui-grid="vm.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection ui-grid-pagination
-						ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div>
+					ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div>
 				</div>
-				<button ng-click="vm.showImportant()">Show Important</button>
-				<button ng-click="vm.showRecent()">Show Recent</button>
 				<!-- Snack Bar -->
 				<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
 					<div class="mdl-snackbar__text"></div>

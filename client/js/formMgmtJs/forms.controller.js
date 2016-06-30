@@ -1,8 +1,11 @@
 angular
 	.module("formsApp")
+<<<<<<< HEAD
 	.controller("formsCtrl", ['$compile','$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
 
 function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
+=======
+>>>>>>> Style forms, remove side nav important and recent
 	var vm = this;
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
@@ -499,7 +502,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		{
 			name: 'isImportant',
 			displayName: 'Importance',
-			resizable: true
+			resizable: true,
 		},
 		{
 			name: 'creationDate',
@@ -606,6 +609,17 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		}];
 
 	//sorting and filtering
+	
+	// var filter = $stateParams.filter;
+	// function showByFilter() {
+	// 	if(filter == "important") {
+	// 		showImportant();
+	// 	}
+		
+	// 	if(filter == "recent") {
+	// 		showRecent();
+	// 	}
+	// }
 
 	function showRecent() {
 		if (vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term = '';
@@ -657,5 +671,6 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		$timeout(function () {
 			componentHandler.upgradeDom();
 		}, 0);
+		// showByFilter();
 	});
 }
