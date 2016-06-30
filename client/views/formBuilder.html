@@ -107,6 +107,9 @@
 					<label id="editCheckboxDefault">Default Value: 
 						<select ng-model="vm.element.firstChild.checked"  ng-options="vm.boolToStr(item) for item in [true, false]"></select>
 					</label>
+					<label id="editCheckboxLabel">Checkbox label: 
+						<input type="text" ng-model="vm.element.firstChild.nextSibling.innerHTML"  >
+					</label>
 				</div>
 				<div class="mdl-tabs__panel" id="options-panel">
 					<label>{{"Options: " + vm.editOptions.join(', ')}}</label><br>

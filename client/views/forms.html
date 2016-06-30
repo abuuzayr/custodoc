@@ -1,7 +1,7 @@
 <!---------------------------------------- Dialog for newForm ---------------------------------------->
 <dialog id="newForm" class="mdl-dialog">
+<form id="createForm-form" ng-submit="vm.createForm()">
 	<div class="mdl-dialog__content">
-		<form id="createForm-form" ng-submit="vm.createForm()">
 			<label class="mdl-selectfield__label">Select form group</label>
 			<select class="selectInDialog" ng-model="vm.newFormGroup" required>
 							<option ng-repeat="data in vm.groups">{{ data }}</option>
@@ -9,14 +9,15 @@
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 				<input id="newFormName" class="mdl-textfield__input" type="text" ng-model="vm.newFormName" placeholder="Form name" ng-required="true">
 				<label class="mdl-textfield__label" for="newFormName">Form name</label>
-			</div>
-		</form>
+			</div>	
 	</div>
 	<div class="mdl-dialog__actions">
 		<button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('newForm')">Close</button>
 		<div class="mdl-layout-spacer"></div>
 		<input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" value="Create form" for="createForm-form">
+
 	</div>
+	</form>
 </dialog>
 
 <!---------------------------------------- Dialog for newGroup ---------------------------------------->

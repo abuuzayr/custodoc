@@ -1,8 +1,8 @@
 angular
 	.module("formsApp")
-	.controller("formsCtrl", ['$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
+	.controller("formsCtrl", ['$compile','$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
 
-function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
+function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
 	var vm = this;
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
@@ -241,11 +241,11 @@ function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, form
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
 						var node = document.createElement('select');
-						node.onmousedown = function () { return false; };
 						var options = element.options;
 						for (var i = 0; i < options.length; i++) {
 							var option = document.createElement('option');
 							option.innerHTML = options[i];
+							if (options[i]===element.default) option.setAttribute("selected",true);
 							node.appendChild(option);
 						}
 						node.style.color = element.color;
@@ -254,6 +254,34 @@ function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, form
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
+					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+						var node = document.createElement('form');
+						var options = element.options;
+						if (element.display==="radioInline") var display = "inline";
+						else var display = "block";
+						if(options.length>0){
+							for(var i=0; i<options.length; i++){
+								var label = document.createElement("label");
+								var option = document.createElement("input");
+								option.type = "radio";
+								option.name = element.name;
+								option.value = options[i];
+								if(options[i]===element.default) option.setAttribute("checked",true);
+								var span = document.createElement("span");
+								span.innerHTML=options[i]+" ";
+								label.style.display = display;
+								label.appendChild(option);
+								label.appendChild(span);
+								node.appendChild(label);
+							}
+						}
+						node.className = element.display;
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
 					} else if (element.name.startsWith('signature_')) {
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
@@ -267,8 +295,9 @@ function formsCtrl($scope, $q, $location, $timeout, $http, uiGridConstants, form
 						var span = document.createElement('span');
 						var checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
-						checkbox.checked = element.default;
-						checkbox.onclick = function () { return false; };
+						if(element.default) checkbox.setAttribute("checked",true);
+						checkbox.setAttribute("ng-checked",element.default);
+						$compile(checkbox)($scope);
 						span.innerHTML = element.label;
 						node.appendChild(checkbox);
 						node.appendChild(span);

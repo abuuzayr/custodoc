@@ -96,6 +96,7 @@ function formBuilderCtrl(
 	var editContent = document.getElementById("editContent");
 	var editRadioDefault = document.getElementById("editRadioDefault");
 	var editCheckboxDefault = document.getElementById("editCheckboxDefault");
+	var editCheckboxLabel = document.getElementById("editCheckboxLabel");
 	var editTextFieldDefault = document.getElementById("editTextFieldDefault");
 	var editDropdownDefault = document.getElementById("editDropdownDefault");
 	var editRadioDisplay = document.getElementById("editRadioDisplay");
@@ -279,6 +280,34 @@ function formBuilderCtrl(
 					node.style.fontSize = element.fontSize;
 					node.style.textDecoration = element.textDecoration;
 					node.style.zIndex="1";
+				}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+					var node = document.createElement('form');
+					node.onclick = function(){return false;};
+					var options = element.options;
+					if(options.length>0){
+						if (element.display==="radioInline") var display = "inline";
+						else var display = "block";
+						for(var i=0; i<options.length; i++){
+							var label = document.createElement("label");
+							var option = document.createElement("input");
+							option.type = "radio";
+							option.name = element.name;
+							option.value = options[i];
+							if(options[i]===element.default) option.checked = true;
+							var span = document.createElement("span");
+							span.innerHTML=options[i]+" ";
+							label.appendChild(option);
+							label.appendChild(span);
+							label.style.display=display;
+							node.appendChild(label);
+						}
+					}
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.style.zIndex="1";
 				}else if(element.name.startsWith('signature_')){
 					var node = document.createElement('canvas');
 					node.style.backgroundColor = element.backgroundColor;
@@ -297,6 +326,7 @@ function formBuilderCtrl(
 				$compile(node)($scope);
 				node.setAttribute("class","resize-drag");
 				node.id = key;
+				if(element.type==="radio") node.className +=" "+ element.display;
 				node.setAttribute('name',element.name);
 				node.style.overflow = "hidden";
 				node.style.lineHeight="100%";
@@ -384,7 +414,7 @@ function formBuilderCtrl(
 				if(id.startsWith("image")){
 					elements[id].type = "image";
 				}
-				if (id.startsWith("checkbox") || id.startsWith("auto_checkbox") || id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
+				if (id.startsWith("radio") || id.startsWith("auto_radio") || id.startsWith("checkbox") || id.startsWith("auto_checkbox") || id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
 					elements[id].fontSize = node.style.fontSize;
 					elements[id].color = node.style.color;
 					elements[id].fontFamily = node.style.fontFamily;
@@ -403,6 +433,19 @@ function formBuilderCtrl(
 							for(var k=0; k<node.childNodes.length; k++){
 								var option = node.childNodes[k];
 								if(option.tagName && option.tagName ==='OPTION') elements[id].options.push(option.innerHTML);
+							}
+						}
+					}else if (id.startsWith("radio") || id.startsWith("auto_radio")) {
+						elements[id].options=[];
+						elements[id].default = "";
+						if (node.className.includes("radioMultiline")) elements[id].display = "radioMultiline";
+						else elements[id].display = "radioInline"; 
+						elements[id].type = "radio";
+						if (node.lastChild) {
+							for(var k=0; k<node.childNodes.length; k++){
+								var option = node.childNodes[k].firstChild;
+								elements[id].options.push(option.value);
+								if (option.checked===true) elements[id].default = option.value;
 							}
 						}
 					}else if(id.startsWith("checkbox") || id.startsWith("auto_checkbox")){
@@ -857,6 +900,19 @@ function formBuilderCtrl(
 		}
 	);
 
+	$scope.$watch("vm.editRadioDisplayClass", 
+		function( newValue, oldValue ) {
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+				vm.element.className=vm.element.className.replace(oldValue,newValue);
+				if(newValue==="radioInline") var display = "inline";
+				else var display = "block";
+				for(var i=0; i<vm.element.childNodes.length;i++){
+					vm.element.childNodes[i].style.display=display;
+				}
+			}
+		}
+	);
+
 
 	function elementOnclick(event) {
 		var element = event.currentTarget;
@@ -941,6 +997,7 @@ function formBuilderCtrl(
 			}
 			if (element.getAttribute("name").startsWith("checkbox") || element.getAttribute("name").startsWith("auto_checkbox")) {
 				contentPanel.style.display = "inline";
+				editCheckboxLabel.style.display = "inline";
 				editCheckboxDefault.style.display = "inline";
 			}
 			if (element.getAttribute("name").startsWith("label")) {
@@ -980,7 +1037,13 @@ function formBuilderCtrl(
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
 		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
+		var tempId = newElement.id;
+		var tempName = newElement.getAttribute("name");
+		newElement.id="";
+		newElement.setAttribute("name","");
 		$compile(newElement)($scope);
+		newElement.id=tempId;
+		newElement.setAttribute("name",tempName);
 		newElement.setAttribute("class", "resize-drag");
 		if(vm.newElementType.startsWith('radio')) newElement.className +=" "+ vm.radioDisplay;
 		newElement.style.overflow = "hidden";
@@ -1000,6 +1063,7 @@ function formBuilderCtrl(
 		newElement.style.left = newElementPosition.x + "px";
 		newElement.style.top = newElementPosition.y + "px";
 		newElement.style.opacity = vm.Opacity;
+		newElement.normalize();
 		currentPage.appendChild(newElement);
 		if(vm.newElementType!=='auto') vm.closeDialog();
 	}
@@ -1055,6 +1119,8 @@ function formBuilderCtrl(
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", name);
 		}
+		if (vm.radioDisplay==="radioInline") var display = "inline";
+		else var display = "block";
 		for(var i=0; i<vm.options.length; i++){
 			var label = document.createElement("label");
 			var option = document.createElement("input");
@@ -1064,6 +1130,7 @@ function formBuilderCtrl(
 			if(vm.options[i]===vm.radioDefault) option.checked = true;
 			var span = document.createElement("span");
 			span.innerHTML=vm.options[i]+" ";
+			label.style.display = display;
 			label.appendChild(option);
 			label.appendChild(span);
 			radio.appendChild(label);
