@@ -45,6 +45,8 @@ function formBuilderCtrl(
 	//initialization
 	var vm = this;
 	vm.saved = true;
+	vm.mousedowned = false;
+	vm.mousetarget = null;
 	vm.boolToStr = function(arg) {return arg ? 'Checked' : 'Unchecked'};
 	vm.progressbar = ngProgressFactory.createInstance();
 	vm.progressbar.setHeight("3px");
@@ -264,7 +266,6 @@ function formBuilderCtrl(
 					node.style.zIndex="1";
 				}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
 					var node = document.createElement('select');
-					node.onmousedown = function(){return false;};
 					var options = element.options;
 					if(options.length>0){
 						for(var i = 0; i<options.length; i++){
@@ -322,7 +323,23 @@ function formBuilderCtrl(
 				node.style.borderRadius = element.borderRadius;
 				node.setAttribute("data-x","0");
 				node.setAttribute("data-y","0");
-				node.setAttribute("ondblclick","angular.element(document.getElementById('formBuilderBody')).scope().vm.elementOnclick(event)");
+				node.onmousedown = function(event){
+					if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
+						vm.onmousedowned = false;
+						vm.mousetarget = null;
+						vm.elementOnclick(event);
+						return false;
+					}
+					else{
+						vm.onmousedowned=true;
+						vm.mousetarget = event.currentTarget;
+						setTimeout(function(){
+							vm.onmousedowned=false;
+							vm.mousetarget=null;
+						},300)
+						return false;
+					}
+				};
 				node.setAttribute("class","resize-drag");
 				node.id = key;
 				if(element.type==="radio") node.className +=" "+ element.display;
@@ -1013,6 +1030,7 @@ function formBuilderCtrl(
 			editDropdownDefault.style.display = "none";
 			editBackgroundColorLabel.style.display = "inline";
 			editCheckboxDefault.style.display = "none";
+			editCheckboxLabel.style.display = "none";
 			editRadioDefault.style.display = "none";
 			editRadioDisplay.style.display="none";
 			if (element.getAttribute("name").startsWith("background")) {
@@ -1094,7 +1112,23 @@ function formBuilderCtrl(
 		}
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
-		newElement.setAttribute("ondblclick","angular.element(document.getElementById('formBuilderBody')).scope().vm.elementOnclick(event)");
+		newElement.onmousedown = function(event){
+			if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
+				vm.onmousedowned = false;
+				vm.mousetarget = null;
+				vm.elementOnclick(event);
+				return false;
+			}
+			else{
+				vm.onmousedowned=true;
+				vm.mousetarget = event.currentTarget;
+				setTimeout(function(){
+					vm.onmousedowned=false;
+					vm.mousetarget=null;
+				},300)
+				return false;
+			}
+		};
 		var tempId = newElement.id;
 		var tempName = newElement.getAttribute("name");
 		newElement.id="";
