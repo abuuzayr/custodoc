@@ -487,33 +487,96 @@ function formBuilderCtrl(
 			vm.progressbar.start();
 			vm.progressbar.set(0);
 			pdf = new jsPDF();
-			var deferred = $q.defer();
-			deferred.resolve(1);
-			var p = deferred.promise;
+			var p = beforeGeneratePDF();
 			for (var i = 1; i <= vm.numberOfPages; i++) {
 				p = p.then(function (pageNumber) { return addPagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return finishAddImagePromise(pageNumber) });
 			}
+			p.then(function (pageNumber) { return afterGeneratePDF(); });
 		}
 	}
 
 	function previewStart() {
 		if (vm.allowCreate) {
+			console.log(elements);
 			vm.progressbar.start();
 			vm.progressbar.set(0);
 			while (preview.firstChild) {
 				preview.removeChild(preview.firstChild);
 			}
 			vm.hideToolbar();
-			var deferred = $q.defer();
-			deferred.resolve(1);
-			var p = deferred.promise;
+			var p = beforeGeneratePDF();
 			for (var i = 1; i <= vm.numberOfPages; i++) {
 				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return addToPreviewPromise(pageNumber) });
 			}
+			p.then(function (pageNumber) { return afterGeneratePDF(); });
 		}
+	}
+
+	function beforeGeneratePDF(){
+		var deferred = $q.defer();
+		console.log(1);
+		for(key in elements){
+			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+				var radio = document.getElementById(key);
+				if(radio.firstChild){
+					for(var i=0; i<radio.childNodes.length;i++){
+						if (radio.childNodes[i].firstChild.checked === true) radio.childNodes[i].firstChild.setAttribute("checked",true);
+					}
+				}
+			}
+			if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+				var dropdown = document.getElementById(key);
+				if(dropdown.firstChild){
+					for(var i=0; i<dropdown.childNodes.length;i++){
+						if (dropdown.childNodes[i].value === dropdown.value) dropdown.childNodes[i].setAttribute("selected",true);
+					}
+				}
+			}
+			if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+				var label = document.getElementById(key);
+				if (label.firstChild.checked) label.firstChild.setAttribute("checked",true);
+			}
+		}
+		deferred.resolve(1);
+		return deferred.promise;
+	}
+
+	function afterGeneratePDF(){
+		console.log(4);
+		var deferred = $q.defer(); 
+		for(key in elements){
+			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+				var radio = document.getElementById(key);
+				if(radio.firstChild){
+					for(var i=0; i<radio.childNodes.length;i++){
+						if (radio.childNodes[i].firstChild.hasAttribute("checked")) {
+							radio.childNodes[i].firstChild.removeAttribute("checked");
+							radio.childNodes[i].firstChild.checked = true;
+						}
+					}
+				}
+			}
+			if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+				var dropdown = document.getElementById(key);
+				if(dropdown.firstChild){
+					for(var i=0; i<dropdown.childNodes.length;i++){
+						if (dropdown.childNodes[i].hasAttribute("selected")) dropdown.childNodes[i].removeAttribute("selected");
+					}
+				}
+			}
+			if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+				var label = document.getElementById(key);
+				if (label.firstChild.hasAttribute("checked")) {
+					label.firstChild.removeAttribute("checked");
+					label.firstChild.checked = true;
+				}
+			}
+		}
+		deferred.resolve();
+		return deferred.promise;
 	}
 
 	function downloadPreview() {
@@ -555,6 +618,7 @@ function formBuilderCtrl(
 	}
 
 	function generateImagePromise(pageNumber) {
+		console.log(2);
 		var deferred = $q.defer();
 		vm.progressbar.set(pageNumber * 100 / vm.numberOfPages);
 		canvas = document.createElement("canvas");
@@ -573,6 +637,7 @@ function formBuilderCtrl(
 	}
 
 	function addToPreviewPromise(pageNumber) {
+		console.log(3);
 		var deferred = $q.defer();
 		imgurl = canvas.toDataURL('image/jpeg', 1);
 		pdfFactory.addData(imgurl);
