@@ -18,100 +18,97 @@
 </head>
 
 <body ng-controller='newEntryCtrl as vm'>
-<form name="myForm" class="form-horizontal" role="form" ng-submit="vm.createEntry()">
+    <div class="mdl-layout__container">
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
+            <div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
+            <main class="mdl-layout__content">
+                <div class="mdl-grid" id="newEntry-content">
+                    <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
+                        <div id="elements-heading" class="mdl-card__title mdl-color--accent mdl-color-text--white">
+                            <h2 class="mdl-card__title-text">Elements</h2>
+                        </div>
 
-<!--- TODO: INPUT FOR USER VALUES -->
+                        <form name="myForm" class="form-horizontal" role="form" ng-submit="vm.createEntry()">
 
-<div ng-repeat="key in vm.entryData.fields">
-    <ng-form name="form">
+                        <!--- TODO: INPUT FOR USER VALUES -->
 
-    <!-- TEXT FIELDS -->
-    <div ng-if="key.type=='text'">
-        <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6">
-        <input class="form-control" type="text" placeholder="{{key.name}}" ng-model="key.data">
-        </div>
-    </div>
-    
-    <!-- IMAGE FIELDS -->
-    <div ng-if="key.type=='image'">
-        <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6">
-            <input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input maxsize="2000" accept="image/*">
-        </div>
-        <label>Preview</label>
-        <img width="90%" src={{'data:image/png;base64,'+vm.file.base64}} />
-    </div>
+                        <div ng-repeat="key in vm.entryData.fields">
+                        <ng-form name="form">
 
-    <!-- DROPDOWN FIELDS -->
-    <div ng-if="key.type=='dropdown'">
-        <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6">
-        <select form="form" class="form-control" ng-model="key.data" ng-options="option for option in key.options"> </select>
-        </div>
-    </div>
-    
-    <!-- CHECKBOX FIELDS -->
-    <div ng-if="key.type=='checkbox'">
-       <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6" ng-repeat="option in key.options">
-        <label>
-        <input type="checkbox" class="form-control" name="selected[]" ng-model="key.data" value={{option}} ng-checked="vm.selected.indexOf(option) > -1" ng-click="toggleSelection(option)">
-            {{option}} </label>
-        </div>
-    </div>
+                        <!-- TEXT FIELDS -->
+                        <div ng-if="key.type=='text'">
+                            <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="{{key.name}}" ng-model="key.data">
+                            </div>
+                        </div>
+                        
+                        <!-- IMAGE FIELDS -->
+                        <div ng-if="key.type=='image'">
+                            <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input maxsize="2000" accept="image/*">
+                            </div>
+                            <label>Preview</label>
+                            <img width="90%" src={{'data:image/png;base64,'+vm.file.base64}} />
+                        </div>
 
-    <!-- EMAIL FIELDS -->
-    <div ng-if="key.type=='email'">
-        <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6">
-        <input type="email" ng-model="key.data" class="form-control" placeholder={{key.name}}>
-            </div>
-        </div>
+                        <!-- DROPDOWN FIELDS -->
+                        <div ng-if="key.type=='dropdown'">
+                            <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6">
+                            <select form="form" class="form-control" ng-model="key.data" ng-options="option for option in key.options"> </select>
+                            </div>
+                        </div>
+                        
+                        <!-- CHECKBOX FIELDS -->
+                        <div ng-if="key.type=='checkbox'">
+                           <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6" ng-repeat="option in key.options">
+                            <label>
+                            <input type="checkbox" class="form-control" name="selected[]" ng-model="key.data" value={{option}} ng-checked="vm.selected.indexOf(option) > -1" ng-click="toggleSelection(option)">
+                                {{option}} </label>
+                            </div>
+                        </div>
 
-    <!-- RADIO FIELDS -->
-    <div ng-if="key.type=='radio'">
-        <label class="col-sm-2 control-label">{{key.label}}</label>
-        <div class="col-sm-6" ng-repeat="option in key.options">
-        <label>
-        <input type="radio" name="key.name" value={{option}} ng-model="key.data" class="form-control">
-                {{option}} </label>
-        </div>
-        </div>
+                        <!-- EMAIL FIELDS -->
+                        <div ng-if="key.type=='email'">
+                            <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6">
+                            <input type="email" ng-model="key.data" class="form-control" placeholder={{key.name}}>
+                                </div>
+                            </div>
 
-    </ng-form>
-</div>
+                        <!-- RADIO FIELDS -->
+                        <div ng-if="key.type=='radio'">
+                            <label class="col-sm-2 control-label">{{key.label}}</label>
+                            <div class="col-sm-6" ng-repeat="option in key.options">
+                            <label>
+                            <input type="radio" name="key.name" value={{option}} ng-model="key.data" class="form-control">
+                                    {{option}} </label>
+                            </div>
+                            </div>
 
-<button type="submit"> Create </button>
-</br>
-
-</form>
-
-
-<!-- original -->
-
-<!-- CONTROLLER SCRIPT -->
-<script src="../controllers/newEntryController.js"></script>
-
-<!-- SERVICE SCRIPT -->
-<script src="../services/entryService.js"></script>
-
-<!-- APP SCRIPT -->
-<script src="../js/app.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
-<body ng-app="user-interface" ng-controller="newEntryCtrl as newEntry">
-
-<div class="mdl-layout__container">
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
-        <div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
-        <main class="mdl-layout__content">
-            <div class="mdl-grid" id="newEntry-content">
-                <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
-                    <div id="elements-heading" class="mdl-card__title mdl-color--accent mdl-color-text--white">
-                        <h2 class="mdl-card__title-text">Elements</h2>
+                        </ng-form>
                     </div>
+
+                    <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                                    Submit entry
+                    </button>
+                    </br>
+
+                    </form>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+<!--
+
                     <div id="elements-form">
                         <div id="elements">
                             
@@ -119,25 +116,19 @@
                     </div>
                     <div id="elements-form" ng-submit="newEntry.createEntry()">
                         <div id="elements">
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield-floating-label" >
                                 <input id="name" class="mdl-textfield__input " type="text"/>
 				                <li ng-repeat="fieldNames in newEntry.retrieveKeys()"> {{ fieldNames }} </li>
-                               <!-- <label class="mdl-textfield__label" for="name">{{ fieldNames }}</label>    -->
+                               <!- <label class="mdl-textfield__label" for="name">{{ fieldNames }}</label>    
                             </div>
                         </div>
                     </div>
                     <div class="mdl-card__actions">
-                        <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
-                    Submit entry
-                </button>
+                        
                     </div>
                 </div>
-                <div class="mdl-cell mdl-cell--3-offset mdl-cell--9-col">
+                <div class="mdl-cell mdl-cell-3-offset mdl-cell-9-col">
                     <div class="img">
                         <img src="http://www.ideabook.com/tutorials/images/ib_form_after.gif">
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-</div>
+                    </div> -->
+               
