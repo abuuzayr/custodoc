@@ -10,7 +10,7 @@ angular
                 controllerAs: 'login'
             })
             .state('newentry', {
-                url: '/newentry',
+                url: '/newentry/:groupName',
                 templateUrl: 'views/newEntry.html',
                 controller: 'newEntryCtrl',
                 controllerAs: 'vm'
