@@ -43,6 +43,7 @@ function formBuilderCtrl(
 	 });
 
 	//initialization
+	var serverURL = "http://localhost:3001/api/protected";
 	var vm = this;
 	vm.saved = true;
 	vm.mousedowned = false;
@@ -386,7 +387,7 @@ function formBuilderCtrl(
 	}
 
 	function getAutofillElements(){
-		$http.get("http://localhost:3000/autofill/element")
+		$http.get(serverURL+"/autofill/element")
 			.then(function(res){
 				var data = res.data;
 				vm.autofillElements=[];
@@ -485,7 +486,7 @@ function formBuilderCtrl(
 			}, function (data) {
 				if(data.status===404){
 					var formData = {groupName:vm.groupName,formName:vm.formName};
-					$http.post("http://localhost:3000/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} })
+					$http.post(serverURL+"/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} })
 						.then(function(res){
 							saveForm();
 						});

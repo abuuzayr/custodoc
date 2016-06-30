@@ -4,6 +4,7 @@ angular
 
 function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
 	var vm = this;
+	var serverURL = "http://localhost:3001/api/protected";
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
 	vm.addNewGroup = addNewGroup;
@@ -39,7 +40,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	vm.getGroupData();
 	function getGroupData() {
 		vm.groups = [];
-		$http.get("http://localhost:3000/groups")
+		$http.get(serverURL+"/groups")
 			.then(function (res) {
 				for (var i = 0; i < res.data.length; i++) {
 					vm.groups.push(res.data[i].groupName);
@@ -55,7 +56,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 
 	function addNewGroup() {
-		$http.post("http://localhost:3000/groups", { groupName: vm.newGroupName }, { headers: { 'Content-Type': 'application/json' } })
+		$http.post(serverURL+"/groups", { groupName: vm.newGroupName }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -69,7 +70,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function deleteGroup() {
 		if (confirm("Do you really want to delete this group? All the forms and entries data of this group will be deleted?")) {
-			$http.delete("http://localhost:3000/groups/" + vm.deleteGroupName)
+			$http.delete(serverURL+"/groups/" + vm.deleteGroupName)
 				.then(function (res) {
 					vm.getGroupData();
 					vm.getFormData();
@@ -78,7 +79,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function renameGroup() {
-		$http.put("http://localhost:3000/groups", { originalName: vm.renameGroupOld, newName: vm.renameGroupNew }, { headers: { 'Content-Type': 'application/json' } })
+		$http.put(serverURL+"/groups", { originalName: vm.renameGroupOld, newName: vm.renameGroupNew }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -201,7 +202,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		var deferred = $q.defer();
 		var groupName = rows[formNumber - 1].groupName;
 		var formName = rows[formNumber - 1].formName;
-		$http.get("http://localhost:3000/forms/" + groupName + '/' + formName)
+		$http.get(serverURL+"/forms/" + groupName + '/' + formName)
 			.then(function (res) {
 				var formData = res.data;
 				elements = formData.elements;
@@ -333,7 +334,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function getFormData() {
 		vm.gridOptions.data = [];
-		$http.get("http://localhost:3000/forms")
+		$http.get(serverURL+"/forms")
 			.then(function (result) {
 				vm.formsData = result.data;
 				for (var i = 0; i < vm.formsData.length; i++) {
@@ -355,7 +356,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function createForm() {
 		var formData = { groupName: vm.newFormGroup, formName: vm.newFormName };
-		$http.post("http://localhost:3000/forms", { formData: formData }, { headers: { 'Content-Type': 'application/json' } })
+		$http.post(serverURL+"/forms", { formData: formData }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This form name already exists in the selected group.");
@@ -368,7 +369,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function deleteForms() {
 		if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
 			angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-				$http.delete("http://localhost:3000/forms/" + data.groupName + '/' + data.formName)
+				$http.delete(serverURL+"/forms/" + data.groupName + '/' + data.formName)
 					.then(function (res) {
 						vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
 						if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
@@ -383,7 +384,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function renameForm() {
 		var groupName = vm.gridApi.selection.getSelectedRows()[0].groupName;
 		var renameFormOld = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.put("http://localhost:3000/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
+		$http.put(serverURL+"/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -399,7 +400,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function duplicateForm() {
 		var duplicateFrom = vm.gridApi.selection.getSelectedRows()[0].groupName;
 		var formName = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.post("http://localhost:3000/forms/duplicate",
+		$http.post(serverURL+"/forms/duplicate",
 			{
 				duplicateFrom: duplicateFrom,
 				formName: formName,
@@ -424,7 +425,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function setImportant() {
 		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put("http://localhost:3000/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+			$http.put(serverURL+"/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
 					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
 						vm.getFormData();
@@ -436,7 +437,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function setNormal() {
 		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put("http://localhost:3000/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+			$http.put(serverURL+"/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
 					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
 						vm.getFormData();
