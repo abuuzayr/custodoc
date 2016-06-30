@@ -9,7 +9,7 @@ var formsRouter = express.Router();
 
 formsRouter.route('/')
 	.get(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		coll.find().toArray(function(err, documents){
 			assert.equal(null,err);
@@ -20,7 +20,7 @@ formsRouter.route('/')
 		});
 	})
 	.put(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		var formData = req.body.formData;
 		coll.updateOne(
@@ -39,7 +39,7 @@ formsRouter.route('/')
 			});
 	})
 	.post(function(req, res, next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		var formName = req.body.formData.formName;
 		var groupName = req.body.formData.groupName;
@@ -72,7 +72,7 @@ formsRouter.route('/')
 	});
 formsRouter.route('/rename')
 	.put(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		var originalName = req.body.originalName;
 		var newName = req.body.newName;
@@ -114,7 +114,7 @@ formsRouter.route('/rename')
 
 formsRouter.route('/duplicate')
 	.post(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		var duplicateFrom = req.body.duplicateFrom;
 		var formName = req.body.formName;
@@ -156,7 +156,7 @@ formsRouter.route('/important')
 	.put(function(req,res,next){
 		var formName=req.body.formName;
 		var groupName=req.body.groupName;
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		coll.updateOne({
 			'formName': formName,
@@ -181,7 +181,7 @@ formsRouter.route('/normal')
 	.put(function(req,res,next){
 		var formName=req.body.formName;
 		var groupName=req.body.groupName;
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		coll.updateOne({
 			'formName': formName,
@@ -206,7 +206,7 @@ formsRouter.route('/:groupName/:formName')
 	.get(function(req,res,next){
 		var groupName = req.params.groupName;
 		var formName = req.params.formName;
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		coll.findOne({formName: formName,groupName:groupName}, function(err, item) {
 			assert.equal(null, err);
@@ -220,7 +220,7 @@ formsRouter.route('/:groupName/:formName')
 	.delete(function(req,res,next){
 		var groupName = req.params.groupName;
 		var formName = req.params.formName;
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
 		coll.deleteOne({"groupName":groupName,"formName":formName},function(err,result){
 			assert.equal(null,err);

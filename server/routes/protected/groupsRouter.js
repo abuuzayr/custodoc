@@ -7,7 +7,7 @@ var url = 'mongodb://localhost:27017/custodoc';
 var groupsRouter = express.Router();
 groupsRouter.route('/')
 	.get(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("groups");
 		coll.find().toArray(function(err, documents){
 			assert.equal(null,err);
@@ -15,7 +15,7 @@ groupsRouter.route('/')
 		});
 	})
 	.put(function(req,res,next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("groups");
 		var originalName = req.body.originalName;
 		var newName = req.body.newName;
@@ -51,7 +51,7 @@ groupsRouter.route('/')
 		});
 	})
 	.post(function(req, res, next){
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("groups");
 		var groupName = req.body.groupName;
 		coll.findOne({groupName: groupName}, function(err, item) {
@@ -77,7 +77,7 @@ groupsRouter.route('/')
 groupsRouter.route('/:groupName')
 	.delete(function(req,res,next){
 		var groupName = req.params.groupName;
-		var db = require('../server.js').db;
+		var db = require('../../server.js').db;
 		var coll = db.collection("groups");
 		coll.deleteOne({"groupName":groupName},function(err,result){
 			assert.equal(null,err);
