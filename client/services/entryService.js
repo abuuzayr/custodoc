@@ -1,8 +1,16 @@
 angular.module('entryService', [])
 
 .factory('entryService', function($http) {
-
-	var entryFactory = {};
+	var serverURL = "http://localhost:3001/api/protected";
+	var entryFactory = {
+		getAllEntries: getAllEntries,
+		create: create,
+		deleteEntry: deleteEntry,
+		retrieveKeys: retrieveKeys,
+		retrieveInput: retrieveInput,
+		getFormElements: getFormElements
+	};
+	
 	
 	/************************************** LEGEND *************************************/
 
@@ -14,31 +22,42 @@ angular.module('entryService', [])
 	/* FUNCTIONS THAT DO BASIC CRUD */
 
 	// get all entries
-	entryFactory.getAllEntries = function() {
-		return $http.get('localhost:3001/protected/entry');
+	function getAllEntries() {
+		return $http.get(serverURL+'/entry');
 	};
 
 	// create an entry
-	entryFactory.create = function(finalData) {
-		return $http.post('localhost:3001/protected/entry', finalData);
+	function create(finalData) {
+		return $http.post(serverURL+'/entry', finalData);
 	};
 
 	// delete an entry, entData contains groupName
-	entryFactory.delete = function(entData) {
-		return $http.delete('/entryRouter/entries', entData);
+	function deleteEntry(entData) {
+		return $http.delete(serverURL+'/entryRouter/entries', entData);
 	};
 
 	/* OTHER FUNCTIONS */
 	
 	// retrieves all the keys aka field names from all the forms in that particular group, entData contains groupName
-	entryFactory.retrieveKeys = function(entData) {
-		return $http.post('/entryRouter/functions', entData);
+	function retrieveKeys(entData) {
+		return $http.post(serverURL+'/entryRouter/functions', entData);
 	};
 
 	// retrieves all user input for the respective keys, entData contains groupName AND user input
-	entryFactory.retrieveInput = function(entData) {
-		return $http.get('/entryRouter/functions', entData);
+	function retrieveInput(entData) {
+		return $http.get(serverURL+'/entryRouter/functions', entData);
 	};
+
+	// get the group name, return an array of objects, each objects contain the information of a form in the group
+	// properties of the object: formName, groupName, numberOfPage, elements, isImportant, creationDate...
+	function getFormElements(groupName){
+		$http.get(serverURL+'/getGroupForms/'+groupName)
+			.then(function(res){
+				return res.data;
+			},function(res){
+				
+			});
+	}
 
 	return entryFactory;
 

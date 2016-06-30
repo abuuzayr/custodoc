@@ -10,12 +10,12 @@ formsRouter.route('/')
 	.get(function(req,res,next){
 		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
-		coll.find().toArray(function(err, documents){
+		coll.find().toArray(function(err, forms){
 			assert.equal(null,err);
-			for(var i=0;i<documents.length;i++){
-				delete documents[i].elements;
+			for(var i=0;i<forms.length;i++){
+				delete forms[i].elements;
 			}
-			res.send(documents);
+			res.send(forms);
 		});
 	})
 	.put(function(req,res,next){
@@ -47,19 +47,30 @@ formsRouter.route('/')
 			if(item){
 				res.send("Existed");
 			}else{
-				var formData={
-					formName:formName,
-					groupName:groupName,
-					elements: {},
-					isImportant: 'Normal',
-					creationDate:Date(),
-					lastModified: Date(),
-					numberOfPages:1
-				}
-				coll.insert(formData, function(err, result) {
-					assert.equal(err, null);
-					res.send({groupName:groupName,formName:formName});
-					console.log("Created new form");
+				coll.find({groupName:groupName}).toArray(function(err, forms){
+					assert.equal(null,err);
+					if (forms) {
+						var order = 0;
+						for(var i=0;i<forms.length;i++){
+							if (forms[i].order>order) order = forms[i].order;
+						}
+						order ++;
+						var formData={
+							formName:formName,
+							groupName:groupName,
+							elements: {},
+							isImportant: 'Normal',
+							creationDate:Date(),
+							lastModified: Date(),
+							order: order,
+							numberOfPages:1
+						}
+						coll.insert(formData, function(err, result) {
+							assert.equal(err, null);
+							res.send({groupName:groupName,formName:formName});
+							console.log("Created new form");
+						});
+					}
 				});
 			}
 		});
@@ -231,4 +242,7 @@ formsRouter.route('/:groupName/:formName')
 			res.send("");
 		}
 	});
+
+
+
 module.exports=formsRouter;

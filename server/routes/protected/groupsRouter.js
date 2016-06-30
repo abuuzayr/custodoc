@@ -74,6 +74,12 @@ groupsRouter.route('/')
 	});
 
 groupsRouter.route('/:groupName')
+	.get(function(req, res, next){
+		var groupName = req.params.groupName;
+		var db = require('../../server.js').db;
+		var coll = db.collection("groups");
+
+	})
 	.delete(function(req,res,next){
 		var groupName = req.params.groupName;
 		var db = require('../../server.js').db;
@@ -94,5 +100,16 @@ groupsRouter.route('/:groupName')
 			res.send("");
 		}
 	});
+
+groupsRouter.route('/getGroupForms/:groupName')
+	.get(function(req, res, next){
+		var groupName = req.params.groupName;
+		var db = require('../../server.js').db;
+		var coll = db.collection("forms");
+		coll.find({groupName: groupName}).sort({order: 1}).toArray(function(err, forms){
+			assert.equal(null,err);
+			res.status(200).send(forms);
+		});
+	})
 
 module.exports=groupsRouter;
