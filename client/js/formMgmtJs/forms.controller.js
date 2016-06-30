@@ -1,11 +1,8 @@
 angular
 	.module("formsApp")
-<<<<<<< HEAD
 	.controller("formsCtrl", ['$compile','$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
 
 function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
-=======
->>>>>>> Style forms, remove side nav important and recent
 	var vm = this;
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
