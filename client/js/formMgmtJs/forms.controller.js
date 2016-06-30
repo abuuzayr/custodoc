@@ -21,6 +21,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	vm.setImportant = setImportant;
 	vm.setNormal = setNormal;
 	vm.showNewEntry = showNewEntry;
+	vm.toNewEntry = toNewEntry;
 	vm.downloadAsOne = downloadAsOne;
 	vm.downloadSeparate = downloadSeparate;
 	vm.getTableHeight = getTableHeight;
@@ -33,6 +34,13 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 			if (rows[i].groupName !== rows[i + 1].groupName) return false;
 		}
 		return rows.length > 0;
+	}
+
+	//submit new entry
+	function toNewEntry(){
+		var rows = vm.gridApi.selection.getSelectedRows();
+		var groupName = rows[0].groupName;
+		$state.go('newentry', { groupName: groupName});
 	}
 
 	//group management
