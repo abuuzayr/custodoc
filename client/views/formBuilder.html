@@ -170,16 +170,6 @@
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
-					<form ng-submit="vm.addNewAutofillElement()">
-						<label>Add new element: <input type="text" ng-model="vm.newAutofillElementName" required></label><br>
-						<label>Type: 
-							<select ng-init="vm.newAutofillElementType='text'" ng-model="vm.newAutofillElementType" required>
-								<option value="text">Text</option> 
-								<option value="dropdown">Drop-down List</option>
-							</select>
-							<input type="submit" value="Add">
-						</label><br>
-					</form>
 					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
