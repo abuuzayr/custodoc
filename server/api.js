@@ -7,7 +7,7 @@ var http404 = require('./utils/404.js')();
 var protectedRoutes = require('./routes/protected');
 //AUTH
 //routes.use('/',auth.authenticateToken);
-routes.use('/protected', protectedRoutes)
+routes.use('/protected', protectedRoutes);
 //UNDEFINED ROUTES
 routes.use('*', http404.notFoundMiddleware);
 
