@@ -1,5 +1,5 @@
 angular
-    .module('user-interface', ['entryService'])
+    .module('user-interface')
     .controller("newEntryCtrl", ['entryService', '$scope', '$q', '$location', '$timeout', function (entryService, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
