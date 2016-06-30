@@ -3,7 +3,6 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var url = 'mongodb://localhost:27017/custodoc';
 var groupsRouter = express.Router();
 groupsRouter.route('/')
 	.get(function(req,res,next){

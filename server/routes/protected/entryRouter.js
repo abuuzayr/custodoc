@@ -2,7 +2,7 @@ var express = require('express');
 var assert = require('assert');
 var connection = require('../../utils/connection')();
 var entryRoutes = express.Router();
-entryRoutes.route('/entries')
+entryRoutes.route('/')
 	
 	// display all entries in the database
 	.get(function(req,res,next){
