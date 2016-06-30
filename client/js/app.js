@@ -22,7 +22,7 @@ angular
                 controllerAs: 'users'
             })
             .state('entries', {
-                url: '/entries',
+                url: '/entries/:groupName',
                 templateUrl: 'views/entries.html',
                 controller: 'entriesCtrl',
                 controllerAs: 'entries'
