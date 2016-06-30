@@ -1,7 +1,7 @@
 var autofillRoutes = require('express').Router();
 //import modules
 var config = require('../../config.js');
-var sendError = require('../../utils/connection.js');
+var sendError = require('../../utils/errorHandler.js');
 var connection = require('../../utils/connection.js')();
 var http404 = require('../../utils/404.js')();
 
@@ -59,28 +59,40 @@ autofillRoutes.route('/element')
 			});	
 	})	
 
-		.post(function(req,res){
-			connection.Do(function(db){
-				var fieldName = req.body.fieldName;
-				var type = req.body.type;
-				db.collection('element')
-				.findOne({fieldName:fieldName})
-				.then(function(element){
-					if (element)
-						sendError(req,res,409,'Already exists','Unsuccessful');
-					else
-						return db.collection('element').insert({fieldName:fieldName, type:type});
-				})	
-				.then(function(docs){
-					console.log('Records added: ' + docs);
-					return res.status(200).send('Records added:' + docs);
-				})
-				.catch(function(err){
-					console.log(err);
-					return res.status(400).send(err);
-				});
-		});
-	});
+	.post(function(req,res){
+        connection.Do(function(db){
+        	var fieldName = req.body.elementData.fieldName;
+			console.log('field name is ' + fieldName);
+
+            db.collection('element')
+            .find({fieldName:fieldName})
+            .limit(1)
+            .toArray()
+            .then(function(element){
+                console.log(element);
+                if (element && element.length != 0){
+                	console.log('duplicate');
+                	res.status(409);
+                    throw new Error('An element with this name already exists');
+                }
+                else{
+                	console.log('no duplicate');
+                    return db.collection('element').insert(req.body.elementData);
+                }
+            })
+            .then(function(savedElement){
+                console.log('records added: '); 
+                console.log(savedElement);
+                return res.status(200).send('element saved');
+            })
+            .catch(function(err){
+            	if(res.statusCode === 409)
+                	return sendError(req,res,409,err.message,"Conflict")
+                else 
+                	return sendError(req,res,400,err.message,'Unsuccessful');
+            });
+    	});
+    });	
 
 //update delete by id
 autofillRoutes.route('/:record_id')
@@ -137,7 +149,7 @@ autofillRoutes.route('/:record_id')
 			.catch(function(err){
 				console.log(err);
 				return sendError(req,res,400,err.message,'Unsuccessful');
-			})
+			});
 		})		
 	});
 		
@@ -161,7 +173,8 @@ autofillRoutes.route('/')
 
 	//Create new
 	.post(function(req,res){
-		db.collection('autofill')
+		connection.Do( function(db) {
+			db.collection('autofill')
 			.insertOne(req.body.recordData)
 			.then(function(savedDoc){
 				res.status(200).send('success: ' + savedDoc + 'documents removed');		
@@ -169,6 +182,7 @@ autofillRoutes.route('/')
 			.catch(function(err){
 				return sendError(req,res,400,err.message,'Unsuccessful');
 			});
+		});	
 	})
 
 	//Delete many
