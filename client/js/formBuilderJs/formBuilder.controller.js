@@ -390,8 +390,8 @@ function formBuilderCtrl(
 		$http.get(serverURL+"/autofill/element")
 			.then(function(res){
 				var data = res.data;
-				vm.autofillElements=[];
-				for(var i=0;i<data.length;i++) vm.autofillElements.push(data[i]);
+				console.log(data);
+				vm.autofillElements = data;
 			},function(res){
 				alert('Failed to retrieve autofill elements.');
 			});
@@ -873,6 +873,9 @@ function formBuilderCtrl(
 				if (vm.selectedAutofillElement.type==='checkbox') {
 					createCheckbox();
 				}
+				if (vm.selectedAutofillElement.type==='radio') {
+					createRadio();
+				}
 			}else{
 				createPlaceholder();
 				openDialog(vm.newElementType);
@@ -967,7 +970,7 @@ function formBuilderCtrl(
 
 	$scope.$watch("vm.editRadioDefaultValue", 
 		function( newValue, oldValue ) {
-			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio"))){
 				var childNodes = vm.element.childNodes;
 				for(var i=0; i<childNodes.length;i++){
 					if (childNodes[i].firstChild.value === newValue) childNodes[i].firstChild.checked=true;
@@ -978,7 +981,7 @@ function formBuilderCtrl(
 
 	$scope.$watch("vm.editRadioDisplayClass", 
 		function( newValue, oldValue ) {
-			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio"))){
 				vm.element.className=vm.element.className.replace(oldValue,newValue);
 				if(newValue==="radioInline") var display = "inline";
 				else var display = "block";
@@ -1136,8 +1139,7 @@ function formBuilderCtrl(
 		newElement.setAttribute("name","");
 		newElement.id=tempId;
 		newElement.setAttribute("name",tempName);
-		newElement.setAttribute("class", "resize-drag");
-		if(vm.newElementType.startsWith('radio')) newElement.className +=" "+ vm.radioDisplay;
+		newElement.className+=" resize-drag";
 		newElement.style.overflow = "hidden";
 		newElement.style.lineHeight = "100%";
 		newElement.style.position = "absolute";
@@ -1200,6 +1202,25 @@ function formBuilderCtrl(
 			var name = 'auto_radio_'+vm.selectedAutofillElement.fieldName;
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", vm.newAutofillElementId);
+			radio.className+=" "+vm.selectedAutofillElement.display;
+			console.log(vm.selectedAutofillElement.display);
+			if (vm.selectedAutofillElement.display==="radioInline") var display = "inline";
+			else var display = "block";
+			var options = vm.selectedAutofillElement.options;
+			for(var i=0; i<options.length; i++){
+				var label = document.createElement("label");
+				var option = document.createElement("input");
+				option.type = "radio";
+				option.name = name;
+				option.value = options[i];
+				if(options[i]===vm.selectedAutofillElement.default) option.checked = true;
+				var span = document.createElement("span");
+				span.innerHTML=options[i]+" ";
+				label.style.display = display;
+				label.appendChild(option);
+				label.appendChild(span);
+				radio.appendChild(label);
+			}
 		}else{
 			if (elements.hasOwnProperty("radio_" + vm.radioName)) {
 				alert("Field name already exists, please change another one");
@@ -1210,22 +1231,24 @@ function formBuilderCtrl(
 			elements[name] = {};
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", name);
-		}
-		if (vm.radioDisplay==="radioInline") var display = "inline";
-		else var display = "block";
-		for(var i=0; i<vm.options.length; i++){
-			var label = document.createElement("label");
-			var option = document.createElement("input");
-			option.type = "radio";
-			option.name = name;
-			option.value = vm.options[i];
-			if(vm.options[i]===vm.radioDefault) option.checked = true;
-			var span = document.createElement("span");
-			span.innerHTML=vm.options[i]+" ";
-			label.style.display = display;
-			label.appendChild(option);
-			label.appendChild(span);
-			radio.appendChild(label);
+			radio.className +=" "+ vm.radioDisplay;
+			console.log(vm.radioDisplay);
+			if (vm.radioDisplay==="radioInline") var display = "inline";
+			else var display = "block";
+			for(var i=0; i<vm.options.length; i++){
+				var label = document.createElement("label");
+				var option = document.createElement("input");
+				option.type = "radio";
+				option.name = name;
+				option.value = vm.options[i];
+				if(vm.options[i]===vm.radioDefault) option.checked = true;
+				var span = document.createElement("span");
+				span.innerHTML=vm.options[i]+" ";
+				label.style.display = display;
+				label.appendChild(option);
+				label.appendChild(span);
+				radio.appendChild(label);
+			}
 		}
 		setNewElement(radio);
 	}
@@ -1233,15 +1256,16 @@ function formBuilderCtrl(
 	function createDropdownList(){
 		var dropdown = document.createElement("select");
 		dropdown.onmousedown = function(){return false;}
-		for(var i=0; i<vm.options.length; i++){
-			var option = document.createElement("option");
-			option.innerHTML = vm.options[i];
-			dropdown.appendChild(option);
-		}
-		dropdown.value = vm.dropdownListDefault;
 		if (vm.newElementType==='auto') {
 			dropdown.setAttribute("name", 'auto_dropdown_'+vm.selectedAutofillElement.fieldName);
 			dropdown.setAttribute("id", vm.newAutofillElementId);
+			var options = vm.selectedAutofillElement.options;
+			for(var i=0; i<options.length; i++){
+				var option = document.createElement("option");
+				option.innerHTML = options[i];
+				dropdown.appendChild(option);
+			}
+			dropdown.value = vm.selectedAutofillElement.default;
 		}else{
 			if (elements.hasOwnProperty("dropdown_" + vm.dropdownListName)) {
 				alert("Field name already exists, please change another one");
@@ -1251,6 +1275,12 @@ function formBuilderCtrl(
 			elements["dropdown_" + vm.dropdownListName] = {};
 			dropdown.setAttribute("name", "dropdown_" + vm.dropdownListName);
 			dropdown.setAttribute("id", "dropdown_" + vm.dropdownListName);
+			for(var i=0; i<vm.options.length; i++){
+				var option = document.createElement("option");
+				option.innerHTML = vm.options[i];
+				dropdown.appendChild(option);
+			}
+			dropdown.value = vm.dropdownListDefault;
 		}
 		setNewElement(dropdown);
 	}
@@ -1268,6 +1298,8 @@ function formBuilderCtrl(
 		if (vm.newElementType==='auto') {
 			label.setAttribute("name", 'auto_checkbox_'+vm.selectedAutofillElement.fieldName);
 			label.setAttribute("id", vm.newAutofillElementId);
+			span.innerHTML = vm.selectedAutofillElement.label;
+			checkbox.checked = vm.selectedAutofillElement.default;
 		}else{
 			if (elements.hasOwnProperty("checkbox_" + vm.checkboxName)) {
 				alert("Field name already exists, please change another one");
@@ -1289,6 +1321,7 @@ function formBuilderCtrl(
 		if (vm.newElementType==='auto') {
 			textarea.setAttribute("name", 'auto_text_'+vm.selectedAutofillElement.fieldName);
 			textarea.setAttribute("id", vm.newAutofillElementId);
+			textarea.placeholder = vm.selectedAutofillElement.default;
 		}else{
 			if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
 				alert("Field name already exists, please change another one");
