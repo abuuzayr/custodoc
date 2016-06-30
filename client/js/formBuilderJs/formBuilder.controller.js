@@ -45,6 +45,8 @@ function formBuilderCtrl(
 	//initialization
 	var vm = this;
 	vm.saved = true;
+	vm.mousedowned = false;
+	vm.mousetarget = null;
 	vm.boolToStr = function(arg) {return arg ? 'Checked' : 'Unchecked'};
 	vm.progressbar = ngProgressFactory.createInstance();
 	vm.progressbar.setHeight("3px");
@@ -94,8 +96,12 @@ function formBuilderCtrl(
 	var fontPanel = document.getElementById("fontPanel");
 	var contentPanel = document.getElementById("contentPanel");
 	var editContent = document.getElementById("editContent");
+	var editRadioDefault = document.getElementById("editRadioDefault");
 	var editCheckboxDefault = document.getElementById("editCheckboxDefault");
+	var editCheckboxLabel = document.getElementById("editCheckboxLabel");
 	var editTextFieldDefault = document.getElementById("editTextFieldDefault");
+	var editDropdownDefault = document.getElementById("editDropdownDefault");
+	var editRadioDisplay = document.getElementById("editRadioDisplay");
 	var optionsPanel = document.getElementById("optionsPanel");
 	var editBackgroundColorLabel = document.getElementById("editBackgroundColorLabel");
 	var placeholder = null;
@@ -260,7 +266,6 @@ function formBuilderCtrl(
 					node.style.zIndex="1";
 				}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
 					var node = document.createElement('select');
-					node.onmousedown = function(){return false;};
 					var options = element.options;
 					if(options.length>0){
 						for(var i = 0; i<options.length; i++){
@@ -270,6 +275,34 @@ function formBuilderCtrl(
 						}
 					}
 					node.value = element.default;
+					node.style.color = element.color;
+					node.style.backgroundColor = element.backgroundColor;
+					node.style.fontFamily = element.fontFamily;
+					node.style.fontSize = element.fontSize;
+					node.style.textDecoration = element.textDecoration;
+					node.style.zIndex="1";
+				}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+					var node = document.createElement('form');
+					node.onclick = function(){return false;};
+					var options = element.options;
+					if(options.length>0){
+						if (element.display==="radioInline") var display = "inline";
+						else var display = "block";
+						for(var i=0; i<options.length; i++){
+							var label = document.createElement("label");
+							var option = document.createElement("input");
+							option.type = "radio";
+							option.name = element.name;
+							option.value = options[i];
+							if(options[i]===element.default) option.checked = true;
+							var span = document.createElement("span");
+							span.innerHTML=options[i]+" ";
+							label.appendChild(option);
+							label.appendChild(span);
+							label.style.display=display;
+							node.appendChild(label);
+						}
+					}
 					node.style.color = element.color;
 					node.style.backgroundColor = element.backgroundColor;
 					node.style.fontFamily = element.fontFamily;
@@ -290,10 +323,26 @@ function formBuilderCtrl(
 				node.style.borderRadius = element.borderRadius;
 				node.setAttribute("data-x","0");
 				node.setAttribute("data-y","0");
-				node.setAttribute("ng-dblclick","vm.elementOnclick($event)");
-				$compile(node)($scope);
+				node.onmousedown = function(event){
+					if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
+						vm.onmousedowned = false;
+						vm.mousetarget = null;
+						vm.elementOnclick(event);
+						return false;
+					}
+					else{
+						vm.onmousedowned=true;
+						vm.mousetarget = event.currentTarget;
+						setTimeout(function(){
+							vm.onmousedowned=false;
+							vm.mousetarget=null;
+						},300)
+						return false;
+					}
+				};
 				node.setAttribute("class","resize-drag");
 				node.id = key;
+				if(element.type==="radio") node.className +=" "+ element.display;
 				node.setAttribute('name',element.name);
 				node.style.overflow = "hidden";
 				node.style.lineHeight="100%";
@@ -358,7 +407,6 @@ function formBuilderCtrl(
 					continue;
 				}
 				var id = node.id;
-				console.log(id);
 				elements[id] = {};
 				elements[id].name = node.getAttribute("name");
 				elements[id].page = i;
@@ -381,7 +429,7 @@ function formBuilderCtrl(
 				if(id.startsWith("image")){
 					elements[id].type = "image";
 				}
-				if (id.startsWith("checkbox") || id.startsWith("auto_checkbox") || id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
+				if (id.startsWith("radio") || id.startsWith("auto_radio") || id.startsWith("checkbox") || id.startsWith("auto_checkbox") || id.startsWith("dropdown") || id.startsWith("auto_dropdown") || id.startsWith("auto_text") || id.startsWith("text") || id.startsWith("label")) {
 					elements[id].fontSize = node.style.fontSize;
 					elements[id].color = node.style.color;
 					elements[id].fontFamily = node.style.fontFamily;
@@ -400,6 +448,19 @@ function formBuilderCtrl(
 							for(var k=0; k<node.childNodes.length; k++){
 								var option = node.childNodes[k];
 								if(option.tagName && option.tagName ==='OPTION') elements[id].options.push(option.innerHTML);
+							}
+						}
+					}else if (id.startsWith("radio") || id.startsWith("auto_radio")) {
+						elements[id].options=[];
+						elements[id].default = "";
+						if (node.className.includes("radioMultiline")) elements[id].display = "radioMultiline";
+						else elements[id].display = "radioInline"; 
+						elements[id].type = "radio";
+						if (node.lastChild) {
+							for(var k=0; k<node.childNodes.length; k++){
+								var option = node.childNodes[k].firstChild;
+								elements[id].options.push(option.value);
+								if (option.checked===true) elements[id].default = option.value;
 							}
 						}
 					}else if(id.startsWith("checkbox") || id.startsWith("auto_checkbox")){
@@ -441,14 +502,13 @@ function formBuilderCtrl(
 			vm.progressbar.start();
 			vm.progressbar.set(0);
 			pdf = new jsPDF();
-			var deferred = $q.defer();
-			deferred.resolve(1);
-			var p = deferred.promise;
+			var p = beforeGeneratePDF();
 			for (var i = 1; i <= vm.numberOfPages; i++) {
 				p = p.then(function (pageNumber) { return addPagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return finishAddImagePromise(pageNumber) });
 			}
+			p.then(function (pageNumber) { return afterGeneratePDF(); });
 		}
 	}
 
@@ -460,14 +520,75 @@ function formBuilderCtrl(
 				preview.removeChild(preview.firstChild);
 			}
 			vm.hideToolbar();
-			var deferred = $q.defer();
-			deferred.resolve(1);
-			var p = deferred.promise;
+			var p = beforeGeneratePDF();
 			for (var i = 1; i <= vm.numberOfPages; i++) {
 				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
 				p = p.then(function (pageNumber) { return addToPreviewPromise(pageNumber) });
 			}
+			p.then(function (pageNumber) { return afterGeneratePDF(); });
 		}
+	}
+
+	function beforeGeneratePDF(){
+		var deferred = $q.defer();
+		for(key in elements){
+			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+				var radio = document.getElementById(key);
+				if(radio.firstChild){
+					for(var i=0; i<radio.childNodes.length;i++){
+						if (radio.childNodes[i].firstChild.checked === true) radio.childNodes[i].firstChild.setAttribute("checked",true);
+					}
+				}
+			}
+			if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+				var dropdown = document.getElementById(key);
+				if(dropdown.firstChild){
+					for(var i=0; i<dropdown.childNodes.length;i++){
+						if (dropdown.childNodes[i].value === dropdown.value) dropdown.childNodes[i].setAttribute("selected",true);
+					}
+				}
+			}
+			if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+				var label = document.getElementById(key);
+				if (label.firstChild.checked) label.firstChild.setAttribute("checked",true);
+			}
+		}
+		deferred.resolve(1);
+		return deferred.promise;
+	}
+
+	function afterGeneratePDF(){
+		var deferred = $q.defer(); 
+		for(key in elements){
+			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+				var radio = document.getElementById(key);
+				if(radio.firstChild){
+					for(var i=0; i<radio.childNodes.length;i++){
+						if (radio.childNodes[i].firstChild.hasAttribute("checked")) {
+							radio.childNodes[i].firstChild.removeAttribute("checked");
+							radio.childNodes[i].firstChild.checked = true;
+						}
+					}
+				}
+			}
+			if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+				var dropdown = document.getElementById(key);
+				if(dropdown.firstChild){
+					for(var i=0; i<dropdown.childNodes.length;i++){
+						if (dropdown.childNodes[i].hasAttribute("selected")) dropdown.childNodes[i].removeAttribute("selected");
+					}
+				}
+			}
+			if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+				var label = document.getElementById(key);
+				if (label.firstChild.hasAttribute("checked")) {
+					label.firstChild.removeAttribute("checked");
+					label.firstChild.checked = true;
+				}
+			}
+		}
+		deferred.resolve();
+		return deferred.promise;
 	}
 
 	function downloadPreview() {
@@ -814,13 +935,25 @@ function formBuilderCtrl(
 	}
 
 	function editAddNewOption(){
-		if(vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")){
-			if(vm.editOptions.indexOf(vm.editNewOption)<0){
-				vm.editOptions.push(vm.editNewOption);
+		if(vm.editOptions.indexOf(vm.editNewOption)<0){
+			vm.editOptions.push(vm.editNewOption);
+			if(vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")){		
 				var option = document.createElement("option");
 				option.innerHTML=vm.editNewOption;
 				option.value=vm.editNewOption;
 				vm.element.appendChild(option);
+				vm.editNewOption = "";
+			}else if(vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio")){
+				var label = document.createElement("label");
+				var option = document.createElement("input");
+				option.type = "radio";
+				option.name = vm.element.name;
+				option.value = vm.editNewOption;
+				var span = document.createElement("span");
+				span.innerHTML=vm.editNewOption+" ";
+				label.appendChild(option);
+				label.appendChild(span);
+				vm.element.appendChild(label);
 				vm.editNewOption = "";
 			}
 		}
@@ -828,8 +961,33 @@ function formBuilderCtrl(
 
 	function editDeleteOption(){
 		vm.editOptions.pop();
-		if(vm.element.lastChild && vm.element.lastChild.tagName && vm.element.lastChild.tagName ==='OPTION') vm.element.removeChild(vm.element.lastChild);
+		if(vm.element.lastChild && vm.element.lastChild.tagName && (vm.element.lastChild.tagName ==='OPTION' || vm.element.lastChild.tagName ==='LABEL')) vm.element.removeChild(vm.element.lastChild);
 	}
+
+	$scope.$watch("vm.editRadioDefaultValue", 
+		function( newValue, oldValue ) {
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+				var childNodes = vm.element.childNodes;
+				for(var i=0; i<childNodes.length;i++){
+					if (childNodes[i].firstChild.value === newValue) childNodes[i].firstChild.checked=true;
+				}
+			}
+		}
+	);
+
+	$scope.$watch("vm.editRadioDisplayClass", 
+		function( newValue, oldValue ) {
+			if(vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("autp_radio"))){
+				vm.element.className=vm.element.className.replace(oldValue,newValue);
+				if(newValue==="radioInline") var display = "inline";
+				else var display = "block";
+				for(var i=0; i<vm.element.childNodes.length;i++){
+					vm.element.childNodes[i].style.display=display;
+				}
+			}
+		}
+	);
+
 
 	function elementOnclick(event) {
 		var element = event.currentTarget;
@@ -869,8 +1027,12 @@ function formBuilderCtrl(
 			editContent.style.display = "none";
 			optionsPanel.style.display = 'none';
 			editTextFieldDefault.style.display="none";
+			editDropdownDefault.style.display = "none";
 			editBackgroundColorLabel.style.display = "inline";
 			editCheckboxDefault.style.display = "none";
+			editCheckboxLabel.style.display = "none";
+			editRadioDefault.style.display = "none";
+			editRadioDisplay.style.display="none";
 			if (element.getAttribute("name").startsWith("background")) {
 				fontPanel.style.display = "none";
 				editBackgroundColorLabel.style.display = "none";
@@ -881,6 +1043,7 @@ function formBuilderCtrl(
 			}
 			if(element.getAttribute('name').startsWith('dropdown') || element.getAttribute('name').startsWith('auto_dropdown_')){
 				optionsPanel.style.display='inline';
+				editDropdownDefault.style.display='inline';
 				var childNodes = element.childNodes;
 				vm.editOptions = [];
 				vm.editNewOption = "";
@@ -890,12 +1053,17 @@ function formBuilderCtrl(
 			}
 			if(element.getAttribute('name').startsWith('radio') || element.getAttribute('name').startsWith('auto_radio_')){
 				optionsPanel.style.display='inline';
+				editRadioDefault.style.display='inline';
+				editRadioDisplay.style.display="inline";
+				if(element.className.includes("radioInline")) vm.editRadioDisplayClass="radioInline";
+				else vm.editRadioDisplayClass = "radioMultiline";
 				var childNodes = element.childNodes;
 				vm.editOptions = [];
 				vm.editNewOption = "";
 				for(var i=0; i<childNodes.length; i++){
 					if(childNodes[i].tagName!=="LABEL") continue;
 					var option = childNodes[i].firstChild;
+					if(option.checked) vm.editRadioDefaultValue = option.value;
 					vm.editOptions.push(option.value);
 				}
 			}
@@ -905,6 +1073,7 @@ function formBuilderCtrl(
 			}
 			if (element.getAttribute("name").startsWith("checkbox") || element.getAttribute("name").startsWith("auto_checkbox")) {
 				contentPanel.style.display = "inline";
+				editCheckboxLabel.style.display = "inline";
 				editCheckboxDefault.style.display = "inline";
 			}
 			if (element.getAttribute("name").startsWith("label")) {
@@ -943,8 +1112,29 @@ function formBuilderCtrl(
 		}
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
-		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
-		$compile(newElement)($scope);
+		newElement.onmousedown = function(event){
+			if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
+				vm.onmousedowned = false;
+				vm.mousetarget = null;
+				vm.elementOnclick(event);
+				return false;
+			}
+			else{
+				vm.onmousedowned=true;
+				vm.mousetarget = event.currentTarget;
+				setTimeout(function(){
+					vm.onmousedowned=false;
+					vm.mousetarget=null;
+				},300)
+				return false;
+			}
+		};
+		var tempId = newElement.id;
+		var tempName = newElement.getAttribute("name");
+		newElement.id="";
+		newElement.setAttribute("name","");
+		newElement.id=tempId;
+		newElement.setAttribute("name",tempName);
 		newElement.setAttribute("class", "resize-drag");
 		if(vm.newElementType.startsWith('radio')) newElement.className +=" "+ vm.radioDisplay;
 		newElement.style.overflow = "hidden";
@@ -964,6 +1154,7 @@ function formBuilderCtrl(
 		newElement.style.left = newElementPosition.x + "px";
 		newElement.style.top = newElementPosition.y + "px";
 		newElement.style.opacity = vm.Opacity;
+		newElement.normalize();
 		currentPage.appendChild(newElement);
 		if(vm.newElementType!=='auto') vm.closeDialog();
 	}
@@ -1019,6 +1210,8 @@ function formBuilderCtrl(
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", name);
 		}
+		if (vm.radioDisplay==="radioInline") var display = "inline";
+		else var display = "block";
 		for(var i=0; i<vm.options.length; i++){
 			var label = document.createElement("label");
 			var option = document.createElement("input");
@@ -1027,7 +1220,8 @@ function formBuilderCtrl(
 			option.value = vm.options[i];
 			if(vm.options[i]===vm.radioDefault) option.checked = true;
 			var span = document.createElement("span");
-			span.innerHTML=" "+vm.options[i];
+			span.innerHTML=vm.options[i]+" ";
+			label.style.display = display;
 			label.appendChild(option);
 			label.appendChild(span);
 			radio.appendChild(label);
@@ -1201,7 +1395,6 @@ function formBuilderCtrl(
 		if (!dialog.showModal) {
 			dialogPolyfill.registerDialog(dialog);
 		}
-		console.log(dialog.open);
 		dialog.showModal();
 	};
 
