@@ -1,9 +1,9 @@
-var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.grid.edit','ui.grid.rowEdit', 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.selection', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);
-	app.controller('MainCtrl', MainCtrl)
+angular.module('autofillApp', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.grid.edit','ui.grid.rowEdit', 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.selection', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping'])
+	.controller('autofillCtrl', autofillCtrl)
 
-	MainCtrl.$inject = ['$scope', '$q', '$timeout',  'uiGridConstants', 'uiGridGroupingConstants', 'dialogServices','feedbackServices','autofillServices']
+	autofillCtrl.$inject = ['$scope', '$q', '$timeout',  'uiGridConstants', 'uiGridGroupingConstants', 'dialogServices','feedbackServices','autofillServices']
 
-	function MainCtrl($scope , $q, $timeout, uiGridConstants, uiGridGroupingConstants, dialogServices, feedbackServices, autofillServices) {
+	function autofillCtrl($scope , $q, $timeout, uiGridConstants, uiGridGroupingConstants, dialogServices, feedbackServices, autofillServices) {
 	var vm = this;
 	vm.hasSelection = false;
 	vm.elementType = '';
@@ -231,6 +231,7 @@ var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gr
 	// ============================================== API ============================================== //
 
 	function initGrid(){
+		console.log('initing');
 		vm.gridOptions.columnDefs = [];
 
 		return autofillServices

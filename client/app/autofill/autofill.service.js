@@ -1,4 +1,4 @@
-angular.module('app')
+angular.module('autofillApp')
 	.service('autofillServices',autofillServices)
 
 	autofillServices.$inject = ['$http', 'appConfig']
@@ -68,11 +68,6 @@ angular.module('app')
 
 			return $http(req);
 		}
-
-		
-
-
-
 
 		this.deleteRecords = function( rgSelectedId ){
 			var path = '/protected/autofill';

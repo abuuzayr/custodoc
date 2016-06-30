@@ -1,5 +1,5 @@
 angular
-    .module('user-interface', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp', 'formsApp'])
+    .module('user-interface', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'formBuilderApp', 'formsApp','autofillApp'])
     .config(['$urlRouterProvider', '$stateProvider', '$locationProvider', function ($urlRouterProvider, $stateProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -53,8 +53,8 @@ angular
             })
             .state('autofill', {
                 url: '/autofill',
-                templateUrl: 'views/autofill.html',
+                templateUrl: 'app/autofill/autofill.html',
                 controller: 'autofillCtrl',
-                controllerAs: 'autofill'
+                controllerAs: 'vm'
             });
     }]);

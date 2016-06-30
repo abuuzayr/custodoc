@@ -1,4 +1,4 @@
-angular.module('app')
+angular.module('autofillApp')
 	.service('feedbackServices',feedbackServices)
 
 	feedbackServices.$inject = ['$q','$timeout'];
