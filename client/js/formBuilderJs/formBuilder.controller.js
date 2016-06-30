@@ -322,8 +322,7 @@ function formBuilderCtrl(
 				node.style.borderRadius = element.borderRadius;
 				node.setAttribute("data-x","0");
 				node.setAttribute("data-y","0");
-				node.setAttribute("ng-dblclick","vm.elementOnclick($event)");
-				$compile(node)($scope);
+				node.setAttribute("ondblclick","angular.element(document.getElementById('formBuilderBody')).scope().vm.elementOnclick(event)");
 				node.setAttribute("class","resize-drag");
 				node.id = key;
 				if(element.type==="radio") node.className +=" "+ element.display;
@@ -391,7 +390,6 @@ function formBuilderCtrl(
 					continue;
 				}
 				var id = node.id;
-				console.log(id);
 				elements[id] = {};
 				elements[id].name = node.getAttribute("name");
 				elements[id].page = i;
@@ -499,7 +497,6 @@ function formBuilderCtrl(
 
 	function previewStart() {
 		if (vm.allowCreate) {
-			console.log(elements);
 			vm.progressbar.start();
 			vm.progressbar.set(0);
 			while (preview.firstChild) {
@@ -517,7 +514,6 @@ function formBuilderCtrl(
 
 	function beforeGeneratePDF(){
 		var deferred = $q.defer();
-		console.log(1);
 		for(key in elements){
 			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 				var radio = document.getElementById(key);
@@ -545,7 +541,6 @@ function formBuilderCtrl(
 	}
 
 	function afterGeneratePDF(){
-		console.log(4);
 		var deferred = $q.defer(); 
 		for(key in elements){
 			if (key.startsWith("auto_radio") || key.startsWith("radio")) {
@@ -618,7 +613,6 @@ function formBuilderCtrl(
 	}
 
 	function generateImagePromise(pageNumber) {
-		console.log(2);
 		var deferred = $q.defer();
 		vm.progressbar.set(pageNumber * 100 / vm.numberOfPages);
 		canvas = document.createElement("canvas");
@@ -637,7 +631,6 @@ function formBuilderCtrl(
 	}
 
 	function addToPreviewPromise(pageNumber) {
-		console.log(3);
 		var deferred = $q.defer();
 		imgurl = canvas.toDataURL('image/jpeg', 1);
 		pdfFactory.addData(imgurl);
@@ -1101,12 +1094,11 @@ function formBuilderCtrl(
 		}
 		newElement.setAttribute("data-x", "0");
 		newElement.setAttribute("data-y", "0");
-		newElement.setAttribute("ng-dblclick", "vm.elementOnclick($event)");
+		newElement.setAttribute("ondblclick","angular.element(document.getElementById('formBuilderBody')).scope().vm.elementOnclick(event)");
 		var tempId = newElement.id;
 		var tempName = newElement.getAttribute("name");
 		newElement.id="";
 		newElement.setAttribute("name","");
-		$compile(newElement)($scope);
 		newElement.id=tempId;
 		newElement.setAttribute("name",tempName);
 		newElement.setAttribute("class", "resize-drag");
@@ -1369,7 +1361,6 @@ function formBuilderCtrl(
 		if (!dialog.showModal) {
 			dialogPolyfill.registerDialog(dialog);
 		}
-		console.log(dialog.open);
 		dialog.showModal();
 	};
 
