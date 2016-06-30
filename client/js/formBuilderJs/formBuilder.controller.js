@@ -303,6 +303,7 @@ function formBuilderCtrl(
 							label.style.display=display;
 							node.appendChild(label);
 						}
+						node.className +=" "+ element.display;
 					}
 					node.style.color = element.color;
 					node.style.backgroundColor = element.backgroundColor;
@@ -341,9 +342,8 @@ function formBuilderCtrl(
 						return false;
 					}
 				};
-				node.setAttribute("class","resize-drag");
+				node.className +=" resize-drag notSelectable";
 				node.id = key;
-				if(element.type==="radio") node.className +=" "+ element.display;
 				node.setAttribute('name',element.name);
 				node.style.overflow = "hidden";
 				node.style.lineHeight="100%";
@@ -1139,7 +1139,7 @@ function formBuilderCtrl(
 		newElement.setAttribute("name","");
 		newElement.id=tempId;
 		newElement.setAttribute("name",tempName);
-		newElement.className+=" resize-drag";
+		newElement.className+=" resize-drag notSelectable";
 		newElement.style.overflow = "hidden";
 		newElement.style.lineHeight = "100%";
 		newElement.style.position = "absolute";
@@ -1501,14 +1501,14 @@ function formBuilderCtrl(
 				
 			function horizontal(){
 				if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
-				if (event.edges.right && (parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width))&&event.dx>0) return false;
+				if (event.edges.right && (parseInt(target.style.left)+x+parseInt(target.style.width)+event.dx+parseInt(target.style.borderWidth)*2>parseInt(target.parentNode.style.width))&&event.dx>0) return false;
 				if(event.edges.left && parseInt(target.style.width)===0 && event.dx>0) return false;
 				if(event.edges.left && parseInt(target.style.width)-event.dx>=0) x += event.dx;
 				if(event.edges.left && (parseInt(target.style.left)+x<30) && (event.dx<0)) {
 					target.style.width=parseInt(target.style.width)+x+parseInt(target.style.left)+'px';
 					x=-parseInt(target.style.left);
 				}
-				if (event.edges.right&&(parseInt(target.style.left)+x+event.rect.width>parseInt(target.parentNode.style.width)-30)&&event.dx>0) {
+				if (event.edges.right&&(parseInt(target.style.left)+x+parseInt(target.style.width)+event.dx+parseInt(target.style.borderWidth)*2>parseInt(target.parentNode.style.width)-30)&&event.dx>0) {
 					target.style.width=(parseInt(target.parentNode.style.width)-parseInt(target.style.left)-parseInt(target.style.borderWidth)*2-x)+'px';
 					return false;
 				}
@@ -1521,15 +1521,15 @@ function formBuilderCtrl(
 
 			function vertical(){
 				if(event.edges.top && (parseInt(target.style.top)+y<0) && (event.dy<0)) return false;
-				if (event.edges.bottom && (parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height))&&event.dy>0) return false;
+				if (event.edges.bottom && (parseInt(target.style.top)+y+parseInt(target.style.height)+event.dy+parseInt(target.style.borderWidth)*2>parseInt(target.parentNode.style.height))&&event.dy>0) return false;
 				if(event.edges.top && parseInt(target.style.height)===0 && event.dy>0) return false;
 				if(event.edges.top && parseInt(target.style.height)-event.dy>=0) y += event.dy;
 				if(event.edges.top && (parseInt(target.style.top)+y<30) && (event.dy<0)) {
 					target.style.height=parseInt(target.style.height)+y+parseInt(target.style.top)+'px';
 					y=-parseInt(target.style.top);
 				}
-				if (event.edges.bottom&&(parseInt(target.style.top)+y+event.rect.height>parseInt(target.parentNode.style.height)-30)&&event.dy>0) {
-					target.style.height=(parseInt(target.parentNode.style.height)-parseInt(target.style.top)-parseInt(target.style.borderWidth)*2-y)+'px';
+				if (event.edges.bottom&&(parseInt(target.style.top)+y+parseInt(target.style.height)+event.dy+parseInt(target.style.borderWidth)*2>parseInt(target.parentNode.style.height)-30)&&event.dy>0) {
+					target.style.height=(parseInt(target.parentNode.style.height)-parseInt(target.style.top)-parseInt(target.style.borderWidth)*2-y-2)+'px';
 					return false;
 				}
 				if(event.edges.bottom) target.style.height  = parseInt(target.style.height)+event.dy + 'px';

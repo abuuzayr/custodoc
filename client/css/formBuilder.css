@@ -8,6 +8,14 @@
   -webkit-user-drag: element;
 }
 
+.notSelectable {
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+} 
+
 .radioInline label{
 	display: inline;
 }
@@ -44,7 +52,6 @@
 	width: 794px;
 	height: 1123px;
 	left: 34%; 
-	border: 2px solid black;
 }
 
 #placeholder{
