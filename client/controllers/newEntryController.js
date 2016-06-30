@@ -1,11 +1,12 @@
 angular
     .module('user-interface')
-    .controller("newEntryCtrl", ['entryService', '$scope', '$q', '$location', '$timeout', function (entryService, $scope, $q, $location, $timeout) {
+    .controller("newEntryCtrl", ['$stateParams', 'entryService', '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
 	var vm = this;
 	vm.entryData = [];
 	vm.file = null;
+	vm.groupName = $stateParams.groupName;
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -50,22 +51,7 @@ angular
 	
 	vm.getEntries();
 
-	vm.entryData = {
-	    fields : 
-	    [
-		{type: "text", name: "Name", label: "Name", data:"SugarContent"},
-		{type: "email", name: "Email", label: "Email", data:""},
-		{type: "text", name: "Country", label: "Country", data:"Singapore"},
-		{type: "text", name: "State", label: "State", data:"Tampines"},
-		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
-		{type: "dropdown", name: "Gender", label: "Gender", options: ["Male", "Female"], data:"Male"},
-		{type: "image", name: "Picture", label: "Picture", data:""},
-		{type: "checkbox",  name: "Illnesses", label:"Any medical conditions?", options:["Asthma", "High-blood pressure", "Diabetes"], data:""},
-		{type: "radio", name: "Are you Human", label: "Are you Human?", options:["true", "false"], data:""}  // true/false questions
-	    ]
-	
-	}
-	setTimeout(function(){console.log(vm.file)},10000);
+	vm.entryData = entryService.getFormElements(vm.groupName);
 
 	/**** UNDER CONSTRUCTION  ***f
 	
@@ -83,21 +69,20 @@ angular
 	};    */
 	
 	// call this function first before creating an entry
-	vm.retrieveKeys = function() {
+	/*vm.retrieveKeys = function() {
 	    var keys = ["Name", "Country", "State", "Address", "Gender"];
-	    /*entry.retrieveKeys(vm.entData)
+	    entry.retrieveKeys(vm.entData)
 		.success(function(keys) {
 		    return keys;
-		}); */
+		}); 
 	    return keys;
-	};
+	};*/
 	
 	vm.myKeys = vm.retrieveKeys();
 
 	vm.createEntry = function() {
 	    //var name = vm.entData.groupName;
-	
-
+		
 	    //TODO: INCLUDE USER INPUT VALUES INSIDE ENTRYDATA
 	    var entryData2 = [{
 		groupName    : 'test',
