@@ -7,7 +7,7 @@ angular
                 url: '/',
                 templateUrl: 'views/login.html',
                 controller: 'loginCtrl',
-                controllerAs: 'login'
+                controllerAs: 'vm'
             })
             .state('newentry', {
                 url: '/newentry/:groupName',
