@@ -1,11 +1,22 @@
 angular
     .module('user-interface')
-    .controller("newEntryCtrl", ['entryService', '$scope', '$q', '$location', '$timeout', function (entryService, $scope, $q, $location, $timeout) {
+    .controller("newEntryCtrl", ['$stateParams', 'entryService', '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
 	var vm = this;
-	vm.entryData = [];
-	vm.file = null;
+
+	// this formData stores the current selected forms that are going to be used to create an entry
+	vm.formData = [];
+
+	// this parsedFormData stores objects that contain the type, name, label, data of the all the elements taken from formData
+	vm.parsedFormData = [];
+
+	/* this entryData stores the final data structure for an entry, which contains the groupName  
+		and the relevant fields obtained from the form database	*/
+	vm.entryData = [];  
+	
+
+	vm.groupName = $stateParams.groupName;
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -18,7 +29,7 @@ angular
             }, 0);
         });
 
-	/*****   FOR CHECKBOX   *****/
+	/*****   FOR CHECKBOX   *
 	
 	vm.selected = [];
 	
@@ -34,38 +45,117 @@ angular
 	    }
 	};
 	
-	/****************************/
+	****************************/
 
-	// initialize the data to contain all entries and lets the htmlview retrieve this data
+	/*// initialize the data to contain all entries and lets the htmlview retrieve this data
 	vm.getEntries = function() {
 	    entryService.getAllEntries()
 		.then(function(res) {
                         vm.entry = res.data;
-			console.log(JSON.stringify(res));
+		//	console.log(JSON.stringify(res));
                 })
                 .catch(function(err) {
                     console.log("Error " + JSON.stringify(err));
                 });
 	};
 	
-	vm.getEntries();
+	vm.getEntries();*/
 
-	vm.entryData = {
-	    fields : 
-	    [
-		{type: "text", name: "Name", label: "Name", data:"SugarContent"},
-		{type: "email", name: "Email", label: "Email", data:""},
-		{type: "text", name: "Country", label: "Country", data:"Singapore"},
-		{type: "text", name: "State", label: "State", data:"Tampines"},
-		{type: "text", name: "Address", label: "Address", data:"Blk 138"},
-		{type: "dropdown", name: "Gender", label: "Gender", options: ["Male", "Female"], data:"Male"},
-		{type: "image", name: "Picture", label: "Picture", data:""},
-		{type: "checkbox",  name: "Illnesses", label:"Any medical conditions?", options:["Asthma", "High-blood pressure", "Diabetes"], data:""},
-		{type: "radio", name: "Are you Human", label: "Are you Human?", options:["true", "false"], data:""}  // true/false questions
-	    ]
-	
-	}
-	setTimeout(function(){console.log(vm.file)},10000);
+	/* This function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData
+		and finally create a proper entry data structure */
+
+	vm.getFormData = entryService.getFormElements(vm.groupName)
+		.then(function(res){
+			vm.formData = res.data;
+		})
+		.then(function() {
+				var arrayOfKeys = [];
+					var key;
+					for (var i = 0; i < vm.formData.length ; i++){
+				 	   var data = vm.formData[i];
+				  	  	var elements = data.elements;
+				   	 for (key in elements) {
+						var element = elements[key];
+						console.log("how many times");
+						var object = {};
+						if (element.name.startsWith('text_')) {
+						    var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+					    	var hello = element.default;
+					    	console.log(hello);
+						    var noDuplicate = true;
+						    // check for duplication here
+						    for(var j=0; j<arrayOfKeys.length; j++) {
+								if (fieldName !== arrayOfKeys[j]) {
+								    continue;
+								} else {
+								    noDuplicate = false;
+								    break;
+								}
+						    }
+
+						    if (noDuplicate) {
+						    	object.type = 'text';
+						        object.name = fieldName;
+						        object.label = fieldName;
+						        object.data = hello;
+						    }
+
+						    arrayOfKeys.push(object);
+
+						} else if (element.name.startsWith('dropdown_')) {
+						    var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+					    	var options = element.options;
+					    	var hello = element.default;
+						    var noDuplicate = true;
+						    // check for duplication here
+						    for(var j=0; j<arrayOfKeys.length; j++) {
+								if (fieldName !== arrayOfKeys[j]) {
+								    continue;
+								} else {
+								    noDuplicate = false;
+								    break;
+								}
+						    }
+
+						    if (noDuplicate) {
+						    	object.type = 'dropdown';
+						        object.name = fieldName;
+						        object.label = fieldName;
+						        object.options = options;
+						        object.data = hello;
+						    }
+
+						    arrayOfKeys.push(object);
+						} 
+				    }
+				}
+				vm.parsedFormData = arrayOfKeys;
+				//console.log("Next log: " + JSON.stringify(vm.parsedFormData));
+		})
+		.then(function() {
+
+		    vm.entryData = [{
+				groupName    : vm.groupName,
+				creationDate : Date(),
+				lastModified : Date()
+		    }];
+		    
+		    // finalData is the object that contains fields and entryData2 
+		    //TODO: FIX THE FORMAT 
+		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
+
+		   /* for (var x in entryData2) { finalData[x] = entryData2[x]; }	 
+		    for (var x in fields) { finalData[x] = fields[x]; } */
+	 
+		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
+			// console.log("Hey: " + JSON.stringify(vm.formData));
+
+
+		})		
+
+//	console.log(vm.formData);
 
 	/**** UNDER CONSTRUCTION  ***f
 	
@@ -83,41 +173,24 @@ angular
 	};    */
 	
 	// call this function first before creating an entry
-	vm.retrieveKeys = function() {
+	/*vm.retrieveKeys = function() {
 	    var keys = ["Name", "Country", "State", "Address", "Gender"];
-	    /*entry.retrieveKeys(vm.entData)
+	    entry.retrieveKeys(vm.entData)
 		.success(function(keys) {
 		    return keys;
-		}); */
+		}); 
 	    return keys;
-	};
-	
-	vm.myKeys = vm.retrieveKeys();
+	};*/
 
+	// Function to create an entry
 	vm.createEntry = function() {
-	    //var name = vm.entData.groupName;
-	
-
-	    //TODO: INCLUDE USER INPUT VALUES INSIDE ENTRYDATA
-	    var entryData2 = [{
-		groupName    : 'test',
-		creationDate : Date(),
-		lastModified : Date()
-	    }];
-	   
-	    // finalData is the object that contains vm.entryData and entryData2 
-	    var finalData = {};
-	    for (var x in vm.entryData) { finalData[x] = vm.entryData[x]; }
-	    for (var x in entryData2) { finalData[x] = entryData2[x]; }	   
- 
-	   console.log("Next log: " + JSON.stringify(finalData));	     	
-
-	   entryService.create(finalData)  
+	    entryService.create(vm.entryData)  
 	        .success(function(data) {
 		    // clear the form
-		    vm.entryData = {};
+		    vm.formData = {};
 		    vm.message = data.message;
 		    location.reload()
 	    });
 	};
+
 }]);
