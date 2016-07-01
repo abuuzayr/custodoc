@@ -27,7 +27,6 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	vm.getTableHeight = getTableHeight;
 
 	//view controll
-
 	function showNewEntry() {
 		var rows = vm.gridApi.selection.getSelectedRows();
 		for (var i = 0; i < rows.length - 1; i++) {
@@ -44,7 +43,6 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	//group management
-
 	vm.getGroupData();
 	function getGroupData() {
 		vm.groups = [];
