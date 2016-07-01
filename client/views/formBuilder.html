@@ -139,13 +139,13 @@
 		</div>
 		<!---------------------------------------- Left elements card ---------------------------------------->
 		<section id="sec1">
-			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-				<div class="mdl-tabs__tab-bar">
-					<a href="#newElement-panel" class="mdl-tabs__tab is-active">New Elements</a>
-					<a href="#savedElement-panel" class="mdl-tabs__tab">Saved Elements</a>
-					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill Elements</a>
+			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect" >
+				<div class="mdl-tabs__tab-bar" style="position: fixed; width:35%; top: 18%">
+					<a href="#newElement-panel" class="mdl-tabs__tab is-active">New</a>
+					<a href="#savedElement-panel" class="mdl-tabs__tab">Saved</a>
+					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill</a>
 				</div>
-				<div class="mdl-tabs__panel is-active" id="newElement-panel">
+				<div class="mdl-tabs__panel is-active" id="newElement-panel" style="position: fixed; width:35%; top: 26%">
 					<a name="createLabel" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')"
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
 					<div class="divider"></div>
@@ -170,7 +170,7 @@
 					<a name="createImageAttachment" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imgUpload')"
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 				</div>
-				<div id="savedElement-panel" class="mdl-tabs__panel" >
+				<div id="savedElement-panel" style="position: fixed; width:35%; top: 26%" class="mdl-tabs__panel" >
 					<label>Search: <input ng-model="vm.searchSavedElement"></label>
 					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
 						<div class="divider"></div>
@@ -178,21 +178,20 @@
 						draggable="true">{{element.name.replace("_",": ")}}</a>
 					</div>
 				</div>
-				<div class="mdl-tabs__panel" id="autofillElement-panel">
+				<div class="mdl-tabs__panel" id="autofillElement-panel" style="position: fixed; width:35%; top: 26%">
 					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
 						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'auto')"
-						draggable="true">{{element.fieldName}}</a>
+						draggable="true">{{element.type+": "+element.fieldName}}</a>
 					</div>
 				</div>
 			</div>
 
 		</section>
 
-		<div ng-init="displayPageBar = false"></div>
 		<section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
-			<div class="container" style="height:50px; width: 794px;z-index=1000;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
+			<div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
 					<div id="hidden-pagebar" ng-show="displayPagebar">
 					<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
 					<form ng-submit="vm.goToPage()" style="display:inline">

@@ -1452,22 +1452,22 @@ function formBuilderCtrl(
 		setNewElement(label);
 	}
 
+
 	//get the current position of mouse
 	 function getCrossBrowserElementCoords(mouseEvent){
 		var result = {
 			x: 0,
 			y: 0
 		};
-
+		
 		if (!mouseEvent){
 			mouseEvent = window.event;
 		}
 
 		if (mouseEvent.pageX || mouseEvent.pageY){
-			result.x = mouseEvent.pageX;
-			result.y = mouseEvent.pageY;
-		}
-		else if (mouseEvent.clientX || mouseEvent.clientY){
+			result.x = mouseEvent.pageX+document.getElementsByClassName("mdl-layout__content")[0].scrollLeft;
+			result.y = mouseEvent.pageY+document.getElementsByClassName("mdl-layout__content")[0].scrollTop;
+		} else if (mouseEvent.clientX || mouseEvent.clientY){
 			result.x = mouseEvent.clientX + document.body.scrollLeft +
 			document.documentElement.scrollLeft;
 			result.y = mouseEvent.clientY + document.body.scrollTop +
@@ -1530,6 +1530,14 @@ function formBuilderCtrl(
 			x = (parseInt(target.getAttribute('data-x')) ) + event.dx,
 			y = (parseInt(target.getAttribute('data-y')) ) + event.dy;
 
+		if((window.innerHeight - event.clientY<100)&&(event.dy>0)) {
+			document.getElementsByClassName("mdl-layout__content")[0].scrollTop +=20;
+			if (parseInt(target.style.top)+y+parseInt(target.style.height)+2*parseInt(target.style.borderWidth)+70<parseInt(target.parentNode.style.height)) y+=20;
+		}
+		if((event.clientY<100) &&(event.dy<0)) {
+			document.getElementsByClassName("mdl-layout__content")[0].scrollTop -=20;
+			if(parseInt(target.style.top)+y>20) y-=20;
+		}
 		// translate the element
 		target.style.webkitTransform =
 		target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
@@ -1537,6 +1545,7 @@ function formBuilderCtrl(
 		// update the posiion attributes
 		target.setAttribute('data-x', x);
 		target.setAttribute('data-y', y);
+
 	}
 
 
@@ -1573,8 +1582,35 @@ function formBuilderCtrl(
 			var target = event.target,
 				x = (parseInt(target.getAttribute('data-x')) ),
 				y = (parseInt(target.getAttribute('data-y')));
-			horizontal();
-			vertical();
+
+
+			//sroll the page 
+			//when the element is reaching the top and bottom of the window
+			if((window.innerHeight - event.clientY<100)&&(event.edges.bottom) && (event.dy>0)) {
+				document.getElementsByClassName("mdl-layout__content")[0].scrollTop +=20;
+				if (parseInt(target.style.top)+y+parseInt(target.style.height)+2*parseInt(target.style.borderWidth)+20<parseInt(target.parentNode.style.height)) target.style.height= parseInt(target.style.height)+20+'px';
+			}
+			if((event.clientY<100)&&(event.edges.bottom)&&(event.dy<0)) {
+				document.getElementsByClassName("mdl-layout__content")[0].scrollTop -=20;
+				if(parseInt(target.style.height)>20) target.style.height=(parseInt(target.style.height)-20)+'px';
+			}
+			if((event.clientY<100) && (event.edges.top) && (event.dy<0)) {
+				document.getElementsByClassName("mdl-layout__content")[0].scrollTop -=20;
+				if (parseInt(target.style.top)+y>20) {
+					target.style.height=(parseInt(target.style.height)+20)+'px';
+					target.style.top=(parseInt(target.style.top)-20)+'px';
+				}
+			}
+			if((window.innerHeight - event.clientY<100)&&(event.edges.top) && (event.dy>0)) {
+				document.getElementsByClassName("mdl-layout__content")[0].scrollTop +=20;
+				if (parseInt(target.style.height)>20) {
+					target.style.height=(parseInt(target.style.height)-20)+'px';
+					target.style.top=(parseInt(target.style.top)+20)+'px';
+				}
+			}
+
+			horizontal(); //handle the resizing of top and bottom edges
+			vertical();	//handle the resizing of left and right edges
 				
 			function horizontal(){
 				if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
