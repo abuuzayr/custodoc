@@ -38,16 +38,18 @@ function loginCtrl(
 
     /* =========================================== Login =========================================== */
     function login() {
-        vm.isValidForLogin = (!isEmpty(usr) && !isEmpty(pwd) && isValidEmail(usr));
-        if (vm.isValidForLogin) {
+        //vm.isValidForLogin = (!isEmpty(usr) && !isEmpty(pwd) && isValidEmail(usr));
+        //console.log(vm.isValidForLogin);
+	//if (vm.isValidForLogin) {
             //Start login
             var usr = vm.email;
             var pwd = vm.password;
-            var baseURL = 'http://localhost:8080/api/userauth';
+            var baseURL = 'https://10.4.1.204/auth/user';
             console.log(usr);
             $http.post(baseURL, {
                 email: usr,
-                password: pwd
+                password: pwd,
+		origin: 'bulletform.com'
             }).then(function SuccessCallback(res) {
                 //To see the msg do console.log(res)
                 console.log(res);
@@ -59,11 +61,11 @@ function loginCtrl(
                 //TODO: What to do when call is not successful
                 vm.loginFeedbackMessage = err.data.description;
             });
-        }
-        else {
-            //If inputs are not valid, display feedback message
-            setLoginFeedback();
-        }
+       	// }
+       	// else {
+        // //If inputs are not valid, display feedback message
+        //	setLoginFeedback();
+        // }
     };
 
     function setLoginFeedback() {
