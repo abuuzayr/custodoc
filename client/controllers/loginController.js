@@ -1,30 +1,20 @@
-angular
-    .module("user-interface")
-    .controller("loginCtrl", [
-        '$scope',
-        '$q',
-        '$location',
-        '$timeout',
-        '$state',
-        '$http',
-        loginCtrl
-    ]);
-function loginCtrl(
-    $scope,
-    $q,
-    $location,
-    $timeout,
-    $state,
-    $http) {
+angular.module("user-interface")
+    .controller("loginCtrl", loginCtrl);
+    
+    loginCtrl.$inject = ['$scope','$q','$location','$timeout','$state','$http'];
+    
+    function loginCtrl($scope, $q, $location, $timeout, $state, $http) {
     	
     /* =========================================== Initialisation =========================================== */
     var vm = this;
-    vm.isLoginSuccessful = true;
-    vm.login = login;
-    console.log('login controller loaded');
+    var errMsg;
+    var MAX_PASSWORD_LENGTH = 24;
+    var MIN_PASSWORD_LENGTH = 8;
+    var baseURL = 'https://10.4.1.204/auth/user';
+    vm.validateBeforeLogin = validateBeforeLogin;
+
     /* =========================================== Load animation =========================================== */
     var viewContentLoaded = $q.defer();
-
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function () {
             viewContentLoaded.resolve();
@@ -35,53 +25,47 @@ function loginCtrl(
             componentHandler.upgradeDom();
         }, 0);
     });
-
     /* =========================================== Login =========================================== */
-    function login() {
-        //vm.isValidForLogin = (!isEmpty(usr) && !isEmpty(pwd) && isValidEmail(usr));
-        //console.log(vm.isValidForLogin);
-	//if (vm.isValidForLogin) {
-            //Start login
-            var usr = vm.email;
-            var pwd = vm.password;
-            var baseURL = 'https://10.4.1.204/auth/user';
-            console.log(usr);
+    function validateBeforeLogin() {
+        var email = '';
+        var password = '';
+        var errMsg = '';
+
+        if (isEmpty(vm.email) || isEmpty(vm.password)) {
+            return;
+        } else if (!isValidEmail(vm.email)) {
+            errMsg = 'Email is invalid.';
+        } else if (!isValidPassword(vm.password)) {
+            errMsg = 'Password is between 8 and 24 characters.';
+        } else {
+            email = vm.email
+            password = vm.password;
+            return login(email, password);
+        }
+            //TODO 
+        console.log('Error'+errMsg);
+    }    
+
+
+
+
+    function login(email,password) {
             $http.post(baseURL, {
-                email: usr,
-                password: pwd,
-		origin: 'bulletform.com'
+                email: email,
+                password: password,
+		        origin: 'bulletform.com'
             }).then(function SuccessCallback(res) {
-                //To see the msg do console.log(res)
                 console.log(res);
-                //TODO: What to do when email is sent? Go through viewcontroller to check jwt
                 $state.go('forms');
             }, function ErrorCallback(err) {
-                //To see the msg do console.log(err)
                 console.log(err);
-                //TODO: What to do when call is not successful
                 vm.loginFeedbackMessage = err.data.description;
             });
-       	// }
-       	// else {
-        // //If inputs are not valid, display feedback message
-        //	setLoginFeedback();
-        // }
     };
 
-    function setLoginFeedback() {
-        if ((isEmpty(usr) || isEmpty(pwd)) === true) {
-            vm.loginFeedbackMessage = 'Please enter both email and password.';
-        }
-        if (isValidEmail(usr) === false) {
-            vm.loginFeedbackMessage = 'Invalid email. Please re-enter email.';
-        }
-    };
 
     function isEmpty(str) {
-        if (str != null && str != undefined && str.length >= 1) {
-            return false;
-        }
-        else return true;
+        return str == null || str == undefined || str.length < 1 ;
     };
 
     function isValidEmail(str) {
@@ -89,14 +73,12 @@ function loginCtrl(
         return emailPattern.test(str);
     };
 
-    /* ===========================================    HTTP CALLS   =========================================== */
+    function isValidPassword(inputStr) {
+        return inputStr.length >= MIN_PASSWORD_LENGTH && inputStr.length <= MAX_PASSWORD_LENGTH
+    }
+
 
     /* =========================================== Forgot password =========================================== */
-    // Set isUsernameConfirmed to null to hide feedback messages.
-    vm.isUsernameConfirmed = null;
-
-    // API here. Retrieve user's email.
-    vm.email = '';
 
     // Check if email is valid.
     vm.checkUserValid = function () {
@@ -104,7 +86,7 @@ function loginCtrl(
         if (!isValidEmail($scope.forgotUser))
             $scope.isUsernameConfirmed = false;
         else {
-            var baseURL = 'http://localhost:8080/api/user/forgetpassword';
+            var path = 'http://localhost:8080/api/user/forgetpassword';
             var email = $scope.forgotUser;
             $http.get(baseURL + '/' + email)
                 .then(function SuccessCallback(res) {
@@ -136,3 +118,4 @@ function loginCtrl(
         vm.isUsernameConfirmed = null;
     };
 }
+
