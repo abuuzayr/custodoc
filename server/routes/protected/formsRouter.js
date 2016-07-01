@@ -10,7 +10,7 @@ formsRouter.route('/')
 	.get(function(req,res,next){
 		var db = require('../../server.js').db;
 		var coll = db.collection("forms");
-		coll.find().toArray(function(err, forms){
+		coll.find().sort({groupName: 1,order: 1}).toArray(function(err, forms){
 			assert.equal(null,err);
 			for(var i=0;i<forms.length;i++){
 				delete forms[i].elements;

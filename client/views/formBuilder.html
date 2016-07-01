@@ -142,6 +142,7 @@
 			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 				<div class="mdl-tabs__tab-bar">
 					<a href="#newElement-panel" class="mdl-tabs__tab is-active">New Elements</a>
+					<a href="#savedElement-panel" class="mdl-tabs__tab">Saved Elements</a>
 					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill Elements</a>
 				</div>
 				<div class="mdl-tabs__panel is-active" id="newElement-panel">
@@ -168,6 +169,14 @@
 					<div class="divider"></div>
 					<a name="createImageAttachment" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imgUpload')"
 						draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+				</div>
+				<div id="savedElement-panel" class="mdl-tabs__panel" >
+					<label>Search: <input ng-model="vm.searchSavedElement"></label>
+					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
+						<div class="divider"></div>
+						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'saved')"
+						draggable="true">{{element.name.replace("_",": ")}}</a>
+					</div>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
 					<label>Search: <input ng-model="vm.searchAutofillElement"></label>

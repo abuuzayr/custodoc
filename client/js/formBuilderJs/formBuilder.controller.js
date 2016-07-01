@@ -142,6 +142,7 @@ function formBuilderCtrl(
 	//define all the functions
 	vm.maxSizeWarning = maxSizeWarning;
 	vm.getAutofillElements = getAutofillElements;
+	vm.getSavedElements = getSavedElements;
 	vm.saveForm = saveForm;
 	vm.downloadPDF = downloadPDF;
 	vm.previewStart = previewStart;
@@ -363,6 +364,7 @@ function formBuilderCtrl(
 		});
 
 	vm.getAutofillElements();
+	vm.getSavedElements();
 
 	function maxSizeWarning(){
 		if(vm.file && vm.file.filesize>2000000){
@@ -386,12 +388,20 @@ function formBuilderCtrl(
 			});
 	}
 
+	function getSavedElements(){
+		$http.get(serverURL+"/groups/getGroupElements/"+vm.groupName)
+			.then(function(res){
+				console.log(res.data);
+				vm.savedElements = res.data;
+			},function(res){
+
+			});
+	}
+
 	function getAutofillElements(){
 		$http.get(serverURL+"/autofill/element")
 			.then(function(res){
-				var data = res.data;
-				console.log(data);
-				vm.autofillElements = data;
+				vm.autofillElements = res.data;
 			},function(res){
 				alert('Failed to retrieve autofill elements.');
 			});
@@ -469,6 +479,7 @@ function formBuilderCtrl(
 							if(node.childNodes[k].tagName && node.childNodes[k].tagName==="SPAN") var span = node.childNodes[k];
 							if(node.childNodes[k].tagName && node.childNodes[k].tagName==="INPUT") var checkbox = node.childNodes[k];
 						}
+						elements[id].type = "checkbox";
 						elements[id].default = checkbox.checked;
 						elements[id].label = span.innerHTML;
 					}
@@ -483,6 +494,7 @@ function formBuilderCtrl(
 				snackbarContainer.MaterialSnackbar.showSnackbar(
 					{ message: "Saved the form" });
 				vm.saved = true;
+				vm.getSavedElements();
 			}, function (data) {
 				if(data.status===404){
 					var formData = {groupName:vm.groupName,formName:vm.formName};
@@ -688,6 +700,7 @@ function formBuilderCtrl(
 			}
 			vm.element=null;
 			toolbar.style.display="none";
+			vm.saved =false;
 			for(var i=vm.numberOfPages; i>vm.currentPageNumber; i--){
 				document.getElementById("page"+i).setAttribute("id","page"+(i+1).toString());
 			}
@@ -709,6 +722,7 @@ function formBuilderCtrl(
 				vm.element.style.boxShadow="none";
 			}
 			vm.element=null;
+			vm.saved = false;
 			toolbar.style.display="none";
 			if(confirm("Do you really want to delete this page?")){
 				while(currentPage.firstChild){
@@ -793,12 +807,13 @@ function formBuilderCtrl(
 
 	function movePage() {
 		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
-			}
-			vm.element = null;
 			toolbar.style.display = "none";
 			if (vm.currentPageNumber > vm.moveToPageNumber) {
+				if (vm.element) {
+					vm.element.style.boxShadow = "none";
+				}
+				vm.element = null;
+				vm.saved = false;
 				for (var i = vm.currentPageNumber - 1; i >= vm.moveToPageNumber; i--) {
 					document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i + 1).toString());
 				}
@@ -806,6 +821,11 @@ function formBuilderCtrl(
 				currentPage.id = "page" + vm.currentPageNumber;
 
 			} else if (vm.currentPageNumber < vm.moveToPageNumber) {
+				if (vm.element) {
+					vm.element.style.boxShadow = "none";
+				}
+				vm.element = null;
+				vm.saved = false;
 				for (var i = vm.currentPageNumber + 1; i <= vm.moveToPageNumber; i++) {
 					document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i - 1).toString());
 				}
@@ -866,14 +886,29 @@ function formBuilderCtrl(
 				elements[vm.newAutofillElementId] = {};
 				if(vm.selectedAutofillElement.type==='text'){
 					createTextField();
-				}
-				if (vm.selectedAutofillElement.type==='dropdown') {
+				} else if (vm.selectedAutofillElement.type==='dropdown') {
 					createDropdownList();
-				}
-				if (vm.selectedAutofillElement.type==='checkbox') {
+				}else if (vm.selectedAutofillElement.type==='checkbox') {
 					createCheckbox();
+				}else if (vm.selectedAutofillElement.type==='radio') {
+					createRadio();
 				}
-				if (vm.selectedAutofillElement.type==='radio') {
+			}else if(vm.newElementType==='saved'){
+				var type = vm.selectedSavedElement.type;
+				var i = 0;
+				console.log(type);
+				while (elements.hasOwnProperty(vm.selectedSavedElement.name+ i)) {
+					i++;
+				}
+				vm.newSavedElementId = vm.selectedSavedElement.name+ i;
+				elements[vm.newSavedElementId] = {};
+				if(type==='text'){
+					createTextField();
+				}else if (type==='dropdown') {
+					createDropdownList();
+				}else if (type==='checkbox') {
+					createCheckbox();
+				}else if (type==='radio') {
 					createRadio();
 				}
 			}else{
@@ -1221,6 +1256,27 @@ function formBuilderCtrl(
 				label.appendChild(span);
 				radio.appendChild(label);
 			}
+		}else if(vm.newElementType==='saved'){
+			radio.setAttribute("name", vm.selectedSavedElement.name);
+			radio.setAttribute("id", vm.newSavedElementId);
+			radio.className+=" "+vm.selectedSavedElement.display;
+			if (vm.selectedSavedElement.display==="radioInline") var display = "inline";
+			else var display = "block";
+			var options = vm.selectedSavedElement.options;
+			for(var i=0; i<options.length; i++){
+				var label = document.createElement("label");
+				var option = document.createElement("input");
+				option.type = "radio";
+				option.name = name;
+				option.value = options[i];
+				if(options[i]===vm.selectedSavedElement.default) option.checked = true;
+				var span = document.createElement("span");
+				span.innerHTML=options[i]+" ";
+				label.style.display = display;
+				label.appendChild(option);
+				label.appendChild(span);
+				radio.appendChild(label);
+			}
 		}else{
 			if (elements.hasOwnProperty("radio_" + vm.radioName)) {
 				alert("Field name already exists, please change another one");
@@ -1266,6 +1322,16 @@ function formBuilderCtrl(
 				dropdown.appendChild(option);
 			}
 			dropdown.value = vm.selectedAutofillElement.default;
+		}else if(vm.newElementType==='saved'){
+			dropdown.setAttribute("name", vm.selectedSavedElement.name);
+			dropdown.setAttribute("id", vm.newSavedElementId);
+			var options = vm.selectedSavedElement.options;
+			for(var i=0; i<options.length; i++){
+				var option = document.createElement("option");
+				option.innerHTML = options[i];
+				dropdown.appendChild(option);
+			}
+			dropdown.value = vm.selectedSavedElement.default;
 		}else{
 			if (elements.hasOwnProperty("dropdown_" + vm.dropdownListName)) {
 				alert("Field name already exists, please change another one");
@@ -1300,6 +1366,12 @@ function formBuilderCtrl(
 			label.setAttribute("id", vm.newAutofillElementId);
 			span.innerHTML = vm.selectedAutofillElement.label;
 			checkbox.checked = vm.selectedAutofillElement.default;
+		}else if(vm.newElementType==='saved'){
+			label.setAttribute("name", vm.selectedSavedElement.name);
+			label.setAttribute("id", vm.newSavedElementId);
+			span.innerHTML = vm.selectedSavedElement.label;
+			checkbox.checked = vm.selectedSavedElement.default;
+			console.log(1);
 		}else{
 			if (elements.hasOwnProperty("checkbox_" + vm.checkboxName)) {
 				alert("Field name already exists, please change another one");
@@ -1310,6 +1382,7 @@ function formBuilderCtrl(
 			label.setAttribute("name", "checkbox_" + vm.checkboxName);
 			label.setAttribute("id", "checkbox_" + vm.checkboxName);
 		}
+		console.log(1);
 		setNewElement(label);
 	}
 
@@ -1322,6 +1395,10 @@ function formBuilderCtrl(
 			textarea.setAttribute("name", 'auto_text_'+vm.selectedAutofillElement.fieldName);
 			textarea.setAttribute("id", vm.newAutofillElementId);
 			textarea.placeholder = vm.selectedAutofillElement.default;
+		}else if(vm.newElementType==='saved'){
+			textarea.setAttribute("name", vm.selectedSavedElement.name);
+			textarea.setAttribute("id", vm.newSavedElementId);
+			textarea.placeholder = vm.selectedSavedElement.default;
 		}else{
 			if (elements.hasOwnProperty("text_" + vm.textFieldName)) {
 				alert("Field name already exists, please change another one");
@@ -1440,7 +1517,7 @@ function formBuilderCtrl(
 
 	function closeDialog() {
 		var dialog = document.querySelector('#' + vm.newElementType);
-		dialog.close();
+		if (dialog) dialog.close();
 		reset();
 	};
 

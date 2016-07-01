@@ -110,6 +110,31 @@ groupsRouter.route('/getGroupForms/:groupName')
 			assert.equal(null,err);
 			res.status(200).send(forms);
 		});
-	})
+	});
+
+groupsRouter.route('/getGroupElements/:groupName')
+	.get(function(req, res, next){
+		var groupName = req.params.groupName;
+		var db = require('../../server.js').db;
+		var coll = db.collection("forms");
+		coll.find({groupName: groupName}).sort({order: 1}).toArray(function(err, forms){
+			assert.equal(null,err);
+			var elements = [];
+			var elementNames = [];
+			if (forms) {
+				for(var i=0; i<forms.length; i++){
+					var formElements = forms[i].elements;
+					for(key in formElements){
+						if (elementNames.indexOf(formElements[key].name)<0 && (key.startsWith("text") || key.startsWith("dropdown") || key.startsWith("radio") || key.startsWith("checkbox"))) {
+							elementNames.push(formElements[key].name);
+							elements.push(formElements[key]);
+						}
+					}
+				}
+			}
+			console.log(elements);
+			res.status(200).send(elements);
+		});
+	});
 
 module.exports=groupsRouter;
