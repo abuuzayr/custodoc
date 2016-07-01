@@ -81,8 +81,7 @@ angular
 						if (element.name.startsWith('text_')) {
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
-					    	var hello = element.default;
-					    	console.log(hello);
+					    	var def = element.default;
 						    var noDuplicate = true;
 						    // check for duplication here
 						    for(var j=0; j<arrayOfKeys.length; j++) {
@@ -98,7 +97,7 @@ angular
 						    	object.type = 'text';
 						        object.name = fieldName;
 						        object.label = fieldName;
-						        object.data = hello;
+						        object.data = def;
 						    }
 
 						    arrayOfKeys.push(object);
@@ -107,7 +106,7 @@ angular
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 					    	var options = element.options;
-					    	var hello = element.default;
+					    	var def = element.default;
 						    var noDuplicate = true;
 						    // check for duplication here
 						    for(var j=0; j<arrayOfKeys.length; j++) {
@@ -124,15 +123,62 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.options = options;
-						        object.data = hello;
+						        object.data = def;
 						    }
 
 						    arrayOfKeys.push(object);
-						} 
+						}  else if (element.name.startsWith('checkbox_')) {
+						    var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+					    	var def = element.default;
+						    var noDuplicate = true;
+						    // check for duplication here
+						    for(var j=0; j<arrayOfKeys.length; j++) {
+								if (fieldName !== arrayOfKeys[j]) {
+								    continue;
+								} else {
+								    noDuplicate = false;
+								    break;
+								}
+						    }
+
+						    if (noDuplicate) {
+						    	object.type = 'checkbox';
+						        object.name = fieldName;
+						        object.label = fieldName;
+						        object.data = def;
+						    }
+
+						    arrayOfKeys.push(object);
+						} else if (element.name.startsWith('radio_')) {
+						    var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+					    	var options = element.options;
+					    	var def = element.default;
+						    var noDuplicate = true;
+						    // check for duplication here
+						    for(var j=0; j<arrayOfKeys.length; j++) {
+								if (fieldName !== arrayOfKeys[j]) {
+								    continue;
+								} else {
+								    noDuplicate = false;
+								    break;
+								}
+						    }
+
+						    if (noDuplicate) {
+						    	object.type = 'radio';
+						        object.name = fieldName;
+						        object.label = fieldName;
+						        object.options = options;
+						        object.data = def;
+						    }
+
+						    arrayOfKeys.push(object);
+						}
 				    }
 				}
 				vm.parsedFormData = arrayOfKeys;
-				//console.log("Next log: " + JSON.stringify(vm.parsedFormData));
 		})
 		.then(function() {
 
@@ -143,15 +189,9 @@ angular
 		    }];
 		    
 		    // finalData is the object that contains fields and entryData2 
-		    //TODO: FIX THE FORMAT 
 		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
-
-		   /* for (var x in entryData2) { finalData[x] = entryData2[x]; }	 
-		    for (var x in fields) { finalData[x] = fields[x]; } */
 	 
 		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
-			// console.log("Hey: " + JSON.stringify(vm.formData));
-
 
 		})		
 
