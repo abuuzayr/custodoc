@@ -201,6 +201,7 @@ function formBuilderCtrl(
 	}
 
 	//remove place holder when close dialog
+	document.getElementById('previewDialog').addEventListener("close", previewDeleteAll);
 	document.getElementById('label').addEventListener("close", removePlaceholder);
 	document.getElementById('text').addEventListener("close", removePlaceholder);
 	document.getElementById('checkbox').addEventListener("close", removePlaceholder);
@@ -391,7 +392,6 @@ function formBuilderCtrl(
 	function getSavedElements(){
 		$http.get(serverURL+"/groups/getGroupElements/"+vm.groupName)
 			.then(function(res){
-				console.log(res.data);
 				vm.savedElements = res.data;
 			},function(res){
 
@@ -896,7 +896,6 @@ function formBuilderCtrl(
 			}else if(vm.newElementType==='saved'){
 				var type = vm.selectedSavedElement.type;
 				var i = 0;
-				console.log(type);
 				while (elements.hasOwnProperty(vm.selectedSavedElement.name+ i)) {
 					i++;
 				}
@@ -1238,7 +1237,6 @@ function formBuilderCtrl(
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", vm.newAutofillElementId);
 			radio.className+=" "+vm.selectedAutofillElement.display;
-			console.log(vm.selectedAutofillElement.display);
 			if (vm.selectedAutofillElement.display==="radioInline") var display = "inline";
 			else var display = "block";
 			var options = vm.selectedAutofillElement.options;
@@ -1288,7 +1286,6 @@ function formBuilderCtrl(
 			radio.setAttribute("name", name);
 			radio.setAttribute("id", name);
 			radio.className +=" "+ vm.radioDisplay;
-			console.log(vm.radioDisplay);
 			if (vm.radioDisplay==="radioInline") var display = "inline";
 			else var display = "block";
 			for(var i=0; i<vm.options.length; i++){
@@ -1371,7 +1368,6 @@ function formBuilderCtrl(
 			label.setAttribute("id", vm.newSavedElementId);
 			span.innerHTML = vm.selectedSavedElement.label;
 			checkbox.checked = vm.selectedSavedElement.default;
-			console.log(1);
 		}else{
 			if (elements.hasOwnProperty("checkbox_" + vm.checkboxName)) {
 				alert("Field name already exists, please change another one");
@@ -1382,7 +1378,6 @@ function formBuilderCtrl(
 			label.setAttribute("name", "checkbox_" + vm.checkboxName);
 			label.setAttribute("id", "checkbox_" + vm.checkboxName);
 		}
-		console.log(1);
 		setNewElement(label);
 	}
 
