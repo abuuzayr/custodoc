@@ -1532,7 +1532,7 @@ function formBuilderCtrl(
 
 		if((window.innerHeight - event.clientY<100)&&(event.dy>0)) {
 			document.getElementsByClassName("mdl-layout__content")[0].scrollTop +=20;
-			if (parseInt(target.style.top)+y+parseInt(target.style.height)+2*parseInt(target.style.borderWidth)+70<parseInt(target.parentNode.style.height)) y+=20;
+			if (parseInt(target.style.top)+y+parseInt(target.style.height)+2*parseInt(target.style.borderWidth)+50<parseInt(target.parentNode.style.height)) y+=20;
 		}
 		if((event.clientY<100) &&(event.dy<0)) {
 			document.getElementsByClassName("mdl-layout__content")[0].scrollTop -=20;
