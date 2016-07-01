@@ -54,7 +54,7 @@ entryRoutes.route('/')
 	// deleting an entry
 	.delete(function(req,res){
 	    connection.Do(function(db){
-		db.collection("entries").remove({groupName: req.body.groupName}, function(err) {
+		db.collection("entries").remove({}, function(err) {
 		    assert.equal(null, err);
 		    res.send("Deleted entry: " + req.body);
 		});
@@ -62,7 +62,7 @@ entryRoutes.route('/')
 	})
 
 // route that contains funtions such as retrieving keys, etc
-entryRoutes.route('/functions')
+entryRoutes.route('/functions/:groupName')
 
 	// get the keys a.k.a field names from the forms database
 	.post(function(req,res,next){

@@ -1,7 +1,7 @@
 angular.module('entryService', [])
 
 .factory('entryService', function($http) {
-	var serverURL = "http://localhost:3001/api/protected";
+	var serverURL = "http://10.4.1.201:3001/api/protected";
 	var entryFactory = {
 		getAllEntries: getAllEntries,
 		create: create,
@@ -23,12 +23,12 @@ angular.module('entryService', [])
 
 	// get all entries
 	function getAllEntries() {
-		return $http.get(serverURL+'/entry');
+		return $http.get(serverURL+'/entries');
 	};
 
 	// create an entry
 	function create(finalData) {
-		return $http.post(serverURL+'/entry', finalData);
+		return $http.post(serverURL+'/entries', finalData);
 	};
 
 	// delete an entry, entData contains groupName
@@ -40,7 +40,7 @@ angular.module('entryService', [])
 	
 	// retrieves all the keys aka field names from all the forms in that particular group, entData contains groupName
 	function retrieveKeys(entData) {
-		return $http.post(serverURL+'/entryRouter/functions', entData);
+		return $http.post(serverURL+'/entries/functions'+groupName);
 	};
 
 	// retrieves all user input for the respective keys, entData contains groupName AND user input
@@ -51,12 +51,7 @@ angular.module('entryService', [])
 	// get the group name, return an array of objects, each objects contain the information of a form in the group
 	// properties of the object: formName, groupName, numberOfPage, elements, isImportant, creationDate...
 	function getFormElements(groupName){
-		$http.get(serverURL+'/getGroupForms/'+groupName)
-			.then(function(res){
-				return res.data;
-			},function(res){
-				
-			});
+		return $http.get(serverURL+'/groups/getGroupForms/'+groupName);
 	}
 
 	return entryFactory;
