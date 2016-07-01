@@ -27,6 +27,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	vm.getTableHeight = getTableHeight;
 
 	//view controll
+
 	function showNewEntry() {
 		var rows = vm.gridApi.selection.getSelectedRows();
 		for (var i = 0; i < rows.length - 1; i++) {
@@ -43,6 +44,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	//group management
+
 	vm.getGroupData();
 	function getGroupData() {
 		vm.groups = [];
@@ -467,8 +469,8 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function getTableHeight() {
-		var rowHeight = 37; // your row height
-		var headerHeight = 210; // your header height
+		var rowHeight = 37; //  row height
+		var headerHeight = 210; // header height
 		return {
 			height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length * rowHeight + headerHeight) + "px"
 		};

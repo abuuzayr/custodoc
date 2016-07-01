@@ -1604,8 +1604,8 @@ function formBuilderCtrl(
 				}
 			}
 
-			horizontal(); //handle the resizing of top and bottom edges
-			vertical();	//handle the resizing of left and right edges
+			horizontal(); //handle the resizing and snapping of top and bottom edges
+			vertical();	//handle the resizing and snapping of left and right edges
 				
 			function horizontal(){
 				if(event.edges.left && (parseInt(target.style.left)+x<0) && (event.dx<0)) return false;
