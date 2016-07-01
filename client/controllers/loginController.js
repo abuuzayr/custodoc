@@ -16,12 +16,12 @@ function loginCtrl(
     $timeout,
     $state,
     $http) {
-
+    	
     /* =========================================== Initialisation =========================================== */
     var vm = this;
     vm.isLoginSuccessful = true;
     vm.login = login;
-
+    console.log('login controller loaded');
     /* =========================================== Load animation =========================================== */
     var viewContentLoaded = $q.defer();
 

@@ -4,7 +4,7 @@ angular
 
 function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
 	var vm = this;
-	var serverURL = "http://localhost:3001/api/protected";
+	var serverURL = "https://10.4.1.204/req/api/protected";
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
 	vm.addNewGroup = addNewGroup;

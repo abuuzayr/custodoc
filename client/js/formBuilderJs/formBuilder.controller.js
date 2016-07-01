@@ -43,7 +43,7 @@ function formBuilderCtrl(
 	 });
 
 	//initialization
-	var serverURL = "http://localhost:3001/api/protected";
+	var serverURL = "https://10.4.1.204/req/api/protected";
 	var vm = this;
 	vm.saved = true;
 	vm.mousedowned = false;
