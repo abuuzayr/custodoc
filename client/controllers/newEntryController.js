@@ -1,9 +1,10 @@
 angular
     .module('user-interface')
-    .controller("newEntryCtrl", ['$stateParams', 'entryService', '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, $scope, $q, $location, $timeout) {
+    .controller("newEntryCtrl", ['$stateParams', 'entryService', 'formsFactory' '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, formsFactory, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
 	var vm = this;
+	var forms = document.getElementById('forms');
 
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
@@ -61,8 +62,8 @@ angular
 	
 	vm.getEntries();*/
 
-	/* This function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData
-		and finally create a proper entry data structure */
+	/* This function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
+	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
 
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
@@ -192,6 +193,133 @@ angular
 		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
 	 
 		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
+
+		})
+		.then(function(){
+			console.log(vm.formData.length);
+			for(var n = 0; n < vm.formData.length; n++) {
+				vm.numberOfPages = vm.formData.numberOfPages;
+				var elements = vm.formData.elements;
+				for (var j = 1; j <= vm.numberOfPages; j++) {
+					var newPage = formsFactory.newPage.cloneNode(true);
+					newPage.setAttribute("id", 'form' + formNumber + "page" + j);
+					newPage.style.display = "none";
+					forms.appendChild(newPage);
+				}
+				for (key in elements) {
+					var element = elements[key];
+					if (element.name.startsWith('background_')) {
+						var node = document.createElement('img');
+						node.src = element.src;
+						node.style.zIndex = "0";
+					} else if (element.name.startsWith('label_')) {
+						var node = document.createElement('div');
+						node.innerHTML = element.content;
+						node.style.whiteSpace = "pre-wrap";
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex = "1";
+					} else if (element.name.startsWith('text_') || element.name.startsWith('auto_text_')) {
+						var node = document.createElement('input');
+						node.type = 'text';
+						node.placeholder = element.default;
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex = "1";
+					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
+						var node = document.createElement('select');
+						var options = element.options;
+						for (var i = 0; i < options.length; i++) {
+							var option = document.createElement('option');
+							option.innerHTML = options[i];
+							if (options[i]===element.default) option.setAttribute("selected",true);
+							node.appendChild(option);
+						}
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex = "1";
+					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+						var node = document.createElement('form');
+						var options = element.options;
+						if (element.display==="radioInline") var display = "inline";
+						else var display = "block";
+						if(options.length>0){
+							for(var i=0; i<options.length; i++){
+								var label = document.createElement("label");
+								var option = document.createElement("input");
+								option.type = "radio";
+								option.name = element.name;
+								option.value = options[i];
+								if(options[i]===element.default) option.setAttribute("checked",true);
+								var span = document.createElement("span");
+								span.innerHTML=options[i]+" ";
+								label.style.display = display;
+								label.appendChild(option);
+								label.appendChild(span);
+								node.appendChild(label);
+							}
+						}
+						node.className = element.display;
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					} else if (element.name.startsWith('signature_')) {
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex = "1";
+					} else if (element.name.startsWith('image_')) {
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex = "1";
+					} else if (element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')) {
+						var node = document.createElement('label');
+						var span = document.createElement('span');
+						var checkbox = document.createElement('input');
+						checkbox.type = "checkbox";
+						if(element.default) checkbox.setAttribute("checked",true);
+						checkbox.setAttribute("ng-checked",element.default);
+						$compile(checkbox)($scope);
+						span.innerHTML = element.label;
+						node.appendChild(checkbox);
+						node.appendChild(span);
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex = "1";
+					}
+					node.style.opacity = element.opacity;
+					node.style.border = element.border;
+					node.style.borderRadius = element.borderRadius;
+					node.style.overflow = "hidden";
+					node.style.lineHeight = "100%";
+					node.style.position = "absolute";
+					node.style.overflow = "hidden";
+					node.style.width = element.width + 'px';
+					node.style.height = element.height + 'px';
+					node.style.top = element.top + 'px';
+					node.style.left = element.left + 'px';
+					node.style.position = "absolute";
+					var page = document.getElementById('form' + formNumber + 'page' + element.page);
+					page.appendChild(node);
+
+				}
+				// formNumber NOT USED
+				deferred.resolve(formNumber);
+			}
 
 		})		
 
