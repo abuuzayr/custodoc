@@ -44,6 +44,7 @@ module.exports = function(){
 			var decodedAccessInfo = decipher.update(ecodedAccessInfo,'hex','utf8');
 			decodedAccessInfo += decipher.final('utf8');
 			req.accessInfo = JSON.parse(decodedAccessInfo);
+			console.log(req.accessInfo);
 			return next();
 		}catch(err){
 			return send403(req,res,"Authentication failed with error: " + err.message);

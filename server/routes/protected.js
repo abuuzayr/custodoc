@@ -14,7 +14,7 @@ var usermgmtRoutes  = require('./protected/usermgmt.js');
 
 //PROTECTED ROUTES - REQUIRES TOKEN_AUTH & ACL CHECKINGS
 protectedRoutes.use('*',http403.authenticateToken);
-//protectedRoutes.use('*',http403.decodeAccessInfo);
+protectedRoutes.use('*',http403.decodeAccessInfo);
 //PATH
 protectedRoutes.use('/autofill', autofillRoutes);
 protectedRoutes.use('/entryrecords', entryrecordsRoutes);
