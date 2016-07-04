@@ -57,7 +57,9 @@ module.exports = function(){
 
 	function verifyAccess(moduleName){
 		return function(req,res,next){
-		var module = req.accessInfo[moduleName];		
+		var module = req.accessInfo[moduleName];
+		console.log('verifying access');//TOFIX
+		console.log(module);//TOFIX		
 			switch(req.method){
 				case 'GET':
 						if(module.read === true)
