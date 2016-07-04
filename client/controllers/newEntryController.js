@@ -209,12 +209,10 @@ angular
 				creationDate : Date(),
 				lastModified : Date()
 		    }];
-		    
-		    // finalData is the object that contains fields and entryData2 
+	
 		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
 	 
 		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
-
 		})
 		.then(function(){
 			for(var k=1; k<=vm.formData.length; k++){ //k is the form number

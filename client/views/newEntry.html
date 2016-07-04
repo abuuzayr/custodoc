@@ -1,4 +1,4 @@
-s<!-- gilbert's -->
+<!-- gilbert's -->
 <html lang="en" ng-app="app.core">
 
 <head>
@@ -104,13 +104,18 @@ s<!-- gilbert's -->
                     </button>
                     </br>
 
-                    <div id="form1page1" style="text-align: auto;"></div> 
+                   
 
                     </form>
-                                
-                    <div id="form2page1" style="text-align: auto;">                    </div> 
-                    <div id="form3page1" style="text-align: auto;">                    </div> 
-
+                    
+                    <form name="preview" ng-submit="vm.createEntry()">
+                        <div id="form1page1" style="text-align: auto;""></div> 
+                        <div id="form2page1" style="text-align: auto;"></div> 
+                        <div id="form3page1" style="text-align: auto;"></div> 
+                        <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+                                        Create
+                        </button>
+                    </form>
 
                     </div>
                 </div>
