@@ -16,19 +16,39 @@ module.exports = function(){
 		var config = require('../config.js');
 		var Promise = require('bluebird');
 		var jwtVerifyAsync = Promise.promisify(jwt.verify);
-		var token = req.headers['x-access-token'];
+		//var token = req.headers['x-access-token'];
+		var cookies = req.cookies
 
-		if(!token) 
+		//if(!token) 
+		if(!cookies)
 			send403(req,res,"No token provided");
-		
+		else{
 			jwtVerifyAsync(token,config.secret)
-				.then(function(decoded){
-					req.decoded = decoded;
-					next();
-				})
-				.catch(function(err){
-					send403(req,res,"Authentication failed: " + err );
-				});	
+			.then(function(decoded){
+				req.decoded = decoded;
+				return next();
+			})
+			.catch(function(err){
+				send403(req,res,"Authentication failed: " + err );
+			});	
+		}		
+	}
+
+	function decodeAccessInfo(req,res,next){
+		var crypto = require('crypto');
+		var config = require('../config.js');
+		var algorithm = 'aes-256-ctr';
+		
+		var ecodedAccessInfo = req.decoded;
+		var decipher = crypto.createDecipher(algorithm,config.appSecret);
+		try{
+			var decodedAccessInfo = decipher.update(ecodedAccessInfo,'hex','utf8');
+			decodedAccessInfo += decipher.final('utf8');
+			req.accessInfo = decodedAccessInfo;
+			next();
+		}catch(err){
+			send403(req,res,"Authentication failed: " + err );
+		}
 	}
 
 	function checkStroage(req,res,next){
@@ -58,4 +78,5 @@ module.exports = function(){
 		}
 		res.status(403).send(data);
 	}
+
 };

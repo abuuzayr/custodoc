@@ -1,5 +1,5 @@
 angular
-    .module("user-interface")
+    .module("app.core")
     .controller("autofillCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();

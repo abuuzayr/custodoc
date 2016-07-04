@@ -4,6 +4,7 @@ module.exports = {
 	//dbURL :'mongodb://localhost:27017/test',
 	dbURL:'mongodb://localhost:27017/bulletform',
 	secret : 'gilbert_what_time_is_it_now',
+	appSecret: 'secret_for_bulletform',
 	ObjectId : require('mongodb').ObjectID
 }
 

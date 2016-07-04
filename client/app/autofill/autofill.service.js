@@ -1,4 +1,4 @@
-angular.module('autofillApp')
+angular.module('app.autofill')
 	.service('autofillServices',autofillServices)
 
 	autofillServices.$inject = ['$http', 'appConfig']

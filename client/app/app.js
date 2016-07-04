@@ -1,59 +1,59 @@
 angular
-    .module('app.core', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'app.formBuilder', 'app.formMgmt', 'autofillApp', 'entryService'])
+    .module('app.core', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'app.formBuilder', 'app.formMgmt', 'app.autofill','app.shared'])
     .config(['$urlRouterProvider', '$stateProvider', '$locationProvider', function ($urlRouterProvider, $stateProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('login', {
                 url: '/',
-                templateUrl: 'views/login.html',
+                templateUrl: 'app/Login/login.html',
                 controller: 'loginCtrl',
                 controllerAs: 'vm'
             })
             .state('newentry', {
                 url: '/newentry/:groupName',
-                templateUrl: 'views/newEntry.html',
+                templateUrl: 'app/NewEntry/newEntry.html',
                 controller: 'newEntryCtrl',
                 controllerAs: 'vm'
             })
             .state('users', {
                 url: '/users',
-                templateUrl: 'views/users.html',
+                templateUrl: 'app/UserMgmt/usermgmt.html',
                 controller: 'usersCtrl',
-                controllerAs: 'users'
+                controllerAs: 'vm'
             })
             .state('entries', {
                 url: '/entries',
-                templateUrl: 'views/entries.html',
+                templateUrl: 'views/entries.html', //TOFIX
                 controller: 'entriesCtrl',
                 controllerAs: 'entries'
             })
             .state('settings', {
                 url: '/settings',
-                templateUrl: 'views/settings.html',
+                templateUrl: 'app/Settings//settings.html',
                 controller: 'settingsCtrl',
-                controllerAs: 'settings'
+                controllerAs: 'vm'
             })
             .state('forms', {
                 url: '/forms',
-                templateUrl: 'views/forms.html',
+                templateUrl: 'app/FormMgmt/forms.html',
                 controller: 'formsCtrl',
                 controllerAs: 'vm'
             })
             .state('formBuilder', {
                 url: '/formBuilder/:groupName/:formName',
-                templateUrl: 'views/formBuilder.html',
+                templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
             })
             .state('formBuilderBase', {
                 url: '/formBuilderBase',
-                templateUrl: 'views/FBBase.html',
+                templateUrl: 'app/FormBuilder/FBBase.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm'
             })
             .state('autofill', {
                 url: '/autofill',
-                templateUrl: 'app/autofill/autofill.html',
+                templateUrl: 'app/Autofill/autofill.html',
                 controller: 'autofillCtrl',
                 controllerAs: 'vm'
             });
