@@ -1,5 +1,5 @@
 angular
-    .module('user-interface')
+    .module('app.core')
     .controller("newEntryCtrl", [
     	'$stateParams', 
     	'entryService', 

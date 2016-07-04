@@ -11,7 +11,7 @@ angular
             })
             .state('newentry', {
                 url: '/newentry/:groupName',
-                templateUrl: 'app/NewEntry/newEntry.html',
+                templateUrl: 'views/newEntry.html', //TOFIX
                 controller: 'newEntryCtrl',
                 controllerAs: 'vm'
             })
