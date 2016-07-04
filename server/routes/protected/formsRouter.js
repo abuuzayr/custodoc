@@ -8,7 +8,7 @@ var http403 = require('../../utils/403')();
 
 var formsRouter = express.Router();
 
-formsRouter.route('*',http403.verifyAccess('formmgmt'));
+formsRouter.use('*',http403.verifyAccess('formmgmt'));
 
 formsRouter.route('/')
 	.get(function(req,res,next){
