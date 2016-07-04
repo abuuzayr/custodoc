@@ -2,8 +2,11 @@ var express = require('express');
 var assert = require('assert');
 var connection = require('../../utils/connection')();
 var entryRoutes = express.Router();
-entryRoutes.route('/')
-	
+var http403 = require('../../utils/403')();
+
+entryRoutes.route('*',http403.verifyAccess('entrymgmt'));
+
+entryRoutes.route('/')	
 	// display all entries in the database
 	.get(function(req,res,next){
 	    connection.Do(function(db){

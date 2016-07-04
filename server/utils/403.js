@@ -8,6 +8,7 @@ module.exports = function(){
 		checkStroage: checkStroage,
 		checkExpiration: checkExpiration,
 		decodeAccessInfo: decodeAccessInfo,
+		verifyAccess: verifyAccess,
 		send403:send403
 	};
 	return service;
@@ -51,6 +52,42 @@ module.exports = function(){
 		}catch(err){
 			console.log(err);//TOFIX
 			return send403(req,res,"Authentication failed with error: " + err.message);
+		}
+	}
+
+	function verifyAccess(moduleName){
+		return function(req,res,next){
+		var module = req.accessInfo[moduleName];		
+			switch(req.method){
+				case 'GET':
+						if(module.read === true)
+							next();
+						else 
+							http403.send403(req,res,'Unauthorized user group');
+						break;
+				case 'POST':
+						if(module.create === true)
+							next();
+						else 
+							http403.send403(req,res,'Unauthorized user group');
+
+					break;
+				case 'PUT':
+						if(module.update === true)
+							next();
+						else 
+							http403.send403(req,res,'Unauthorized user group');
+
+					break;
+				case 'DELETE':
+						if(module.delete === true)
+							next();
+						else 
+							http403.send403(req,res,'Unauthorized user group');
+					break;
+				default:
+					return http403.send403	(req,res,'Invalid request');
+			}
 		}
 	}
 

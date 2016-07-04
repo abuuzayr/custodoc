@@ -4,6 +4,11 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var groupsRouter = express.Router();
+var http403 = require('../../utils/403')();
+
+
+groupsRouter.route('*',http403.verifyAccess('formmgmt'));
+
 groupsRouter.route('/')
 	.get(function(req,res,next){
 		var db = require('../../server.js').db;

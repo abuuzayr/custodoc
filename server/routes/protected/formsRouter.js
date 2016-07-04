@@ -4,7 +4,11 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
+var http403 = require('../../utils/403')();
+
 var formsRouter = express.Router();
+
+formsRouter.route('*',http403.verifyAccess('formmgmt'));
 
 formsRouter.route('/')
 	.get(function(req,res,next){
@@ -103,16 +107,6 @@ formsRouter.route('/rename')
 						console.log("Renamed a form");
 						res.send('Renamed a group');
 					});
-				// var coll2 = db.collection("entries");
-				// coll2.updateMany(
-				// 	{"formName" : originalName},
-				// 	{
-				// 		$set: { 
-				// 			"formName": newName
-				// 		}
-				// 	},function(err,result){
-				// 		assert.equal(err, null);
-				// 	});
 			}
 		});
 	})
