@@ -1,10 +1,31 @@
 angular
     .module('user-interface')
-    .controller("newEntryCtrl", ['$stateParams', 'entryService', 'formsFactory' '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, formsFactory, $scope, $q, $location, $timeout) {
-        var viewContentLoaded = $q.defer();
+    .controller("newEntryCtrl", [
+    	'$stateParams', 
+    	'entryService', 
+    	'formsFactory',
+    	'formBuilderFactory', 
+    	'$scope', 
+    	'$q', 
+    	'$location', 
+    	'$timeout', 
+
+    function (
+    	$stateParams, 
+    	entryService, 
+    	formsFactory, 
+    	formBuilderFactory,
+    	$scope, 
+    	$q, 
+    	$location, 
+    	$timeout
+    	) {
+
+    var viewContentLoaded = $q.defer();
         
 	var vm = this;
 	var forms = document.getElementById('forms');
+	var newPageTemplate = formBuilderFactory.newPage;
 
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
@@ -196,101 +217,51 @@ angular
 
 		})
 		.then(function(){
-			console.log(vm.formData.length);
-			for(var n = 0; n < vm.formData.length; n++) {
-				vm.numberOfPages = vm.formData.numberOfPages;
-				var elements = vm.formData.elements;
-				for (var j = 1; j <= vm.numberOfPages; j++) {
-					var newPage = formsFactory.newPage.cloneNode(true);
-					newPage.setAttribute("id", 'form' + formNumber + "page" + j);
+			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
+				var form = vm.formData[k-1];
+				var elements = form.elements;
+				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
-					forms.appendChild(newPage);
+					body.appendChild(newPage);
 				}
-				for (key in elements) {
+				for (key in elements){
 					var element = elements[key];
-					if (element.name.startsWith('background_')) {
+					//console.log("What is the name: " + element.name);
+					if(element.name.startsWith('background_')){
 						var node = document.createElement('img');
-						node.src = element.src;
-						node.style.zIndex = "0";
-					} else if (element.name.startsWith('label_')) {
+						node.src = element.src;	
+						node.style.zIndex="0";
+					}else if(element.name.startsWith('label_')){
+						//console.log("Did i come here then? label");
 						var node = document.createElement('div');
 						node.innerHTML = element.content;
-						node.style.whiteSpace = "pre-wrap";
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('text_') || element.name.startsWith('auto_text_')) {
-						var node = document.createElement('input');
-						node.type = 'text';
-						node.placeholder = element.default;
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
-						var node = document.createElement('select');
-						var options = element.options;
-						for (var i = 0; i < options.length; i++) {
-							var option = document.createElement('option');
-							option.innerHTML = options[i];
-							if (options[i]===element.default) option.setAttribute("selected",true);
-							node.appendChild(option);
-						}
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
-						var node = document.createElement('form');
-						var options = element.options;
-						if (element.display==="radioInline") var display = "inline";
-						else var display = "block";
-						if(options.length>0){
-							for(var i=0; i<options.length; i++){
-								var label = document.createElement("label");
-								var option = document.createElement("input");
-								option.type = "radio";
-								option.name = element.name;
-								option.value = options[i];
-								if(options[i]===element.default) option.setAttribute("checked",true);
-								var span = document.createElement("span");
-								span.innerHTML=options[i]+" ";
-								label.style.display = display;
-								label.appendChild(option);
-								label.appendChild(span);
-								node.appendChild(label);
-							}
-						}
-						node.className = element.display;
+						node.style.whiteSpace="pre-wrap";
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
-					} else if (element.name.startsWith('signature_')) {
-						var node = document.createElement('canvas');
+					}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
+						//console.log("Did i come here then? text");
+						var node = document.createElement('input');
+						node.type='text';
+						node.placeholder=element.default;
+						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('image_')) {
-						var node = document.createElement('canvas');
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')) {
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
+						//console.log("Did i come here then? checkbox");
 						var node = document.createElement('label');
 						var span = document.createElement('span');
 						var checkbox = document.createElement('input');
-						checkbox.type = "checkbox";
-						if(element.default) checkbox.setAttribute("checked",true);
-						checkbox.setAttribute("ng-checked",element.default);
-						$compile(checkbox)($scope);
+						checkbox.type="checkbox";
+						checkbox.checked = element.default;
 						span.innerHTML = element.label;
 						node.appendChild(checkbox);
 						node.appendChild(span);
@@ -299,29 +270,89 @@ angular
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
+						//console.log("Did i come here then? dropdown");
+						var node = document.createElement('select');
+						var options = element.options;
+						if(options.length>0){
+							for(var i = 0; i<options.length; i++){
+								var option = document.createElement('option');
+								option.innerHTML=options[i];
+								node.appendChild(option);
+							}
+						}
+
+						node.value = element.default;
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+						//console.log("Did i come here then? radio");
+						var node = document.createElement('form');
+						var options = element.options;
+						if(options.length>0){
+							if (element.display==="radioInline") var display = "inline";
+							else var display = "block";
+							for(var i=0; i<options.length; i++){
+								var label = document.createElement("label");
+								var option = document.createElement("input");
+								option.type = "radio";
+								option.name = element.name;
+								option.value = options[i];
+								if(options[i]===element.default) option.checked = true;
+								var span = document.createElement("span");
+								span.innerHTML=options[i]+" ";
+								label.appendChild(option);
+								label.appendChild(span);
+								label.style.display=display;
+								node.appendChild(label);
+							}
+							node.className +=" "+ element.display;
+						}
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('signature_')){
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex="1";
+					}else if (element.name.startsWith('image_')) {
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex="1";
 					}
 					node.style.opacity = element.opacity;
 					node.style.border = element.border;
 					node.style.borderRadius = element.borderRadius;
+					node.className +=" notSelectable";
+					node.id = key;
+					node.setAttribute('name',element.name);
 					node.style.overflow = "hidden";
-					node.style.lineHeight = "100%";
-					node.style.position = "absolute";
+					node.style.lineHeight="100%";
+					node.style.position="absolute";
 					node.style.overflow = "hidden";
-					node.style.width = element.width + 'px';
-					node.style.height = element.height + 'px';
-					node.style.top = element.top + 'px';
-					node.style.left = element.left + 'px';
+					node.style.width = element.width+'px';
+					node.style.height = element.height+'px';
+					node.style.top = element.top+'px';
+					node.style.left = element.left+'px';
 					node.style.position = "absolute";
-					var page = document.getElementById('form' + formNumber + 'page' + element.page);
+					var page = document.getElementById('form'+k+'page'+element.page);
+					/*console.log("Page?: " + k);
+					console.log("Wats my node: " + node);*/
 					page.appendChild(node);
 
 				}
-				// formNumber NOT USED
-				deferred.resolve(formNumber);
 			}
-
-		})		
+			
+			document.getElementById("form1page1").style.display="block"; 
+		})
 
 //	console.log(vm.formData);
 
