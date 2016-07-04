@@ -9,6 +9,7 @@ var entryrecordsRoutes = require('./protected/entryRecords.js');
 var entryRoutes = require('./protected/entryRouter.js')
 var formRoutes = require('./protected/formsRouter.js');
 var groupRoutes = require('./protected/groupsRouter.js');
+var usermgmtRoutes  = require('./protected/usermgmt.js');
 
 
 //PROTECTED ROUTES - REQUIRES TOKEN_AUTH & ACL CHECKINGS
@@ -20,6 +21,7 @@ protectedRoutes.use('/entryrecords', entryrecordsRoutes);
 protectedRoutes.use('/entries',entryRoutes);
 protectedRoutes.use('/forms',formRoutes);
 protectedRoutes.use('/groups',groupRoutes);
+protectedRoutes.use('/users',usermgmtRoutes);
 
 //UNDEFINED ROUTES
 protectedRoutes.use('*', http404.notFoundMiddleware);

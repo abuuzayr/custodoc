@@ -7,30 +7,29 @@ module.exports = function(){
 		authenticateToken: authenticateToken,
 		checkStroage: checkStroage,
 		checkExpiration: checkExpiration,
-		verifyAccess: verifyAccess, 
+		decodeAccessInfo: decodeAccessInfo,
 		send403:send403
 	};
 	return service;
 
 	function authenticateToken(req,res,next){
 		var config = require('../config.js');
-		var Promise = require('bluebird');
-		var jwtVerifyAsync = Promise.promisify(jwt.verify);
-		//var token = req.headers['x-access-token'];
+		var jwt = require('jsonwebtoken');
 		var cookies = req.cookies
+		console.log(cookies);//TOFIX
 
-		//if(!token) 
 		if(!cookies)
-			send403(req,res,"No token provided");
+			send403(req,res,"no cookies");
 		else{
-			jwtVerifyAsync(token,config.secret)
-			.then(function(decoded){
-				req.decoded = decoded;
-				return next();
-			})
-			.catch(function(err){
-				send403(req,res,"Authentication failed: " + err );
-			});	
+			jwt.verify(token,config.secret,function(err, decoded){
+				if(err){
+					return send403(req,res,"Authentication failed with error: " + err.message);
+				}
+				else{
+					req.decoded = decoded;
+					return next();
+				}
+			});
 		}		
 	}
 
@@ -44,30 +43,27 @@ module.exports = function(){
 		try{
 			var decodedAccessInfo = decipher.update(ecodedAccessInfo,'hex','utf8');
 			decodedAccessInfo += decipher.final('utf8');
-			req.accessInfo = decodedAccessInfo;
-			next();
+			req.accessInfo = JSON.parse(decodedAccessInfo);
+			return next();
 		}catch(err){
-			send403(req,res,"Authentication failed: " + err );
+			return send403(req,res,"Authentication failed with error: " + err.message);
 		}
 	}
 
 	function checkStroage(req,res,next){
 		var connection = require('./connection')();
 			connection.Do(function(db){
-
-		})
+				return next()
+		});
 	}
 
 	function checkExpiration(req,res,next){
+		var connection = require('./connection')();
+			connection.Do(function(db){
+				return next()
+		});
 	}
 
-
-	function verifyAccess(req,res,next){
-		var decoded = req.decoded;
-		console.log("decoded:");
-		console.log(decoded);
-		next();
-	}
 
 	function send403(req,res,description){
 		var data = {
