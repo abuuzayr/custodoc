@@ -3,7 +3,7 @@ module.exports = {
 	environment : process.env.NODE_ENV,
 	//dbURL :'mongodb://localhost:27017/test',
 	dbURL:'mongodb://localhost:27017/bulletform',
-	secret : 'gilbert_what_time_is_it_now',
+	superSecret : 'ilovescotchscotchyscotchscotch',
 	appSecret: 'secret_for_bulletform',
 	ObjectId : require('mongodb').ObjectID
 }

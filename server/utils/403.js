@@ -15,13 +15,14 @@ module.exports = function(){
 	function authenticateToken(req,res,next){
 		var config = require('../config.js');
 		var jwt = require('jsonwebtoken');
-		var cookies = req.cookies
-		console.log(cookies);//TOFIX
+		var token = req.cookies['access-token'];
+		console.log('Authenticate User');//TOFIX
+		//console.log(token);//TOFIX
 
-		if(!cookies)
-			send403(req,res,"no cookies");
+		if(!token)
+			send403(req,res,"no token");
 		else{
-			jwt.verify(token,config.secret,function(err, decoded){
+			jwt.verify(token,config.superSecret,function(err, decoded){
 				if(err){
 					return send403(req,res,"Authentication failed with error: " + err.message);
 				}
@@ -37,8 +38,9 @@ module.exports = function(){
 		var crypto = require('crypto');
 		var config = require('../config.js');
 		var algorithm = 'aes-256-ctr';
-		
-		var ecodedAccessInfo = req.decoded;
+		console.log('decodeing access info');//TOFIX	
+		var ecodedAccessInfo = req.decoded.application;
+		console.log(ecodedAccessInfo);//TOFIX
 		var decipher = crypto.createDecipher(algorithm,config.appSecret);
 		try{
 			var decodedAccessInfo = decipher.update(ecodedAccessInfo,'hex','utf8');
@@ -47,6 +49,7 @@ module.exports = function(){
 			console.log(req.accessInfo);
 			return next();
 		}catch(err){
+			console.log(err);//TOFIX
 			return send403(req,res,"Authentication failed with error: " + err.message);
 		}
 	}
