@@ -83,7 +83,7 @@ angular
 	
 	vm.getEntries();*/
 
-	/* This function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
+	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
 
 	vm.getFormData = entryService.getFormElements(vm.groupName)
@@ -98,7 +98,7 @@ angular
 				  	  	var elements = data.elements;
 				   	 for (key in elements) {
 						var element = elements[key];
-						console.log("how many times");
+						//console.log("how many times");
 						var object = {};
 						if (element.name.startsWith('text_')) {
 						    var index = element.name.indexOf('_');
@@ -249,6 +249,7 @@ angular
 						var node = document.createElement('input');
 						node.type='text';
 						node.placeholder=element.default;
+						//node.data = '';
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
@@ -282,7 +283,6 @@ angular
 								node.appendChild(option);
 							}
 						}
-
 						node.value = element.default;
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;

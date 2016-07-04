@@ -120,14 +120,5 @@ entryRoutes.route('/functions/:groupName')
 			});
 		});
 	})
-
-entryRoutes.route('/input')	
-	// get user input
-	.post(function(req,res,next){
-	    connection.Do(function(db){
-		var userInput = req.body.entValue;
-		res.status(200).send(userInput);
-  	    });
-	});
 						
 module.exports = entryRoutes;
