@@ -56,7 +56,7 @@
                         <div ng-if="key.type=='image'">
                             <label class="mdl-textfield__label">{{key.label}}</label>
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                <input class="mdl-textfield__input" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*">
+                                <input class="mdl-textfield__input" type="file" ng-model="vm.file" name="file" base-sixty-four-input accept="image/*">
                             </div>
                             <label>Preview</label>
                             <img width="90%" ng-src='data:image/png;base64,{{vm.file.base64}}'/>
