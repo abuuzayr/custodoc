@@ -15,11 +15,10 @@ angular.module('entryService', [])
 	
 	/************************************** LEGEND *************************************/
 
-	/* entData = Data that includes groupName OR user input. NOT AN ENTRY */
-	/* entryData = Variable entryData that is used to insert into database as an entry */	
+	/* finalData = Variable finalData that is used to insert into database as an entry */	
 
 	/***********************************************************************************/
-	
+
 	/* FUNCTIONS THAT DO BASIC CRUD */
 
 	// get all entries

@@ -1,5 +1,5 @@
 angular
-    .module('app.core')
+    .module('app.newEntry')
     .controller("newEntryCtrl", ['$stateParams', 'entryService', 'formsFactory' '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, formsFactory, $scope, $q, $location, $timeout) {
         var viewContentLoaded = $q.defer();
         
@@ -15,6 +15,8 @@ angular
 	/* this entryData stores the final data structure for an entry, which contains the groupName  
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = [];  
+
+	vm.file = null;
 	
 
 	vm.groupName = $stateParams.groupName;

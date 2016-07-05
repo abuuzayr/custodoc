@@ -47,20 +47,19 @@
                         <div ng-if="key.type=='text'">
                             <label >{{key.label}}</label>
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                            <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="key.data">
+                            <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="vm.file">
                             </div>
                         </div>
 
-                        <!--
-                        < IMAGE FIELDS 
+                        <!-- IMAGE FIELDS -->
                         <div ng-if="key.type=='image'">
                             <label class="mdl-textfield__label">{{key.label}}</label>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield-text-aligning-label">
-                                <input class="mdl-textfield__input" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input maxsize="2000" accept="image/*">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                                <input class="mdl-textfield__input" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*">
                             </div>
                             <label>Preview</label>
-                            <img width="90%" src={{'data:image/png;base64,'+vm.file.base64}} />
-                        </div> -->
+                            <img width="90%" ng-src='data:image/png;base64,{{vm.file.base64}}'/>
+                        </div> 
 
                         <!-- DROPDOWN FIELDS -->
                         <div ng-if="key.type=='dropdown'">
@@ -108,14 +107,14 @@
 
                     </form>
                     
-                    <form name="preview" ng-submit="vm.createEntry()">
+                    <!-- <form name="preview" ng-submit="vm.createEntry()">
                         <div id="form1page1" style="text-align: auto;""></div> 
                         <div id="form2page1" style="text-align: auto;"></div> 
                         <div id="form3page1" style="text-align: auto;"></div> 
                         <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
                                         Create
                         </button>
-                    </form>
+                    </form> -->
 
                     </div>
                 </div>

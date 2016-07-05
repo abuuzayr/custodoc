@@ -1,5 +1,5 @@
 angular
-    .module('app.core')
+    .module('app.newEntry')
     .controller("newEntryCtrl", [
     	'$stateParams', 
     	'entryService', 
@@ -37,6 +37,7 @@ angular
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = [];  
 	
+	vm.file = null;
 
 	vm.groupName = $stateParams.groupName;
 
@@ -352,9 +353,31 @@ angular
 			document.getElementById("form1page1").style.display="block"; 
 		})
 
+	/*function addImg() {
+		if(!vm.file){
+			alert('Please upload an image');
+		}else if (vm.file && vm.file.filesize>2000000) {
+			alert('Maximum size allowed is 2Mb');
+		}else{
+			var img = document.createElement("img");
+			var i = 0;
+			while (elements.hasOwnProperty("background_" + i)) {
+				i++;
+			}
+			img.setAttribute("id", "background_" + i);
+			img.setAttribute("name", "background_" + i);
+			elements["background_" + i] = {};
+			vm.imageString = 'data:image/png;base64,' + vm.file.base64;
+			img.setAttribute("src", vm.imageString);
+			setNewElement(img);
+			img.style.zIndex = "0";
+			vm.file = null;
+		}		
+	}*/
+
 //	console.log(vm.formData);
 
-	/**** UNDER CONSTRUCTION  ***f
+	/**** UNDER CONSTRUCTION  ****
 	
 	// function to delete ntry
 	vm.deleteEntry = function() {
@@ -367,7 +390,7 @@ angular
 			    vm.entries = data;
 			});
 		});
-	};    */
+	};    
 	
 	// call this function first before creating an entry
 	/*vm.retrieveKeys = function() {

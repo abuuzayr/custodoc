@@ -1,5 +1,5 @@
 angular
-    .module('app.core', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'app.formBuilder', 'app.formMgmt', 'app.autofill','app.shared', 'entryService'])
+    .module('app.core', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'app.formBuilder', 'app.formMgmt', 'app.autofill', 'app.newEntry', 'app.shared'])
     .config(['$urlRouterProvider', '$stateProvider', '$locationProvider', function ($urlRouterProvider, $stateProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
