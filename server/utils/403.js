@@ -59,36 +59,40 @@ module.exports = function(){
 		return function(req,res,next){
 		var module = req.accessInfo[moduleName];
 		console.log('verifying access');//TOFIX
-		console.log(module);//TOFIX		
+		console.log(module);//TOFIX
+		console.log('req.method: '+ req.method);//TOFIX		
 			switch(req.method){
 				case 'GET':
-						if(module.read === true)
+						console.log('GET',module.read,module.read == true);//TOFIX
+						if(module.read == true)
 							next();
 						else 
-							http403.send403(req,res,'Unauthorized user group');
+							send403(req,res,'Unauthorized user group');
 						break;
 				case 'POST':
-						if(module.create === true)
+						console.log('POSt');//TOFIX
+						if(module.create == true)
 							next();
 						else 
-							http403.send403(req,res,'Unauthorized user group');
+							send403(req,res,'Unauthorized user group');
 
 					break;
-				case 'PUT':
-						if(module.update === true)
+				case 'PUT':	console.log('PUt');//TOFIX
+						if(module.update == true)
 							next();
 						else 
-							http403.send403(req,res,'Unauthorized user group');
+							send403(req,res,'Unauthorized user group');
 
 					break;
 				case 'DELETE':
-						if(module.delete === true)
+						console.log('DELETe');//TOFIX
+						if(module.delete == true)
 							next();
 						else 
-							http403.send403(req,res,'Unauthorized user group');
+							send403(req,res,'Unauthorized user group');
 					break;
 				default:
-					return http403.send403	(req,res,'Invalid request');
+					return send403	(req,res,'Invalid request');
 			}
 		}
 	}
