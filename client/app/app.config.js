@@ -4,6 +4,6 @@ angular.module('app.core')
 		API_URL: 'https://10.4.1.204/req/api',
 		AUTH_URL:'https://10.4.1.204/auth/user',
 		FP_URL: 'https://10.4.1.204/forgetpassword/user',
-		MAX_PASSWORD_LENGTH:8
-		MIN_PASSWORD_LENGTH:24
+		MIN_PASSWORD_LENGTH:8,
+		MAX_PASSWORD_LENGTH:24
 	});

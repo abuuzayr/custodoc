@@ -8,7 +8,7 @@ angular.module("app.core")
     /* =========================================== Initialisation =========================================== */
     var vm = this;
     var MAX_PASSWORD_LENGTH = appConfig.MAX_PASSWORD_LENGTH;
-    var MIN_PASSWORD_LENGTH = appConfig.MAX_PASSWORD_LENGTH;
+    var MIN_PASSWORD_LENGTH = appConfig.MIN_PASSWORD_LENGTH;
     var AUTH_URL = appConfig.AUTH_URL;
     var FP_URL = appConfig.FP_URL;
 
@@ -33,22 +33,22 @@ angular.module("app.core")
         } else if (!isValidEmail(vm.loginEmail)) {
             errMsg = 'Email is invalid.';
         } else if (!isValidPassword(vm.password)) {
-            errMsg = 'Password is between 8 and 24 characters.';
+            errMsg = 'Password is between '+ MIN_PASSWORD_LENGTH + ' and ' + MAX_PASSWORD_LENGTH + ' characters.';
         } else {
             email = vm.loginEmail
             password = vm.password;
             return login(email, password);
         }
-        feedbackServices.errorFeedback(errMsg);
+        errorFeedback(errMsg);
     }
 
-    function validateBeforeLogin() {
+    function validateBeforeSend() {
         var email = '';
         var errMsg = '';
 
         if (!isValidEmail(vm.resetPwdEmail)) {
             errMsg = 'Email is invalid.';
-            return feedbackServices.errorFeedback(errMsg);
+            return errorFeedback(errMsg);
         }
         else {
             email = vm.resetPwdEmail
@@ -59,7 +59,7 @@ angular.module("app.core")
 
     /* =========================================== API =========================================== */
     function login(email,password) {
-            $http.post(baseURL, {
+            $http.post(AUTH_URL, {
                 email: email,
                 password: password,
                 origin: 'bulletform.com'
@@ -75,24 +75,22 @@ angular.module("app.core")
             function ErrorCallback(err) {
                 errorFeedback(err.data);
             }
-    };
+    }
 
     function sendEmail(email) {
         $http.post(FP_URL,{
-            email: email
+            email: email,
             origin: 'bulletform.com'
         })
             .then(SuccessCallback)
             .catch(ErrorCallback);
-        }
-
         function SuccessCallback(res){
             return successFeedback('email sent to' + email);
         }
         function ErrorCallback(err){
             return errorFeedback(err.data);
         }
-    };
+    }
 
     /* =========================================== Helper Function =========================================== */
     function openDialog() {
@@ -113,15 +111,15 @@ angular.module("app.core")
 
     function isEmpty(str) {
         return str == null || str == undefined || str.length < 1 ;
-    };
+    }
 
     function isValidEmail(str) {
         var emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return emailPattern.test(str);
-    };
+    }
 
-    function isValidPassword(inputStr) {
-        return inputStr.length >= MIN_PASSWORD_LENGTH && inputStr.length <= MAX_PASSWORD_LENGTH
+    function isValidPassword(str) {
+        return str.length >= MIN_PASSWORD_LENGTH && str.length <= MAX_PASSWORD_LENGTH
     }
 
     /* =========================================== Load animation =========================================== */

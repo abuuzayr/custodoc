@@ -14,7 +14,7 @@
 			snackbarContainer.classList.remove("mdl-snackbar--active");
 			snackbarContainer.MaterialSnackbar.active = false;//
 			
-			var errMas = ''
+			var errMsg = ''
 			if( (typeof errData) === 'string')
 				errMsg = errData;
 			else 

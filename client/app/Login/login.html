@@ -26,11 +26,6 @@
                     <h2 class="mdl-card__title-text">BulletForms Login</h2>
                 </div>
                 <div class="mdl-card__supporting-text">
-                    <!-- Feedback message -->
-                    <div class="fail-feedback-message" ng-bind="vm.loginFeedbackMessage">
-                        <p>{{ vm.loginFeedbackMessage }}</p>
-                    </div>
-                    <!-- Redirect to auth here @ action -->
                     <form id="login-form" ng-submit="vm.validateBeforeLogin()">
                         <!-- Email input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -55,7 +50,6 @@
                     <div class="mdl-card__actions mdl-card--border">
                         <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type='button' ng-click="vm.openDialog()">Forgot password?</button>
                     </div>
-                  
                 </div>
             </main>
         </div>
