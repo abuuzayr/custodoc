@@ -1,4 +1,4 @@
-angular.module('entryService', [])
+angular.module('app.newEntry')
 
 .factory('entryService', function($http) {
 	//var serverURL = "http://10.4.1.204/req/api/protected";
