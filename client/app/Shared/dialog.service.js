@@ -14,6 +14,7 @@ function dialogServices() {
 
     this.closeDialog = function (dialogId) {
         var dialog = document.querySelector('#' + dialogId);
-        dialog.close();
+        if(dialog.open)
+            dialog.close();
     }
 }

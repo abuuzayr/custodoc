@@ -1,3 +1,23 @@
+<!-- DIALOG -->
+<dialog id="forgot-password-dialog" class="mdl-dialog">
+    <div class="mdl-dialog__content">
+        <div id="forgot-password-username-textbox">
+            <p>Please enter your email</p>
+            <form>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input ng-model="vm.resetPwdEmail" class="mdl-textfield__input" type="text" />
+                    <label class="mdl-textfield__label" for="vm.resetPwdEmail">email</label>
+                </div>
+                <div class="mdl-dialog__actions">
+                    <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog()">Cancel</button>
+                    <div class="mdl-layout-spacer"></div>
+                    <button id="next" type="button" class="mdl-button" ng-click="vm.validateBeforeSend()">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</dialog>
+<!-- BODY -->
 <div class="color mdl-layout mdl-js-layout">
     <div id="login-background">
         <div id="login-card" class="mdl-card">
@@ -14,14 +34,14 @@
                     <form id="login-form" ng-submit="vm.validateBeforeLogin()">
                         <!-- Email input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input ng-model="vm.email" class="mdl-textfield__input" type="text" />
-                            <label class="mdl-textfield__label" for="vm.email">Email</label>
+                            <input id="login-email-input" ng-model="vm.loginEmail" class="mdl-textfield__input" type="text" />
+                            <label class="mdl-textfield__label" for="login-email-input">Email</label>
                         </div>
                         <br>
                         <!-- Password input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input ng-model="vm.password" class="mdl-textfield__input" type="password" />
-                            <label class="mdl-textfield__label" for="vm.password">Password</label>
+                            <input id='login-password-input' ng-model="vm.password" class="mdl-textfield__input" type="password" />
+                            <label class="mdl-textfield__label" for="login-password-input">Password</label>
                         </div>
                         <!-- Login button -->
                         <div class="mdl-card__actions">
@@ -30,35 +50,19 @@
                         </button>
                         </div>
                     </form>
+
                     <br>
                     <div class="mdl-card__actions mdl-card--border">
-                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type='button' ng-click="vm.openDialog('forgot-password-dialog')">Forgot password?</button>
+                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type='button' ng-click="vm.openDialog()">Forgot password?</button>
                     </div>
-                    <!-- Forgot password dialog -->
-                    <dialog id="forgot-password-dialog" class="mdl-dialog">
-                        <div class="mdl-dialog__content">
-                            <div class="success-feedback-message" ng-if="isUsernameConfirmed === true">
-                                <p>Your new auto-generated password is being sent to {{ email }}.</p>
-                            </div>
-                            <div id="fail-feedback-message" ng-if="isUsernameConfirmed === false">
-                                <p>Invalid username.</p>
-                            </div>
-                            <div id="forgot-password-username-textbox">
-                                <p>Please enter your username.</p>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input ng-model="forgotUser" class="mdl-textfield__input" type="text" />
-                                    <label class="mdl-textfield__label" for="forgotUser">Username</label>
-                                </div>
-                                <div class="mdl-dialog__actions">
-                                    <button id="cancel" type="button" class="mdl-button" ng-click="closeDialog('forgot-password-dialog')">Cancel</button>
-                                    <div class="mdl-layout-spacer"></div>
-                                    <button id="next" type="button" class="mdl-button" ng-click="checkUserValid()">Next</button>
-                                </div>
-                            </div>
-                        </div>
-                    </dialog>
+                  
                 </div>
             </main>
         </div>
+    </div>
+    <!-- SNACKBAR -->
+    <div id="login-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
     </div>
 </div>

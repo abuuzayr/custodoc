@@ -1,68 +1,115 @@
 angular.module("app.core")
     .controller("loginCtrl", loginCtrl);
     
-    loginCtrl.$inject = ['$scope','$q','$location','$timeout','$state','$http'];
+    loginCtrl.$inject = ['$scope','$q','$location','$timeout','$state','$http','appConfig','feedbackServices', 'dialogServices'];
     
-    function loginCtrl($scope, $q, $location, $timeout, $state, $http) {
+    function loginCtrl($scope, $q, $location, $timeout, $state, $http, appConfig, feedbackServices, dialogServices) {
     	
     /* =========================================== Initialisation =========================================== */
     var vm = this;
-    var errMsg;
-    var MAX_PASSWORD_LENGTH = 24;
-    var MIN_PASSWORD_LENGTH = 8;
-    var baseURL = 'https://10.4.1.204/auth/user';
-    vm.validateBeforeLogin = validateBeforeLogin;
+    var MAX_PASSWORD_LENGTH = appConfig.MAX_PASSWORD_LENGTH;
+    var MIN_PASSWORD_LENGTH = appConfig.MAX_PASSWORD_LENGTH;
+    var AUTH_URL = appConfig.AUTH_URL;
+    var FP_URL = appConfig.FP_URL;
 
-    /* =========================================== Load animation =========================================== */
-    var viewContentLoaded = $q.defer();
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();
-        }, 0);
-    });
-    /* =========================================== Login =========================================== */
+    vm.loginEmail = '';
+    vm.password = '';
+    vm.resetPwdEmail = '';
+
+    vm.validateBeforeLogin = validateBeforeLogin;
+    vm.validateBeforeSend = validateBeforeSend;
+    vm.closeDialog = closeDialog;
+    vm.openDialog = openDialog;
+
+
+    /* =========================================== UI =========================================== */
     function validateBeforeLogin() {
         var email = '';
         var password = '';
         var errMsg = '';
 
-        if (isEmpty(vm.email) || isEmpty(vm.password)) {
+        if (isEmpty(vm.loginEmail) || isEmpty(vm.password)) {
             return;
-        } else if (!isValidEmail(vm.email)) {
+        } else if (!isValidEmail(vm.loginEmail)) {
             errMsg = 'Email is invalid.';
         } else if (!isValidPassword(vm.password)) {
             errMsg = 'Password is between 8 and 24 characters.';
         } else {
-            email = vm.email
+            email = vm.loginEmail
             password = vm.password;
             return login(email, password);
         }
-            //TODO 
-        console.log('Error'+errMsg);
-    }    
+        feedbackServices.errorFeedback(errMsg);
+    }
 
+    function validateBeforeLogin() {
+        var email = '';
+        var errMsg = '';
 
+        if (!isValidEmail(vm.resetPwdEmail)) {
+            errMsg = 'Email is invalid.';
+            return feedbackServices.errorFeedback(errMsg);
+        }
+        else {
+            email = vm.resetPwdEmail
+            return sendEmail(email);
+        }
+    }
+    
 
-
+    /* =========================================== API =========================================== */
     function login(email,password) {
             $http.post(baseURL, {
                 email: email,
                 password: password,
-		        origin: 'bulletform.com'
-            }).then(function SuccessCallback(res) {
-                console.log(res);
+                origin: 'bulletform.com'
+            })
+            .then(SuccessCallback)
+            .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                successFeedback('Logged in');
                 $state.go('forms');
-            }, function ErrorCallback(err) {
-                console.log(err);
-                vm.loginFeedbackMessage = err.data.description;
-            });
+            }
+
+            function ErrorCallback(err) {
+                errorFeedback(err.data);
+            }
     };
 
+    function sendEmail(email) {
+        $http.post(FP_URL,{
+            email: email
+            origin: 'bulletform.com'
+        })
+            .then(SuccessCallback)
+            .catch(ErrorCallback);
+        }
+
+        function SuccessCallback(res){
+            return successFeedback('email sent to' + email);
+        }
+        function ErrorCallback(err){
+            return errorFeedback(err.data);
+        }
+    };
+
+    /* =========================================== Helper Function =========================================== */
+    function openDialog() {
+        return dialogServices.openDialog('forgot-password-dialog')
+    }
+
+    function closeDialog() {
+        return dialogServices.closeDialog('forgot-password-dialog')
+    }
+
+    function successFeedback(msg,timeout){
+        return feedbackServices.successFeedback(msg,'login-feedbackMessage',timeout)
+    }
+
+    function errorFeedback(errData,timeout){
+        return feedbackServices.errorFeedback(errData,'login-feedbackMessage',timeout)
+    }
 
     function isEmpty(str) {
         return str == null || str == undefined || str.length < 1 ;
@@ -77,45 +124,17 @@ angular.module("app.core")
         return inputStr.length >= MIN_PASSWORD_LENGTH && inputStr.length <= MAX_PASSWORD_LENGTH
     }
 
-
-    /* =========================================== Forgot password =========================================== */
-
-    // Check if email is valid.
-    vm.checkUserValid = function () {
-        //Check for email syntax first before sending.
-        if (!isValidEmail($scope.forgotUser))
-            $scope.isUsernameConfirmed = false;
-        else {
-            var path = 'http://localhost:8080/api/user/forgetpassword';
-            var email = $scope.forgotUser;
-            $http.get(baseURL + '/' + email)
-                .then(function SuccessCallback(res) {
-                    //To see the msg do console.log(res)
-                    //console.log(res);
-                    //TODO: What to do when email is sent?
-                    vm.forgotPasswordFeedbackMessage = 'Your new auto-generated password is sent to ' + vm.forgotPasswordEmail;
-                }, function ErrorCallback(err) {
-                    //To see the msg do console.log(err)
-                    //console.log(err);
-                    //TODO: What to do when call is not successful
-                });
-
-        }
-    };
-
-    /* =========================================== Dialog =========================================== */
-    vm.openDialog = function (dialogName) {
-        var dialog = document.querySelector('#' + dialogName);
-        if (!dialog.showModal) {
-            dialogPolyfill.registerDialog(dialog);
-        }
-        dialog.showModal();
-    };
-
-    vm.closeDialog = function (dialogName) {
-        var dialog = document.querySelector('#' + dialogName);
-        dialog.close();
-        vm.isUsernameConfirmed = null;
-    };
+    /* =========================================== Load animation =========================================== */
+    var viewContentLoaded = $q.defer();
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function () {
+            viewContentLoaded.resolve();
+        }, 0);
+    });
+    viewContentLoaded.promise.then(function () {
+        $timeout(function () {
+            componentHandler.upgradeDom();
+        }, 0);
+    });
 }
 
