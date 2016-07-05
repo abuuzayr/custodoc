@@ -1,6 +1,6 @@
 angular
     .module("app.shared")
-    .controller("topNavCtrl", ['authServices','$scope', '$window', '$state', '$interval', function (authServices, $scope, $window, $state, $interval) {
+    .controller("topNavCtrl", ['authServices','$scope', '$interval', function (authServices, $scope, $interval) {
         var vm = this;
         vm.date = new Date();
         vm.logout = logout;
