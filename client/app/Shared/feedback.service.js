@@ -39,10 +39,6 @@
 			return $q.defer().promise;
 		}
 
-		// this.hideFeedback = function (domElementId) {
-		// 	var snackbarContainer = document.querySelector(domElementId);
-		// 	return $q.defer().promise;
-		// }
 	}
 } ());
 	
