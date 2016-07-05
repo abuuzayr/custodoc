@@ -24,6 +24,7 @@
 
 
 		function getToken() {
+			console.log($cookies.get('session'));
 			return $cookies.get('access-token')
 		}
 
@@ -32,15 +33,9 @@
 		}
 
 		function decodeToken(token) {
-			if (!token) {
-				return feedbackServices.hideFeedback('login-feedbackMessage')
-				.then(feedbackServices.errorFeedback( 'Not Athenticated, Logging out' , 'login-feedbackMessage'))
-				.then(function delayLogout(){
-					setTimeout(function() {
-						logout()
-					}, 2000);
-				});
-			}
+			console.log(token);
+			if (!token)
+				console.log('no cookie')//	return logout();
 			var payload = token.split('.')[1];
 			var decoded = JSON.parse(atob(payload));
 			return decoded;
