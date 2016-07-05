@@ -1,8 +1,8 @@
 angular.module('app.newEntry')
 
 .factory('entryService', function($http) {
-	//var serverURL = "http://10.4.1.204/req/api/protected";
-	var serverURL = "http://10.4.1.201:3001/api/protected";
+	var serverURL = "https://10.4.1.204/req/api/protected";
+	//var serverURL = "http://10.4.1.201:3001/api/protected";
 	var entryFactory = {
 		getAllEntries: getAllEntries,
 		create: create,

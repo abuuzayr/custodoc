@@ -24,12 +24,12 @@
 
 
 		function getToken() {
-			console.log($cookies.get('session'));
-			return $cookies.get('access-token')
+			console.log($cookies.get('id'));
+			return $cookies.get('id')
 		}
 
 		function deleteToken() {
-			return $cookies.remove('access-token');
+			return $cookies.remove('id');
 		}
 
 		function decodeToken(token) {

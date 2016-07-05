@@ -16,7 +16,7 @@ module.exports = function(){
 	function authenticateToken(req,res,next){
 		var config = require('../config.js');
 		var jwt = require('jsonwebtoken');
-		var token = req.cookies['access-token'];
+		var token = req.cookies['session'];
 		console.log('Authenticate User');//TOFIX
 		//console.log(token);//TOFIX
 
@@ -29,10 +29,25 @@ module.exports = function(){
 				}
 				else{
 					req.decoded = decoded;
-					return next();
+					console.log(req.decoded);
+					jwt.sign({
+               				        username: decoded.username,
+               				        email: decoded.email,
+               				        usertype: decoded.usertype
+               				},config.appSecret,{
+               				        expiresIn: '1h'
+               				},function(err,token){
+               				        if(err){	
+               				                return send403(req,res,err.message);
+               				        }
+               				        res.cookie('id', token, { maxAge: 360000, httpOnly: false });
+               				        next();
+               				});
 				}
 			});
-		}		
+		}
+
+			
 	}
 
 	function decodeAccessInfo(req,res,next){
