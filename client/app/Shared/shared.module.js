@@ -1,1 +1,1 @@
-angular.module('app.shared',[]);
+angular.module('app.shared',['ngCookies']);
