@@ -29,6 +29,23 @@
 
 <body ng-controller='newEntryCtrl as vm'>
     <div class="mdl-layout__container" >
+
+    <div id="pagebar" class="mdl-grid">
+            <button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
+            <div class="divider"></div>
+            <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
+            <div class="divider"></div>
+            <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
+            <div class="divider"></div>
+            <button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
+            <div class="divider"></div>
+            <button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
+            <div class="divider"></div>
+            <button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i>Save</button>
+            <div class="mdl-layout-spacer"></div>
+            <button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">delete</i> Delete page</button>
+        </div>
+
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
             <header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
             <div id="side-nav-drawer" class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>

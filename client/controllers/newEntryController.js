@@ -27,6 +27,9 @@ angular
 	var forms = document.getElementById('forms');
 	var newPageTemplate = formBuilderFactory.newPage;
 
+	vm.currentPageNumber = 1;
+	vm.numberOfPages = 1;
+
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
 
@@ -90,6 +93,8 @@ angular
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
 			vm.formData = res.data;
+			vm.numberOfPages = vm.formData.numberOfPages;
+			// number of forms??
 		})
 		.then(function() {
 				var arrayOfKeys = [];
@@ -219,6 +224,7 @@ angular
 			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
 				var form = vm.formData[k-1];
 				var elements = form.elements;
+
 				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
@@ -352,6 +358,56 @@ angular
 			
 			document.getElementById("form1page1").style.display="block"; 
 		})
+
+	function toPreviousPage() {
+		if (vm.allowCreate) {
+			if (vm.element) {
+				vm.element.style.boxShadow = "none";
+			}
+			vm.element = null;
+			toolbar.style.display = "none";
+			if (vm.currentPageNumber == 1) {
+				alert("This is the first page.");
+			} else {
+				document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+				vm.currentPageNumber--;
+				currentPage = document.getElementById("page" + vm.currentPageNumber);
+				currentPage.style.display = "block";
+			}
+		}
+	}
+
+	function toNextPage() {
+		if (vm.allowCreate) {
+			if (vm.element) {
+				vm.element.style.boxShadow = "none";
+			}
+			vm.element = null;
+			toolbar.style.display = "none";
+			if (vm.currentPageNumber == vm.numberOfPages) {
+				alert("This is the last page.");
+			} else {
+				document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+				vm.currentPageNumber++;
+				currentPage = document.getElementById("page" + vm.currentPageNumber);
+				currentPage.style.display = "block";
+			}
+		}
+	}
+
+	function goToPage() {
+		if (vm.allowCreate) {
+			if (vm.element) {
+				vm.element.style.boxShadow = "none";
+			}
+			vm.element = null;
+			toolbar.style.display = "none";
+			currentPage.style.display = "none";
+			vm.currentPageNumber = vm.goToPageNumber;
+			currentPage = document.getElementById("page" + vm.currentPageNumber);
+			currentPage.style.display = "block";
+		}
+	}
 
 	/*function addImg() {
 		if(!vm.file){
