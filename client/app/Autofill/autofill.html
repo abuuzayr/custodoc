@@ -1,3 +1,18 @@
+<style>
+	#md-table-filter:focus{
+    	outline:0px !important;
+    	border: 0;
+    	padding: 0;
+    	-webkit-appearance:none;
+	}
+	#md-table-filter{
+		outline:0px !important;
+		border: 0;
+    	padding: 0;
+    	-webkit-appearance:none;
+	}
+	#file-input { display: none; }
+</style>
 <!-- ========================================= DIALOG ========================================= -->
 <dialog id="create-element-dialog" class="mdl-dialog" >
 	<form ng-submit="vm.saveElement(vm.elementType)">
@@ -192,13 +207,24 @@
 			<!--Toolbar-->
 			<md-toobar class="md-table-toolbar md-default">
 				<div class="md-toolbar-tools">
-					<span ng-hide="vm.table.options.rowSelection && vm.table.selected.length">
+					<span ng-hide="vm.table.options.rowSelection && (vm.table.selected.length || vm.table.options.showFilter)">
 						Autofill Records
 					</span>
 					<span ng-show="vm.table.options.rowSelection && vm.table.selected.length">
 						{{vm.table.selected.length}} {{vm.table.selected.length > 1 ? 'rows':'row'}} selected
 					</span>
+					<!-- vm.table.options.showFilter && !vm.table.selected.length -->
+					<span ng-show='vm.table.options.showFilter && !vm.table.selected.length' class='ng-valid flex ng-dirty ng-valid-parse'>
+							<i class="material-icons" ng-if="!vm.table.options.showFilter">search</i>
+							<input id='md-table-filter' type="text" ng-model='vm.query' ng-model-options='vm.table.options.filterOptions' placeholder='search...' class='ng-valid ng-touched ng-dirty'/>
+					</span>
+
 					<span flex=''></span>
+					<!-- filter button -->
+					<md-button type="button" class="md-icon-button" ng-click="vm.table.options.showFilter = !vm.table.options.showFilter">
+						<i class="material-icons" ng-if="!vm.table.options.showFilter">search</i>
+						<i class="material-icons" ng-if="vm.table.options.showFilter">clear</i>
+					</md-button>
 					<!-- delete button -->
 					<md-button ng-show="vm.table.options.rowSelection && vm.table.selected.length" type="button" class="md-icon-button" ng-click="vm.deleteSelected()">
 						<i class="material-icons">delete</i>
@@ -207,7 +233,12 @@
 					<md-button class="md-icon-button md-primary" type="button" ng-click="vm.reset()" >
 						<i class="material-icons">refresh</i>
 					</md-button>
-
+					<!-- IMPORT button -->
+					<md-button class='md-primary'>
+        				<label for="file-input">IMPORT</label>  
+      				</md-button>
+      				<input id="file-input" type="file">
+					<!-- EXPORT menu -->
 			        <md-menu>
 	            		<md-button class="md-primary" ng-click="$mdOpenMenu()">Export</md-button>
 						<md-menu-content>
@@ -239,7 +270,7 @@
 						</tbody>
 					</table>
 				</md-table-container>
-				<md-table-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>
+				<md-rewqtedf-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>
 			
 		</md-card>
 	</md-content>

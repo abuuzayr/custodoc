@@ -330,9 +330,11 @@ angular.module('app.autofill')
 	vm.table.options = {
 		rowSelection: true,
 		multiSelect: true,//TOFIX: ACCESS CONTROL
+		showFilter:false,
 		orderBy: '',
 		rowLimit: 20,
 		page: 1,
+		filterOptions:{ debounce: 500 },
 		limitOptions: [10,20,30],
 		exportOptions: ['Selected','All']
 	}
@@ -362,7 +364,7 @@ angular.module('app.autofill')
 
 	function getDataBody(){
 		vm.table.data = [];
-		return autofillServices.getRecords()
+		return autofillServices.getRecords(vm.query)
 		.then(function SuccessCallback(res){
 			for(var i = 0; i < res.data.length; i++){
 				vm.table.data.push(res.data[i]);
@@ -454,6 +456,14 @@ angular.module('app.autofill')
 	function clearSelected(){
 		vm.table.selected = [];
 	}
+
+	$scope.$watch('vm.query',function(newVal,oldVal){
+		console.log(newVal,oldVal);
+		if(newVal != oldVal){
+			vm.table.options.page = 1;
+			return getDataBody();
+		}
+	});
 
 	function init(){
 		vm.table.selected = [];
