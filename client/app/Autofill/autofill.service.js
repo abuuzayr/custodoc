@@ -46,8 +46,6 @@ angular.module('app.autofill')
 		}
 
 
-
-
 		this.deleteOneRecord = function(selectedId){
 			var path = '/protected/autofill/';
 			var req = {

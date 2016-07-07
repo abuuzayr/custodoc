@@ -333,11 +333,15 @@ angular.module('app.autofill')
 		orderBy: '',
 		rowLimit: 20,
 		page: 1,
-		limitOptions: [10,20,30]
+		limitOptions: [10,20,30],
+		exportOptions: ['Selected','All']
 	}
 	vm.table.dataHeader = [];
 	vm.table.data = [];
 	vm.table.selected = [];
+
+
+	vm.exportCSV = exportCSV;
 
 	function getDataHeader(){
 		return autofillServices.getElement()
@@ -363,12 +367,72 @@ angular.module('app.autofill')
 		})
 	}
 
-	vm.logOrder = function(){ console.log(vm.table.options.orderBy) }
+	function exportCSV(exportBy){
+		console.log('going to export');//TOFIX
+		console.log(exportBy === 'Selected',exportBy === 'Visible',exportBy === 'All');//TOFIX
+		if( exportBy === 'Selected')
+			return exportSelected();
+		else if( exportBy === 'Visible')
+			return exportVisible();
+		else if( exportBy === 'All')
+			return exportAll();
+		else 
+			return feedbackServices.errorFeedback('Please select a valid export option','autofill-feedbackMessage');
+	}
 
-	getDataHeader();
-	getDataBody();
+	function exportSelected(){
+		console.log('selected');
+		if(vm.table.selected == [] || vm.table.selected.length < 1)
+			return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
+		else	
+			var csv = Papa.unparse(vm.table.selected);
+		return download(csv);
+	}
 
+	function exportAll(){
+		console.log('all');
+		var csv = Papa.unparse(vm.table.data);
+		return download(csv);
+	}
 
+	// function exportVisible(){
+	// 	console.log('visible');
+	// 	var startingIndex = vm.table.options.rowLimit * (vm.table.options.page - 1);
+	// 	var endingIndex = startingIndex + vm.table.options.rowLimit;
+	// 	console.log("exporting from " + startingIndex + " to " + endingIndex);
+	// 	var csv = Papa.unparse(vm.table.data.slice(startingIndex,endingIndex));
+	// 	return download(csv);
+	// }
 
-		
+	function parseComplete(result, file){
+		console.log(result)//TOFIX
+		console.log(file)//TOFIX
+	}
+
+	function parseError(err, file){
+		return
+			feedbackServices.errorFeedback('Exporting failed','autofill-feedbackMessage')
+	}
+
+	function download(csv){
+		var blob =  new Blob([csv],{tpye:'text/csv;charset=utf-8;'});
+		if (window.navigator.msSaveOrOpenBlob)
+			window.navigator.msSaveBlob(blob, "download.csv");
+		else{
+			var link = window.document.createElement('a');
+			link.setAttribute('target',"_self");
+			link.setAttribute('href',window.URL.createObjectURL(blob));
+			link.setAttribute('download','download.csv');
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+	}
+
+	function init(){
+		getDataHeader();
+		getDataBody();	
+	}
+
+	init();	
 }

@@ -189,6 +189,21 @@
 		
 		
 		<md-card>
+			<md-toobar class="md-menu-toolbar">
+
+				<md-menu-bar>
+			        <md-menu>
+	            		<button ng-click="$mdOpenMenu()">Export</button>
+						<md-menu-content>
+								<md-menu-item ng-repeat="exportOption in vm.table.options.exportOptions">
+									<md-button ng-click="vm.exportCSV(exportOption)">Export {{exportOption}}</md-button>
+								</md-menu-item>
+						</md-menu-content>
+	    			</md-menu>
+	    		</md-menu-bar>
+			</md-toobar>
+
+
 			<md-toobar class="md-table-toolbar md-default" ng-hide="vm.table.options.rowSelection && vm.table.selected.length">
 				<div class="md-toolbar-tools">
 					<span>Autofill Records</span>
