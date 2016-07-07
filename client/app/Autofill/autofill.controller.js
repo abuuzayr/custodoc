@@ -344,6 +344,7 @@ angular.module('app.autofill')
 	vm.exportCSV = exportCSV;
 	vm.deleteSelected = deleteSelected;
 	vm.clearSelected = clearSelected
+	vm.reset = init;
 
 	function getDataHeader(){
 		vm.table.dataHeader = [];
@@ -420,7 +421,11 @@ angular.module('app.autofill')
 
 	function download(csv){
 		var blob =  new Blob([csv],{tpye:'text/csv;charset=utf-8;'});
-		if (window.navigator.msSaveOrOpenBlob)
+		var uagent = navigator.userAgent.toLowerCase();
+		console.log(/safari/.test(uagent) && !/chrome/.test(uagent));
+		if(/safari/.test(uagent) && !/chrome/.test(uagent))
+			window.open('data:attachment/csv;charset=utf-8,' + encodeURI(csv));
+		else if (window.navigator.msSaveOrOpenBlob)
 			window.navigator.msSaveBlob(blob, "download.csv");
 		else{
 			var link = window.document.createElement('a');
@@ -451,6 +456,7 @@ angular.module('app.autofill')
 	}
 
 	function init(){
+		vm.table.selected = [];
 		getDataHeader();
 		getDataBody();	
 	}
