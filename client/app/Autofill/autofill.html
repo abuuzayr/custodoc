@@ -213,6 +213,10 @@
 				<div class="md-toolbar-tools">
 					<span>{{vm.table.selected.length}} {{vm.table.selected.length > 1 ? 'rows':'row'}} selected</span>
 				</div>
+
+				<md-button type="button" class="md-icon-button md-primary" ng-click="vm.deleteSelected()">
+					<i class="material-icons">delete</i>
+				</md-button>
 			</md-toobar>
 			<md-content>
 				<md-table-container>

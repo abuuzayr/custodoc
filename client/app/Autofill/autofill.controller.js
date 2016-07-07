@@ -96,22 +96,22 @@ angular.module('app.autofill')
 			vm.numOfOptions = 0;
 	};
 
-	vm.clearSelected = function() {
-		vm.gridApi.selection.clearSelectedRows();
-		vm.hasSelection = false;
-	};
+	// vm.clearSelected = function() {
+	// 	vm.gridApi.selection.clearSelectedRows();
+	// 	vm.hasSelection = false;
+	// };
 
-	vm.deleteSelected = function() {
-		var selectedRows = vm.gridApi.selection.getSelectedRows();
-		var selectedId = [];
-		for(var i = 0 ; i < selectedRows.length ; i++){
-			selectedId.push(selectedRows[i]._id);
-			vm.gridOptions.data.splice(vm.gridOptions.data.indexOf(selectedRows[i]), 1);
-		}
-		if(selectedId.length === 1)
-			return deleteOne(selectedId);
-		return deleteMany(selectedId);
-	};
+	// vm.deleteSelected = function() {
+	// 	var selectedRows = vm.gridApi.selection.getSelectedRows();
+	// 	var selectedId = [];
+	// 	for(var i = 0 ; i < selectedRows.length ; i++){
+	// 		selectedId.push(selectedRows[i]._id);
+	// 		vm.gridOptions.data.splice(vm.gridOptions.data.indexOf(selectedRows[i]), 1);
+	// 	}
+	// 	if(selectedId.length === 1)
+	// 		return deleteOne(selectedId);
+	// 	return deleteMany(selectedId);
+	// };
 
 	vm.saveElement = function(elementType){
 		var elementData = {}
@@ -279,7 +279,7 @@ angular.module('app.autofill')
 			vm.clearSelected();
 			console.log('delete response: ');
 			console.log(res);
-			return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage')
+			return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage').then(getDataBody())
 		})
 		.catch(function ErrorCallback(err) {
 			console.log(err);
@@ -342,8 +342,11 @@ angular.module('app.autofill')
 
 
 	vm.exportCSV = exportCSV;
+	vm.deleteSelected = deleteSelected;
+	vm.clearSelected = clearSelected
 
 	function getDataHeader(){
+		vm.table.dataHeader = [];
 		return autofillServices.getElement()
 		.then(function SuccessCallback(res){
 			for(var i = 0; i < res.data.length; i++){
@@ -357,9 +360,10 @@ angular.module('app.autofill')
 	}
 
 	function getDataBody(){
+		vm.table.data = [];
 		return autofillServices.getRecords()
 		.then(function SuccessCallback(res){
-			for(var i = 0; i < 100; i++){
+			for(var i = 0; i < res.data.length; i++){
 				vm.table.data.push(res.data[i]);
 			}
 		}).catch(function ErrorCallback(err){
@@ -427,6 +431,23 @@ angular.module('app.autofill')
 			link.click();
 			document.body.removeChild(link);
 		}
+	}
+
+
+	function deleteSelected() {
+		var selectedRows = vm.table.selected;
+		var selectedId = [];
+		for(var i = 0 ; i < selectedRows.length ; i++){
+			selectedId.push(selectedRows[i]._id);
+			vm.gridOptions.data.splice(vm.gridOptions.data.indexOf(selectedRows[i]), 1);
+		}
+		if(selectedId.length === 1)
+			return deleteOne(selectedId);
+		return deleteMany(selectedId);
+	};
+
+	function clearSelected(){
+		vm.table.selected = [];
 	}
 
 	function init(){
