@@ -221,7 +221,7 @@
 
 					<span flex=''></span>
 					<!-- filter button -->
-					<md-button type="button" class="md-icon-button" ng-click="vm.table.options.showFilter = !vm.table.options.showFilter">
+					<md-button type="button" class="md-icon-button" ng-click="vm.table.options.showFilter = !vm.table.options.showFilter ; vm.query = ''">
 						<i class="material-icons" ng-if="!vm.table.options.showFilter">search</i>
 						<i class="material-icons" ng-if="vm.table.options.showFilter">clear</i>
 					</md-button>
@@ -235,9 +235,9 @@
 					</md-button>
 					<!-- IMPORT button -->
 					<md-button class='md-primary'>
-        				<label for="file-input">IMPORT</label>  
+        				<label for="file-input">Import</label>  
       				</md-button>
-      				<input id="file-input" type="file">
+      				<input id="file-input" type="file" accept='.csv' onchange="vm.validateCsvImport(this.value)">
 					<!-- EXPORT menu -->
 			        <md-menu>
 	            		<md-button class="md-primary" ng-click="$mdOpenMenu()">Export</md-button>
@@ -270,7 +270,8 @@
 						</tbody>
 					</table>
 				</md-table-container>
-				<md-rewqtedf-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>
+
+				<md-table-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>
 			
 		</md-card>
 	</md-content>

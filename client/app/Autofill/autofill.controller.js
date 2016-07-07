@@ -334,6 +334,10 @@ angular.module('app.autofill')
 		orderBy: '',
 		rowLimit: 20,
 		page: 1,
+		importOptions:{ 
+			allowedExtension: '.csv',
+			maxSize: '10MB'
+		},
 		filterOptions:{ debounce: 500 },
 		limitOptions: [10,20,30],
 		exportOptions: ['Selected','All']
@@ -347,6 +351,7 @@ angular.module('app.autofill')
 	vm.deleteSelected = deleteSelected;
 	vm.clearSelected = clearSelected
 	vm.reset = init;
+	vm.validateCsvImport = validateCsvImport;
 
 	function getDataHeader(){
 		vm.table.dataHeader = [];
@@ -440,6 +445,10 @@ angular.module('app.autofill')
 		}
 	}
 
+	function validateCsvImport(fileName){
+
+	}
+
 
 	function deleteSelected() {
 		var selectedRows = vm.table.selected;
@@ -457,7 +466,7 @@ angular.module('app.autofill')
 		vm.table.selected = [];
 	}
 
-	$scope.$watch('vm.query',function(newVal,oldVal){
+	$scope.$watch('vm.query',function query(newVal,oldVal){
 		console.log(newVal,oldVal);
 		if(newVal != oldVal){
 			vm.table.options.page = 1;
