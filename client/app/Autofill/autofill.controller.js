@@ -1,4 +1,4 @@
-angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.grid.edit','ui.grid.rowEdit', 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.selection', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping'])
+angular.module('app.autofill')
 	.controller('autofillCtrl', autofillCtrl)
 
 	autofillCtrl.$inject = ['$scope', '$q', '$timeout',  'uiGridConstants', 'uiGridGroupingConstants', 'dialogServices','feedbackServices','autofillServices']
@@ -56,14 +56,8 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
       vm.gridOptions.data = vm.gridOptions.data.concat( newObjects );
     }
 	
-
-//	vm.deleteRow = deleteRow;
-
-
 	
 // ===========================================   	UI 	  	=========================================== //
-	
-
 	var viewContentLoaded = $q.defer();
 			$scope.$on('$viewContentLoaded', function () {
 				$timeout(function () {
@@ -166,7 +160,7 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 			})
 			.catch(function ErrorCallback(err) {
 				console.log(err);
-				feedbackServices.errorFeedback(err.data.description, 'autofill-feedbackMessage')
+				feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
 			});
 	};
 
@@ -243,21 +237,13 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 					name: res.data[i].fieldName,
 					displayName: res.data[i].fieldName.charAt(0).toUpperCase() +  res.data[i].fieldName.slice(1),
 					width: '20%'
-				}); 
-			}
-
-			// vm.gridOptions.columnDefs.push({
-			// 	name: ' ',
-			// 	enableCellEdit: false,
-			// 	allowCellFocus : false,
-			// 	cellTemplate:'cellTemplate.html'
-			// });
-
-			return vm.read()
+				});
+			} 
+			return vm.read();
 		})
 		.catch(function ErrorCallback(err){ 
 			console.log(err);
-			return feedbackServices.errorFeedback(err.data.description, 'autofill-feedbackMessage')
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
 		});        
 	}
 	
@@ -281,7 +267,7 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 			})
 		.catch(function ErrorCallback(err) {
 			console.log(err);
-			return feedbackServices.errorFeedback(err.data.description, 'autofill-feedbackMessage')
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
 		});
 	}
 	
@@ -297,7 +283,7 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 		})
 		.catch(function ErrorCallback(err) {
 			console.log(err);
-			return feedbackServices.errorFeedback(err.data.description, 'autofill-feedbackMessage');
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		});
 	}
 
@@ -309,16 +295,11 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 		})
 		.catch(function ErrorCallback(err){
 			console.log(err);
-			return feedbackServices.errorFeedback(err.data.description, 'autofill-feedbackMessage');
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		})
 	}
 	
-	initGrid();
-
-	
-
-
-
+	//initGrid();//UIGRID
 
 	//Additional
 	vm.gridOptions.onRegisterApi = function(gridApi){
@@ -343,5 +324,51 @@ angular.module('app.autofill', ['ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.gri
 	};
 
 	/* =========================================== Load animation =========================================== */
+
+	/* =========================================== mdl data table =========================================== */
+	vm.table = {}
+	vm.table.options = {
+		rowSelection: true,
+		multiSelect: true,//TOFIX: ACCESS CONTROL
+		orderBy: '',
+		rowLimit: 20,
+		page: 1,
+		limitOptions: [10,20,30]
+	}
+	vm.table.dataHeader = [];
+	vm.table.data = [];
+	vm.table.selected = [];
+
+	function getDataHeader(){
+		return autofillServices.getElement()
+		.then(function SuccessCallback(res){
+			for(var i = 0; i < res.data.length; i++){
+				vm.table.dataHeader.push(res.data[i].fieldName);
+			}
+			vm.table.options.orderBy = vm.table.dataHeader[0];
+			console.log(vm.table.dataHeader);
+		}).catch(function ErrorCallback (err) {
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+		})
+	}
+
+	function getDataBody(){
+		return autofillServices.getRecords()
+		.then(function SuccessCallback(res){
+			for(var i = 0; i < 100; i++){
+				vm.table.data.push(res.data[i]);
+			}
+		}).catch(function ErrorCallback(err){
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+		})
+	}
+
+	vm.logOrder = function(){ console.log(vm.table.options.orderBy) }
+
+	getDataHeader();
+	getDataBody();
+
+
+
 		
 }
