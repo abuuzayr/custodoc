@@ -1,4 +1,4 @@
-<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header" ng-controller="newEntryCtrl as vm">
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
 
@@ -17,8 +17,7 @@
                         <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
                             <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 
-                            <div id="form1" style="position:absolute; left: 480px;"></div>
-                            <div id="form2" style="position:absolute; left: 480px;"></div>
+                            <div id="form" style="position:absolute; left: 480px;"></div>
 
                     </form>
             </div>
