@@ -384,7 +384,7 @@ angular
 
 	vm.toNextPage = function() {
 		//toolbar.style.display = "none";
-		if (vm.currentPageNumber >= vm.totalNumberOfPages) {
+		if (vm.currentPageNumber == vm.numberOfPages) {
 			alert("This is the last page.");
 		} else {
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
