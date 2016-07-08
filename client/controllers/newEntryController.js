@@ -47,6 +47,7 @@ angular
 	vm.goToPageNumber = 1;
 	vm.element = null;
 	vm.currentPageNumber = 1;
+	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
 	vm.numberOfPages = [];
 
@@ -381,7 +382,7 @@ angular
 		} else {
 			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
 			vm.currentPageNumber--;
-			currentPage = document.getElementById("page" + vm.currentPageNumber);
+			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page" + vm.currentPageNumber);
 			currentPage.style.display = "block";
 		}
 	}
@@ -397,7 +398,7 @@ angular
 		} else {
 			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
 			vm.currentPageNumber++;
-			currentPage = document.getElementById("page" + vm.currentPageNumber);
+			currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
 			currentPage.style.display = "block";
 		}
 	}
