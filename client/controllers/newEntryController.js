@@ -375,7 +375,7 @@ angular
 			vm.element.style.boxShadow = "none";
 		}
 		vm.element = null;
-		toolbar.style.display = "none";
+		//toolbar.style.display = "none";
 		if (vm.currentPageNumber == 1) {
 			alert("This is the first page.");
 		} else {
@@ -391,7 +391,7 @@ angular
 			vm.element.style.boxShadow = "none";
 		}
 		vm.element = null;
-		toolbar.style.display = "none";
+		//toolbar.style.display = "none";
 		if (vm.currentPageNumber == vm.numberOfPages) {
 			alert("This is the last page.");
 		} else {
@@ -407,7 +407,7 @@ angular
 			vm.element.style.boxShadow = "none";
 		}
 		vm.element = null;
-		toolbar.style.display = "none";
+		//toolbar.style.display = "none";
 		currentPage.style.display = "none";
 		vm.currentPageNumber = vm.goToPageNumber;
 		currentPage = document.getElementById("page" + vm.currentPageNumber);
