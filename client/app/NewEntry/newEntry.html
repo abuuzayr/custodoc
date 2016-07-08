@@ -36,7 +36,7 @@
                 <div class="mdl-layout-spacer"></div>
         </div> 
 
-        <section id="form" style="height: 1123px; width: 794px;border:2px solid black; position:absolute; left:480px;">
+        <section id="form" style="height: 1123px; width: 794px;border:2px solid black; position:absolute; left:480px; z-index:-1;">
             <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:-1;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
                 <div id="hidden-pagebar" ng-show="displayPagebar">
                     <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
@@ -44,9 +44,9 @@
                             <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
                                 <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 
-                                <div id="form1page1" style="position:absolute; left: 480px; z-index:100"></div>
-                                <div id="form1page2" style="position:absolute; left: 480px; z-index:100"></div>
-                                <div id="form2page1" style="position:absolute; left: 480px; z-index:100"></div>
+                                <div id="form1page1" style="position:absolute; left: 480px; z-index:100;"></div>
+                                <div id="form1page2" style="position:absolute; left: 480px; z-index:100;"></div>
+                                <div id="form2page1" style="position:absolute; left: 480px; z-index:100;"></div>
                         </form>
                 </div>
             </div>
