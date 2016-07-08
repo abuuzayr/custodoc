@@ -10,6 +10,9 @@
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
             <div class="divider"></div>
+            <button name="toNextForm" value="Next Page" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
+            <div class="divider"></div>
+            <button name="toPreviousForm" value="Next Page" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
         
         </div>
         
@@ -20,7 +23,6 @@
                     <form ng-submit="vm.goToPage()" style="display:inline">
                         <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
                         <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
-                        <div class="page" id="page1"></div>
                     </form>
                 </div>
             </div>
