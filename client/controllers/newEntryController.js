@@ -409,6 +409,7 @@ angular
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentFormNumber--;
 			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
+			vm.currentPageNumber = 1;
 			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page1");
 			currentPage.style.display = "block";	
 		}
@@ -421,6 +422,7 @@ angular
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentFormNumber++;
 			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
+			vm.currentPageNumber = 1;
 			currentPage = document.getElementById("form" + vm.currentFormNumber + "page1");
 			currentPage.style.display = "block";
 		}
