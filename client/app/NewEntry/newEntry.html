@@ -1,9 +1,9 @@
-<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<body ng-controller="newEntryCtrl as vm">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
     
 
-    <div id="formBuilderBody" class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
@@ -26,7 +26,9 @@
                     </form>
                 </div>
             </div>
-            
+        </section>
+</div>
+</body>
             
 
         
