@@ -380,8 +380,9 @@ angular
 		if (vm.currentPageNumber == 1) {
 			alert("This is the first page.");
 		} else {
-			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentPageNumber--;
+			console.log("watpagenum here wor " + vm.currentPageNumber);			
 			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page" + vm.currentPageNumber);
 			currentPage.style.display = "block";
 		}
@@ -396,8 +397,9 @@ angular
 		if (vm.currentPageNumber == vm.numberOfPages) {
 			alert("This is the last page.");
 		} else {
-			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentPageNumber++;
+			console.log("watpagenum here " + vm.currentPageNumber);
 			currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
 			currentPage.style.display = "block";
 		}
@@ -411,7 +413,8 @@ angular
 		//toolbar.style.display = "none";
 		currentPage.style.display = "none";
 		vm.currentPageNumber = vm.goToPageNumber;
-		currentPage = document.getElementById("page" + vm.currentPageNumber);
+		console.log("i go where " + vm.goToPageNumber);
+		currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
 		currentPage.style.display = "block";
 	}
 
