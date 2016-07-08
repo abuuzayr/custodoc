@@ -100,6 +100,7 @@ angular
 		.then(function(res){
 			vm.formData = res.data;
 			vm.numberOfPages = vm.formData.numberOfPages;
+			console.log("wat here" + vm.numberOfPages);
 			// number of forms??
 		})
 		.then(function() {
