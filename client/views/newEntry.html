@@ -31,20 +31,26 @@
     <div class="mdl-layout__container" >
 
     <div id="pagebar" class="mdl-grid">
-            <button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
-            <div class="divider"></div>
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
-            <div class="divider"></div>
-            <button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
-            <div class="divider"></div>
-            <button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
-            <div class="divider"></div>
-            <button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i>Save</button>
-            <div class="mdl-layout-spacer"></div>
-            <button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">delete</i> Delete page</button>
         </div>
+
+         <section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
+                    <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
+                        <div id="hidden-pagebar" ng-show="displayPagebar">
+                            <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+                                <form ng-submit="vm.goToPage()" style="display:inline">
+                                    <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+                                        <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+
+                                        <div id="form1"></div>
+                                        <div id="form2"></div>
+
+                                </form>
+                        </div>
+                    </div>
+                </section>
 
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
             <header class="mdl-layout__header" ng-include="'views/topNavBar.html'"></header>
@@ -120,10 +126,9 @@
                                     Submit entry
                     </button>
                     </br>
-
-                   
-
                     </form>
+
+
                     
                     <!-- <form name="preview" ng-submit="vm.createEntry()">
                         <div id="form1page1" style="text-align: auto;""></div> 

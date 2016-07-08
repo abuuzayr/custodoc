@@ -27,8 +27,7 @@ angular
 	var forms = document.getElementById('forms');
 	var newPageTemplate = formBuilderFactory.newPage;
 
-	vm.currentPageNumber = 1;
-	vm.numberOfPages = 1;
+
 
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
@@ -43,6 +42,13 @@ angular
 	vm.file = null;
 
 	vm.groupName = $stateParams.groupName;
+
+	/********* PAGE NAGIVATION VARIABLES **********/
+	vm.goToPageNumber = 1;
+	vm.element = null;
+	vm.currentPageNumber = 1;
+	vm.numberOfPages = 1;
+
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -360,53 +366,47 @@ angular
 		})
 
 	function toPreviousPage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
-			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			if (vm.currentPageNumber == 1) {
-				alert("This is the first page.");
-			} else {
-				document.getElementById("page" + vm.currentPageNumber).style.display = "none";
-				vm.currentPageNumber--;
-				currentPage = document.getElementById("page" + vm.currentPageNumber);
-				currentPage.style.display = "block";
-			}
+		if (vm.element) {
+			vm.element.style.boxShadow = "none";
+		}
+		vm.element = null;
+		toolbar.style.display = "none";
+		if (vm.currentPageNumber == 1) {
+			alert("This is the first page.");
+		} else {
+			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+			vm.currentPageNumber--;
+			currentPage = document.getElementById("page" + vm.currentPageNumber);
+			currentPage.style.display = "block";
 		}
 	}
 
 	function toNextPage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
-			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			if (vm.currentPageNumber == vm.numberOfPages) {
-				alert("This is the last page.");
-			} else {
-				document.getElementById("page" + vm.currentPageNumber).style.display = "none";
-				vm.currentPageNumber++;
-				currentPage = document.getElementById("page" + vm.currentPageNumber);
-				currentPage.style.display = "block";
-			}
+		if (vm.element) {
+			vm.element.style.boxShadow = "none";
+		}
+		vm.element = null;
+		toolbar.style.display = "none";
+		if (vm.currentPageNumber == vm.numberOfPages) {
+			alert("This is the last page.");
+		} else {
+			document.getElementById("page" + vm.currentPageNumber).style.display = "none";
+			vm.currentPageNumber++;
+			currentPage = document.getElementById("page" + vm.currentPageNumber);
+			currentPage.style.display = "block";
 		}
 	}
 
 	function goToPage() {
-		if (vm.allowCreate) {
-			if (vm.element) {
-				vm.element.style.boxShadow = "none";
-			}
-			vm.element = null;
-			toolbar.style.display = "none";
-			currentPage.style.display = "none";
-			vm.currentPageNumber = vm.goToPageNumber;
-			currentPage = document.getElementById("page" + vm.currentPageNumber);
-			currentPage.style.display = "block";
+		if (vm.element) {
+			vm.element.style.boxShadow = "none";
 		}
+		vm.element = null;
+		toolbar.style.display = "none";
+		currentPage.style.display = "none";
+		vm.currentPageNumber = vm.goToPageNumber;
+		currentPage = document.getElementById("page" + vm.currentPageNumber);
+		currentPage.style.display = "block";
 	}
 
 	/*function addImg() {
