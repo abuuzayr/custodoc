@@ -236,7 +236,7 @@ angular
 				var form = vm.formData[k-1];
 				var elements = form.elements;
 
-				for (var j = 1; j <= form.totalNumberOfPages; j++) { //j is page number
+				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
