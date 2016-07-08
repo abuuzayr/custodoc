@@ -1,4 +1,30 @@
-<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header" ng-controller="newEntryCtrl as vm">
+<head>
+    <!-- AngularJS and MDL -->
+    <script src="../resources/angular.min.js"></script>
+    <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/adonespitogo/angular-base64-upload/master/src/angular-base64-upload.js"></script>
+
+    <!-- Controllers -->
+    <script src="../app/app.js"></script>
+    <script src="../controllers/app.newEntry.js"></script>
+    <script src="../controllers/newEntryController.js"></script>
+    <script src="../services/entryService.js"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-indigo.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Dialogs MDL -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.js"></script>
+
+
+       <title>BulletForms</title>
+</head>
+<body ng-controller="newEntryCtrl as vm">
+<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
 
@@ -17,11 +43,11 @@
                         <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
                             <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 
-                            <div id="form" style="position:absolute; left: 480px;"></div>
+                            <div id="form1" style="position:absolute; left: 480px;"></div>
 
                     </form>
             </div>
         </div>
     </section>
-
-</div>                
+</div>   
+</body>             
