@@ -16,7 +16,7 @@
         
         </div>
         
-        <div id="form" style="height: 1123px; width: 794px;border:2px solid black;">
+        <section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
             <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
                      <div id="hidden-pagebar" ng-show="displayPagebar">
                     <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
@@ -28,8 +28,10 @@
                 </div>
             </div>
             
+            <div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)"
+                ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px">
             <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:100px;left:400px;position:absolute"></div>
-        </div>
+        </section>
     </div>
 </div>
 </body>
