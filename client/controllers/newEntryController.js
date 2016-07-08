@@ -104,7 +104,7 @@ angular
 				vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
 			}
 			vm.numberOfForms = vm.totalNumberOfPages.length;
-			console.log("hey" + vm.totalNumberOfPages);
+			vm.numberOfPages = vm.totalNumberOfPages[0];
 			// number of forms??
 		})
 		.then(function() {
