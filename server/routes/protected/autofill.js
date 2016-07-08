@@ -196,7 +196,8 @@ autofillRoutes.route('/')
 			db.collection('autofill')
 				.deleteMany({_id:{$in:id_arr}})
 				.then(function(results){
-					res.status(200).send('success: ' + results.n + 'documents removed');	
+					console.log(results);
+					res.status(200).send('success: ' + results.result.n + ' documents removed');	
 				})
 				.catch(function(err){
 					return sendError(req,res,400,err.message,'Unsuccessful');
