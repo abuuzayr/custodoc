@@ -47,7 +47,8 @@ angular
 	vm.goToPageNumber = 1;
 	vm.element = null;
 	vm.currentPageNumber = 1;
-	vm.numberOfPages = 1;
+	vm.numberOfForms = 1;
+	vm.numberOfPages = [];
 
 
         $scope.$on('$viewContentLoaded', function () {
@@ -99,9 +100,11 @@ angular
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
 			vm.formData = res.data;
-			vm.numberOfPages = vm.formData.numberOfPages;
-			console.log("wat here" + JSON.stringify(vm.formData));
-
+			for(var x = 0; x < vm.formData.length; x++) {
+				vm.numberOfPages[x] = vm.formData[x].numberOfPages;
+			}
+			vm.numberOfForms = vm.numberOfPages.length;
+			console.log("hey" + vm.numberOfPages);
 			// number of forms??
 		})
 		.then(function() {
