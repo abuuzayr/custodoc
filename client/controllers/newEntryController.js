@@ -45,12 +45,11 @@ angular
 
 	/********* PAGE NAGIVATION VARIABLES **********/
 	vm.goToPageNumber = 1;
-	vm.element = null;
 	vm.currentPageNumber = 1;
+	vm.numberOfPages = 1;
+	vm.totalNumberOfPages = [];
 	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
-	vm.numberOfPages = [];
-
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -102,10 +101,10 @@ angular
 		.then(function(res){
 			vm.formData = res.data;
 			for(var x = 0; x < vm.formData.length; x++) {
-				vm.numberOfPages[x] = vm.formData[x].numberOfPages;
+				vm.totalNumberOfPages[x] = vm.formData[x].totalNumberOfPages;
 			}
-			vm.numberOfForms = vm.numberOfPages.length;
-			console.log("hey" + vm.numberOfPages);
+			vm.numberOfForms = vm.totalNumberOfPages.length;
+			console.log("hey" + vm.totalNumberOfPages);
 			// number of forms??
 		})
 		.then(function() {
@@ -237,7 +236,7 @@ angular
 				var form = vm.formData[k-1];
 				var elements = form.elements;
 
-				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
+				for (var j = 1; j <= form.totalNumberOfPages; j++) { //j is page number
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
@@ -385,7 +384,7 @@ angular
 
 	vm.toNextPage = function() {
 		//toolbar.style.display = "none";
-		if (vm.currentPageNumber == vm.numberOfPages) {
+		if (vm.currentPageNumber == vm.totalNumberOfPages) {
 			alert("This is the last page.");
 		} else {
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
@@ -405,21 +404,23 @@ angular
 
 	vm.toPreviousForm = function() {
 		if (vm.currentFormNumber == 1) {
-			alert("This is the first page.");
+			alert("This is the first form.");
 		} else {
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentFormNumber--;
-			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page" + vm.currentPageNumber);
-			currentPage.style.display = "block";
+			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
+			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page1");
+			currentPage.style.display = "block";	
 		}
 	}
 
 	vm.toNextForm = function() {
 		if (vm.currentFormNumber == vm.numberOfForms) {
-			alert("This is the last page.");
+			alert("This is the last form.");
 		} else {
 			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
 			vm.currentFormNumber++;
+			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
 			currentPage = document.getElementById("form" + vm.currentFormNumber + "page1");
 			currentPage.style.display = "block";
 		}

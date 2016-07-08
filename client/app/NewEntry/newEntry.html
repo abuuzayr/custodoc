@@ -3,7 +3,7 @@
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
     
-
+    <div id="formBuilderBody" class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
@@ -17,8 +17,8 @@
         </div>
         
         <section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
-<!--             <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false">  -->
-<!--                     <div id="hidden-pagebar" ng-show="displayPagebar"> -->
+            <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
+                     <div id="hidden-pagebar" ng-show="displayPagebar">
                     <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
                     <form ng-submit="vm.goToPage()" style="display:inline">
                         <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
@@ -27,6 +27,7 @@
                 </div>
             </div>
         </section>
+    </div>
 </div>
 </body>
             
