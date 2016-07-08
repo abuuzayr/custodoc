@@ -10,9 +10,9 @@
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
             <div class="divider"></div>
-            <button name="toNextForm" value="Next Page" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
+            <button name="toPreviousForm" value="Previous Form" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
             <div class="divider"></div>
-            <button name="toPreviousForm" value="Next Page" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
+            <button name="toNextForm" value="Next Form" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
         
         </div>
         
@@ -25,6 +25,10 @@
                         <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
                     </form>
                 </div>
+            </div>
+            <div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)"
+                ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px">
+                <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
             </div>
         </div>
     </div>
