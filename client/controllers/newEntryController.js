@@ -100,7 +100,8 @@ angular
 		.then(function(res){
 			vm.formData = res.data;
 			vm.numberOfPages = vm.formData.numberOfPages;
-			console.log("wat here" + vm.numberOfPages);
+			console.log("wat here" + JSON.stringify(vm.formData));
+
 			// number of forms??
 		})
 		.then(function() {
@@ -366,7 +367,7 @@ angular
 			document.getElementById("form1page1").style.display="block"; 
 		})
 
-	function toPreviousPage() {
+	vm.toPreviousPage = function() {
 		if (vm.element) {
 			vm.element.style.boxShadow = "none";
 		}
@@ -382,7 +383,7 @@ angular
 		}
 	}
 
-	function toNextPage() {
+	vm.toNextPage = function() {
 		if (vm.element) {
 			vm.element.style.boxShadow = "none";
 		}
@@ -398,7 +399,7 @@ angular
 		}
 	}
 
-	function goToPage() {
+	vm.goToPage = function() {
 		if (vm.element) {
 			vm.element.style.boxShadow = "none";
 		}
