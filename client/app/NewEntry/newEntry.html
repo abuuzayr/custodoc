@@ -3,7 +3,7 @@
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
     
-    <div id="formBuilderBody" class="mdl-layout__content">
+    <div id="entryBody" class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
@@ -26,9 +26,9 @@
                     </form>
                 </div>
             </div>
-            <div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)"
-                ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px">
-                <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
+            <div class="page" id="page1" ondrop="angular.element(document.getElementById('entryBody')).scope().vm.drop(event)"
+                ondragover="angular.element(document.getElementById('entryBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px">
+                <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:100px;left:400px;position:absolute"></div>
             </div>
         </div>
     </div>
