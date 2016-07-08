@@ -142,68 +142,11 @@
 </div>
 <!-- ========================================= UI-GRID ========================================= -->
 <div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<!---------------------------------------- Ng-include nav bars ---------------------------------------->
+	<!--================================== Ng-include nav bars ==================================-->
 	<header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
-	
-
-	<div id="autofillBody" class="mdl-layout__content">
-		<!-- ========================================= Buttons =============================================== -->
-		<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.resetGrid()" >
-			Reset
-		</button>
-
-		
-		
-	
-		<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.clearSelected()" ng-if="vm.hasSelection">
-			Clear Selection
-		</button>
-
-		<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.deleteSelected()" ng-if="vm.hasSelection">
-			<i class="material-icons">delete</i>
-			Delete Selected
-		</button>
-
-		<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.exportCSV()" ng-if="vm.hasSelection">
-			Export
-		</button>
-
-		<button id="create-menu-lower-left" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-			<i class="material-icons">add</i> Create
-		</button>
-		<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="create-menu-lower-left">
-			<li class="mdl-menu__item" ng-click="vm.createTextfield()"> Textfield</li>
-			<li class="mdl-menu__item" ng-click="vm.createCheckbox()"> Checkbox</li>
-			<li class="mdl-menu__item" ng-click="vm.createRadio()"> Radio</li>
-			<li class="mdl-menu__item" ng-click="vm.createDropdown()"> Dropdown</li>
-		</ul>
-		
-		<form><input type="file" class="file-chooser" id="files" name="files[]" /></form>
-		<div id='search-bar-wrapper'>
-			<form ng-submit="vm.read()">
-				<div class="mdl-textfield mdl-js-textfield">
-						<input class="mdl-textfield__input" type="text" name="search-bar" id="fixed-header-drawer-exp" ng-model="vm.query">
-				</div>
-				<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" type="submit">
-					<i class="material-icons">search</i>
-				</button>
-			</form>
-		</div>    
-
-	
-
-	<!-- <div>
-		<strong>{{ vm.gridOptions.data.length }} rows</strong>
-		<br>
-		<div id="grid1" ui-grid="vm.gridOptions" ui-grid-cellNav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns ui-grid-pinning ui-grid-selection ui-grid-move-columns ui-grid-importer ui-grid-exporter ui-grid-grouping class="grid"></div>
-	</div> -->
-
-	
-	<!-- ============================================ new data table =================================================== -->
-		
-		
+	<!--====================================== new data table ===================================-->
 	<md-content>
-		<md-card>
+		<div class="mdl-card">
 			<!--Toolbar-->
 			<md-toobar class="md-table-toolbar md-default">
 				<div class="md-toolbar-tools">
@@ -249,11 +192,9 @@
 								</md-menu-item>
 						</md-menu-content>
 	    			</md-menu>
-
 				</div>
 
 			<!--Data Table-->	
-			</md-toobar>
 				<md-table-container>
 					<table md-table md-row-select="vm.table.options.rowSelection" multiple="{{vm.table.options.multiSelect}}" ng-model="vm.table.selected" class="md-table md-row-select">
 						<thead md-head md-order = "vm.table.options.orderBy" md-on-reorder="logOrder">
@@ -271,10 +212,10 @@
 					</table>
 				</md-table-container>
 
-				<md-table-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>
-			
-		</md-card>
-	</md-content>
+				<md-table-pagination md-limit="vm.table.options.rowLimit" md-limit-options="vm.table.options.limitOptions" md-page="vm.table.options.page" md-total="{{vm.table.data.length}}" md-page-select md-boundary-links></md-table-pagination>	
+
+
+
 	</div>
 </div>
 

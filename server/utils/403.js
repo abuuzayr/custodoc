@@ -45,9 +45,22 @@ module.exports = function(){
                				});
 				}
 			});
-		}
+		}		
+	}
 
-			
+
+	function checkStroage(req,res,next){
+		var connection = require('./connection')();
+			connection.Do(function(db){
+				return next()
+		});
+	}
+
+	function checkExpiration(req,res,next){
+		var connection = require('./connection')();
+			connection.Do(function(db){
+				return next()
+		});
 	}
 
 	function decodeAccessInfo(req,res,next){
@@ -62,7 +75,7 @@ module.exports = function(){
 			var decodedAccessInfo = decipher.update(ecodedAccessInfo,'hex','utf8');
 			decodedAccessInfo += decipher.final('utf8');
 			req.accessInfo = JSON.parse(decodedAccessInfo);
-			console.log(req.accessInfo);
+			console.log(req.accessInfo);//TOFIX
 			return next();
 		}catch(err){
 			console.log(err);//TOFIX
@@ -111,21 +124,6 @@ module.exports = function(){
 			}
 		}
 	}
-
-	function checkStroage(req,res,next){
-		var connection = require('./connection')();
-			connection.Do(function(db){
-				return next()
-		});
-	}
-
-	function checkExpiration(req,res,next){
-		var connection = require('./connection')();
-			connection.Do(function(db){
-				return next()
-		});
-	}
-
 
 	function send403(req,res,description){
 		var data = {

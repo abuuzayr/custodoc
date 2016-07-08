@@ -5,9 +5,9 @@ var bodyParser = require('body-parser');
 var CookieParser = require('cookie-parser');
 var MongoClient = require('mongodb').MongoClient;
 var Promise = require('bluebird');
-var assert = require('assert'); //DELETE?
-var path = require('path'); //DELETE?
-var logger = require('morgan'); //DELETE?
+var assert = require('assert'); //TOFIX?
+var path = require('path'); //TOFIX?
+var logger = require('morgan'); //TOFIX?
 var app = express();
 
 Promise.promisifyAll(MongoClient);
@@ -31,16 +31,10 @@ app.use( function(req, res, next) {
   	return next();
 });
 
-// STATIC SERVER
-// app.use(express.static(__dirname + '/../client/app/autofill'));
-// app.use(express.static(__dirname + '/../client/app/'));
-// app.use('/static',express.static(__dirname + '/../client/app/autofill'));
-
 // ROUTES
 // Connect all our routes to our application
 app.use('/api', routes);
-//app.use('*',http404.notFoundMiddleware);
-
+app.use('*',http404.notFoundMiddleware);
 // STARTING SERVER
 // Open one database connection
 // one connection handles all request
