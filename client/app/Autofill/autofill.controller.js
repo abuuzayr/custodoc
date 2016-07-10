@@ -37,25 +37,6 @@ angular.module('app.autofill')
 
 
 	vm.query ='';
-	vm.gridOptions = {};
-	vm.gridOptions.data = [];
-	vm.gridOptions.columnDefs = [];
-	vm.gridOptions.rowHeight = 50;
-	vm.gridOptions.enableColumnResizing = true;
-	vm.gridOptions.enableFiltering = true;
-	vm.gridOptions.enableGridMenu = false;
-	vm.gridOptions.enableColumnMenus = false
-	vm.gridOptions.showGridFooter = false;
-	vm.gridOptions.showColumnFooter = false;
-	vm.gridOptions.fastWatch = true;
-	vm.gridOptions.multiSelect = true;
-	vm.gridOptions.gridMenuShowHideColumns = false;
-	vm.gridOptions.importerShowMenu = false;
-	
-	vm.gridOptions.importerDataAddCallback = function ( grid, newObjects ) {
-      vm.gridOptions.data = vm.gridOptions.data.concat( newObjects );
-    }
-	
 	
 // ===========================================   	UI 	  	=========================================== //
 	var viewContentLoaded = $q.defer();
@@ -138,31 +119,31 @@ angular.module('app.autofill')
 		.then(vm.closeDialog());
 	};
 
-	vm.exportCSV = function(){
-		var element = angular.element(document.querySelectorAll('.custom-csv-link-location'));
-	    vm.gridApi.exporter.csvExport('selected', 'all', element );
-	};
+	// vm.exportCSV = function(){
+	// 	var element = angular.element(document.querySelectorAll('.custom-csv-link-location'));
+	//     vm.gridApi.exporter.csvExport('selected', 'all', element );
+	// };
 
-	vm.resetGrid = function(){
-		return initGrid();
-	}
+	// vm.resetGrid = function(){
+	// 	return initGrid();
+	// }
 
-	vm.read = function(){
-			vm.gridOptions.data = [];
+	// vm.read = function(){
+	// 		vm.gridOptions.data = [];
 
-			return autofillServices
-			.getRecords(vm.query)
-			.then(function SuccessCallback(res){
-				res.data.forEach(function(row){
-					vm.gridOptions.data.push(row);
-				});
-				console.log(vm.gridOptions.data);
-			})
-			.catch(function ErrorCallback(err) {
-				console.log(err);
-				feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
-			});
-	};
+	// 		return autofillServices
+	// 		.getRecords(vm.query)
+	// 		.then(function SuccessCallback(res){
+	// 			res.data.forEach(function(row){
+	// 				vm.gridOptions.data.push(row);
+	// 			});
+	// 			console.log(vm.gridOptions.data);
+	// 		})
+	// 		.catch(function ErrorCallback(err) {
+	// 			console.log(err);
+	// 			feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
+	// 		});
+	// };
 
 	vm.createTextfield	= function(){
 		vm.elementType = 'text';
@@ -224,37 +205,37 @@ angular.module('app.autofill')
 
 	// ============================================== API ============================================== //
 
-	function initGrid(){
-		console.log('initing');
-		vm.gridOptions.columnDefs = [];
+	// function initGrid(){
+	// 	console.log('initing');
+	// 	vm.gridOptions.columnDefs = [];
 
-		return autofillServices
-		.getElement()
-		.then(function SuccessCallback(res){
-			console.log(res.data);
-			for(var i = 0; i < res.data.length; i++){
-				vm.gridOptions.columnDefs.push({
-					name: res.data[i].fieldName,
-					displayName: res.data[i].fieldName.charAt(0).toUpperCase() +  res.data[i].fieldName.slice(1),
-					width: '20%'
-				});
-			} 
-			return vm.read();
-		})
-		.catch(function ErrorCallback(err){ 
-			console.log(err);
-			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
-		});        
-	}
+	// 	return autofillServices
+	// 	.getElement()
+	// 	.then(function SuccessCallback(res){
+	// 		console.log(res.data);
+	// 		for(var i = 0; i < res.data.length; i++){
+	// 			vm.gridOptions.columnDefs.push({
+	// 				name: res.data[i].fieldName,
+	// 				displayName: res.data[i].fieldName.charAt(0).toUpperCase() +  res.data[i].fieldName.slice(1),
+	// 				width: '20%'
+	// 			});
+	// 		} 
+	// 		return vm.read();
+	// 	})
+	// 	.catch(function ErrorCallback(err){ 
+	// 		console.log(err);
+	// 		return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
+	// 	});        
+	// }
 	
-	function update( rowEntity ) {
-		console.log(rowEntity);
-		if(rowEntity && rowEntity._id != null && rowEntity._id != undefined)
-			var promise = autofillServices.updateRecord(rowEntity);
-		else
-			var promise = autofillServices.createRecord(rowEntity);
-		vm.gridApi.rowEdit.setSavePromise(rowEntity, promise)
-	}
+	// function update( rowEntity ) {
+	// 	console.log(rowEntity);
+	// 	if(rowEntity && rowEntity._id != null && rowEntity._id != undefined)
+	// 		var promise = autofillServices.updateRecord(rowEntity);
+	// 	else
+	// 		var promise = autofillServices.createRecord(rowEntity);
+	// 	vm.gridApi.rowEdit.setSavePromise(rowEntity, promise)
+	// }
 
 	function deleteOne(selectedId){
 		return autofillServices
@@ -302,56 +283,100 @@ angular.module('app.autofill')
 	//initGrid();//UIGRID
 
 	//Additional
-	vm.gridOptions.onRegisterApi = function(gridApi){
-			//set gridApi on scope
-			vm.gridApi = gridApi;
-			gridApi.selection.on.rowSelectionChanged($scope,function(row){
-				if(vm.gridApi.grid.selection.selectedCount)
-					vm.hasSelection = true;
-				else
-					vm.hasSelection = false;
-			});
+	// vm.gridOptions.onRegisterApi = function(gridApi){
+	// 		//set gridApi on scope
+	// 		vm.gridApi = gridApi;
+	// 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+	// 			if(vm.gridApi.grid.selection.selectedCount)
+	// 				vm.hasSelection = true;
+	// 			else
+	// 				vm.hasSelection = false;
+	// 		});
  
-			gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
-				if(vm.gridApi.grid.selection.selectedCount)
-					vm.hasSelection = true;
-				else
-					vm.hasSelection = false;
-			});
+	// 		gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+	// 			if(vm.gridApi.grid.selection.selectedCount)
+	// 				vm.hasSelection = true;
+	// 			else
+	// 				vm.hasSelection = false;
+	// 		});
 
-			gridApi.rowEdit.on.saveRow($scope, 
-				update);
-	};
+	// 		gridApi.rowEdit.on.saveRow($scope, 
+	// 			update);
+	// };
 
 	/* =========================================== Load animation =========================================== */
 
 	/* =========================================== mdl data table =========================================== */
-	vm.table = {}
-	vm.table.options = {
+	
+	// vm.table.options = {
+	// 	rowSelection: true,
+	// 	multiSelect: true,//TOFIX: ACCESS CONTROL
+	// 	showFilter:false,
+	// 	orderBy: '',
+	// 	rowLimit: 20,
+	// 	page: 1,
+	// 	importOptions:{ 
+	// 		allowedExtension: '.csv',
+	// 		maxSize: '10MB'
+	// 	},
+	// 	filterOptions:{ debounce: 500 },
+	// 	limitOptions: [10,20,30],
+	// 	exportOptions: ['Selected','All']
+	// }
+	vm.table = {
+		dataHeader: [],
+		data: [],
+	}
+
+	vm.sorting = {
+		sortBy: '',
+		sortReverse: true
+	}
+
+	vm.checked = {};
+
+	vm.selection = {
 		rowSelection: true,
 		multiSelect: true,//TOFIX: ACCESS CONTROL
-		showFilter:false,
-		orderBy: '',
-		rowLimit: 20,
-		page: 1,
+		selected: [],
+		hasSelected: false
+	}
+
+	vm.pagination = {
+		currentPage: 1,
+		totalPage: 0,
+		itemPerPage: 10,
+		totalItem: 0,
+		limitOption: [10,20,30],
+		startingIndex: 0,
+		endingIndex: 0,
+		pagedItem: []
+	}
+
+	vm.fileOptions = {
+		exportOptions: ['Selected','All'],
 		importOptions:{ 
 			allowedExtension: '.csv',
 			maxSize: '10MB'
-		},
-		filterOptions:{ debounce: 500 },
-		limitOptions: [10,20,30],
-		exportOptions: ['Selected','All']
+		}
 	}
-	vm.table.dataHeader = [];
-	vm.table.data = [];
-	vm.table.selected = [];
 
-
+	
 	vm.exportCSV = exportCSV;
 	vm.deleteSelected = deleteSelected;
 	vm.clearSelected = clearSelected
 	vm.reset = init;
 	vm.validateCsvImport = validateCsvImport;
+
+	vm.toFirstPage = toFirstPage;
+	vm.toLastPage = toLastPage;
+	vm.toPreviousPage = toPreviousPage;
+	vm.toNextPage = toNextPage;
+	vm.sort = sort
+
+	vm.pageFilter = function(){
+
+	}
 
 	function getDataHeader(){
 		vm.table.dataHeader = [];
@@ -371,14 +396,122 @@ angular.module('app.autofill')
 		vm.table.data = [];
 		return autofillServices.getRecords(vm.query)
 		.then(function SuccessCallback(res){
-			for(var i = 0; i < res.data.length; i++){
-				vm.table.data.push(res.data[i]);
-			}
+				for(var i = 0; i < res.data.length; i++){
+					vm.table.data.push(res.data[i]);
+				}
+
+			onDataLoaded();
 		}).catch(function ErrorCallback(err){
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		})
 	}
 
+	function onDataLoaded(){
+		vm.pagination.totalItem = vm.table.data.length;
+		vm.pagination.totalPage = Math.ceil(vm.pagination.totalItem/vm.pagination.itemPerPage);
+		vm.pagination.currentPage = 1;
+		getPagedItem();
+		console.log(vm.pagination);//TOFIX
+ 	}
+
+ 	$scope.$watch('vm.pagination.currentPage',function onPageChange(newPage, oldPage){
+		vm.pagination.startingIndex = (newPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (newPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
+		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
+		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
+ 	})
+
+ 	$scope.$watch('vm.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
+		var startingIndex = vm.pagination.startingIndex;
+		vm.pagination.endingIndex = (startingIndex + newLimit - 1) < vm.pagination.totalItem ?  startingIndex + newLimit - 1 : vm.pagination.totalItem;
+		vm.pagination.itemPerPage = newLimit;
+		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
+ 	})
+
+ 	function getPagedItem(){
+ 		vm.pagination.startingIndex = (vm.pagination.currentPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (vm.pagination.currentPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
+		vm.pagination.endingIndex = (( vm.pagination.currentPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? vm.pagination.currentPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
+		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
+ 	}
+
+ 	function toFirstPage(){
+ 		vm.pagination.currentPage = 1;
+ 		console.log(vm.pagination.currentPage);//TOFIX
+ 	}
+
+ 	function toLastPage(){
+ 		vm.pagination.currentPage = vm.pagination.totalPage;
+ 		console.log(vm.pagination.currentPage);//TOFIX
+ 	}
+
+ 	function toNextPage(){
+ 		if(vm.pagination.currentPage < vm.pagination.totalPage)
+ 			vm.pagination.currentPage++;
+ 		else
+ 			feedbackServices.errorFeedback('Last page', 'autofill-feedbackMessage');
+ 		console.log(vm.pagination.currentPage);//TOFIX
+ 	}
+
+ 	function toPreviousPage(){
+ 		if(vm.pagination.currentPage > 1)
+ 			vm.pagination.currentPage--;
+ 		else
+ 			feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');feedbackServices.errorFeedback()
+ 		console.log(vm.pagination.currentPage);//TOFIX
+ 	}
+
+ 	function toPage(pageNum){
+ 		vm.pagination.currentPage = pageNum;
+ 		console.log(vm.pagination.currentPage);//TOFIX
+ 	}
+
+ 	function sort(sortBy){
+ 		vm.sorting.sortBy = sortBy;
+		vm.sorting.sortReverse = !vm.sorting.sortReverse;
+		vm.table.data = vm.sorting.sortReverse ? vm.table.data.sort(compareReverse):vm.table.data.sort(compare);
+		return getPagedItem();
+
+		function compare(a,b) {
+			if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
+				var first = '';
+			else	
+				var first = String(a[sortBy]).toUpperCase();
+
+			if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
+				var second = '';
+			else	
+				var second = String(b[sortBy]).toUpperCase();
+
+			if ( first < second ){
+				return -1;
+			}
+			if (first > second ){
+				return 1;
+			}
+			return 0;
+		}
+
+		function compareReverse(a,b) {
+			if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
+				var first = '';
+			else	
+				var first = String(a[sortBy]).toUpperCase();
+
+			if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
+				var second = '';
+			else	
+				var second = String(b[sortBy]).toUpperCase();
+
+			if ( first < second ){
+				return 1;
+			}
+			if (first > second ){
+				return -1;
+			}
+			return 0;
+		}
+ 	}
+
+ 
 	function exportCSV(exportBy){
 		console.log('going to export');//TOFIX
 		console.log(exportBy === 'Selected',exportBy === 'Visible',exportBy === 'All');//TOFIX
@@ -466,6 +599,10 @@ angular.module('app.autofill')
 		vm.table.selected = [];
 	}
 
+	$scope.$watch('vm.selection.selected', function onSelectionChange(newSelected, oldSelected){
+	})
+
+
 	$scope.$watch('vm.query',function query(newVal,oldVal){
 		console.log(newVal,oldVal);
 		if(newVal != oldVal){
@@ -475,7 +612,7 @@ angular.module('app.autofill')
 	});
 
 	function init(){
-		vm.table.selected = [];
+		vm.selection.selected = [];
 		getDataHeader();
 		getDataBody();	
 	}
