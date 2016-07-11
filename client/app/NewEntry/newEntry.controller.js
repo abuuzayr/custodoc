@@ -364,7 +364,7 @@ angular
 
 	/****************** SIGNATURE PAD VARIABLES **********************/
 
-	if (gotSignature) {
+	if (vm.gotSignature) {
 		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
 		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
@@ -372,7 +372,7 @@ angular
 		console.log('wats canvas ' + vm.canvas);
 		vm.signaturePad = new SignaturePad(vm.canvas);
 	}
-	
+
 	/*****************************************************************/
 
 
