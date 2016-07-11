@@ -64,8 +64,8 @@ angular
 	/****************** SIGNATURE PAD VARIABLES **********************/
 
 	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-	vm.dialog = angular.element(vm.wrapper.find('.dialog'))[0];
-	vm.canvas = angular.element(vm.wrapper.find('.canvas'))[0];
+	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
 	console.log('wats dialog ' + vm.dialog);
 	console.log('wats canvas ' + vm.canvas);
 	vm.signaturePad = new SignaturePad(vm.canvas);

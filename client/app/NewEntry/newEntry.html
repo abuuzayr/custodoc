@@ -3,10 +3,10 @@
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
     
-    <div id="formBuilderBody" class="mdl-layout__content">
+    <div id="signature-field-div" class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
-            <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
+            <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>  
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
             <div class="divider"></div>
@@ -90,7 +90,7 @@
                 </div> 
 
                 <!-- SIGNATURE FIELDS -->
-                <div id="signature-field-div">
+                <div ng-if="key.type=='signature'">
                     <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
                     <dialog id="signature-modal" class="mdl-dialog">
                         <p>Sign below</p>
