@@ -27,7 +27,14 @@ angular
 	var forms = document.getElementById('forms');
 	var newPageTemplate = formBuilderFactory.newPage;
 
+	// variables that contain base-64 encoding converted from user input
+	vm.image = null;
+	vm.signature = null;
 
+	vm.groupName = $stateParams.groupName;
+	
+
+	/*********** ARRAY VARIABLES THAT STORE FORM/ENTRY DATA **********/
 
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
@@ -38,18 +45,20 @@ angular
 	/* this entryData stores the final data structure for an entry, which contains the groupName  
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = [];  
-	
-	vm.file = null;
 
-	vm.groupName = $stateParams.groupName;
+	/*****************************************************************/
+	
 
 	/********* PAGE NAGIVATION VARIABLES **********/
+
 	vm.goToPageNumber = 1;
 	vm.currentPageNumber = 1;
 	vm.numberOfPages = 1;
 	vm.totalNumberOfPages = [];
 	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
+
+	/**********************************************/
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -62,7 +71,7 @@ angular
             }, 0);
         });
 
-	/*****   FOR CHECKBOX   *
+	/*****   FOR CHECKBOX   
 	
 	vm.selected = [];
 	
@@ -79,20 +88,6 @@ angular
 	};
 	
 	****************************/
-
-	/*// initialize the data to contain all entries and lets the htmlview retrieve this data
-	vm.getEntries = function() {
-	    entryService.getAllEntries()
-		.then(function(res) {
-                        vm.entry = res.data;
-		//	console.log(JSON.stringify(res));
-                })
-                .catch(function(err) {
-                    console.log("Error " + JSON.stringify(err));
-                });
-	};
-	
-	vm.getEntries();*/
 
 	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
@@ -166,6 +161,7 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
+
 						}  else if (element.name.startsWith('checkbox_')) {
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
@@ -189,6 +185,7 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
+
 						} else if (element.name.startsWith('radio_')) {
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
@@ -214,7 +211,27 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
-						}
+
+						} else if (element.name.startsWith('image_')) {
+							var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+							object.type = 'image';
+					        object.name = fieldName;
+					        object.label = fieldName;
+					        object.data = '';
+
+					        arrayOfKeys.push(object);
+
+						} else if (element.name.startsWith('signature_')) {
+							var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+							object.type = 'signature';
+					        object.name = fieldName;
+					        object.label = fieldName;
+					        object.data = '';
+
+					        arrayOfKeys.push(object);
+					    }
 				    }
 				}
 				vm.parsedFormData = arrayOfKeys;
@@ -244,13 +261,11 @@ angular
 				}
 				for (key in elements){
 					var element = elements[key];
-					//console.log("What is the name: " + element.name);
 					if(element.name.startsWith('background_')){
 						var node = document.createElement('img');
 						node.src = element.src;	
 						node.style.zIndex="0";
 					}else if(element.name.startsWith('label_')){
-						//console.log("Did i come here then? label");
 						var node = document.createElement('div');
 						node.innerHTML = element.content;
 						node.style.whiteSpace="pre-wrap";
@@ -261,11 +276,9 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
-						//console.log("Did i come here then? text");
 						var node = document.createElement('input');
 						node.type='text';
 						node.placeholder=element.default;
-						//node.data = '';
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
@@ -273,7 +286,6 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
-						//console.log("Did i come here then? checkbox");
 						var node = document.createElement('label');
 						var span = document.createElement('span');
 						var checkbox = document.createElement('input');
@@ -289,7 +301,6 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
-						//console.log("Did i come here then? dropdown");
 						var node = document.createElement('select');
 						var options = element.options;
 						if(options.length>0){
@@ -307,7 +318,6 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
-						//console.log("Did i come here then? radio");
 						var node = document.createElement('form');
 						var options = element.options;
 						if(options.length>0){
@@ -360,8 +370,6 @@ angular
 					node.style.left = element.left+'px';
 					node.style.position = "absolute";
 					var page = document.getElementById('form'+k+'page'+element.page);
-					/*console.log("Page?: " + k);
-					console.log("Wats my node: " + node);*/
 					page.appendChild(node);
 
 				}
@@ -369,6 +377,8 @@ angular
 			
 			document.getElementById("form1page1").style.display="block"; 
 		})
+
+	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 
 	vm.toPreviousPage = function() {
 		//toolbar.style.display = "none";
@@ -428,6 +438,9 @@ angular
 		}
 	}
 
+	/*************************************************************************/
+
+
 	/*function addImg() {
 		if(!vm.file){
 			alert('Please upload an image');
@@ -449,33 +462,6 @@ angular
 			vm.file = null;
 		}		
 	}*/
-
-//	console.log(vm.formData);
-
-	/**** UNDER CONSTRUCTION  ****
-	
-	// function to delete ntry
-	vm.deleteEntry = function() {
-	    entryService.delete(vm.entData)
-		.success(function(data) {
-		
-		    // after deleting, get the new list of entries and return it for display
-		    entryService.getAllEntries()
-			.success(function(data) { 
-			    vm.entries = data;
-			});
-		});
-	};    
-	
-	// call this function first before creating an entry
-	/*vm.retrieveKeys = function() {
-	    var keys = ["Name", "Country", "State", "Address", "Gender"];
-	    entry.retrieveKeys(vm.entData)
-		.success(function(keys) {
-		    return keys;
-		}); 
-	    return keys;
-	};*/
 
 	// Function to create an entry
 	vm.createEntry = function() {

@@ -75,16 +75,6 @@
                             </div>
                         </div>
 
-                        <!-- IMAGE FIELDS -->
-                        <div ng-if="key.type=='image'">
-                            <label class="mdl-textfield__label">{{key.label}}</label>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                <input class="mdl-textfield__input" type="file" ng-model="vm.file" name="file" base-sixty-four-input accept="image/*">
-                            </div>
-                            <label>Preview</label>
-                            <img width="90%" ng-src='data:image/png;base64,{{vm.file.base64}}'/>
-                        </div> 
-
                         <!-- DROPDOWN FIELDS -->
                         <div ng-if="key.type=='dropdown'">
                             <label >{{key.label}}</label>
@@ -101,23 +91,33 @@
                             </div>
                         </div>
 
-                        <!-- EMAIL FIELDS -->
-                        <div ng-if="key.type=='email'">
-                            <label class="mdl-textfield__label">{{key.label}}</label>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                            <input type="email" ng-model="key.data" class="mdl-textfield__input" placeholder={{key.name}}>
-                                </div>
-                            </div>
-
                         <!-- RADIO FIELDS -->
                         <div ng-if="key.type=='radio'">
                             <label>{{key.label}}</label>
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label" ng-repeat="option in key.options">
                             <label>
-                            <input type="radio" name="key.name" value={{option}} ng-model="key.data" class="mdl-textfield__input">
+                            <input type="radio" name="key.name" value={{option}} ng-model="key.data">
                                     {{option}} </label>
                             </div>
+                        </div>
+
+                        <!-- IMAGE FIELDS -->
+                        <div ng-if="key.type=='image'">
+                            <label class="mdl-textfield__label">{{key.label}}</label>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                                <input type="file" ng-model="vm.image" name="image" base-sixty-four-input accept="image/*">
                             </div>
+                            <label> Preview </label>
+                            <img width="90%" ng-src='data:image/png;base64,{{vm.image.base64}}'/>
+                        </div> 
+
+                        <!-- SIGNATURE FIELDS -->
+                        <div ng-if="key.type=='signature'">
+                            <label>{{key.label}}</label>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                            <input type="file" ng-model="vm.signature">
+                            </div>
+                        </div>
 
                         </ng-form>
                     </div>
