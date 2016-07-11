@@ -30,6 +30,7 @@ angular
 	// variables that contain base-64 encoding converted from user input
 	vm.image = null;
 	vm.signature = null;
+	vm.gotSignature = false;
 
 	vm.groupName = $stateParams.groupName;
 	
@@ -57,18 +58,6 @@ angular
 	vm.totalNumberOfPages = [];
 	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
-
-	/*****************************************************************/
-
-
-	/****************** SIGNATURE PAD VARIABLES **********************/
-
-	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-	console.log('wats dialog ' + vm.dialog);
-	console.log('wats canvas ' + vm.canvas);
-	vm.signaturePad = new SignaturePad(vm.canvas);
 
 	/*****************************************************************/
 
@@ -343,6 +332,7 @@ angular
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
+						vm.gotSignature = true;
 					}else if (element.name.startsWith('image_')) {
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
@@ -371,6 +361,20 @@ angular
 			
 			document.getElementById("form1page1").style.display="block"; 
 		})
+
+	/****************** SIGNATURE PAD VARIABLES **********************/
+
+	if (gotSignature) {
+		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+		console.log('wats dialog ' + vm.dialog);
+		console.log('wats canvas ' + vm.canvas);
+		vm.signaturePad = new SignaturePad(vm.canvas);
+	}
+	
+	/*****************************************************************/
+
 
 	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 

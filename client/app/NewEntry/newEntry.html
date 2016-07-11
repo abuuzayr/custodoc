@@ -3,7 +3,7 @@
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
     
-    <div id="signature-field-div" class="mdl-layout__content">
+    <div class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>  
@@ -33,7 +33,6 @@
             <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:100px;left:400px;position:absolute"></div>
         </section>
 
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <main class="mdl-layout__content">
         <div class="mdl-grid" id="newEntry-content">
         <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
@@ -91,27 +90,29 @@
 
                 <!-- SIGNATURE FIELDS -->
                 <div ng-if="key.type=='signature'">
-                    <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
-                    <dialog id="signature-modal" class="mdl-dialog">
-                        <p>Sign below</p>
-                        <div class="mdl-dialog__content">
-                            <div id="signature-pad" >
-                                <div>
-                                    <canvas id="signature-canvas"></canvas>
-                                </div>
-                                <div>
-                                    <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-                                    <button type="button" class="mdl-button" ng-click="vm.save()">Save</button> 
-                                    <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
-                                </div>
-                            </div>  
+                    <div id="signature-field-div">
+                        <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
+                        <dialog id="signature-modal" class="mdl-dialog">
+                            <p>Sign below</p>
+                            <div class="mdl-dialog__content">
+                                <div id="signature-pad" >
+                                    <div>
+                                        <canvas id="signature-canvas"></canvas>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
+                                        <button type="button" class="mdl-button" ng-click="vm.save()">Save</button> 
+                                        <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
+                                    </div>
+                                </div>  
+                            </div>   
+                        </dialog>
+                    
+                        <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
+                            <div class="mdl-snackbar__text"></div>
+                            <button class="mdl-snackbar__action" type="button"></button> 
                         </div>  
-                    </dialog>
-                
-                    <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
-                        <div class="mdl-snackbar__text"></div>
-                        <button class="mdl-snackbar__action" type="button"></button> 
-                    </div>                       
+                    </div>                     
                 </div>
 
                 </ng-form>
@@ -125,7 +126,6 @@
         </div>
         </div>
         </main>
-        </div>
     </div>
 </div>
 </body>
