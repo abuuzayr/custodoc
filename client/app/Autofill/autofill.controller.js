@@ -339,7 +339,6 @@ angular.module('app.autofill')
 				vm.table.dataHeader.push(res.data[i].fieldName);
 			}
 			vm.sorting.sortBy = vm.table.dataHeader[0];
-			console.log(vm.table.dataHeader);
 		}).catch(function ErrorCallback (err) {
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		})
@@ -367,14 +366,13 @@ angular.module('app.autofill')
 		vm.pagination.totalPage = Math.ceil(vm.pagination.totalItem/vm.pagination.itemPerPage);
 		vm.pagination.currentPage = 1;
 		getPagedItem();
-		console.log(vm.pagination);//TOFIX
  	}
 
  	$scope.$watch('vm.pagination.currentPage',function onPageChange(newPage, oldPage){
 		vm.pagination.startingIndex = (newPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (newPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
 		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
-		renderSelectionOnPageChange();
+		renderSelectionOnChange();
  	})
 
  	$scope.$watch('vm.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
@@ -382,7 +380,7 @@ angular.module('app.autofill')
 		vm.pagination.endingIndex = (startingIndex + newLimit - 1) < vm.pagination.totalItem ?  startingIndex + newLimit - 1 : vm.pagination.totalItem;
 		vm.pagination.itemPerPage = newLimit;
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
-		renderSelectionOnPageChange();
+		renderSelectionOnChange();
  	})
 
  	function getPagedItem(){
@@ -429,7 +427,6 @@ angular.module('app.autofill')
  	vm.selectVisible = selectVisible;
  	//SELECTION HANDLER
  	function updateSelection(target, action , id){
-		console.log(action,' ',id, target.checked);
 		return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
 		
 		//TOFIX
@@ -466,36 +463,68 @@ angular.module('app.autofill')
  	function selectVisible($event){
  		var checkbox = $event.target;
   		var action = (checkbox.checked ? 'add' : 'remove');
-  		for ( var i = 0; i < vm.pagination.itemPerPage; i++) {
-    			//var row = ;
-    			//updateSelected(action, row);
+  		var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
+  		var elementId
+  		for ( var i = 0; i < elementList.length; i++) {
+  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
+  			if(action==='add' && vm.selection.selected.indexOf(elementId) === -1){
+  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  			}else if(action==='remove' && vm.selection.selected.indexOf(elementId) != -1){
+  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  			}
   		}
+  		renderSelectionOnChange()
  	}
 
  	function selectOne($event, row){
  		var checkbox = $event.target;
   		var action = (checkbox.checked ? 'add' : 'remove');
   		updateSelection(checkbox, action, row._id);
+  		renderSelectionOnChange();
  	}
 
- 	function renderSelectionOnPageChange(){
+ 	function renderSelectionOnChange(){
 		$timeout( function() {
-			console.log('rendering');
-			var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
+			console.log('rendering');//TOFIX
+			var headerCheckbox = angular.element(document.querySelectorAll("[id^='data-table-header-checkbox-label']"))[0];
+			var elementList = angular.element(document.querySelectorAll("[id^='data-table-checkbox-label-']"));
 			var elementId = '';
 			for(var i = 0 ; i < elementList.length; i++){
 				elementId = elementList[i].id.replace('data-table-checkbox-label-','');
 				if( vm.selection.selected.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
-					console.log('uncheck')
 					elementList[i].MaterialCheckbox.uncheck();
 				}else if(vm.selection.selected.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
-					console.log('check')
 					elementList[i].MaterialCheckbox.check();
+				}
+			}
+			//TOFIX
+			if(elementList && elementList.length > 0 ){
+				if(isAllChecked(elementList)){
+					if(!vm.checked.headerChecked)
+						vm.checked.headerChecked = true;
+						headerCheckbox.MaterialCheckbox.check();
+				}else{
+					if(vm.checked.headerChecked){
+						vm.checked.headerChecked = false
+						headerCheckbox.MaterialCheckbox.uncheck();
+					}
+						
 				}
 			}
   		}, 0, false);
  	}
 
+ 	function isAllChecked(elementList){
+ 		console.log(elementList.length);
+ 		for(var i = 0 ; i < elementList.length; i++){
+ 			if(!angular.element(elementList[i]).hasClass('is-checked')){
+ 				console.log('return false')//TOFIX
+ 				return false;
+ 			}	
+ 		}
+		console.log('is all checked')//TOFIX
+ 		return true;
+ 	}
 
  	//EXPORT IMPORT HANDLER
 	function exportCSV(exportBy){
@@ -555,7 +584,6 @@ angular.module('app.autofill')
 	}
 
 	function validateCsvImport(fileName){
-
 	}
 
 

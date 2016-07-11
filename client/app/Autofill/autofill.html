@@ -66,8 +66,8 @@
 		  	<thead>
 		    	<tr>
 		      		<th>
-		          		<label class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="table-header">
-		            		<input type="checkbox" id="table-header" class="mdl-checkbox__input" ng-model='vm.checked.headerChecked' />
+		          		<label id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="data-table-header-checkbox">
+		            		<input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='vm.checked.headerChecked' ng-click='vm.selectVisible($event)'/>
 		          		</label>
 		      		</th>
 		      		<th>
