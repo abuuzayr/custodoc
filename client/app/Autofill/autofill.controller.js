@@ -420,6 +420,7 @@ angular.module('app.autofill')
  	function sort(sortBy){
  		vm.sorting.sortBy = sortBy;
 		vm.sorting.sortReverse = !vm.sorting.sortReverse;
+		renderSelectionOnChange();
  	}
 
 
