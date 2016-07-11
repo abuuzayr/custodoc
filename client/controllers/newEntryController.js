@@ -49,7 +49,7 @@ angular
 	/*****************************************************************/
 	
 
-	/********* PAGE NAGIVATION VARIABLES **********/
+	/****************** PAGE NAGIVATION VARIABLES ********************/
 
 	vm.goToPageNumber = 1;
 	vm.currentPageNumber = 1;
@@ -58,7 +58,17 @@ angular
 	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
 
-	/**********************************************/
+	/*****************************************************************/
+
+
+	/****************** SIGNATURE PAD VARIABLES **********************/
+
+	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+	vm.signaturePad = new SignaturePad(vm.canvas);
+
+	/*****************************************************************/
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -440,6 +450,53 @@ angular
 
 	/*************************************************************************/
 
+
+
+	/*********************** SIGNATURE PAD FUNCTIONS *************************/
+
+
+	vm.openModal = function() {
+		vm.dialog.showModal();	
+	}
+	
+	vm.closeModal = function() {
+		vm.dialog.close();	
+	}
+
+	vm.clear = function() {
+		vm.signaturePad.clear();
+	};
+
+	vm.save = function() {
+		console.log('haha');
+		if (vm.signaturePad.isEmpty()) {
+    		var msg = "Please provide signature first.";
+    		showSnackbar(msg);
+		 	} else {
+		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
+		 		//Open image in new window
+			//window.open(dataURL);
+			//..or
+			//Extract as base64 encoded
+			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+			vm.signature = data;
+			console.log(data);
+			//TODO: include in your json object
+		}
+	}
+
+	function showSnackbar(msg) {
+		var msgSnackbar = {
+			message: msg,
+			timeout: 5000
+		}
+		var snackbarContainer = document.querySelector('#snackbar-div');
+		console.log(snackbarContainer);
+		snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+	}
+
+
+	/*************************************************************************/
 
 	/*function addImg() {
 		if(!vm.file){

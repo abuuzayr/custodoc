@@ -1,10 +1,40 @@
 angular
     .module('app.newEntry')
-    .controller("newEntryCtrl", ['$stateParams', 'entryService', 'formsFactory' '$scope', '$q', '$location', '$timeout', function ($stateParams, entryService, formsFactory, $scope, $q, $location, $timeout) {
-        var viewContentLoaded = $q.defer();
+    .controller("newEntryCtrl", [
+    	'$stateParams', 
+    	'entryService', 
+    	'formsFactory',
+    	'formBuilderFactory', 
+    	'$scope', 
+    	'$q', 
+    	'$location', 
+    	'$timeout', 
+
+    function (
+    	$stateParams, 
+    	entryService, 
+    	formsFactory, 
+    	formBuilderFactory,
+    	$scope, 
+    	$q, 
+    	$location, 
+    	$timeout
+    	) {
+
+    var viewContentLoaded = $q.defer();
         
 	var vm = this;
 	var forms = document.getElementById('forms');
+	var newPageTemplate = formBuilderFactory.newPage;
+
+	// variables that contain base-64 encoding converted from user input
+	vm.image = null;
+	vm.signature = null;
+
+	vm.groupName = $stateParams.groupName;
+	
+
+	/*********** ARRAY VARIABLES THAT STORE FORM/ENTRY DATA **********/
 
 	// this formData stores the current selected forms that are going to be used to create an entry
 	vm.formData = [];
@@ -16,10 +46,29 @@ angular
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = [];  
 
-	vm.file = null;
+	/*****************************************************************/
 	
 
-	vm.groupName = $stateParams.groupName;
+	/****************** PAGE NAGIVATION VARIABLES ********************/
+
+	vm.goToPageNumber = 1;
+	vm.currentPageNumber = 1;
+	vm.numberOfPages = 1;
+	vm.totalNumberOfPages = [];
+	vm.currentFormNumber = 1;
+	vm.numberOfForms = 1;
+
+	/*****************************************************************/
+
+
+	/****************** SIGNATURE PAD VARIABLES **********************/
+
+	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+	vm.signaturePad = new SignaturePad(vm.canvas);
+
+	/*****************************************************************/
 
         $scope.$on('$viewContentLoaded', function () {
             $timeout(function () {
@@ -32,7 +81,7 @@ angular
             }, 0);
         });
 
-	/*****   FOR CHECKBOX   *
+	/*****   FOR CHECKBOX   
 	
 	vm.selected = [];
 	
@@ -50,26 +99,18 @@ angular
 	
 	****************************/
 
-	/*// initialize the data to contain all entries and lets the htmlview retrieve this data
-	vm.getEntries = function() {
-	    entryService.getAllEntries()
-		.then(function(res) {
-                        vm.entry = res.data;
-		//	console.log(JSON.stringify(res));
-                })
-                .catch(function(err) {
-                    console.log("Error " + JSON.stringify(err));
-                });
-	};
-	
-	vm.getEntries();*/
-
-	/* This function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
+	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
 
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
 			vm.formData = res.data;
+			for(var x = 0; x < vm.formData.length; x++) {
+				vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
+			}
+			vm.numberOfForms = vm.totalNumberOfPages.length;
+			vm.numberOfPages = vm.totalNumberOfPages[0];
+			// number of forms??
 		})
 		.then(function() {
 				var arrayOfKeys = [];
@@ -79,7 +120,7 @@ angular
 				  	  	var elements = data.elements;
 				   	 for (key in elements) {
 						var element = elements[key];
-						console.log("how many times");
+						//console.log("how many times");
 						var object = {};
 						if (element.name.startsWith('text_')) {
 						    var index = element.name.indexOf('_');
@@ -130,6 +171,7 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
+
 						}  else if (element.name.startsWith('checkbox_')) {
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
@@ -153,6 +195,7 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
+
 						} else if (element.name.startsWith('radio_')) {
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
@@ -178,7 +221,27 @@ angular
 						    }
 
 						    arrayOfKeys.push(object);
-						}
+
+						} else if (element.name.startsWith('image_')) {
+							var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+							object.type = 'image';
+					        object.name = fieldName;
+					        object.label = fieldName;
+					        object.data = '';
+
+					        arrayOfKeys.push(object);
+
+						} else if (element.name.startsWith('signature_')) {
+							var index = element.name.indexOf('_');
+					    	var fieldName = element.name.substring(index+1, element.name.length);
+							object.type = 'signature';
+					        object.name = fieldName;
+					        object.label = fieldName;
+					        object.data = '';
+
+					        arrayOfKeys.push(object);
+					    }
 				    }
 				}
 				vm.parsedFormData = arrayOfKeys;
@@ -190,109 +253,54 @@ angular
 				creationDate : Date(),
 				lastModified : Date()
 		    }];
-		    
-		    // finalData is the object that contains fields and entryData2 
+	
 		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
 	 
 		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
-
 		})
 		.then(function(){
-			console.log(vm.formData.length);
-			for(var n = 0; n < vm.formData.length; n++) {
-				vm.numberOfPages = vm.formData.numberOfPages;
-				var elements = vm.formData.elements;
-				for (var j = 1; j <= vm.numberOfPages; j++) {
-					var newPage = formsFactory.newPage.cloneNode(true);
-					newPage.setAttribute("id", 'form' + formNumber + "page" + j);
+			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
+				var form = vm.formData[k-1];
+				var elements = form.elements;
+
+				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
+					var newPage = newPageTemplate.cloneNode(true);
+					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
-					forms.appendChild(newPage);
+					body.appendChild(newPage);
 				}
-				for (key in elements) {
+				for (key in elements){
 					var element = elements[key];
-					if (element.name.startsWith('background_')) {
+					if(element.name.startsWith('background_')){
 						var node = document.createElement('img');
-						node.src = element.src;
-						node.style.zIndex = "0";
-					} else if (element.name.startsWith('label_')) {
+						node.src = element.src;	
+						node.style.zIndex="0";
+					}else if(element.name.startsWith('label_')){
 						var node = document.createElement('div');
 						node.innerHTML = element.content;
-						node.style.whiteSpace = "pre-wrap";
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('text_') || element.name.startsWith('auto_text_')) {
-						var node = document.createElement('input');
-						node.type = 'text';
-						node.placeholder = element.default;
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
-						var node = document.createElement('select');
-						var options = element.options;
-						for (var i = 0; i < options.length; i++) {
-							var option = document.createElement('option');
-							option.innerHTML = options[i];
-							if (options[i]===element.default) option.setAttribute("selected",true);
-							node.appendChild(option);
-						}
-						node.style.color = element.color;
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.fontFamily = element.fontFamily;
-						node.style.fontSize = element.fontSize;
-						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
-					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
-						var node = document.createElement('form');
-						var options = element.options;
-						if (element.display==="radioInline") var display = "inline";
-						else var display = "block";
-						if(options.length>0){
-							for(var i=0; i<options.length; i++){
-								var label = document.createElement("label");
-								var option = document.createElement("input");
-								option.type = "radio";
-								option.name = element.name;
-								option.value = options[i];
-								if(options[i]===element.default) option.setAttribute("checked",true);
-								var span = document.createElement("span");
-								span.innerHTML=options[i]+" ";
-								label.style.display = display;
-								label.appendChild(option);
-								label.appendChild(span);
-								node.appendChild(label);
-							}
-						}
-						node.className = element.display;
+						node.style.whiteSpace="pre-wrap";
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
-					} else if (element.name.startsWith('signature_')) {
-						var node = document.createElement('canvas');
+					}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
+						var node = document.createElement('input');
+						node.type='text';
+						node.placeholder=element.default;
+						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('image_')) {
-						var node = document.createElement('canvas');
-						node.style.backgroundColor = element.backgroundColor;
-						node.style.zIndex = "1";
-					} else if (element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')) {
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 						var node = document.createElement('label');
 						var span = document.createElement('span');
 						var checkbox = document.createElement('input');
-						checkbox.type = "checkbox";
-						if(element.default) checkbox.setAttribute("checked",true);
-						checkbox.setAttribute("ng-checked",element.default);
-						$compile(checkbox)($scope);
+						checkbox.type="checkbox";
+						checkbox.checked = element.default;
 						span.innerHTML = element.label;
 						node.appendChild(checkbox);
 						node.appendChild(span);
@@ -301,56 +309,194 @@ angular
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex = "1";
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
+						var node = document.createElement('select');
+						var options = element.options;
+						if(options.length>0){
+							for(var i = 0; i<options.length; i++){
+								var option = document.createElement('option');
+								option.innerHTML=options[i];
+								node.appendChild(option);
+							}
+						}
+						node.value = element.default;
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+						var node = document.createElement('form');
+						var options = element.options;
+						if(options.length>0){
+							if (element.display==="radioInline") var display = "inline";
+							else var display = "block";
+							for(var i=0; i<options.length; i++){
+								var label = document.createElement("label");
+								var option = document.createElement("input");
+								option.type = "radio";
+								option.name = element.name;
+								option.value = options[i];
+								if(options[i]===element.default) option.checked = true;
+								var span = document.createElement("span");
+								span.innerHTML=options[i]+" ";
+								label.appendChild(option);
+								label.appendChild(span);
+								label.style.display=display;
+								node.appendChild(label);
+							}
+							node.className +=" "+ element.display;
+						}
+						node.style.color = element.color;
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.fontFamily = element.fontFamily;
+						node.style.fontSize = element.fontSize;
+						node.style.textDecoration = element.textDecoration;
+						node.style.zIndex="1";
+					}else if(element.name.startsWith('signature_')){
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex="1";
+					}else if (element.name.startsWith('image_')) {
+						var node = document.createElement('canvas');
+						node.style.backgroundColor = element.backgroundColor;
+						node.style.zIndex="1";
 					}
 					node.style.opacity = element.opacity;
 					node.style.border = element.border;
 					node.style.borderRadius = element.borderRadius;
+					node.className +=" notSelectable";
+					node.id = key;
+					node.setAttribute('name',element.name);
 					node.style.overflow = "hidden";
-					node.style.lineHeight = "100%";
-					node.style.position = "absolute";
+					node.style.lineHeight="100%";
+					node.style.position="absolute";
 					node.style.overflow = "hidden";
-					node.style.width = element.width + 'px';
-					node.style.height = element.height + 'px';
-					node.style.top = element.top + 'px';
-					node.style.left = element.left + 'px';
+					node.style.width = element.width+'px';
+					node.style.height = element.height+'px';
+					node.style.top = element.top+'px';
+					node.style.left = element.left+'px';
 					node.style.position = "absolute";
-					var page = document.getElementById('form' + formNumber + 'page' + element.page);
+					var page = document.getElementById('form'+k+'page'+element.page);
 					page.appendChild(node);
 
 				}
-				// formNumber NOT USED
-				deferred.resolve(formNumber);
 			}
+			
+			document.getElementById("form1page1").style.display="block"; 
+		})
 
-		})		
+	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 
-//	console.log(vm.formData);
+	vm.toPreviousPage = function() {
+		//toolbar.style.display = "none";
+		if (vm.currentPageNumber == 1) {
+			alert("This is the first page.");
+		} else {
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
+			vm.currentPageNumber--;
+			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page" + vm.currentPageNumber);
+			currentPage.style.display = "block";
+		}
+	}
 
-	/**** UNDER CONSTRUCTION  ***f
+	vm.toNextPage = function() {
+		//toolbar.style.display = "none";
+		if (vm.currentPageNumber == vm.numberOfPages) {
+			alert("This is the last page.");
+		} else {
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
+			vm.currentPageNumber++;
+			currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
+			currentPage.style.display = "block";
+		}
+	}
+
+	vm.goToPage = function() {
+		//toolbar.style.display = "none";
+		currentPage.style.display = "none";
+		vm.currentPageNumber = vm.goToPageNumber;
+		currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
+		currentPage.style.display = "block";
+	}
+
+	vm.toPreviousForm = function() {
+		if (vm.currentFormNumber == 1) {
+			alert("This is the first form.");
+		} else {
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
+			vm.currentFormNumber--;
+			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
+			vm.currentPageNumber = 1;
+			currentPage = document.getElementById("form" + vm.currentFormNumber+ "page1");
+			currentPage.style.display = "block";	
+		}
+	}
+
+	vm.toNextForm = function() {
+		if (vm.currentFormNumber == vm.numberOfForms) {
+			alert("This is the last form.");
+		} else {
+			document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber).style.display = "none";
+			vm.currentFormNumber++;
+			vm.numberOfPages = vm.totalNumberOfPages[vm.currentFormNumber-1];
+			vm.currentPageNumber = 1;
+			currentPage = document.getElementById("form" + vm.currentFormNumber + "page1");
+			currentPage.style.display = "block";
+		}
+	}
+
+	/*************************************************************************/
+
+
+
+	/*********************** SIGNATURE PAD FUNCTIONS *************************/
+
+
+	vm.openModal = function() {
+		vm.dialog.showModal();	
+	}
 	
-	// function to delete ntry
-	vm.deleteEntry = function() {
-	    entryService.delete(vm.entData)
-		.success(function(data) {
-		
-		    // after deleting, get the new list of entries and return it for display
-		    entryService.getAllEntries()
-			.success(function(data) { 
-			    vm.entries = data;
-			});
-		});
-	};    */
-	
-	// call this function first before creating an entry
-	/*vm.retrieveKeys = function() {
-	    var keys = ["Name", "Country", "State", "Address", "Gender"];
-	    entry.retrieveKeys(vm.entData)
-		.success(function(keys) {
-		    return keys;
-		}); 
-	    return keys;
-	};*/
+	vm.closeModal = function() {
+		vm.dialog.close();	
+	}
+
+	vm.clear = function() {
+		vm.signaturePad.clear();
+	};
+
+	vm.save = function() {
+		console.log('haha');
+		if (vm.signaturePad.isEmpty()) {
+    		var msg = "Please provide signature first.";
+    		showSnackbar(msg);
+		 	} else {
+		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
+		 		//Open image in new window
+			//window.open(dataURL);
+			//..or
+			//Extract as base64 encoded
+			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+			vm.signature = data;
+			console.log(data);
+			//TODO: include in your json object
+		}
+	}
+
+	function showSnackbar(msg) {
+		var msgSnackbar = {
+			message: msg,
+			timeout: 5000
+		}
+		var snackbarContainer = document.querySelector('#snackbar-div');
+		console.log(snackbarContainer);
+		snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+	}
+
+
+	/*************************************************************************/
 
 	// Function to create an entry
 	vm.createEntry = function() {
