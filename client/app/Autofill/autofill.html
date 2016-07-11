@@ -24,7 +24,156 @@
 	}
 
 </style>
-<!-- ========================================= DIALOG ========================================= -->
+
+<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<!--================================== Ng-include nav bars ==================================-->
+	<header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
+	<!--====================================== new data table ===================================-->
+	<div>
+		<div>
+			<p>Checked: {{vm.checked}} </p><br/>
+			<p>Selectio: {{vm.selection.selected.length}} {{vm.selection.selected.length>1 ? 'rows':'row'}} selected</p>
+		</div>
+	</div>
+	<div>
+		<button class='mdl-button mdl-primary' ng-click='vm.upgradeDom()'>Refresh Dom</button>
+
+
+		<div id='table-toolbar' class = 'mdl-grid'>
+			<div class="mdl-cell mdl-cell--1-col">
+				<button class='mdl-button mdl-primary'>
+					<label for="file-input">Import</label>  
+				</button>
+				<input id="file-input" type="file" accept='.csv' onchange="vm.validateCsvImport(this.value)">
+			</div>	
+			<span flex=''><span>
+			<!-- EXPORT menu -->
+			<div class='menu-wrapper mdl-cell mdl-cell--1-col'>
+				<button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
+					Export
+				</button>
+				<ul class="mdl-menu mdl-menu mdl-js-menu"
+					for="table-toolbar-export-menu">
+					<li class="mdl-menu__item" ng-repeat="exportOption in vm.fileOptions.exportOptions" ng-click="vm.exportCSV(exportOption)">
+						Export {{exportOption}}
+					</li>
+				</ul>
+			</div>	
+		</div>
+	
+
+		<table class="mdl-data-table mdl-shadow--2dp">
+		  	<thead>
+		    	<tr>
+		      		<th>
+		          		<label class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="table-header">
+		            		<input type="checkbox" id="table-header" class="mdl-checkbox__input" ng-model='vm.checked.headerChecked' />
+		          		</label>
+		      		</th>
+		      		<th>
+		      		</th>
+
+		      		<th class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
+		      			<a href="" ng-click="vm.sort(header)">
+	                        {{header}}
+	                        <span ng-show="vm.sorting.sortBy == header && !vm.sorting.sortReverse" >^</span>
+	                        <span ng-show="vm.sorting.sortBy == header && vm.sorting.sortReverse" >v</span>
+                        </a>
+		      		</th>
+		    	</tr>
+		  	</thead>
+
+		  	<tbody>
+		    	<tr ng-repeat='row in vm.table.data  | orderBy: vm.sorting.sortBy : vm.sorting.sortReverse | limitTo:vm.pagination.itemPerPage : vm.pagination.startingIndex track by $index' post-repeat-upgrade>
+					<td>
+	          			<label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="{{'data-table-checkbox-' + row._id}}">
+	            			<input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='vm.checked[row._id]' ng-click='vm.selectOne($event,row)'/> 
+	          			</label>
+	      			</td>
+	      			<td>
+	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
+							<i class="material-icons">edit</i>
+						</button>
+
+	      			</td>
+	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
+	      				{{row[header]}}
+	      			</td>	
+		    	</tr>
+		  	</tbody>
+		</table>
+		<!-- pagiantion options -->
+		<div class="mdl-grid">
+			<div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+			<div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
+			<span flex=''></span>
+			<div class="mdl-cell mdl-cell--2-col">
+				<div id='page-selection' class='menu-wrapper'>
+					<span>Page: </span>
+					<button id='page-selection-menu-button' class="mdl-button mdl-js-button">
+					{{vm.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
+					</button>
+					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu"
+						for="page-selection-menu-button">
+						<li class="mdl-menu__item" ng-repeat='num in vm.getTimes(vm.pagination.totalPage) track by $index' ng-click='vm.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mdl-cell mdl-cell--3-col">
+				<div id='item-per-page-selection' class='menu-wrapper'>
+					<span>Rows per page: </span>
+					<button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
+						{{vm.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
+					</button>
+					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
+						<li class="mdl-menu__item" ng-repeat='option in vm.pagination.limitOption' ng-click='vm.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mdl-cell mdl-cell--4-col">
+				<span id='item-info'>
+					{{vm.pagination.startingIndex}} - {{vm.pagination.endingIndex}} of {{vm.pagination.totalItem}}
+				<span>
+				<span id='page-navigator'>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.toFirstPage()'>
+							<i class="material-icons">first_page</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='vm.toPreviousPage()'>
+							<i class="material-icons">chevron_left</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='vm.toNextPage()'>
+							<i class="material-icons">chevron_right</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='vm.toLastPage()'>
+							<i class="material-icons">last_page</i>
+					</button>
+				</span>
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+		  	<!-- <tbody>
+		    	<tr ng-repeat='row in vm.pagination.pagedItem track by $index'>
+					<td>
+	          			<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="{{'row-' + $index}}">
+	            			<input type="checkbox" id="{{'row-' + $index}}" class="mdl-checkbox__input" />
+	          			</label>
+	      			</td>
+	      			<td>
+	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
+							<i class="material-icons">edit</i>
+						</button>
+	      			</td>
+	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
+	      				{{row[header]}}
+	      			</td>	
+		    	</tr>
+		  	</tbody> -->
+		  	<!-- alternative design -->
+
+		  	<!-- ========================================= DIALOG ========================================= -->
 <dialog id="create-element-dialog" class="mdl-dialog" >
 	<form ng-submit="vm.saveElement(vm.elementType)">
 		<div class="mdl-dialog__title" style="padding: 24px 24px 10px">
@@ -122,7 +271,7 @@
 							<i class="material-icons">remove</i>
 						</button>
 
-						<div ng-repeat = "x in vm.getTimes(vm.numOfOptions) track by $index">
+						<div ng-repeat = "x in vm.getTimes(vm.numOfOptions) track by $index" post-repeat-upgrade>
 							<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">     
 								 <input id="'dialog-input-dropdown-option-'+($index+1)}}" class="mdl-textfield__input" ng-model='vm.dropdown.options[$index]' type="text" ng-required="true" ng-init='vm.upgradeDom()'/>
 								 <label class="mdl-textfield__label" for="'dialog-input-dropdown-option-'+($index+1)}}">option {{$index+1}}</label>
@@ -151,151 +300,5 @@
 	<div class="mdl-snackbar__text"></div>
 	<button class="mdl-snackbar__action" type="button"></button>
 </div>
-
-<div id="body"  class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<!--================================== Ng-include nav bars ==================================-->
-	<header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
-	<!--====================================== new data table ===================================-->
-	<div class='mdl-grid'>
-		<div class="mdl-cell mdl-cell--12-col">
-			<p>Checked: </p>{{vm.checked}}<br/>
-		</div>
-	</div>
-	<div>
-		<button class='mdl-button mdl-primary' ng-click='vm.upgradeDom()'>Refresh Dom</button>
-
-
-		<div id='table-toolbar' class = 'mdl-grid'>
-			<div class="mdl-cell mdl-cell--1-col">
-				<button class='mdl-button mdl-primary'>
-					<label for="file-input">Import</label>  
-				</button>
-				<input id="file-input" type="file" accept='.csv' onchange="vm.validateCsvImport(this.value)">
-			</div>	
-			<span flex=''><span>
-			<!-- EXPORT menu -->
-			<div class='menu-wrapper mdl-cell mdl-cell--1-col'>
-				<button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
-					Export
-				</button>
-				<ul class="mdl-menu mdl-menu mdl-js-menu"
-					for="table-toolbar-export-menu">
-					<li class="mdl-menu__item" ng-repeat="exportOption in vm.fileOptions.exportOptions" ng-click="vm.exportCSV(exportOption)">
-						Export {{exportOption}}
-					</li>
-				</ul>
-			</div>	
-		</div>
-	
-
-		<table class="mdl-data-table mdl-shadow--2dp">
-		  	<thead>
-		    	<tr>
-		      		<th>
-		          		<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="table-header">
-		            		<input type="checkbox" id="table-header" class="mdl-checkbox__input" />
-		          		</label>
-		      		</th>
-		      		<th>
-		      		</th>
-
-		      		<th class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
-		      			<a href="" ng-click="vm.sort(header)">
-	                        {{header}}
-	                        <span ng-show="vm.sorting.sortBy == header && !vm.sortReverse" class="fa fa-caret-down"></span>
-	                        <span ng-show="vm.sorting.sortBy == header && vm.sortReverse" class="fa fa-caret-up"></span>
-                        </a>
-		      		</th>
-		    	</tr>
-		  	</thead>
-		  	<tbody>
-		    	<tr ng-repeat='row in vm.table.data | orderBy: vm.sorting.sortBy : vm.sorting.sortReverse | limitTo:vm.pagination.itemPerPage : vm.pagination.startingIndex track by $index'>
-					<td>
-	          			<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="{{'row-' + row._id}}">
-	            			<input type="checkbox" ng-attr-id="{{'row-' + row._id}}" class="mdl-checkbox__input" ng-model='vm.checked[row._id]' ng-checked='vm.checked[row._id]'/>
-	          			</label>
-	      			</td>
-	      			<td>
-	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
-							<i class="material-icons">edit</i>
-						</button>
-
-	      			</td>
-	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
-	      				{{row[header]}}
-	      			</td>	
-		    	</tr>
-		  	</tbody>
-		</table>
-		<!-- pagiantion options -->
-		<div class="mdl-grid">
-			<div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
-			<div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
-			<span flex=''></span>
-			<div class="mdl-cell mdl-cell--2-col">
-				<div id='page-selection' class='menu-wrapper'>
-					<span>Page: </span>
-					<button id='page-selection-menu-button' class="mdl-button mdl-js-button">
-					{{vm.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
-					</button>
-					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu"
-						for="page-selection-menu-button">
-						<li class="mdl-menu__item" ng-repeat='num in vm.getTimes(vm.pagination.totalPage) track by $index' ng-click='vm.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
-					</ul>
-				</div>
-			</div>
-			<div class="mdl-cell mdl-cell--3-col">
-				<div id='item-per-page-selection' class='menu-wrapper'>
-					<span>Rows per page: </span>
-					<button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
-						{{vm.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
-					</button>
-					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
-						<li class="mdl-menu__item" ng-repeat='option in vm.pagination.limitOption' ng-click='vm.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
-					</ul>
-				</div>
-			</div>
-			<div class="mdl-cell mdl-cell--4-col">
-				<span id='item-info'>
-					{{vm.pagination.startingIndex}} - {{vm.pagination.endingIndex}} of {{vm.pagination.totalItem}}
-				<span>
-				<span id='page-navigator'>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.toFirstPage()'>
-							<i class="material-icons">first_page</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='vm.toPreviousPage()'>
-							<i class="material-icons">chevron_left</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='vm.toNextPage()'>
-							<i class="material-icons">chevron_right</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='vm.toLastPage()'>
-							<i class="material-icons">last_page</i>
-					</button>
-				</span>
-			</div>
-		</div>
-	</div>	
-</div>
-
-
-		  	<!-- <tbody>
-		    	<tr ng-repeat='row in vm.pagination.pagedItem track by $index'>
-					<td>
-	          			<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="{{'row-' + $index}}">
-	            			<input type="checkbox" id="{{'row-' + $index}}" class="mdl-checkbox__input" />
-	          			</label>
-	      			</td>
-	      			<td>
-	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
-							<i class="material-icons">edit</i>
-						</button>
-	      			</td>
-	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
-	      				{{row[header]}}
-	      			</td>	
-		    	</tr>
-		  	</tbody> -->
-		  	<!-- alternative design -->
 
    

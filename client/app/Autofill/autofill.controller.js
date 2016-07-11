@@ -54,7 +54,7 @@ angular.module('app.autofill')
 	// ===========================================   UI Buttons  =========================================== //
 	vm.upgradeDom = function(){
 		console.log('upgrade DOM');
-		return componentHandler.upgradeDom()
+		return componentHandler.upgradeDom();
 	}
 
 	vm.addOption  = function(){
@@ -76,11 +76,6 @@ angular.module('app.autofill')
 		else 
 			vm.numOfOptions = 0;
 	};
-
-	// vm.clearSelected = function() {
-	// 	vm.gridApi.selection.clearSelectedRows();
-	// 	vm.hasSelection = false;
-	// };
 
 	// vm.deleteSelected = function() {
 	// 	var selectedRows = vm.gridApi.selection.getSelectedRows();
@@ -119,14 +114,6 @@ angular.module('app.autofill')
 		.then(vm.closeDialog());
 	};
 
-	// vm.exportCSV = function(){
-	// 	var element = angular.element(document.querySelectorAll('.custom-csv-link-location'));
-	//     vm.gridApi.exporter.csvExport('selected', 'all', element );
-	// };
-
-	// vm.resetGrid = function(){
-	// 	return initGrid();
-	// }
 
 	// vm.read = function(){
 	// 		vm.gridOptions.data = [];
@@ -282,47 +269,11 @@ angular.module('app.autofill')
 	
 	//initGrid();//UIGRID
 
-	//Additional
-	// vm.gridOptions.onRegisterApi = function(gridApi){
-	// 		//set gridApi on scope
-	// 		vm.gridApi = gridApi;
-	// 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
-	// 			if(vm.gridApi.grid.selection.selectedCount)
-	// 				vm.hasSelection = true;
-	// 			else
-	// 				vm.hasSelection = false;
-	// 		});
- 
-	// 		gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
-	// 			if(vm.gridApi.grid.selection.selectedCount)
-	// 				vm.hasSelection = true;
-	// 			else
-	// 				vm.hasSelection = false;
-	// 		});
-
-	// 		gridApi.rowEdit.on.saveRow($scope, 
-	// 			update);
-	// };
 
 	/* =========================================== Load animation =========================================== */
 
 	/* =========================================== mdl data table =========================================== */
 	
-	// vm.table.options = {
-	// 	rowSelection: true,
-	// 	multiSelect: true,//TOFIX: ACCESS CONTROL
-	// 	showFilter:false,
-	// 	orderBy: '',
-	// 	rowLimit: 20,
-	// 	page: 1,
-	// 	importOptions:{ 
-	// 		allowedExtension: '.csv',
-	// 		maxSize: '10MB'
-	// 	},
-	// 	filterOptions:{ debounce: 500 },
-	// 	limitOptions: [10,20,30],
-	// 	exportOptions: ['Selected','All']
-	// }
 	vm.table = {
 		dataHeader: [],
 		data: [],
@@ -333,7 +284,9 @@ angular.module('app.autofill')
 		sortReverse: true
 	}
 
-	vm.checked = {};
+	vm.checked = {
+		headerChecked:false
+	};
 
 	vm.selection = {
 		rowSelection: true,
@@ -385,7 +338,7 @@ angular.module('app.autofill')
 			for(var i = 0; i < res.data.length; i++){
 				vm.table.dataHeader.push(res.data[i].fieldName);
 			}
-			vm.table.options.orderBy = vm.table.dataHeader[0];
+			vm.sorting.sortBy = vm.table.dataHeader[0];
 			console.log(vm.table.dataHeader);
 		}).catch(function ErrorCallback (err) {
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
@@ -406,6 +359,9 @@ angular.module('app.autofill')
 		})
 	}
 
+
+	//PAGINATION
+
 	function onDataLoaded(){
 		vm.pagination.totalItem = vm.table.data.length;
 		vm.pagination.totalPage = Math.ceil(vm.pagination.totalItem/vm.pagination.itemPerPage);
@@ -418,6 +374,7 @@ angular.module('app.autofill')
 		vm.pagination.startingIndex = (newPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (newPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
 		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
+		renderSelectionOnPageChange();
  	})
 
  	$scope.$watch('vm.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
@@ -425,6 +382,7 @@ angular.module('app.autofill')
 		vm.pagination.endingIndex = (startingIndex + newLimit - 1) < vm.pagination.totalItem ?  startingIndex + newLimit - 1 : vm.pagination.totalItem;
 		vm.pagination.itemPerPage = newLimit;
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
+		renderSelectionOnPageChange();
  	})
 
  	function getPagedItem(){
@@ -455,70 +413,96 @@ angular.module('app.autofill')
  		if(vm.pagination.currentPage > 1)
  			vm.pagination.currentPage--;
  		else
- 			feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');feedbackServices.errorFeedback()
+ 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
  		console.log(vm.pagination.currentPage);//TOFIX
  	}
 
- 	function toPage(pageNum){
- 		vm.pagination.currentPage = pageNum;
- 		console.log(vm.pagination.currentPage);//TOFIX
- 	}
 
+ 	//SORTING AND FILTERING
  	function sort(sortBy){
  		vm.sorting.sortBy = sortBy;
 		vm.sorting.sortReverse = !vm.sorting.sortReverse;
-		vm.table.data = vm.sorting.sortReverse ? vm.table.data.sort(compareReverse):vm.table.data.sort(compare);
-		return getPagedItem();
+ 	}
 
-		function compare(a,b) {
-			if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
-				var first = '';
-			else	
-				var first = String(a[sortBy]).toUpperCase();
 
-			if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
-				var second = '';
-			else	
-				var second = String(b[sortBy]).toUpperCase();
+ 	vm.selectOne = selectOne;
+ 	vm.selectVisible = selectVisible;
+ 	//SELECTION HANDLER
+ 	function updateSelection(target, action , id){
+		console.log(action,' ',id, target.checked);
+		return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
+		
+		//TOFIX
 
-			if ( first < second ){
-				return -1;
+		function addToSelection(target, id){
+			if(vm.selection.selected.indexOf(id) === -1){
+				vm.selection.selected.push(id);
+				if(target && (!vm.checked.hasOwnProperty(id) || (!vm.checked[id] && !vm.checked.hasOwnProperty(id))))
+					target.checked = true;
 			}
-			if (first > second ){
-				return 1;
-			}
-			return 0;
+			else 
+				console.log('already have row ??');
 		}
 
-		function compareReverse(a,b) {
-			if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
-				var first = '';
-			else	
-				var first = String(a[sortBy]).toUpperCase();
-
-			if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
-				var second = '';
-			else	
-				var second = String(b[sortBy]).toUpperCase();
-
-			if ( first < second ){
-				return 1;
+		function removeFromSelection(target,id){
+			if(vm.selection.selected.indexOf(id) != -1){
+				vm.selection.selected.splice(vm.selection.selected.indexOf(id), 1);
+				if(target && (!vm.checked.hasOwnProperty(id) || vm.checked[id]))
+					target.checked = false;
 			}
-			if (first > second ){
-				return -1;
-			}
-			return 0;
+			else
+				console.log('not removed');
 		}
  	}
 
- 
+ 	function clearAll(){
+ 		var action = 'remove';
+ 		for ( var i = 0; i < vm.selection.selected.length; i++) {
+ 			updateSelection(null, action, vm.selection.selected[i]);
+ 		}
+ 		vm.checked = { headerChecked:false };
+ 	}
+
+ 	function selectVisible($event){
+ 		var checkbox = $event.target;
+  		var action = (checkbox.checked ? 'add' : 'remove');
+  		for ( var i = 0; i < vm.pagination.itemPerPage; i++) {
+    			//var row = ;
+    			//updateSelected(action, row);
+  		}
+ 	}
+
+ 	function selectOne($event, row){
+ 		var checkbox = $event.target;
+  		var action = (checkbox.checked ? 'add' : 'remove');
+  		updateSelection(checkbox, action, row._id);
+ 	}
+
+ 	function renderSelectionOnPageChange(){
+		$timeout( function() {
+			console.log('rendering');
+			var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
+			var elementId = '';
+			for(var i = 0 ; i < elementList.length; i++){
+				elementId = elementList[i].id.replace('data-table-checkbox-label-','');
+				if( vm.selection.selected.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
+					console.log('uncheck')
+					elementList[i].MaterialCheckbox.uncheck();
+				}else if(vm.selection.selected.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
+					console.log('check')
+					elementList[i].MaterialCheckbox.check();
+				}
+			}
+  		}, 0, false);
+ 	}
+
+
+ 	//EXPORT IMPORT HANDLER
 	function exportCSV(exportBy){
 		console.log('going to export');//TOFIX
 		console.log(exportBy === 'Selected',exportBy === 'Visible',exportBy === 'All');//TOFIX
 		if( exportBy === 'Selected')
 			return exportSelected();
-		else if( exportBy === 'Visible')
-			return exportVisible();
 		else if( exportBy === 'All')
 			return exportAll();
 		else 
@@ -540,14 +524,6 @@ angular.module('app.autofill')
 		return download(csv);
 	}
 
-	// function exportVisible(){
-	// 	console.log('visible');
-	// 	var startingIndex = vm.table.options.rowLimit * (vm.table.options.page - 1);
-	// 	var endingIndex = startingIndex + vm.table.options.rowLimit;
-	// 	console.log("exporting from " + startingIndex + " to " + endingIndex);
-	// 	var csv = Papa.unparse(vm.table.data.slice(startingIndex,endingIndex));
-	// 	return download(csv);
-	// }
 
 	function parseComplete(result, file){
 		console.log(result)//TOFIX
@@ -599,10 +575,7 @@ angular.module('app.autofill')
 		vm.table.selected = [];
 	}
 
-	$scope.$watch('vm.selection.selected', function onSelectionChange(newSelected, oldSelected){
-	})
-
-
+	//Query
 	$scope.$watch('vm.query',function query(newVal,oldVal){
 		console.log(newVal,oldVal);
 		if(newVal != oldVal){
@@ -619,3 +592,50 @@ angular.module('app.autofill')
 
 	init();	
 }
+
+// function sort(sortBy){
+//  		vm.sorting.sortBy = sortBy;
+// 		vm.sorting.sortReverse = !vm.sorting.sortReverse;
+// 		// vm.table.data = vm.sorting.sortReverse ? vm.table.data.sort(compareReverse):vm.table.data.sort(compare);
+// 		// return getPagedItem();
+
+// 		// function compareReverse(a,b) {
+// 		// 	if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
+// 		// 		var first = '';
+// 		// 	else	
+// 		// 		var first = String(a[sortBy]).toUpperCase();
+
+// 		// 	if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
+// 		// 		var second = '';
+// 		// 	else	
+// 		// 		var second = String(b[sortBy]).toUpperCase();
+
+// 		// 	if ( first < second ){
+// 		// 		return -1;
+// 		// 	}
+// 		// 	if (first > second ){
+// 		// 		return 1;
+// 		// 	}
+// 		// 	return 0;
+// 		// }
+
+// 		// function compare(a,b) {
+// 		// 	if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
+// 		// 		var first = '';
+// 		// 	else	
+// 		// 		var first = String(a[sortBy]).toUpperCase();
+
+// 		// 	if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
+// 		// 		var second = '';
+// 		// 	else	
+// 		// 		var second = String(b[sortBy]).toUpperCase();
+
+// 		// 	if ( first < second ){
+// 		// 		return 1;
+// 		// 	}
+// 		// 	if (first > second ){
+// 		// 		return -1;
+// 		// 	}
+// 		// 	return 0;
+// 		// }
+//  	}
