@@ -43,4 +43,4 @@ _dev_only/
 .node_repl_history
 
 # Visual Studio settings
-.vscode
+.vscode/
