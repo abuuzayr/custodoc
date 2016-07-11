@@ -268,6 +268,8 @@ angular
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
+						//TODO: CREATE DATA FOR VM FOR TWO WAY DATA BINDING
+						//node.data = vm.text;   like this??
 					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 						var node = document.createElement('label');
 						var span = document.createElement('span');
