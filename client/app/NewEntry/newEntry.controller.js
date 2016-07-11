@@ -64,40 +64,24 @@ angular
 	/****************** SIGNATURE PAD VARIABLES **********************/
 
 	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+	vm.dialog = angular.element(vm.wrapper.find('.dialog'))[0];
+	vm.canvas = angular.element(vm.wrapper.find('.canvas'))[0];
+	console.log('wats dialog ' + vm.dialog);
+	console.log('wats canvas ' + vm.canvas);
 	vm.signaturePad = new SignaturePad(vm.canvas);
 
 	/*****************************************************************/
 
-        $scope.$on('$viewContentLoaded', function () {
-            $timeout(function () {
-                viewContentLoaded.resolve();
-            }, 0);
-        });
-        viewContentLoaded.promise.then(function () {
-            $timeout(function () {
-                componentHandler.upgradeDom();
-            }, 0);
-        });
-
-	/*****   FOR CHECKBOX   
-	
-	vm.selected = [];
-	
-	console.log(JSON.stringify(vm.selected));
-
-	vm.toggleSelection = function (option) {
-	    var idx = vm.selected.indexOf(option);
-	
-	    if (idx > -1) {
-		vm.selected.splice(idx, 1);
-	    } else { 
-		vm.selected.push(option);	
-	    }
-	};
-	
-	****************************/
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function () {
+            viewContentLoaded.resolve();
+        }, 0);
+    });
+    viewContentLoaded.promise.then(function () {
+        $timeout(function () {
+            componentHandler.upgradeDom();
+        }, 0);
+    });
 
 	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
