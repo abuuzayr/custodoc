@@ -63,7 +63,7 @@
                 <!-- CHECKBOX FIELDS -->
                 <div ng-if="key.type=='checkbox'">
                    <label >{{key.label}}</label>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label" ng-repeat="option in key.options">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
                     <label>
                     <input type="checkbox" class="mdl-checkbox__input" ng-model="key.data" value={{option}}>        
                             {{option}} </label>    
