@@ -6,5 +6,5 @@ function postRepeatUpgrade(){
 		if(scope.$last){
 			componentHandler.upgradeDom();
 		}
-	}
+	};
 }

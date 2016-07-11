@@ -2,7 +2,7 @@
 	  "use strict";
 
 angular.module('app.autofill')
-	.service('autofillServices',autofillServices)
+	.service('autofillServices',autofillServices);
 
 	autofillServices.$inject = ['$http', 'appConfig'];
 	function autofillServices($http, appConfig){
@@ -10,19 +10,19 @@ angular.module('app.autofill')
 		this.getElement = function(){
 			var path = '/protected/autofill/element';
 			return $http.get(appConfig.API_URL + path);
-		}
+		};
 
 		this.getRecords = function(query){
-			
-			if(query === ''||query == undefined||query == null){
-				var path = '/protected/autofill'
+			var path = '';
+			if(query === ''||query === undefined||query === null){
+				path = '/protected/autofill';
 				return $http.get(appConfig.API_URL + path);
 			}else{
-				var path = '/protected/autofill/query'
+				path = '/protected/autofill/query';
 				return $http.get(appConfig.API_URL + path + '/' + query);
 			} 
 
-		}
+		};
 
 		this.updateRecord = function(rowEntity){
 			var path = '/protected/autofill/';
@@ -31,9 +31,9 @@ angular.module('app.autofill')
 					url: appConfig.API_URL + path + rowEntity._id,
 					headers: { 'Content-type': 'application/json' },
 					data: rowEntity
-				}
+				};
 			return $http(req);	
-		}
+		};
 
 		this.createRecord = function(rowEntity){
 			var path = '/protected/autofill/';
@@ -41,9 +41,9 @@ angular.module('app.autofill')
 				method: 'POST',
 				url: appConfig.API_URL + path,
 				data: {recordData: rowEntity} 
-			}
+			};
 			return $http(req);
-		}
+		};
 
 
 		this.deleteOneRecord = function(selectedId){
@@ -52,10 +52,10 @@ angular.module('app.autofill')
 				method: 'DELETE',
 				url: appConfig.API_URL + path + selectedId,
 				data: selectedId 
-			}
+			};
 
 			return $http(req);
-		}
+		};
 
 		this.deleteRecords = function( rgSelectedId ){
 			var path = '/protected/autofill';
@@ -63,10 +63,10 @@ angular.module('app.autofill')
 				method: 'DELETE',
 				url: appConfig.API_URL + path,
 				params: { id: rgSelectedId }
-			}
+			};
 
 			return $http(req);
-		}
+		};
 
 		this.createElement = function(elementData){
 			var path = '/protected/autofill/element';
@@ -75,9 +75,9 @@ angular.module('app.autofill')
 					url: appConfig.API_URL + path,
 					headers: { 'Content-type': 'application/json' },	
 					data: {elementData: elementData}
-				}
+				};
 			return $http(req);	
-		}
+		};
 	}
 
 

@@ -1,7 +1,9 @@
+(function() {
+	  "use strict";
 angular.module('app.autofill')
-	.controller('autofillCtrl', autofillCtrl)
+	.controller('autofillCtrl', autofillCtrl);
 
-	autofillCtrl.$inject = ['$scope', '$q', '$timeout',  'uiGridConstants', 'uiGridGroupingConstants', 'dialogServices','feedbackServices','autofillServices']
+	autofillCtrl.$inject = ['$scope', '$q', '$timeout',  'uiGridConstants', 'uiGridGroupingConstants', 'dialogServices','feedbackServices','autofillServices'];
 
 	function autofillCtrl($scope , $q, $timeout, uiGridConstants, uiGridGroupingConstants, dialogServices, feedbackServices, autofillServices) {
 	var vm = this;
@@ -13,27 +15,27 @@ angular.module('app.autofill')
 		fieldName:'',
 		type:'text',
 		default:''
-	}
+	};
 	vm.checkbox = {
 		fieldName:'',
 		type:'checkbox',
 		label:'',
 		default:false,
 
-	}
+	};
 	vm.radio = {
 		fieldName:'',
 		type:'radio',
 		options: [],
 		default:'',
 		display:'',
-	}
+	};
 	vm.dropdown = {
 		fieldName:'',
 		type:'dropdown',
 		options: [],
 		default:''
-	}
+	};
 
 
 	vm.query ='';
@@ -52,17 +54,20 @@ angular.module('app.autofill')
 			});
 			
 	// ===========================================   UI Buttons  =========================================== //
-	vm.upgradeDom = function(){
+	vm.upgradeDom = upgradeDom;
+	vm.addOption  = addOption;
+	vm.removeOption = removeOption;
+
+	function upgradeDom(){
 		console.log('upgrade DOM');
 		return componentHandler.upgradeDom();
 	}
-
-	vm.addOption  = function(){
+	
+	function addOption(){
 		vm.numOfOptions++;
-		console.log(vm.numOfOptions)
-	};
+	}
 
-	vm.removeOption = function(elementType){
+	function removeOption(elementType){
 		if(vm.numOfOptions > 0){
 			vm.numOfOptions--;
 			if(elementType === 'radio'){
@@ -75,22 +80,17 @@ angular.module('app.autofill')
 		}	
 		else 
 			vm.numOfOptions = 0;
-	};
+	}
 
-	// vm.deleteSelected = function() {
-	// 	var selectedRows = vm.gridApi.selection.getSelectedRows();
-	// 	var selectedId = [];
-	// 	for(var i = 0 ; i < selectedRows.length ; i++){
-	// 		selectedId.push(selectedRows[i]._id);
-	// 		vm.gridOptions.data.splice(vm.gridOptions.data.indexOf(selectedRows[i]), 1);
-	// 	}
-	// 	if(selectedId.length === 1)
-	// 		return deleteOne(selectedId);
-	// 	return deleteMany(selectedId);
-	// };
+	function deleteSelected() {
+		var selectedId = vm.selection.selectedId;
+		if(selectedId.length === 1)
+			return deleteOne(selectedId);
+		return deleteMany(selectedId);
+	}
 
 	vm.saveElement = function(elementType){
-		var elementData = {}
+		var elementData = {};
 		console.log(elementType);
 		switch(elementType){
 			case 'text':
@@ -114,23 +114,6 @@ angular.module('app.autofill')
 		.then(vm.closeDialog());
 	};
 
-
-	// vm.read = function(){
-	// 		vm.gridOptions.data = [];
-
-	// 		return autofillServices
-	// 		.getRecords(vm.query)
-	// 		.then(function SuccessCallback(res){
-	// 			res.data.forEach(function(row){
-	// 				vm.gridOptions.data.push(row);
-	// 			});
-	// 			console.log(vm.gridOptions.data);
-	// 		})
-	// 		.catch(function ErrorCallback(err) {
-	// 			console.log(err);
-	// 			feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
-	// 		});
-	// };
 
 	vm.createTextfield	= function(){
 		vm.elementType = 'text';
@@ -171,7 +154,7 @@ angular.module('app.autofill')
 
 	var handleFileSelect = function( event ){
     	var target = event.srcElement || event.target;
-    	console.log(target.files)
+    	console.log(target.files);
 		if (target && target.files && target.files.length === 1) {
 			var fileObject = target.files[0];
 			vm.gridApi.importer.importFile( fileObject );
@@ -228,61 +211,56 @@ angular.module('app.autofill')
 		return autofillServices
 		.deleteOneRecord(selectedId)
 		.then(function SuccessCallback(res){
-				vm.clearSelected();
-				console.log('delete response: ');
-				console.log(res);
-				return feedbackServices.successFeedback('record deleted', 'autofill-feedbackMessage')
-			})
+			postDeleteUpdate();
+			return feedbackServices.successFeedback('record deleted', 'autofill-feedbackMessage');
+		})
 		.catch(function ErrorCallback(err) {
-			console.log(err);
-			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
+			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		});
 	}
 	
 	function deleteMany(rgSelectedId){
-		console.log(rgSelectedId);
-
 		return autofillServices.deleteRecords(rgSelectedId)
 		.then(function SuccessCallback(res){
-			vm.clearSelected();
-			console.log('delete response: ');
-			console.log(res);
-			return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage').then(getDataBody())
+			postDeleteUpdate();			
+			return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage');
 		})
 		.catch(function ErrorCallback(err) {
-			console.log(err);
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		});
 	}
+
+	function postDeleteUpdate(){
+		clearAll();
+		init();
+	}
+
+	/* =========================================== Element =========================================== */
 
 	function createElement(elementData){
 		return autofillServices.createElement(elementData)
 		.then(function SuccessCallback(res){
 			var elementType = elementData.type == 'text' ? 'textfield' : elementData.type;
-			return feedbackServices.successFeedback( elementType + ' saved', 'autofill-feedbackMessage')
+			return feedbackServices.successFeedback( elementType + ' saved', 'autofill-feedbackMessage');
 		})
 		.catch(function ErrorCallback(err){
 			console.log(err);
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-		})
+		});
 	}
-	
-	//initGrid();//UIGRID
 
-
-	/* =========================================== Load animation =========================================== */
 
 	/* =========================================== mdl data table =========================================== */
 	
 	vm.table = {
 		dataHeader: [],
 		data: [],
-	}
+	};
 
 	vm.sorting = {
 		sortBy: '',
 		sortReverse: true
-	}
+	};
 
 	vm.checked = {
 		headerChecked:false
@@ -292,8 +270,8 @@ angular.module('app.autofill')
 		rowSelection: true,
 		multiSelect: true,//TOFIX: ACCESS CONTROL
 		selected: [],
-		hasSelected: false
-	}
+		selectedId: []
+	};
 
 	vm.pagination = {
 		currentPage: 1,
@@ -304,7 +282,7 @@ angular.module('app.autofill')
 		startingIndex: 0,
 		endingIndex: 0,
 		pagedItem: []
-	}
+	};
 
 	vm.fileOptions = {
 		exportOptions: ['Selected','All'],
@@ -312,12 +290,11 @@ angular.module('app.autofill')
 			allowedExtension: '.csv',
 			maxSize: '10MB'
 		}
-	}
+	};
 
 	
 	vm.exportCSV = exportCSV;
 	vm.deleteSelected = deleteSelected;
-	vm.clearSelected = clearSelected
 	vm.reset = init;
 	vm.validateCsvImport = validateCsvImport;
 
@@ -325,11 +302,7 @@ angular.module('app.autofill')
 	vm.toLastPage = toLastPage;
 	vm.toPreviousPage = toPreviousPage;
 	vm.toNextPage = toNextPage;
-	vm.sort = sort
-
-	vm.pageFilter = function(){
-
-	}
+	vm.sort = sort;
 
 	function getDataHeader(){
 		vm.table.dataHeader = [];
@@ -341,11 +314,12 @@ angular.module('app.autofill')
 			vm.sorting.sortBy = vm.table.dataHeader[0];
 		}).catch(function ErrorCallback (err) {
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-		})
+		});
 	}
 
 	function getDataBody(){
 		vm.table.data = [];
+		console.log(vm.table.data);
 		return autofillServices.getRecords(vm.query)
 		.then(function SuccessCallback(res){
 				for(var i = 0; i < res.data.length; i++){
@@ -355,25 +329,22 @@ angular.module('app.autofill')
 			onDataLoaded();
 		}).catch(function ErrorCallback(err){
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-		})
+		});
 	}
 
-
 	//PAGINATION
-
 	function onDataLoaded(){
 		vm.pagination.totalItem = vm.table.data.length;
 		vm.pagination.totalPage = Math.ceil(vm.pagination.totalItem/vm.pagination.itemPerPage);
 		vm.pagination.currentPage = 1;
-		getPagedItem();
  	}
 
  	$scope.$watch('vm.pagination.currentPage',function onPageChange(newPage, oldPage){
 		vm.pagination.startingIndex = (newPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (newPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
-		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
+		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem);
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
 		renderSelectionOnChange();
- 	})
+ 	});
 
  	$scope.$watch('vm.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
 		var startingIndex = vm.pagination.startingIndex;
@@ -381,13 +352,7 @@ angular.module('app.autofill')
 		vm.pagination.itemPerPage = newLimit;
 		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
 		renderSelectionOnChange();
- 	})
-
- 	function getPagedItem(){
- 		vm.pagination.startingIndex = (vm.pagination.currentPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (vm.pagination.currentPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
-		vm.pagination.endingIndex = (( vm.pagination.currentPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? vm.pagination.currentPage * vm.pagination.itemPerPage : vm.pagination.totalItem)
-		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
- 	}
+ 	});
 
  	function toFirstPage(){
  		vm.pagination.currentPage = 1;
@@ -423,18 +388,43 @@ angular.module('app.autofill')
 		renderSelectionOnChange();
  	}
 
+ 	function filterByQuery(){
 
+ 	}
  	vm.selectOne = selectOne;
  	vm.selectVisible = selectVisible;
  	//SELECTION HANDLER
+ 	function selectVisible($event){
+ 		var checkbox = $event.target;
+  		var action = (checkbox.checked ? 'add' : 'remove');
+  		var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
+  		var elementId = '';
+  		for ( var i = 0; i < elementList.length; i++) {
+  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
+  			if(action==='add' && vm.selection.selectedId.indexOf(elementId) === -1){
+  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  			}else if(action==='remove' && vm.selection.selectedId.indexOf(elementId) != -1){
+  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  			}
+  		}
+  		renderSelectionOnChange();
+ 	}
+
+ 	function selectOne($event, row){
+ 		var checkbox = $event.target;
+  		var action = (checkbox.checked ? 'add' : 'remove');
+  		updateSelection(checkbox, action, row._id);
+  		renderSelectionOnChange();
+ 	}
+
  	function updateSelection(target, action , id){
 		return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
 		
 		//TOFIX
 
 		function addToSelection(target, id){
-			if(vm.selection.selected.indexOf(id) === -1){
-				vm.selection.selected.push(id);
+			if(vm.selection.selectedId.indexOf(id) === -1){
+				vm.selection.selectedId.push(id);
 				if(target && (!vm.checked.hasOwnProperty(id) || (!vm.checked[id] && !vm.checked.hasOwnProperty(id))))
 					target.checked = true;
 			}
@@ -443,8 +433,8 @@ angular.module('app.autofill')
 		}
 
 		function removeFromSelection(target,id){
-			if(vm.selection.selected.indexOf(id) != -1){
-				vm.selection.selected.splice(vm.selection.selected.indexOf(id), 1);
+			if(vm.selection.selectedId.indexOf(id) != -1){
+				vm.selection.selectedId.splice(vm.selection.selectedId.indexOf(id), 1);
 				if(target && (!vm.checked.hasOwnProperty(id) || vm.checked[id]))
 					target.checked = false;
 			}
@@ -455,33 +445,10 @@ angular.module('app.autofill')
 
  	function clearAll(){
  		var action = 'remove';
- 		for ( var i = 0; i < vm.selection.selected.length; i++) {
- 			updateSelection(null, action, vm.selection.selected[i]);
+ 		for ( var i = 0; i < vm.selection.selectedId.length; i++) {
+ 			updateSelection(null, action, vm.selection.selectedId[i]);
  		}
  		vm.checked = { headerChecked:false };
- 	}
-
- 	function selectVisible($event){
- 		var checkbox = $event.target;
-  		var action = (checkbox.checked ? 'add' : 'remove');
-  		var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
-  		var elementId
-  		for ( var i = 0; i < elementList.length; i++) {
-  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-  			if(action==='add' && vm.selection.selected.indexOf(elementId) === -1){
-  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-  			}else if(action==='remove' && vm.selection.selected.indexOf(elementId) != -1){
-  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-  			}
-  		}
-  		renderSelectionOnChange()
- 	}
-
- 	function selectOne($event, row){
- 		var checkbox = $event.target;
-  		var action = (checkbox.checked ? 'add' : 'remove');
-  		updateSelection(checkbox, action, row._id);
-  		renderSelectionOnChange();
  	}
 
  	function renderSelectionOnChange(){
@@ -492,9 +459,9 @@ angular.module('app.autofill')
 			var elementId = '';
 			for(var i = 0 ; i < elementList.length; i++){
 				elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-				if( vm.selection.selected.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
+				if( vm.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
 					elementList[i].MaterialCheckbox.uncheck();
-				}else if(vm.selection.selected.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
+				}else if(vm.selection.selectedId.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
 					elementList[i].MaterialCheckbox.check();
 				}
 			}
@@ -506,7 +473,7 @@ angular.module('app.autofill')
 						headerCheckbox.MaterialCheckbox.check();
 				}else{
 					if(vm.checked.headerChecked){
-						vm.checked.headerChecked = false
+						vm.checked.headerChecked = false;
 						headerCheckbox.MaterialCheckbox.uncheck();
 					}
 						
@@ -519,13 +486,25 @@ angular.module('app.autofill')
  		console.log(elementList.length);
  		for(var i = 0 ; i < elementList.length; i++){
  			if(!angular.element(elementList[i]).hasClass('is-checked')){
- 				console.log('return false')//TOFIX
+ 				console.log('return false');//TOFIX
  				return false;
  			}	
  		}
-		console.log('is all checked')//TOFIX
+		console.log('is all checked');//TOFIX
  		return true;
  	}
+
+ 	function getDataFromId(){
+ 		var lookup = {};
+		for( var i = 0, len = vm.table.data.length; i < len; i++) {
+    		lookup[vm.table.data[i]._id] = vm.table.data.length[i];
+		}
+		for( var index = 0, length = vm.selection.selectedId.length; index < len; index++){
+			vm.selection.selected.push(lookup[vm.selection.selectedId[index]]);
+		}
+	}
+
+
 
  	//EXPORT IMPORT HANDLER
 	function exportCSV(exportBy){
@@ -540,12 +519,12 @@ angular.module('app.autofill')
 	}
 
 	function exportSelected(){
-		console.log('selected');
-		if(vm.table.selected == [] || vm.table.selected.length < 1)
+		getDataFromId();
+		if(vm.selection.selected == [] || vm.selection.selected.length < 1)
 			return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
 		else	
-			var csv = Papa.unparse(vm.table.selected);
-		return download(csv);
+			var csv = Papa.unparse(vm.selection.selected);
+		return download(this.csv);
 	}
 
 	function exportAll(){
@@ -554,15 +533,13 @@ angular.module('app.autofill')
 		return download(csv);
 	}
 
-
 	function parseComplete(result, file){
-		console.log(result)//TOFIX
-		console.log(file)//TOFIX
+		console.log(result);//TOFIX
+		console.log(file);//TOFIX
 	}
 
 	function parseError(err, file){
-		return
-			feedbackServices.errorFeedback('Exporting failed','autofill-feedbackMessage')
+		return feedbackServices.errorFeedback('Exporting failed','autofill-feedbackMessage');
 	}
 
 	function download(csv){
@@ -584,26 +561,10 @@ angular.module('app.autofill')
 		}
 	}
 
-	function validateCsvImport(fileName){
+	function validateCsvImport(fileName){	
 	}
 
-
-	function deleteSelected() {
-		var selectedRows = vm.table.selected;
-		var selectedId = [];
-		for(var i = 0 ; i < selectedRows.length ; i++){
-			selectedId.push(selectedRows[i]._id);
-			vm.gridOptions.data.splice(vm.gridOptions.data.indexOf(selectedRows[i]), 1);
-		}
-		if(selectedId.length === 1)
-			return deleteOne(selectedId);
-		return deleteMany(selectedId);
-	};
-
-	function clearSelected(){
-		vm.table.selected = [];
-	}
-
+	
 	//Query
 	$scope.$watch('vm.query',function query(newVal,oldVal){
 		console.log(newVal,oldVal);
@@ -614,7 +575,7 @@ angular.module('app.autofill')
 	});
 
 	function init(){
-		vm.selection.selected = [];
+		vm.selection.selectedId = [];
 		getDataHeader();
 		getDataBody();	
 	}
@@ -622,49 +583,4 @@ angular.module('app.autofill')
 	init();	
 }
 
-// function sort(sortBy){
-//  		vm.sorting.sortBy = sortBy;
-// 		vm.sorting.sortReverse = !vm.sorting.sortReverse;
-// 		// vm.table.data = vm.sorting.sortReverse ? vm.table.data.sort(compareReverse):vm.table.data.sort(compare);
-// 		// return getPagedItem();
-
-// 		// function compareReverse(a,b) {
-// 		// 	if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
-// 		// 		var first = '';
-// 		// 	else	
-// 		// 		var first = String(a[sortBy]).toUpperCase();
-
-// 		// 	if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
-// 		// 		var second = '';
-// 		// 	else	
-// 		// 		var second = String(b[sortBy]).toUpperCase();
-
-// 		// 	if ( first < second ){
-// 		// 		return -1;
-// 		// 	}
-// 		// 	if (first > second ){
-// 		// 		return 1;
-// 		// 	}
-// 		// 	return 0;
-// 		// }
-
-// 		// function compare(a,b) {
-// 		// 	if(a[sortBy] === undefined || a[sortBy] === null ||a[sortBy].toString === undefined || a[sortBy].toString === null)
-// 		// 		var first = '';
-// 		// 	else	
-// 		// 		var first = String(a[sortBy]).toUpperCase();
-
-// 		// 	if(b[sortBy] === undefined || b[sortBy] === null ||b[sortBy].toString === undefined || b[sortBy].toString === null)
-// 		// 		var second = '';
-// 		// 	else	
-// 		// 		var second = String(b[sortBy]).toUpperCase();
-
-// 		// 	if ( first < second ){
-// 		// 		return 1;
-// 		// 	}
-// 		// 	if (first > second ){
-// 		// 		return -1;
-// 		// 	}
-// 		// 	return 0;
-// 		// }
-//  	}
+})();

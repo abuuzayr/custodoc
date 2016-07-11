@@ -31,13 +31,12 @@
 	<!--====================================== new data table ===================================-->
 	<div>
 		<div>
-			<p>Checked: {{vm.checked}} </p><br/>
-			<p>Selectio: {{vm.selection.selected.length}} {{vm.selection.selected.length>1 ? 'rows':'row'}} selected</p>
+			<p>Selectio: {{vm.selection.selectedId.length}} {{vm.selection.selectedId.length>1 ? 'rows':'row'}} selected</p><br>
+			<p>{{vm.table.data.length}} rows</p>
 		</div>
 	</div>
 	<div>
-		<button class='mdl-button mdl-primary' ng-click='vm.upgradeDom()'>Refresh Dom</button>
-
+		
 
 		<div id='table-toolbar' class = 'mdl-grid'>
 			<div class="mdl-cell mdl-cell--1-col">
@@ -46,7 +45,6 @@
 				</button>
 				<input id="file-input" type="file" accept='.csv' onchange="vm.validateCsvImport(this.value)">
 			</div>	
-			<span flex=''><span>
 			<!-- EXPORT menu -->
 			<div class='menu-wrapper mdl-cell mdl-cell--1-col'>
 				<button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
@@ -58,6 +56,12 @@
 						Export {{exportOption}}
 					</li>
 				</ul>
+			</div>
+			<div class="mdl-cell mdl-cell--9-col"></div>
+			<div class="mdl-cell mdl-cell--1-col">
+				<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='vm.deleteSelected()' ng-show='vm.selection.selectedId.length > 0'>
+					<i class="material-icons">delete</i>
+				</button>	
 			</div>	
 		</div>
 	
