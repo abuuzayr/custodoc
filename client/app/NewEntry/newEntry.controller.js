@@ -30,6 +30,7 @@ angular
 	// variables that contain base-64 encoding converted from user input
 	vm.image = null;
 	vm.signature = null;
+	
 	vm.gotSignature = false;
 
 	vm.groupName = $stateParams.groupName;
@@ -83,7 +84,6 @@ angular
 			}
 			vm.numberOfForms = vm.totalNumberOfPages.length;
 			vm.numberOfPages = vm.totalNumberOfPages[0];
-			// number of forms??
 		})
 		.then(function() {
 				var arrayOfKeys = [];
@@ -206,6 +206,7 @@ angular
 					        arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('signature_')) {
+							vm.gotSignature = true;
 							var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 							object.type = 'signature';
@@ -268,8 +269,7 @@ angular
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
-						//TODO: CREATE DATA FOR VM FOR TWO WAY DATA BINDING
-						//node.data = vm.text;   like this??
+						//node.value = vm.
 					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 						var node = document.createElement('label');
 						var span = document.createElement('span');
