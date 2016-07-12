@@ -45,11 +45,11 @@ function formBuilderFactory($http) {
 
 	var saveFormData = function(formData){
 		return $http.put(serverURL+"/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} });
-	}
+	};
 
 	var getFormData = function(groupName, formName){
 		return $http.get(serverURL+"/forms/"+groupName+'/'+formName);
-	}
+	};
 
 	return {
 		colorsArray: colors,
@@ -61,5 +61,5 @@ function formBuilderFactory($http) {
 		availableBorderWidth: availableBorderWidth,
 		saveFormData: saveFormData,
 		getFormData: getFormData
-	}
+	};
 }
