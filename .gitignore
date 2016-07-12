@@ -30,9 +30,8 @@ coverage
 build/Release
 
 # Dependency directories
-client/node_modules
-server/node_modules
-jspm_packages
+node_modules/
+jspm_packages/
 _dev_only/
 .DS_Store/
 
@@ -44,3 +43,4 @@ _dev_only/
 
 # Visual Studio settings
 .vscode/
+jsconfig.json
