@@ -31,7 +31,7 @@ angular
 	vm.image = null;
 	vm.signature = null;
 	
-	vm.gotSignature = false;
+	// vm.gotSignature = false;
 
 	vm.groupName = $stateParams.groupName;
 	
@@ -201,18 +201,18 @@ angular
 							object.type = 'image';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = '';
+					        object.data = vm.image;
 
 					        arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('signature_')) {
-							vm.gotSignature = true;
+							// vm.gotSignature = true;
 							var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 							object.type = 'signature';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = '';
+					        object.data = vm.signature;
 
 					        arrayOfKeys.push(object);
 					    }
@@ -269,7 +269,7 @@ angular
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
-						//node.value = vm.
+						//node.value = vm.text;
 					}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 						var node = document.createElement('label');
 						var span = document.createElement('span');
@@ -334,7 +334,7 @@ angular
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
-						vm.gotSignature = true;
+						// vm.gotSignature = true;
 					}else if (element.name.startsWith('image_')) {
 						var node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
@@ -363,20 +363,6 @@ angular
 			
 			document.getElementById("form1page1").style.display="block"; 
 		})
-
-	/****************** SIGNATURE PAD VARIABLES **********************/
-
-	if (vm.gotSignature) {
-		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		console.log('wats dialog ' + vm.dialog);
-		console.log('wats canvas ' + vm.canvas);
-		vm.signaturePad = new SignaturePad(vm.canvas);
-	}
-
-	/*****************************************************************/
-
 
 	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 
@@ -440,6 +426,19 @@ angular
 
 	/*************************************************************************/
 
+
+	/****************** SIGNATURE PAD VARIABLES **********************/
+
+	
+	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+	vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+	vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+	console.log('wats dialog ' + vm.dialog);
+	console.log('wats canvas ' + vm.canvas);
+	vm.signaturePad = new SignaturePad(vm.canvas);
+	
+
+	/*****************************************************************/
 
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
