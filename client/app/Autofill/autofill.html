@@ -36,8 +36,6 @@
 		</div>
 	</div>
 	<div>
-		
-
 		<div id='table-toolbar' class = 'mdl-grid'>
 			<div class="mdl-cell mdl-cell--1-col">
 				<button class='mdl-button mdl-primary'>
@@ -64,96 +62,9 @@
 				</button>	
 			</div>	
 		</div>
-	
+		
+		<custom-mdl-data-table table-options='vm.tableOptions'></custom-mdl-data-table>
 
-		<table class="mdl-data-table mdl-shadow--2dp">
-		  	<thead>
-		    	<tr>
-		      		<th>
-		          		<label id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="data-table-header-checkbox">
-		            		<input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='vm.checked.headerChecked' ng-click='vm.selectVisible($event)'/>
-		          		</label>
-		      		</th>
-		      		<th>
-		      		</th>
-
-		      		<th class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
-		      			<a href="" ng-click="vm.sort(header)">
-	                        {{header}}
-	                        <span ng-show="vm.sorting.sortBy == header && !vm.sorting.sortReverse" >^</span>
-	                        <span ng-show="vm.sorting.sortBy == header && vm.sorting.sortReverse" >v</span>
-                        </a>
-		      		</th>
-		    	</tr>
-		  	</thead>
-
-		  	<tbody>
-		    	<tr ng-repeat='row in vm.table.data  | orderBy: vm.sorting.sortBy : vm.sorting.sortReverse | limitTo:vm.pagination.itemPerPage : vm.pagination.startingIndex track by $index' post-repeat-upgrade>
-					<td>
-	          			<label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="{{'data-table-checkbox-' + row._id}}">
-	            			<input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='vm.checked[row._id]' ng-click='vm.selectOne($event,row)'/> 
-	          			</label>
-	      			</td>
-	      			<td>
-	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
-							<i class="material-icons">edit</i>
-						</button>
-
-	      			</td>
-	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
-	      				{{row[header]}}
-	      			</td>	
-		    	</tr>
-		  	</tbody>
-		</table>
-		<!-- pagiantion options -->
-		<div class="mdl-grid">
-			<div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
-			<div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
-			<span flex=''></span>
-			<div class="mdl-cell mdl-cell--2-col">
-				<div id='page-selection' class='menu-wrapper'>
-					<span>Page: </span>
-					<button id='page-selection-menu-button' class="mdl-button mdl-js-button">
-					{{vm.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
-					</button>
-					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu"
-						for="page-selection-menu-button">
-						<li class="mdl-menu__item" ng-repeat='num in vm.getTimes(vm.pagination.totalPage) track by $index' ng-click='vm.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
-					</ul>
-				</div>
-			</div>
-			<div class="mdl-cell mdl-cell--3-col">
-				<div id='item-per-page-selection' class='menu-wrapper'>
-					<span>Rows per page: </span>
-					<button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
-						{{vm.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
-					</button>
-					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
-						<li class="mdl-menu__item" ng-repeat='option in vm.pagination.limitOption' ng-click='vm.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
-					</ul>
-				</div>
-			</div>
-			<div class="mdl-cell mdl-cell--4-col">
-				<span id='item-info'>
-					{{vm.pagination.startingIndex}} - {{vm.pagination.endingIndex}} of {{vm.pagination.totalItem}}
-				<span>
-				<span id='page-navigator'>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.toFirstPage()'>
-							<i class="material-icons">first_page</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='vm.toPreviousPage()'>
-							<i class="material-icons">chevron_left</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='vm.toNextPage()'>
-							<i class="material-icons">chevron_right</i>
-					</button>
-					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='vm.toLastPage()'>
-							<i class="material-icons">last_page</i>
-					</button>
-				</span>
-			</div>
-		</div>
 	</div>	
 </div>
 
@@ -305,4 +216,92 @@
 	<button class="mdl-snackbar__action" type="button"></button>
 </div>
 
+<!-- 		<table class="mdl-data-table mdl-shadow--2dp">
+		  	<thead>
+		    	<tr>
+		      		<th>
+		          		<label id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="data-table-header-checkbox">
+		            		<input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='vm.checked.headerChecked' ng-click='vm.selectVisible($event)'/>
+		          		</label>
+		      		</th>
+		      		<th>
+		      		</th>
+
+		      		<th class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
+		      			<a href="" ng-click="vm.sort(header)">
+	                        {{header}}
+	                        <span ng-show="vm.sorting.sortBy == header && !vm.sorting.sortReverse" >^</span>
+	                        <span ng-show="vm.sorting.sortBy == header && vm.sorting.sortReverse" >v</span>
+                        </a>
+		      		</th>
+		    	</tr>
+		  	</thead>
+
+		  	<tbody>
+		    	<tr ng-repeat='row in vm.table.data  | orderBy: vm.sorting.sortBy : vm.sorting.sortReverse | limitTo:vm.pagination.itemPerPage : vm.pagination.startingIndex track by $index' post-repeat-upgrade>
+					<td>
+	          			<label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input" for="{{'data-table-checkbox-' + row._id}}">
+	            			<input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='vm.checked[row._id]' ng-click='vm.selectOne($event,row)'/> 
+	          			</label>
+	      			</td>
+	      			<td>
+	      				<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.enableRowEdit()'>
+							<i class="material-icons">edit</i>
+						</button>
+
+	      			</td>
+	      			<td class="mdl-data-table__cell--non-numeric" ng-repeat="header in vm.table.dataHeader track by $index">
+	      				{{row[header]}}
+	      			</td>	
+		    	</tr>
+		  	</tbody>
+		</table>
+
+		<div class="mdl-grid">
+			<div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+			<div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
+			<span flex=''></span>
+			<div class="mdl-cell mdl-cell--2-col">
+				<div id='page-selection' class='menu-wrapper'>
+					<span>Page: </span>
+					<button id='page-selection-menu-button' class="mdl-button mdl-js-button">
+					{{vm.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
+					</button>
+					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu"
+						for="page-selection-menu-button">
+						<li class="mdl-menu__item" ng-repeat='num in vm.getTimes(vm.pagination.totalPage) track by $index' ng-click='vm.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mdl-cell mdl-cell--3-col">
+				<div id='item-per-page-selection' class='menu-wrapper'>
+					<span>Rows per page: </span>
+					<button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
+						{{vm.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
+					</button>
+					<ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
+						<li class="mdl-menu__item" ng-repeat='option in vm.pagination.limitOption' ng-click='vm.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mdl-cell mdl-cell--4-col">
+				<span id='item-info'>
+					{{vm.pagination.startingIndex}} - {{vm.pagination.endingIndex}} of {{vm.pagination.totalItem}}
+				<span>
+				<span id='page-navigator'>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='vm.toFirstPage()'>
+							<i class="material-icons">first_page</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='vm.toPreviousPage()'>
+							<i class="material-icons">chevron_left</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='vm.toNextPage()'>
+							<i class="material-icons">chevron_right</i>
+					</button>
+					<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='vm.toLastPage()'>
+							<i class="material-icons">last_page</i>
+					</button>
+				</span>
+			</div>
+		</div> -->
    

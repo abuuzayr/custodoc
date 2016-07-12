@@ -7,7 +7,6 @@ angular.module('app.autofill')
 
 	function autofillCtrl($scope , $q, $timeout, uiGridConstants, uiGridGroupingConstants, dialogServices, feedbackServices, autofillServices) {
 	var vm = this;
-	vm.hasSelection = false;
 	vm.elementType = '';
 	vm.numOfOptions = 0;
 
@@ -83,7 +82,7 @@ angular.module('app.autofill')
 	}
 
 	function deleteSelected() {
-		var selectedId = vm.selection.selectedId;
+		var selectedId = vm.tableOptions.selection.selectedId;
 		if(selectedId.length === 1)
 			return deleteOne(selectedId);
 		return deleteMany(selectedId);
@@ -251,10 +250,45 @@ angular.module('app.autofill')
 
 
 	/* =========================================== mdl data table =========================================== */
+	vm.tableOptions = {
+		tableData:{},
+		selection:{
+			checked:{},
+			selectedId:[],
+			selected:[]
+		},
+		sorting:{
+			sortBy: '',
+			sortReverse: true
+		},
+		pagination:{
+			currentPage: 1,
+			totalPage: 0,
+			itemPerPage: 10,
+			totalItem: 0,
+			limitOption: [10,20,30],
+			startingIndex: 0,
+			endingIndex: 0,
+			pagedItem: []
+		},
+		fileOptions:{
+			exportOptions: {
+				exportBy:['Selected','All'],
+				ignoreProperty:[],
+			},
+			importOptions:{ 
+				allowedExtension: '.csv',
+				maxSize: '10MB'
+			}
+		}
+	};
+
 	
 	vm.table = {
-		dataHeader: [],
+		columnDefs: [],
 		data: [],
+		rowIntentity: '',
+		ignoreProperty:[],
 	};
 
 	vm.sorting = {
@@ -285,7 +319,10 @@ angular.module('app.autofill')
 	};
 
 	vm.fileOptions = {
-		exportOptions: ['Selected','All'],
+		exportOptions: {
+			exportBy:['Selected','All'],
+			ignoreProperty:[],
+		},
 		importOptions:{ 
 			allowedExtension: '.csv',
 			maxSize: '10MB'
@@ -298,32 +335,32 @@ angular.module('app.autofill')
 	vm.reset = init;
 	vm.validateCsvImport = validateCsvImport;
 
-	vm.toFirstPage = toFirstPage;
-	vm.toLastPage = toLastPage;
-	vm.toPreviousPage = toPreviousPage;
-	vm.toNextPage = toNextPage;
-	vm.sort = sort;
+	// vm.toFirstPage = toFirstPage;
+	// vm.toLastPage = toLastPage;
+	// vm.toPreviousPage = toPreviousPage;
+	// vm.toNextPage = toNextPage;
+	// vm.sort = sort;
 
 	function getDataHeader(){
-		vm.table.dataHeader = [];
+		vm.tableOptions.tableData.columnDefs = [];
 		return autofillServices.getElement()
 		.then(function SuccessCallback(res){
 			for(var i = 0; i < res.data.length; i++){
-				vm.table.dataHeader.push(res.data[i].fieldName);
+				vm.tableOptions.tableData.columnDefs.push(res.data[i].fieldName);
 			}
-			vm.sorting.sortBy = vm.table.dataHeader[0];
+			vm.sorting.sortBy = vm.tableOptions.tableData.columnDefs[0];
 		}).catch(function ErrorCallback (err) {
 			return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 		});
 	}
 
 	function getDataBody(){
-		vm.table.data = [];
-		console.log(vm.table.data);
+		vm.tableOptions.tableData.data = [];
+		console.log(vm.tableOptions.tableData.data);
 		return autofillServices.getRecords(vm.query)
 		.then(function SuccessCallback(res){
 				for(var i = 0; i < res.data.length; i++){
-					vm.table.data.push(res.data[i]);
+					vm.tableOptions.tableData.data.push(res.data[i]);
 				}
 
 			onDataLoaded();
@@ -332,53 +369,53 @@ angular.module('app.autofill')
 		});
 	}
 
-	//PAGINATION
+	// //PAGINATION
 	function onDataLoaded(){
-		vm.pagination.totalItem = vm.table.data.length;
-		vm.pagination.totalPage = Math.ceil(vm.pagination.totalItem/vm.pagination.itemPerPage);
-		vm.pagination.currentPage = 1;
+		vm.tableOptions.pagination.totalItem = vm.tableOptions.tableData.data.length;
+		vm.tableOptions.pagination.totalPage = Math.ceil(vm.tableOptions.pagination.totalItem/vm.tableOptions.pagination.itemPerPage);
+		vm.tableOptions.pagination.currentPage = 1;
  	}
 
- 	$scope.$watch('vm.pagination.currentPage',function onPageChange(newPage, oldPage){
-		vm.pagination.startingIndex = (newPage - 1) * vm.pagination.itemPerPage + 1 < vm.pagination.totalItem ? (newPage - 1) * vm.pagination.itemPerPage + 1 : vm.pagination.totalItem;
-		vm.pagination.endingIndex = (( newPage * vm.pagination.itemPerPage < vm.pagination.totalItem ) ? newPage * vm.pagination.itemPerPage : vm.pagination.totalItem);
-		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
-		renderSelectionOnChange();
- 	});
+ // 	$scope.$watch('vm.tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
+	// 	vm.tableOptions.pagination.startingIndex = (newPage - 1) * vm.tableOptions.pagination.itemPerPage + 1 < vm.tableOptions.pagination.totalItem ? (newPage - 1) * vm.tableOptions.pagination.itemPerPage + 1 : vm.tableOptions.pagination.totalItem;
+	// 	vm.tableOptions.pagination.endingIndex = (( newPage * vm.tableOptions.pagination.itemPerPage < vm.tableOptions.pagination.totalItem ) ? newPage * vm.tableOptions.pagination.itemPerPage : vm.tableOptions.pagination.totalItem);
+	// 	vm.tableOptions.pagination.pagedItem = vm.tableOptions.tableData.data.slice(vm.tableOptions.pagination.startingIndex,vm.tableOptions.pagination.endingIndex + 1);
+	// 	renderSelectionOnChange();
+ // 	});
 
- 	$scope.$watch('vm.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
-		var startingIndex = vm.pagination.startingIndex;
-		vm.pagination.endingIndex = (startingIndex + newLimit - 1) < vm.pagination.totalItem ?  startingIndex + newLimit - 1 : vm.pagination.totalItem;
-		vm.pagination.itemPerPage = newLimit;
-		vm.pagination.pagedItem = vm.table.data.slice(vm.pagination.startingIndex,vm.pagination.endingIndex + 1);
-		renderSelectionOnChange();
- 	});
+ // 	$scope.$watch('vm.tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
+	// 	var startingIndex = vm.tableOptions.pagination.startingIndex;
+	// 	vm.tableOptions.pagination.endingIndex = (startingIndex + newLimit - 1) < vm.tableOptions.pagination.totalItem ?  startingIndex + newLimit - 1 : vm.tableOptions.pagination.totalItem;
+	// 	vm.tableOptions.pagination.itemPerPage = newLimit;
+	// 	vm.tableOptions.pagination.pagedItem = vm.tableOptions.tableData.data.slice(vm.tableOptions.pagination.startingIndex,vm.tableOptions.pagination.endingIndex + 1);
+	// 	renderSelectionOnChange();
+ // 	});
 
- 	function toFirstPage(){
- 		vm.pagination.currentPage = 1;
- 		console.log(vm.pagination.currentPage);//TOFIX
- 	}
+ // 	function toFirstPage(){
+ // 		vm.tableOptions.pagination.currentPage = 1;
+ // 		console.log(vm.tableOptions.pagination.currentPage);//TOFIX
+ // 	}
 
- 	function toLastPage(){
- 		vm.pagination.currentPage = vm.pagination.totalPage;
- 		console.log(vm.pagination.currentPage);//TOFIX
- 	}
+ // 	function toLastPage(){
+ // 		vm.tableOptions.pagination.currentPage = vm.tableOptions.pagination.totalPage;
+ // 		console.log(vm.tableOptions.pagination.currentPage);//TOFIX
+ // 	}
 
- 	function toNextPage(){
- 		if(vm.pagination.currentPage < vm.pagination.totalPage)
- 			vm.pagination.currentPage++;
- 		else
- 			feedbackServices.errorFeedback('Last page', 'autofill-feedbackMessage');
- 		console.log(vm.pagination.currentPage);//TOFIX
- 	}
+ // 	function toNextPage(){
+ // 		if(vm.tableOptions.pagination.currentPage < vm.tableOptions.pagination.totalPage)
+ // 			vm.tableOptions.pagination.currentPage++;
+ // 		else
+ // 			feedbackServices.errorFeedback('Last page', 'autofill-feedbackMessage');
+ // 		console.log(vm.tableOptions.pagination.currentPage);//TOFIX
+ // 	}
 
- 	function toPreviousPage(){
- 		if(vm.pagination.currentPage > 1)
- 			vm.pagination.currentPage--;
- 		else
- 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
- 		console.log(vm.pagination.currentPage);//TOFIX
- 	}
+ // 	function toPreviousPage(){
+ // 		if(vm.tableOptions.pagination.currentPage > 1)
+ // 			vm.tableOptions.pagination.currentPage--;
+ // 		else
+ // 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
+ // 		console.log(vm.tableOptions.pagination.currentPage);//TOFIX
+ // 	}
 
 
  	//SORTING AND FILTERING
@@ -391,118 +428,120 @@ angular.module('app.autofill')
  	function filterByQuery(){
 
  	}
- 	vm.selectOne = selectOne;
- 	vm.selectVisible = selectVisible;
+ 	// vm.selectOne = selectOne;
+ 	// vm.selectVisible = selectVisible;
  	//SELECTION HANDLER
- 	function selectVisible($event){
- 		var checkbox = $event.target;
-  		var action = (checkbox.checked ? 'add' : 'remove');
-  		var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
-  		var elementId = '';
-  		for ( var i = 0; i < elementList.length; i++) {
-  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-  			if(action==='add' && vm.selection.selectedId.indexOf(elementId) === -1){
-  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-  			}else if(action==='remove' && vm.selection.selectedId.indexOf(elementId) != -1){
-  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-  			}
-  		}
-  		renderSelectionOnChange();
- 	}
+ 	// function selectVisible($event){
+ 	// 	var checkbox = $event.target;
+  // 		var action = (checkbox.checked ? 'add' : 'remove');
+  // 		var elementList = angular.element( document.querySelectorAll( "[id^='data-table-checkbox-label-']") );
+  // 		var elementId = '';
+  // 		for ( var i = 0; i < elementList.length; i++) {
+  // 			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
+  // 			if(action==='add' && vm.tableOptions.selection.selectedId.indexOf(elementId) === -1){
+  // 				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  // 			}else if(action==='remove' && vm.tableOptions.selection.selectedId.indexOf(elementId) != -1){
+  // 				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
+  // 			}
+  // 		}
+  // 		renderSelectionOnChange();
+ 	// }
 
- 	function selectOne($event, row){
- 		var checkbox = $event.target;
-  		var action = (checkbox.checked ? 'add' : 'remove');
-  		updateSelection(checkbox, action, row._id);
-  		renderSelectionOnChange();
- 	}
+ // 	function selectOne($event, row){
+ // 		var checkbox = $event.target;
+ //  		var action = (checkbox.checked ? 'add' : 'remove');
+ //  		updateSelection(checkbox, action, row._id);
+ //  		renderSelectionOnChange();
+ // 	}
 
- 	function updateSelection(target, action , id){
-		return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
+ // 	function updateSelection(target, action , id){
+	// 	return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
 		
-		//TOFIX
+	// 	//TOFIX
 
-		function addToSelection(target, id){
-			if(vm.selection.selectedId.indexOf(id) === -1){
-				vm.selection.selectedId.push(id);
-				if(target && (!vm.checked.hasOwnProperty(id) || (!vm.checked[id] && !vm.checked.hasOwnProperty(id))))
-					target.checked = true;
-			}
-			else 
-				console.log('already have row ??');
-		}
+	// 	function addToSelection(target, id){
+	// 		if(vm.tableOptions.selection.selectedId.indexOf(id) === -1){
+	// 			vm.tableOptions.selection.selectedId.push(id);
+	// 			if(target && (!vm.tableOptions.selection.checked.hasOwnProperty(id) || (!vm.tableOptions.selection.checked[id] && !vm.tableOptions.selection.checked.hasOwnProperty(id))))
+	// 				target.checked = true;
+	// 		}
+	// 		else 
+	// 			console.log('already have row ??');
+	// 	}
 
-		function removeFromSelection(target,id){
-			if(vm.selection.selectedId.indexOf(id) != -1){
-				vm.selection.selectedId.splice(vm.selection.selectedId.indexOf(id), 1);
-				if(target && (!vm.checked.hasOwnProperty(id) || vm.checked[id]))
-					target.checked = false;
-			}
-			else
-				console.log('not removed');
-		}
- 	}
+	// 	function removeFromSelection(target,id){
+	// 		if(vm.tableOptions.selection.selectedId.indexOf(id) != -1){
+	// 			vm.tableOptions.selection.selectedId.splice(vm.tableOptions.selection.selectedId.indexOf(id), 1);
+	// 			if(target && (!vm.tableOptions.selection.checked.hasOwnProperty(id) || vm.tableOptions.selection.checked[id]))
+	// 				target.checked = false;
+	// 		}
+	// 		else
+	// 			console.log('not removed');
+	// 	}
+ // 	}
 
  	function clearAll(){
  		var action = 'remove';
- 		for ( var i = 0; i < vm.selection.selectedId.length; i++) {
- 			updateSelection(null, action, vm.selection.selectedId[i]);
+ 		for ( var i = 0; i < vm.tableOptions.selection.selectedId.length; i++) {
+ 			updateSelection(null, action, vm.tableOptions.selection.selectedId[i]);
  		}
- 		vm.checked = { headerChecked:false };
+ 		vm.tableOptions.selection.checked = { headerChecked:false };
  	}
 
- 	function renderSelectionOnChange(){
-		$timeout( function() {
-			console.log('rendering');//TOFIX
-			var headerCheckbox = angular.element(document.querySelectorAll("[id^='data-table-header-checkbox-label']"))[0];
-			var elementList = angular.element(document.querySelectorAll("[id^='data-table-checkbox-label-']"));
-			var elementId = '';
-			for(var i = 0 ; i < elementList.length; i++){
-				elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-				if( vm.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
-					elementList[i].MaterialCheckbox.uncheck();
-				}else if(vm.selection.selectedId.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
-					elementList[i].MaterialCheckbox.check();
-				}
-			}
-			//TOFIX
-			if(elementList && elementList.length > 0 ){
-				if(isAllChecked(elementList)){
-					if(!vm.checked.headerChecked)
-						vm.checked.headerChecked = true;
-						headerCheckbox.MaterialCheckbox.check();
-				}else{
-					if(vm.checked.headerChecked){
-						vm.checked.headerChecked = false;
-						headerCheckbox.MaterialCheckbox.uncheck();
-					}
+ // 	function renderSelectionOnChange(){
+	// 	$timeout( function() {
+	// 		console.log('rendering');//TOFIX
+	// 		var headerCheckbox = angular.element(document.querySelectorAll("[id^='data-table-header-checkbox-label']"))[0];
+	// 		var elementList = angular.element(document.querySelectorAll("[id^='data-table-checkbox-label-']"));
+	// 		var elementId = '';
+	// 		for(var i = 0 ; i < elementList.length; i++){
+	// 			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
+	// 			if( vm.tableOptions.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
+	// 				elementList[i].MaterialCheckbox.uncheck();
+	// 			}else if(vm.tableOptions.selection.selectedId.indexOf(elementId) != -1 && !angular.element(elementList[i]).hasClass('is-checked')){
+	// 				elementList[i].MaterialCheckbox.check();
+	// 			}
+	// 		}
+	// 		//TOFIX
+	// 		if(elementList && elementList.length > 0 ){
+	// 			if(isAllChecked(elementList)){
+	// 				if(!vm.tableOptions.selection.checked.headerChecked)
+	// 					vm.tableOptions.selection.checked.headerChecked = true;
+	// 					headerCheckbox.MaterialCheckbox.check();
+	// 			}else{
+	// 				if(vm.tableOptions.selection.checked.headerChecked){
+	// 					vm.tableOptions.selection.checked.headerChecked = false;
+	// 					headerCheckbox.MaterialCheckbox.uncheck();
+	// 				}
 						
-				}
-			}
-  		}, 0, false);
- 	}
+	// 			}
+	// 		}
+ //  		}, 0, false);
+ // 	}
 
- 	function isAllChecked(elementList){
- 		console.log(elementList.length);
- 		for(var i = 0 ; i < elementList.length; i++){
- 			if(!angular.element(elementList[i]).hasClass('is-checked')){
- 				console.log('return false');//TOFIX
- 				return false;
- 			}	
- 		}
-		console.log('is all checked');//TOFIX
- 		return true;
- 	}
+ // 	function isAllChecked(elementList){
+ // 		console.log(elementList.length);
+ // 		for(var i = 0 ; i < elementList.length; i++){
+ // 			if(!angular.element(elementList[i]).hasClass('is-checked')){
+ // 				console.log('return false');//TOFIX
+ // 				return false;
+ // 			}	
+ // 		}
+	// 	console.log('is all checked');//TOFIX
+ // 		return true;
+ // 	}
 
- 	function getDataFromId(){
- 		var lookup = {};
-		for( var i = 0, len = vm.table.data.length; i < len; i++) {
-    		lookup[vm.table.data[i]._id] = vm.table.data.length[i];
-		}
-		for( var index = 0, length = vm.selection.selectedId.length; index < len; index++){
-			vm.selection.selected.push(lookup[vm.selection.selectedId[index]]);
-		}
-	}
+ // 	function getDataFromId(){
+ // 		var lookup = {};
+	// 	for( var i = 0, len = vm.tableOptions.tableData.data.length; i < len; i++) {
+ //    		lookup[vm.tableOptions.tableData.data[i]._id] = vm.tableOptions.tableData.data[i];
+	// 	}
+	// 	for( var index = 0, length = vm.tableOptions.selection.selectedId.length; index < length; index++){
+	// 		console.log(vm.tableOptions.selection.selectedId[index]);
+	// 		vm.tableOptions.selection.selected.push(lookup[vm.tableOptions.selection.selectedId[index]]);
+	// 	}
+	// 	console.log(vm.tableOptions.selection.selected);
+	// }
 
 
 
@@ -519,17 +558,18 @@ angular.module('app.autofill')
 	}
 
 	function exportSelected(){
+		var csv = null;
 		getDataFromId();
-		if(vm.selection.selected == [] || vm.selection.selected.length < 1)
+		if(vm.tableOptions.selection.selected == [] || vm.tableOptions.selection.selected.length < 1)
 			return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
 		else	
-			var csv = Papa.unparse(vm.selection.selected);
-		return download(this.csv);
+			csv = Papa.unparse(vm.tableOptions.selection.selected);
+		return download(csv);
 	}
 
 	function exportAll(){
 		console.log('all');
-		var csv = Papa.unparse(vm.table.data);
+		var csv = Papa.unparse(vm.tableOptions.tableData.data);
 		return download(csv);
 	}
 
@@ -575,7 +615,7 @@ angular.module('app.autofill')
 	});
 
 	function init(){
-		vm.selection.selectedId = [];
+		vm.tableOptions.selection.selectedId = [];
 		getDataHeader();
 		getDataBody();	
 	}
