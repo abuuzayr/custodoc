@@ -122,7 +122,7 @@ module.exports = function(){
 				default:
 					return send403	(req,res,'Invalid request');
 			}
-		}
+		};
 	}
 
 	function send403(req,res,description){

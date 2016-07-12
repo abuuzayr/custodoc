@@ -2,7 +2,7 @@
 module.exports = function(){
 	return {Do: Do};
 	function Do(dbOperation){
-		var db = require('../server.js').db
+		var db = require('../server.js').db;
     	dbOperation(db);    	
 	}
-}
+};
