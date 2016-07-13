@@ -36,7 +36,6 @@
     height: 50px;
 }
 </style>
-{{tableOptions.selection.selectedId}}
 <br> hasMultiSelection: {{hasMultiSelection}}
 <br> hasToolbar: {{hasToolbar}}
 <br> hasExport: {{hasExport}}
@@ -45,7 +44,7 @@
 <br> enableEdit: {{enableEdit}}
 <br>
 <!--toolbar-->
-<div id='table-toolbar' class='mdl-grid mdl-shadow--2dp' ng-if='hasToolbar'>
+<div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='hasToolbar'>
     <div class="mdl-cell mdl-cell--3-col">
         <div ng-if='hasSearch'>
             <input class="mdl-textfield__input" type="text" id="table-toolbar-search" ng-model='tableOptions.filterQuery' placeholder="search...">
@@ -81,7 +80,7 @@
     </div>
 </div>
 <!--table-->
-<div class="mdl-card mdl-shadow--4dp">
+<div class="mdl-card mdl-shadow--2dp">
 
     <table class="mdl-data-table mdl-shadow--2dp">
         <thead>
@@ -117,12 +116,13 @@
                 <td class="mdl-data-table__cell--non-numeric" ng-repeat="col in tableOptions.tableData.columnDefs track by $index">
                     {{row[col]}}
                 </td>
-                <p ng-show='filteredRows.length === 0'>No match</p> 
+                <p ng-show='filteredRows.length !== 0 && tableOptions.tableData.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p> 
+                <p ng-show='filteredRows.length === 0 && tableOptions.tableData.data.length !== 0'>No match</p> 
             </tr>
         </tbody>
     </table>
-
 </div>
+<!--pagination-->
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
     <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
@@ -169,6 +169,7 @@
 		</span>
     </div>
 </div>
+<!--editing modal-->
 <dialog class="mdl-dialog" id='table-edit-dialog' ng-if='enableEdit'>
     <div class="mdl-dialog__content">
         <span ng-repeat='field in tableOptions.tableData.columnDefs track by $index'>

@@ -86,7 +86,7 @@ angular.module('dataTable')
 	 			tableOptions.pagination.currentPage--;
 	 		else
 	 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
-	 		console.log(tableOptions.pagination.currentPage);//TOFIX
+
 	 	}
 
 	 	//Selection Handler
@@ -116,7 +116,7 @@ angular.module('dataTable')
 
 	 	function updateSelection(target, action , id){
 			return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
-			//TOFIX
+
 			function addToSelection(target, id){
 				if(tableOptions.selection.selectedId.indexOf(id) === -1){
 					tableOptions.selection.selectedId.push(id);
@@ -140,7 +140,7 @@ angular.module('dataTable')
 
 	 	function renderSelectionOnChange(){
 			$timeout( function() {
-				console.log('rendering');//TOFIX
+
 				var headerCheckbox = angular.element(document.querySelectorAll("[id^='data-table-header-checkbox-label']"))[0];
 				var elementList = angular.element(document.querySelectorAll("[id^='data-table-checkbox-label-']"));
 				var elementId = '';
@@ -174,11 +174,11 @@ angular.module('dataTable')
 	 		console.log(elementList.length);
 	 		for(var i = 0 ; i < elementList.length; i++){
 	 			if(!angular.element(elementList[i]).hasClass('is-checked')){
-	 				console.log('return false');//TOFIX
+
 	 				return false;
 	 			}	
 	 		}
-			console.log('is all checked');//TOFIX
+
 	 		return true;
 	 	}
 
@@ -286,11 +286,6 @@ angular.module('dataTable')
             }
             return false;
         }
-
-        $scope.$watch('tableOptions.filterQuery',function(newVal,oldVal){
-        	console.log(newVal,oldVal);
-        });
-
 
 		function openDialog(){
 			dialogServices.openDialog('table-edit-dialog');
