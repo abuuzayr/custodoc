@@ -20,11 +20,14 @@ angular.module('dataTable')
 		$scope.exportCSV = exportCSV;
 		//EDIT
 		$scope.editRow = editRow;
-		$scope.saveEdit = saveEdit;
 		$scope.discardEdit = discardEdit;
+		//DATA SERVICES
+		$scope.deleteSelected = deleteSelected;
+		$scope.saveEdit = saveEdit;
 		//SEARCH
 		$scope.filterByKeyword = filterByKeyword;
 		$scope.filterQuery = 'hahahah';
+
 
 		console.log(tableOptions);
 
@@ -259,6 +262,7 @@ angular.module('dataTable')
 		}
 
 		function deleteSelected(){
+			console.log(tableOptions.dataServices);//TOFIX
 			return tableOptions.dataServices.delete(tableOptions.selection.selectedId);
 		}
 

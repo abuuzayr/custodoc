@@ -14,6 +14,8 @@
 .mdl-card {
   overflow: auto;
   width: 100%;
+  padding: 0,0,0,0;
+  margin: 0,0,0,0
 }
 
 .mdl-menu {
@@ -25,6 +27,7 @@
 
 .menu-wrapper {
     position: relative;
+    min-height: 36px 
 }
 
 .mdl-dialog__content {
@@ -32,9 +35,22 @@
     overflow-y: auto;
 }
 
+.mdl-data-table{
+	min-width: 100%;
+	margin: 0,0,0,0;
+}
+
+
 #table-toolbar {
     height: 50px;
 }
+
+#item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+
 </style>
 <br> hasMultiSelection: {{hasMultiSelection}}
 <br> hasToolbar: {{hasToolbar}}
@@ -45,15 +61,15 @@
 <br>
 <!--toolbar-->
 <div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='hasToolbar'>
-    <div class="mdl-cell mdl-cell--3-col">
-        <div ng-if='hasSearch'>
+    <div class="mdl-cell mdl-cell--3-col ">
+        <div ng-if='hasSearch' class="menu-wrapper">
             <input class="mdl-textfield__input" type="text" id="table-toolbar-search" ng-model='tableOptions.filterQuery' placeholder="search...">
         </div>
     </div>
     <div class='mdl-cell mdl-cell--5-col'></div>
     <div class="mdl-cell mdl-cell--1-col">
 		<i class = "mdl-badge mdl-badge--overlap" data-badge="{{tableOptions.selection.selectedId.length}}" ng-show='tableOptions.selection.selectedId.length > 0'>
-			<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='tableOptions.delete()'>
+			<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='deleteSelected()'>
 				<i class="material-icons">delete</i>
 			</button>
 		</i>	
@@ -127,7 +143,7 @@
     <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
     <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
     <span flex=''></span>
-    <div class="mdl-cell mdl-cell--2-col">
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
         <div id='page-selection' class='menu-wrapper'>
             <span>Page: </span>
             <button id='page-selection-menu-button' class="mdl-button mdl-js-button">
@@ -149,11 +165,16 @@
             </ul>
         </div>
     </div>
-    <div class="mdl-cell mdl-cell--4-col">
-        <span id='item-info'>
-			{{tableOptions.pagination.startingIndex}} - {{tableOptions.pagination.endingIndex}} of {{tableOptions.pagination.totalItem}}
-		<span>
-		<span id='page-navigator'>
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
+        <!-- <span id='item-info'> -->
+         <div id='item-info' class='menu-wrapper'>
+			<p id='item-info-text'>{{tableOptions.pagination.startingIndex}} - {{tableOptions.pagination.endingIndex}} of {{tableOptions.pagination.totalItem}}</p>
+		</div>
+		<!-- </span> -->
+	</div>
+	<div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
+		<!-- <span id='page-navigator'> -->
+		<div id='item-info' class='menu-wrapper'>
 			<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='toFirstPage()'>
 					<i class="material-icons">first_page</i>
 			</button>
@@ -166,7 +187,8 @@
 			<button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='toLastPage()'>
 					<i class="material-icons">last_page</i>
 			</button>
-		</span>
+		</div>
+		<!-- </span> -->
     </div>
 </div>
 <!--editing modal-->

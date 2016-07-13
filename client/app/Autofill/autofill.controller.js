@@ -72,7 +72,7 @@ angular.module('app.autofill')
 				save: function(rowData){
 					console.log(rowData);
 				},
-				delete: null
+				delete: deleteSelected
 			}
 		};
 
@@ -118,7 +118,8 @@ angular.module('app.autofill')
 		}
 
 		function deleteSelected(rgSelectedId) {
-			var selectedId = vm.tableOptions.selection.selectedId;
+			console.log('deleteSelected in autofill');//TOFIX
+			var selectedId = rgSelectedId;
 			if(selectedId.length === 1)
 				return deleteOne(selectedId);
 			return deleteMany(selectedId);
@@ -321,7 +322,7 @@ angular.module('app.autofill')
 	 	function clearAll(){
 	 		var action = 'remove';
 	 		for ( var i = 0; i < vm.tableOptions.selection.selectedId.length; i++) {
-	 			updateSelection(null, action, vm.tableOptions.selection.selectedId[i]);
+	 			//updateSelection(null, action, vm.tableOptions.selection.selectedId[i]);
 	 		}
 	 		vm.tableOptions.selection.checked = { headerChecked:false };
 	 	}
