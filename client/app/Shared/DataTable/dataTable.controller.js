@@ -22,6 +22,9 @@ angular.module('dataTable')
 		$scope.editRow = editRow;
 		$scope.saveEdit = saveEdit;
 		$scope.discardEdit = discardEdit;
+		//SEARCH
+		$scope.filterByKeyword = filterByKeyword;
+		$scope.filterQuery = 'hahahah';
 
 		console.log(tableOptions);
 
@@ -212,16 +215,16 @@ angular.module('dataTable')
 		function exportSelected(){
 			var csv = null;
 			getDataFromId();
-			if(vm.tableOptions.selection.selected == [] || vm.tableOptions.selection.selected.length < 1)
+			if(tableOptions.selection.selected == [] || tableOptions.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
 			else	
-				csv = Papa.unparse(vm.tableOptions.selection.selected);
+				csv = Papa.unparse(tableOptions.selection.selected);
 			return download(csv);
 		}
 
 		function exportAll(){
 			console.log('all');
-			var csv = Papa.unparse(vm.tableOptions.tableData.data);
+			var csv = Papa.unparse(tableOptions.tableData.data);
 			return download(csv);
 		}
 
@@ -266,6 +269,28 @@ angular.module('dataTable')
 		// function savePromise(){
 		// 	var promise = saveEdit();
 		// }
+		function filterByKeyword(element) {
+			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
+				$scope.tableOptions.filterQuery = '';
+			}
+            for (var property in element) {
+                if (tableOptions.tableData.columnDefs.indexOf(property) === -1)
+                    continue;
+                if (element.hasOwnProperty(property)) {
+                    if (typeof element[property] === 'string') {
+                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        $scope.$watch('tableOptions.filterQuery',function(newVal,oldVal){
+        	console.log(newVal,oldVal);
+        });
+
 
 		function openDialog(){
 			dialogServices.openDialog('table-edit-dialog');
