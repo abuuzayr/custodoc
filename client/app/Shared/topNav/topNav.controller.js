@@ -9,11 +9,11 @@ angular
             vm.date = new Date();
         }, 1000);
         
-        vm.userInfo = authServices.getUserInfo();
+        // vm.userInfo = authServices.getUserInfo();
 
-        vm.userGroup = vm.userInfo.usertype;
-        vm.email = vm.userInfo.email;
-        vm.username = vm.userInfo.username;
+        // vm.userGroup = vm.userInfo.usertype;
+        // vm.email = vm.userInfo.email;
+        // vm.username = vm.userInfo.username;
 
         function logout() {
             authServices.logout();

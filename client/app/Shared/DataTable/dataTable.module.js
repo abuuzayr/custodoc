@@ -1,1 +1,1 @@
-angular.module('dataTable',[])
+angular.module('dataTable',['app.shared']);

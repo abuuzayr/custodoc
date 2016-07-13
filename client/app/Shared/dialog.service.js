@@ -1,5 +1,5 @@
 angular.module('app.shared')
-    .service('dialogServices', dialogServices)
+    .service('dialogServices', dialogServices);
 
 
 function dialogServices() {
@@ -10,11 +10,11 @@ function dialogServices() {
             dialogPolyfill.registerDialog(dialog);
         }
         dialog.showModal();
-    }
+    };
 
     this.closeDialog = function (dialogId) {
         var dialog = document.querySelector('#' + dialogId);
         if(dialog.open)
             dialog.close();
-    }
+    };
 }
