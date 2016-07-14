@@ -323,22 +323,7 @@
 					node.style.borderRadius = element.borderRadius;
 					node.setAttribute("data-x", "0");
 					node.setAttribute("data-y", "0");
-					node.onmousedown = function(event) { //TODO: calvyn extract function
-						if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
-							vm.onmousedowned = false;
-							vm.mousetarget = null;
-							vm.elementOnclick(event);
-							return false;
-						} else {
-							vm.onmousedowned = true;
-							vm.mousetarget = event.currentTarget;
-							setTimeout(function() {
-								vm.onmousedowned = false;
-								vm.mousetarget = null;
-							}, 300);
-							return false;
-						}
-					};
+					node.onmousedown = isClicked(event);
 					node.className += " resize-drag notSelectable";
 					node.id = key;
 					node.setAttribute('name', element.name);
@@ -361,6 +346,23 @@
 
 		vm.getAutofillElements();
 		vm.getSavedElements();
+
+		function isClicked(event) { //TODO: calvyn extract function
+			if (vm.onmousedowned && vm.mousetarget === event.currentTarget) {
+				vm.onmousedowned = false;
+				vm.mousetarget = null;
+				vm.elementOnclick(event);
+				return false;
+			} else {
+				vm.onmousedowned = true;
+				vm.mousetarget = event.currentTarget;
+				setTimeout(function() {
+					vm.onmousedowned = false;
+					vm.mousetarget = null;
+				}, 300);
+				return false;
+			}
+		}
 
 		function maxSizeWarning() {
 			if (vm.file && vm.file.filesize > 2000000) {
