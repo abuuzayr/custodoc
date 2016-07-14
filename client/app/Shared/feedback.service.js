@@ -16,7 +16,7 @@
 				snackbarContainer.MaterialSnackbar.active = false;//
 			}
 			
-			var errMsg = ''
+			var errMsg = '';
 			if( (typeof errData) === 'string')
 				errMsg = errData;
 			else 
@@ -24,10 +24,12 @@
 			var feedback = {
 				message: errMsg,
 				timeout: 5000
-			}
+			};
 			snackbarContainer.MaterialSnackbar.showSnackbar(feedback);
-			return $q.defer().promise;
-		}
+			var deferred = $q.defer();
+			deferred.resolve('ok');
+			return deferred.promise;
+		};
 
 		this.successFeedback = function (msg, domElementId, timeout) {
 			var snackbarContainer = document.querySelector('#' + domElementId);
@@ -38,10 +40,12 @@
 			var feedback = {
 				message: msg,
 				timeout: timeout ? timeout : 5000
-			}
+			};
 			snackbarContainer.MaterialSnackbar.showSnackbar(feedback);
-			return $q.defer().promise;
-		}
+			var deferred = $q.defer();
+			deferred.resolve('ok');
+			return deferred.promise;
+		};
 
 	}
 } ());

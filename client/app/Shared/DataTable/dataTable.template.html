@@ -143,7 +143,7 @@
                 {{tableOptions.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
             </button>
             <ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="page-selection-menu-button">
-                <li class="mdl-menu__item" ng-repeat='num in getTimes(tableOptions.pagination.totalPage) track by $index' ng-click='tableOptions.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
+                <li class="mdl-menu__item" ng-repeat='num in tableOptions.pagination.rgPage track by $index' ng-click='tableOptions.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
             </ul>
         </div>
     </div>
@@ -161,7 +161,7 @@
     <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
         <!-- <span id='item-info'> -->
          <div id='item-info' class='menu-wrapper'>
-			<p id='item-info-text'>{{tableOptions.pagination.startingIndex}} - {{tableOptions.pagination.endingIndex}} of {{tableOptions.pagination.totalItem}}</p>
+			<p id='item-info-text'>{{tableOptions.pagination.startingIndex + 1}} - {{tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage }} of {{tableOptions.pagination.totalItem}}</p>
 		</div>
 		<!-- </span> -->
 	</div>

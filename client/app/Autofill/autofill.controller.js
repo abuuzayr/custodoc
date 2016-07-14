@@ -56,9 +56,7 @@ angular.module('app.autofill')
 				itemPerPage: 10,
 				totalItem: 0,
 				limitOptions: [10,20,30],
-				startingIndex: 0,
-				endingIndex: 0,
-				pagedItem: []
+				startingIndex: 0
 			},
 			exportOptions: {
 				exportBy:['Selected','All'],
@@ -299,14 +297,13 @@ angular.module('app.autofill')
 
 		function getDataBody(){
 			vm.tableOptions.tableData.data = [];
-			console.log(vm.tableOptions.tableData.data);
 			return autofillServices.getRecords(vm.query)
 			.then(function SuccessCallback(res){
 					for(var i = 0; i < res.data.length; i++){
 						vm.tableOptions.tableData.data.push(res.data[i]);
 					}
 
-				onDataLoaded();
+					onDataLoaded();
 			}).catch(function ErrorCallback(err){
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
@@ -317,6 +314,7 @@ angular.module('app.autofill')
 			vm.tableOptions.pagination.totalItem = vm.tableOptions.tableData.data.length;
 			vm.tableOptions.pagination.totalPage = Math.ceil(vm.tableOptions.pagination.totalItem/vm.tableOptions.pagination.itemPerPage);
 			vm.tableOptions.pagination.currentPage = 1;
+			vm.tableOptions.pagination.rgPage = new Array(vm.tableOptions.pagination.totalPage);
 	 	}
 
 	 	function clearAll(){

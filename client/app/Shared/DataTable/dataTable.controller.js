@@ -26,46 +26,36 @@ angular.module('dataTable')
 		$scope.saveEdit = saveEdit;
 		//SEARCH
 		$scope.filterByKeyword = filterByKeyword;
-		$scope.filterQuery = 'hahahah';
-
-
-		console.log(tableOptions);
+		$scope.filterQuery = '';
+		
+		// console.log(tableOptions.pagination);
 
 		function getPagination(){
 			try{
+				console.log(tableOptions);
 				tableOptions.pagination.limitOptions = $scope.dtRowPerPageOptions;
 				if(tableOptions.pagination.limitOptions.constructor !== Array)
 					throw new Error('Type Error: limitOptions expect array');
 			}catch(err){
 				tableOptions.pagination.limitOptions = [10,20,30];
 				console.log(err);
-			}finally{
-				tableOptions.pagination.itemPerPage = tableOptions.pagination.limitOptions[0];
+			}
+			finally{
+					tableOptions.pagination.itemPerPage = tableOptions.pagination.limitOptions[0];
 			}	
 		}
 
 		
 		//PAGINATION
-		function onDataLoaded(){
-			tableOptions.pagination.totalItem = tableOptions.tableData.data.length;
-			tableOptions.pagination.totalPage = Math.ceil(tableOptions.pagination.totalItem/tableOptions.pagination.itemPerPage);
-			tableOptions.pagination.currentPage = 1;
-	 	}
-
 	 	$scope.$watch('tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
-	 		console.log('page change: ' + newPage);
-			tableOptions.pagination.startingIndex = (newPage - 1) * tableOptions.pagination.itemPerPage + 1 < tableOptions.pagination.totalItem ? (newPage - 1) * tableOptions.pagination.itemPerPage + 1 : tableOptions.pagination.totalItem;
-			tableOptions.pagination.endingIndex = (( newPage * tableOptions.pagination.itemPerPage < tableOptions.pagination.totalItem ) ? newPage * tableOptions.pagination.itemPerPage : tableOptions.pagination.totalItem);
-			tableOptions.pagination.pagedItem = tableOptions.tableData.data.slice(tableOptions.pagination.startingIndex,tableOptions.pagination.endingIndex + 1);
+			tableOptions.pagination.startingIndex = (newPage - 1) * tableOptions.pagination.itemPerPage + 1 < tableOptions.pagination.totalItem ? (newPage - 1) * tableOptions.pagination.itemPerPage : tableOptions.pagination.totalItem;
 			renderSelectionOnChange();
 	 	});
 
 	 	$scope.$watch('tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
-	 		console.log('limit change: ' + newLimit);
-			var startingIndex = tableOptions.pagination.startingIndex;
-			tableOptions.pagination.endingIndex = (startingIndex + newLimit - 1) < tableOptions.pagination.totalItem ?  startingIndex + newLimit - 1 : tableOptions.pagination.totalItem;
 			tableOptions.pagination.itemPerPage = newLimit;
-			tableOptions.pagination.pagedItem = tableOptions.tableData.data.slice(tableOptions.pagination.startingIndex,tableOptions.pagination.endingIndex + 1);
+			tableOptions.pagination.totalPage = Math.ceil(tableOptions.pagination.totalItem/tableOptions.pagination.itemPerPage)
+			tableOptions.pagination.rgPage = getTimes(tableOptions.pagination.totalPage);
 			renderSelectionOnChange();
 	 	});
 
@@ -109,7 +99,6 @@ angular.module('dataTable')
 	  		renderSelectionOnChange();
 	 	}
 
-
 	 	function selectOne($event, row){
 	 		var checkbox = $event.target;
 	  		var action = (checkbox.checked ? 'add' : 'remove');
@@ -126,8 +115,6 @@ angular.module('dataTable')
 					if(target && (!tableOptions.selection.checked.hasOwnProperty(id) || (!tableOptions.selection.checked[id] && !tableOptions.selection.checked.hasOwnProperty(id))))
 						target.checked = true;
 				}
-				else 
-					console.log('already have row ??');
 			}
 
 			function removeFromSelection(target,id){
@@ -136,21 +123,17 @@ angular.module('dataTable')
 					if(target && (!tableOptions.selection.checked.hasOwnProperty(id) || tableOptions.selection.checked[id]))
 						target.checked = false;
 				}
-				else
-					console.log('not removed');
 			}
 	 	}
 
 	 	function renderSelectionOnChange(){
 			$timeout( function() {
-
 				var headerCheckbox = angular.element(document.querySelectorAll("[id^='data-table-header-checkbox-label']"))[0];
 				var elementList = angular.element(document.querySelectorAll("[id^='data-table-checkbox-label-']"));
 				var elementId = '';
 				for(var i = 0 ; i < elementList.length; i++){
 					
 					elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-					console.log(elementId,tableOptions.selection.selectedId.indexOf(elementId));
 					if( tableOptions.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
 						elementList[i].MaterialCheckbox.uncheck();
 					}else if(tableOptions.selection.selectedId.indexOf(elementId) !== -1 && !angular.element(elementList[i]).hasClass('is-checked')){
@@ -160,21 +143,17 @@ angular.module('dataTable')
 				//header
 				if(elementList && elementList.length > 0 ){
 					if(isAllChecked(elementList)){
-						if(!tableOptions.selection.checked.headerChecked)
 							tableOptions.selection.checked.headerChecked = true;
 							headerCheckbox.MaterialCheckbox.check();
 					}else{
-						if(tableOptions.selection.checked.headerChecked){
 							tableOptions.selection.checked.headerChecked = false;
 							headerCheckbox.MaterialCheckbox.uncheck();
-						}	
 					}
 				}
 	  		}, 0, false);
 	 	}
 
 	 	function isAllChecked(elementList){
-	 		console.log(elementList.length);
 	 		for(var i = 0 ; i < elementList.length; i++){
 	 			if(!angular.element(elementList[i]).hasClass('is-checked')){
 
@@ -204,6 +183,28 @@ angular.module('dataTable')
 			tableOptions.sorting.sortReverse = !tableOptions.sorting.sortReverse;
 			renderSelectionOnChange();
 	 	}
+
+	 	function filterByKeyword(element) {
+			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
+				$scope.tableOptions.filterQuery = '';
+			}
+            for (var property in element) {
+                if (tableOptions.tableData.columnDefs.indexOf(property) === -1)
+                    continue;
+                if (element.hasOwnProperty(property)) {
+                    if (typeof element[property] === 'string') {
+                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        $scope.$watch('tableOptions.filterQuery', function() {
+     		renderSelectionOnChange();
+		});
 
 	 	//IMPORT AND EXPORT
 	 	function exportCSV(exportBy){
@@ -262,8 +263,15 @@ angular.module('dataTable')
 		}
 
 		function deleteSelected(){
-			console.log(tableOptions.dataServices);//TOFIX
-			return tableOptions.dataServices.delete(tableOptions.selection.selectedId);
+			tableOptions.dataServices.delete(tableOptions.selection.selectedId)
+			.then(function successCallback(){
+				if(tableOptions.selection.selectedId.length === 0){
+					$timeout(function() {
+						renderSelectionOnChange();
+					}, 500);
+				}
+			});
+			
 		}
 
 		function saveEdit(){
@@ -273,23 +281,7 @@ angular.module('dataTable')
 		// function savePromise(){
 		// 	var promise = saveEdit();
 		// }
-		function filterByKeyword(element) {
-			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
-				$scope.tableOptions.filterQuery = '';
-			}
-            for (var property in element) {
-                if (tableOptions.tableData.columnDefs.indexOf(property) === -1)
-                    continue;
-                if (element.hasOwnProperty(property)) {
-                    if (typeof element[property] === 'string') {
-                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+		
 
 		function openDialog(){
 			dialogServices.openDialog('table-edit-dialog');
