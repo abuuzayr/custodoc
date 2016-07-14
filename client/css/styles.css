@@ -167,5 +167,10 @@ select {
 
 .mdl-menu__item {
     line-height: 48px !important;
+    color: black !important;
+}
+
+.mdl-layout__header-row {
+    padding: 0 16px 0 30px !important;
 }
 
