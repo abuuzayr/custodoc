@@ -445,20 +445,13 @@ angular
 	};
 
 	vm.save = function() {
-		console.log('haha');
 		if (vm.signaturePad.isEmpty()) {
     		var msg = "Please provide signature first.";
     		showSnackbar(msg);
-		 	} else {
-		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
-		 		//Open image in new window
-			//window.open(dataURL);
-			//..or
-			//Extract as base64 encoded
+		 } else {
+		 	var dataURL = vm.signaturePad.toDataURL('image/png',1);
 			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-			vm.signature = data;
-			console.log(data);
-			//TODO: include in your json object
+			return data;
 		}
 	}
 

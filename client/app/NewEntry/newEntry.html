@@ -93,7 +93,7 @@
                 <!-- SIGNATURE FIELDS -->
                 <div ng-if="key.type=='signature'">
                     <div id="signature-field-div">
-                        <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
+                        <button type="button" class="mdl-button close" ng-click="vm.openModal()">Click Here To Sign</button>
                         <dialog id="signature-modal" class="mdl-dialog">
                             <p>Sign below</p>
                             <div class="mdl-dialog__content">
@@ -103,7 +103,7 @@
                                     </div>
                                     <div>
                                         <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-                                        <button type="button" class="mdl-button" ng-click="vm.save()">Save</button> 
+                                        <button type="button" class="mdl-button" ng-click="key.data = vm.save()">Save</button> 
                                         <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
                                     </div>
                                 </div>  
