@@ -23,6 +23,7 @@
 
 		//initialization
 		var serverURL = "https://10.4.1.204/req/api/protected";
+		/* jshint validthis: true */
 		var vm = this;
 		vm.saved = true;
 		vm.mousedowned = false;
@@ -197,11 +198,18 @@
 
 		formBuilderFactory.getFormData(vm.groupName, vm.formName)
 			.then(function(res) {
+				var node;
+				var span;
+				var option;
+				var options;
+				var checkbox;
+				var display;
+				var i;
 				var formData = res.data;
 				elements = formData.elements;
 				vm.numberOfPages = formData.numberOfPages;
 				if (vm.numberOfPages > 1) {
-					for (var i = 2; i <= vm.numberOfPages; i++) {
+					for (i = 2; i <= vm.numberOfPages; i++) {
 						var newPage = newPageTemplate.cloneNode(true);
 						newPage.setAttribute("id", "page" + i);
 						newPage.style.display = "none";
@@ -211,11 +219,11 @@
 				for (var key in elements) {
 					var element = elements[key];
 					if (element.name.startsWith('background_')) {
-						var node = document.createElement('img');
+						node = document.createElement('img');
 						node.src = element.src;
 						node.style.zIndex = "0";
 					} else if (element.name.startsWith('label_')) {
-						var node = document.createElement('div');
+						node = document.createElement('div');
 						node.innerHTML = element.content;
 						node.style.whiteSpace = "pre-wrap";
 						node.style.color = element.color;
@@ -225,7 +233,7 @@
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_text') || element.name.startsWith('text_')) {
-						var node = document.createElement('input');
+						node = document.createElement('input');
 						node.type = 'text';
 						node.placeholder = element.default;
 						node.setAttribute('readonly', 'readonly');
@@ -236,9 +244,9 @@
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')) {
-						var node = document.createElement('label');
-						var span = document.createElement('span');
-						var checkbox = document.createElement('input');
+						node = document.createElement('label');
+						span = document.createElement('span');
+						checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
 						checkbox.checked = element.default;
 						checkbox.onclick = function() {
@@ -254,11 +262,11 @@
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
-						var node = document.createElement('select');
-						var options = element.options;
+						node = document.createElement('select');
+						options = element.options;
 						if (options.length > 0) {
-							for (var i = 0; i < options.length; i++) {
-								var option = document.createElement('option');
+							for (i = 0; i < options.length; i++) {
+								option = document.createElement('option');
 								option.innerHTML = options[i];
 								node.appendChild(option);
 							}
@@ -271,22 +279,22 @@
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_radio') || element.name.startsWith('radio')) {
-						var node = document.createElement('form');
+						node = document.createElement('form');
 						node.onclick = function() {
 							return false;
 						};
-						var options = element.options;
+						options = element.options;
 						if (options.length > 0) {
-							if (element.display === "radioInline") var display = "inline";
-							else var display = "block";
-							for (var i = 0; i < options.length; i++) {
+							if (element.display === "radioInline") display = "inline";
+							else display = "block";
+							for (i = 0; i < options.length; i++) {
 								var label = document.createElement("label");
-								var option = document.createElement("input");
+								option = document.createElement("input");
 								option.type = "radio";
 								option.name = element.name;
 								option.value = options[i];
 								if (options[i] === element.default) option.checked = true;
-								var span = document.createElement("span");
+								span = document.createElement("span");
 								span.innerHTML = options[i] + " ";
 								label.appendChild(option);
 								label.appendChild(span);
@@ -302,11 +310,11 @@
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('signature_')) {
-						var node = document.createElement('canvas');
+						node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('image_')) {
-						var node = document.createElement('canvas');
+						node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex = "1";
 					}
@@ -404,6 +412,10 @@
 
 		//get all the elements data and save the form
 		function saveForm() {
+			var k;
+			var checkbox;
+			var option;
+			var span;
 			formData.numberOfPages = vm.numberOfPages;
 			for (var i = 1; i <= vm.numberOfPages; i++) {
 				var page = document.getElementById("page" + i);
@@ -451,8 +463,8 @@
 							elements[id].default = node.value;
 							elements[id].type = "dropdown";
 							if (node.lastChild) {
-								for (var k = 0; k < node.childNodes.length; k++) {
-									var option = node.childNodes[k];
+								for (k = 0; k < node.childNodes.length; k++) {
+									option = node.childNodes[k];
 									if (option.tagName && option.tagName === 'OPTION') elements[id].options.push(option.innerHTML);
 								}
 							}
@@ -463,16 +475,16 @@
 							else elements[id].display = "radioInline";
 							elements[id].type = "radio";
 							if (node.lastChild) {
-								for (var k = 0; k < node.childNodes.length; k++) {
-									var option = node.childNodes[k].firstChild;
+								for (k = 0; k < node.childNodes.length; k++) {
+									option = node.childNodes[k].firstChild;
 									elements[id].options.push(option.value);
 									if (option.checked === true) elements[id].default = option.value;
 								}
 							}
 						} else if (id.startsWith("checkbox") || id.startsWith("auto_checkbox")) {
-							for (var k = 0; k < node.childNodes.length; k++) {
-								if (node.childNodes[k].tagName && node.childNodes[k].tagName === "SPAN") var span = node.childNodes[k];
-								if (node.childNodes[k].tagName && node.childNodes[k].tagName === "INPUT") var checkbox = node.childNodes[k];
+							for (k = 0; k < node.childNodes.length; k++) {
+								if (node.childNodes[k].tagName && node.childNodes[k].tagName === "SPAN") span = node.childNodes[k];
+								if (node.childNodes[k].tagName && node.childNodes[k].tagName === "INPUT") checkbox = node.childNodes[k];
 							}
 							elements[id].type = "checkbox";
 							elements[id].default = checkbox.checked;
@@ -563,12 +575,13 @@
 		}
 
 		function beforeGeneratePDF() {
+			var i;
 			var deferred = $q.defer();
 			for (var key in elements) {
 				if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 					var radio = document.getElementById(key);
 					if (radio.firstChild) {
-						for (var i = 0; i < radio.childNodes.length; i++) {
+						for (i = 0; i < radio.childNodes.length; i++) {
 							if (radio.childNodes[i].firstChild.checked === true) radio.childNodes[i].firstChild.setAttribute("checked", true);
 						}
 					}
@@ -576,7 +589,7 @@
 				if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
 					var dropdown = document.getElementById(key);
 					if (dropdown.firstChild) {
-						for (var i = 0; i < dropdown.childNodes.length; i++) {
+						for (i = 0; i < dropdown.childNodes.length; i++) {
 							if (dropdown.childNodes[i].value === dropdown.value) dropdown.childNodes[i].setAttribute("selected", true);
 						}
 					}
@@ -591,12 +604,13 @@
 		}
 
 		function afterGeneratePDF() {
+			var i;
 			var deferred = $q.defer();
 			for (var key in elements) {
 				if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 					var radio = document.getElementById(key);
 					if (radio.firstChild) {
-						for (var i = 0; i < radio.childNodes.length; i++) {
+						for (i = 0; i < radio.childNodes.length; i++) {
 							if (radio.childNodes[i].firstChild.hasAttribute("checked")) {
 								radio.childNodes[i].firstChild.removeAttribute("checked");
 								radio.childNodes[i].firstChild.checked = true;
@@ -607,7 +621,7 @@
 				if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
 					var dropdown = document.getElementById(key);
 					if (dropdown.firstChild) {
-						for (var i = 0; i < dropdown.childNodes.length; i++) {
+						for (i = 0; i < dropdown.childNodes.length; i++) {
 							if (dropdown.childNodes[i].hasAttribute("selected")) dropdown.childNodes[i].removeAttribute("selected");
 						}
 					}
@@ -625,9 +639,10 @@
 		}
 
 		function downloadPreview() {
+			var i;
 			var pageData = pdfFactory.getData();
 			pdf = new jsPDF();
-			for (var i = 1; i <= vm.numberOfPages; i++) {
+			for (i = 1; i <= vm.numberOfPages; i++) {
 				if (i != 1) {
 					pdf.addPage();
 				}
@@ -826,6 +841,7 @@
 		}
 
 		function movePage() {
+			var i;
 			if (vm.allowCreate) {
 				toolbar.style.display = "none";
 				if (vm.currentPageNumber > vm.moveToPageNumber) {
@@ -834,7 +850,7 @@
 					}
 					vm.element = null;
 					vm.saved = false;
-					for (var i = vm.currentPageNumber - 1; i >= vm.moveToPageNumber; i--) {
+					for (i = vm.currentPageNumber - 1; i >= vm.moveToPageNumber; i--) {
 						document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i + 1).toString());
 					}
 					vm.currentPageNumber = vm.moveToPageNumber;
@@ -846,7 +862,7 @@
 					}
 					vm.element = null;
 					vm.saved = false;
-					for (var i = vm.currentPageNumber + 1; i <= vm.moveToPageNumber; i++) {
+					for (i = vm.currentPageNumber + 1; i <= vm.moveToPageNumber; i++) {
 						document.getElementById("page" + i.toString()).setAttribute("id", "page" + (i - 1).toString());
 					}
 					vm.currentPageNumber = vm.moveToPageNumber;
@@ -896,9 +912,10 @@
 		}
 
 		function drop(event) {
+			var i;
 			if (vm.allowCreate && vm.newElementType !== '') {
 				if (vm.newElementType === 'auto') {
-					var i = 0;
+					i = 0;
 					while (elements.hasOwnProperty("auto_" + vm.selectedAutofillElement.type + '_' + vm.selectedAutofillElement.fieldName + i)) {
 						i++;
 					}
@@ -915,7 +932,7 @@
 					}
 				} else if (vm.newElementType === 'saved') {
 					var type = vm.selectedSavedElement.type;
-					var i = 0;
+					i = 0;
 					while (elements.hasOwnProperty(vm.selectedSavedElement.name + i)) {
 						i++;
 					}
@@ -993,21 +1010,24 @@
 		}
 
 		function editAddNewOption() {
+			var option;
+			var span;
+			var label;
 			if (vm.editOptions.indexOf(vm.editNewOption) < 0) {
 				vm.editOptions.push(vm.editNewOption);
 				if (vm.element.name.startsWith("dropdown") || vm.element.name.startsWith("auto_dropdown")) {
-					var option = document.createElement("option");
+					option = document.createElement("option");
 					option.innerHTML = vm.editNewOption;
 					option.value = vm.editNewOption;
 					vm.element.appendChild(option);
 					vm.editNewOption = "";
 				} else if (vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio")) {
-					var label = document.createElement("label");
-					var option = document.createElement("input");
+					label = document.createElement("label");
+					option = document.createElement("input");
 					option.type = "radio";
 					option.name = vm.element.name;
 					option.value = vm.editNewOption;
-					var span = document.createElement("span");
+					span = document.createElement("span");
 					span.innerHTML = vm.editNewOption + " ";
 					label.appendChild(option);
 					label.appendChild(span);
@@ -1035,10 +1055,11 @@
 
 		$scope.$watch("vm.editRadioDisplayClass",
 			function(newValue, oldValue) {
+				var display;
 				if (vm.element && (vm.element.name.startsWith("radio") || vm.element.name.startsWith("auto_radio"))) {
 					vm.element.className = vm.element.className.replace(oldValue, newValue);
-					if (newValue === "radioInline") var display = "inline";
-					else var display = "block";
+					if (newValue === "radioInline") display = "inline";
+					else display = "block";
 					for (var i = 0; i < vm.element.childNodes.length; i++) {
 						vm.element.childNodes[i].style.display = display;
 					}
@@ -1048,6 +1069,8 @@
 
 
 		function elementOnclick(event) {
+			var childNodes;
+			var i;
 			var element = event.currentTarget;
 			if (element != vm.element) {
 				if (vm.element) {
@@ -1102,10 +1125,10 @@
 				if (element.getAttribute('name').startsWith('dropdown') || element.getAttribute('name').startsWith('auto_dropdown_')) {
 					optionsPanel.style.display = 'inline';
 					editDropdownDefault.style.display = 'inline';
-					var childNodes = element.childNodes;
+					childNodes = element.childNodes;
 					vm.editOptions = [];
 					vm.editNewOption = "";
-					for (var i = 0; i < childNodes.length; i++) {
+					for (i = 0; i < childNodes.length; i++) {
 						if (childNodes[i].tagName === 'OPTION') vm.editOptions.push(childNodes[i].innerHTML);
 					}
 				}
@@ -1115,10 +1138,10 @@
 					editRadioDisplay.style.display = "inline";
 					if (element.className.includes("radioInline")) vm.editRadioDisplayClass = "radioInline";
 					else vm.editRadioDisplayClass = "radioMultiline";
-					var childNodes = element.childNodes;
+					childNodes = element.childNodes;
 					vm.editOptions = [];
 					vm.editNewOption = "";
-					for (var i = 0; i < childNodes.length; i++) {
+					for (i = 0; i < childNodes.length; i++) {
 						if (childNodes[i].tagName !== "LABEL") continue;
 						var option = childNodes[i].firstChild;
 						if (option.checked) vm.editRadioDefaultValue = option.value;
@@ -1182,7 +1205,7 @@
 					setTimeout(function() {
 						vm.onmousedowned = false;
 						vm.mousetarget = null;
-					}, 300)
+					}, 300);
 					return false;
 				}
 			};
@@ -1249,26 +1272,33 @@
 		}
 
 		function createRadio() {
+			var display;
+			var option;
+			var options;
+			var label;
+			var name;
+			var span;
+			var i;
 			var radio = document.createElement("form");
 			radio.onclick = function() {
 				return false;
 			};
 			if (vm.newElementType === 'auto') {
-				var name = 'auto_radio_' + vm.selectedAutofillElement.fieldName;
+				name = 'auto_radio_' + vm.selectedAutofillElement.fieldName;
 				radio.setAttribute("name", name);
 				radio.setAttribute("id", vm.newAutofillElementId);
 				radio.className += " " + vm.selectedAutofillElement.display;
-				if (vm.selectedAutofillElement.display === "radioInline") var display = "inline";
-				else var display = "block";
-				var options = vm.selectedAutofillElement.options;
-				for (var i = 0; i < options.length; i++) {
-					var label = document.createElement("label");
-					var option = document.createElement("input");
+				if (vm.selectedAutofillElement.display === "radioInline") display = "inline";
+				else display = "block";
+				options = vm.selectedAutofillElement.options;
+				for (i = 0; i < options.length; i++) {
+					label = document.createElement("label");
+					option = document.createElement("input");
 					option.type = "radio";
 					option.name = name;
 					option.value = options[i];
 					if (options[i] === vm.selectedAutofillElement.default) option.checked = true;
-					var span = document.createElement("span");
+					span = document.createElement("span");
 					span.innerHTML = options[i] + " ";
 					label.style.display = display;
 					label.appendChild(option);
@@ -1279,17 +1309,17 @@
 				radio.setAttribute("name", vm.selectedSavedElement.name);
 				radio.setAttribute("id", vm.newSavedElementId);
 				radio.className += " " + vm.selectedSavedElement.display;
-				if (vm.selectedSavedElement.display === "radioInline") var display = "inline";
-				else var display = "block";
-				var options = vm.selectedSavedElement.options;
-				for (var i = 0; i < options.length; i++) {
-					var label = document.createElement("label");
-					var option = document.createElement("input");
+				if (vm.selectedSavedElement.display === "radioInline") display = "inline";
+				else display = "block";
+				options = vm.selectedSavedElement.options;
+				for (i = 0; i < options.length; i++) {
+					label = document.createElement("label");
+					option = document.createElement("input");
 					option.type = "radio";
 					option.name = name;
 					option.value = options[i];
 					if (options[i] === vm.selectedSavedElement.default) option.checked = true;
-					var span = document.createElement("span");
+					span = document.createElement("span");
 					span.innerHTML = options[i] + " ";
 					label.style.display = display;
 					label.appendChild(option);
@@ -1302,21 +1332,21 @@
 					vm.allowCreate = true;
 					return;
 				}
-				var name = "radio_" + vm.radioName;
+				name = "radio_" + vm.radioName;
 				elements[name] = {};
 				radio.setAttribute("name", name);
 				radio.setAttribute("id", name);
 				radio.className += " " + vm.radioDisplay;
-				if (vm.radioDisplay === "radioInline") var display = "inline";
-				else var display = "block";
-				for (var i = 0; i < vm.options.length; i++) {
-					var label = document.createElement("label");
-					var option = document.createElement("input");
+				if (vm.radioDisplay === "radioInline") display = "inline";
+				else display = "block";
+				for (i = 0; i < vm.options.length; i++) {
+					label = document.createElement("label");
+					option = document.createElement("input");
 					option.type = "radio";
 					option.name = name;
 					option.value = vm.options[i];
 					if (vm.options[i] === vm.radioDefault) option.checked = true;
-					var span = document.createElement("span");
+					span = document.createElement("span");
 					span.innerHTML = vm.options[i] + " ";
 					label.style.display = display;
 					label.appendChild(option);
@@ -1328,16 +1358,19 @@
 		}
 
 		function createDropdownList() {
+			var options;
+			var option;
+			var i;
 			var dropdown = document.createElement("select");
 			dropdown.onmousedown = function() {
 				return false;
-			}
+			};
 			if (vm.newElementType === 'auto') {
 				dropdown.setAttribute("name", 'auto_dropdown_' + vm.selectedAutofillElement.fieldName);
 				dropdown.setAttribute("id", vm.newAutofillElementId);
-				var options = vm.selectedAutofillElement.options;
-				for (var i = 0; i < options.length; i++) {
-					var option = document.createElement("option");
+				options = vm.selectedAutofillElement.options;
+				for (i = 0; i < options.length; i++) {
+					option = document.createElement("option");
 					option.innerHTML = options[i];
 					dropdown.appendChild(option);
 				}
@@ -1345,9 +1378,9 @@
 			} else if (vm.newElementType === 'saved') {
 				dropdown.setAttribute("name", vm.selectedSavedElement.name);
 				dropdown.setAttribute("id", vm.newSavedElementId);
-				var options = vm.selectedSavedElement.options;
-				for (var i = 0; i < options.length; i++) {
-					var option = document.createElement("option");
+				options = vm.selectedSavedElement.options;
+				for (i = 0; i < options.length; i++) {
+					option = document.createElement("option");
 					option.innerHTML = options[i];
 					dropdown.appendChild(option);
 				}
@@ -1361,8 +1394,8 @@
 				elements["dropdown_" + vm.dropdownListName] = {};
 				dropdown.setAttribute("name", "dropdown_" + vm.dropdownListName);
 				dropdown.setAttribute("id", "dropdown_" + vm.dropdownListName);
-				for (var i = 0; i < vm.options.length; i++) {
-					var option = document.createElement("option");
+				for (i = 0; i < vm.options.length; i++) {
+					option = document.createElement("option");
 					option.innerHTML = vm.options[i];
 					dropdown.appendChild(option);
 				}
@@ -1378,7 +1411,7 @@
 			checkbox.checked = vm.checkboxdefault;
 			checkbox.onclick = function() {
 				return false;
-			}
+			};
 			var span = document.createElement("span");
 			span.innerHTML = vm.checkboxLabel;
 			label.appendChild(checkbox);
@@ -1526,7 +1559,7 @@
 				dialogPolyfill.registerDialog(dialog);
 			}
 			dialog.showModal();
-		};
+		}
 
 		function removePlaceholder() {
 			if (placeholder && placeholder.parentNode === currentPage) currentPage.removeChild(placeholder);
@@ -1538,7 +1571,7 @@
 			var dialog = document.querySelector('#' + vm.newElementType);
 			if (dialog) dialog.close();
 			reset();
-		};
+		}
 
 		function dragMoveListener(event) {
 			if (event.interaction.downEvent.button == 2) {
