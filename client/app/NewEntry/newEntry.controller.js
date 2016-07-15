@@ -46,8 +46,9 @@ angular
 
 	/* this entryData stores the final data structure for an entry, which contains the groupName  
 		and the relevant fields obtained from the form database	*/
-	vm.entryData = [];  
+	vm.entryData = '';
 
+	vm.finalData = [];
 	/*****************************************************************/
 	
 
@@ -119,18 +120,6 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.data = def;
-						        object.width = element.width+'px';
-						        object.height = element.height+'px';
-						        object.border = element.border;
-						        object.borderRadius = element.borderRadius;
-						        object.opacity = element.opacity;
-						        object.top = element.top+'px';
-						        object.left = element.left+'px';
-						        object.backgroundColor = element.backgroundColor;
-						        object.fontSize = element.fontSize;
-						        object.color = element.color;
-						        object.fontFamily = element.fontFamily;
-						        object.textDecoration = element.textDecoration;
 
 						    }
 
@@ -158,18 +147,7 @@ angular
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
-						       	object.width = element.width+'px';
-						        object.height = element.height+'px';
-						        object.border = element.border;
-						        object.borderRadius = element.borderRadius;
-						        object.opacity = element.opacity;
-						        object.top = element.top+'px';
-						        object.left = element.left+'px';
-						        object.backgroundColor = element.backgroundColor;
-						        object.fontSize = element.fontSize;
-						        object.color = element.color;
-						        object.fontFamily = element.fontFamily;
-						        object.textDecoration = element.textDecoration;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -194,18 +172,7 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.data = def;
-						        object.width = element.width+'px';
-						        object.height = element.height+'px';
-						        object.border = element.border;
-						        object.borderRadius = element.borderRadius;
-						        object.opacity = element.opacity;
-						        object.top = element.top+'px';
-						        object.left = element.left+'px';
-						        object.backgroundColor = element.backgroundColor;
-						        object.fontSize = element.fontSize;
-						        object.color = element.color;
-						        object.fontFamily = element.fontFamily;
-						        object.textDecoration = element.textDecoration;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -232,18 +199,7 @@ angular
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
-		        				object.width = element.width+'px';
-						        object.height = element.height+'px';
-						        object.border = element.border;
-						        object.borderRadius = element.borderRadius;
-						        object.opacity = element.opacity;
-						        object.top = element.top+'px';
-						        object.left = element.left+'px';
-						        object.backgroundColor = element.backgroundColor;
-						        object.fontSize = element.fontSize;
-						        object.color = element.color;
-						        object.fontFamily = element.fontFamily;
-						        object.textDecoration = element.textDecoration;						        
+			        
 						    }
 
 						    arrayOfKeys.push(object);
@@ -255,14 +211,6 @@ angular
 					        object.name = fieldName;
 					        object.label = fieldName;
 					        object.data = '';
-					        object.width = element.width+'px';
-					        object.height = element.height+'px';
-					        object.border = element.border;
-					        object.borderRadius = element.borderRadius;
-					        object.opacity = element.opacity;
-					        object.top = element.top+'px';
-					        object.left = element.left+'px';
-					        object.backgroundColor = element.backgroundColor;
 
 					        arrayOfKeys.push(object);
 
@@ -274,14 +222,6 @@ angular
 					        object.name = fieldName;
 					        object.label = fieldName;
 					        object.data = '';
-						    object.width = element.width+'px';
-					        object.height = element.height+'px';
-					        object.border = element.border;
-					        object.borderRadius = element.borderRadius;
-					        object.opacity = element.opacity;
-					        object.top = element.top+'px';
-					        object.left = element.left+'px';
-					        object.backgroundColor = element.backgroundColor;
 
 					        arrayOfKeys.push(object);
 					    }
@@ -291,14 +231,13 @@ angular
 		})
 		.then(function() {
 
-		    vm.entryData = [{
+		    vm.finalData = [{
 				groupName    : vm.groupName,
 				creationDate : Date(),
-				lastModified : Date()
+				lastModified : Date(),
+				data: vm.entryData
 		    }];
-	
-		    vm.entryData.push.apply(vm.entryData, vm.parsedFormData);
-	 
+		 
 		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
 		})
 		.then(function(){
@@ -534,7 +473,7 @@ angular
 
 	// Function to create an entry
 	vm.createEntry = function() {
-	    entryService.create(vm.entryData)  
+	    entryService.create(vm.finalData)  
 	        .success(function(data) {
 		    // clear the form
 		    vm.formData = {};
