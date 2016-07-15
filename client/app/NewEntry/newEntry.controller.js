@@ -469,7 +469,6 @@ angular
 
 	// Function to create an entry
 	vm.createEntry = function() {
-		console.log(JSON.stringify(vm.entryData));
 	    entryService.create(vm.entryData)  
 	        .success(function(data) {
 		    // clear the form
