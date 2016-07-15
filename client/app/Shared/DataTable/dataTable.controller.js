@@ -5,7 +5,7 @@ angular.module('dataTable')
 
 	dataTableController.$inject = ['$scope','$timeout','$q','feedbackServices','dialogServices'];
 	function dataTableController($scope,$timeout,$q,feedbackServices,dialogServices){
-		var tableOptions = $scope.tableOptions;
+		$scope.table = $scope.tableOptions;
 		getPagination();
 		//PAGE
 		$scope.toFirstPage = toFirstPage;
@@ -34,62 +34,64 @@ angular.module('dataTable')
 		$scope.updatePaginationOnFilter = updatePaginationOnFilter;
 
 		function updatePaginationOnFilter(){
-			tableOptions.pagination.totalPage = 1;
-			console.log('haha');
+			console.log($scope.filtered);
+			$scope.table.totalPage = Math.ceil($scope.filtered.length/$scope.pagination.itemPerPage);
+			$scope.table.totalItem = $scope.filtered.length;
+			$scope.table.pagination.rgPage = getTimes($scope.table.pagination.totalPage);
+			console.log($scope.table.pagination);
 		}
 
-		tableOptions.count = 0;
+		$scope.table.count = 0;
 		function getPagination(){
 			try{
-				tableOptions.pagination.limitOptions = $scope.dtRowPerPageOptions;
-				if(tableOptions.pagination.limitOptions.constructor !== Array)
+				$scope.table.pagination.limitOptions = $scope.dtRowPerPageOptions;
+				if($scope.table.pagination.limitOptions.constructor !== Array)
 					throw new Error('Type Error: limitOptions expect array');
 			}catch(err){
-				tableOptions.pagination.limitOptions = [10,20,30];
+				$scope.table.pagination.limitOptions = [10,20,30];
 				console.log(err);
 			}
 			finally{
-					tableOptions.pagination.itemPerPage = tableOptions.pagination.limitOptions[0];
-					tableOptions.pagination.totalPage = 292929;
-					console.log(tableOptions.pagination);
+					$scope.table.pagination.itemPerPage = $scope.table.pagination.limitOptions[0];
+					console.log($scope.table.pagination);
 			}	
 		}
 
-		$scope.$watch('tableOptions.filterQuery',function (newVal, oldVal){
-			tableOptions.count = 0;
-			console.log(newVal, tableOptions.count);
+		$scope.$watch('table.filterQuery',function (newVal, oldVal){
+			$scope.table.count = 0;
+			console.log(newVal, $scope.table.count);
 	 	});
 		//PAGINATION
-	 	$scope.$watch('tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
-			tableOptions.pagination.startingIndex = (newPage - 1) * tableOptions.pagination.itemPerPage + 1 < tableOptions.pagination.totalItem ? (newPage - 1) * tableOptions.pagination.itemPerPage : tableOptions.pagination.totalItem;
+	 	$scope.$watch('table.pagination.currentPage',function onPageChange(newPage, oldPage){
+			$scope.table.pagination.startingIndex = (newPage - 1) * $scope.table.pagination.itemPerPage + 1 < $scope.table.pagination.totalItem ? (newPage - 1) * $scope.table.pagination.itemPerPage : $scope.table.pagination.totalItem;
 			renderSelectionOnChange();
 	 	});
 
-	 	$scope.$watch('tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
-			tableOptions.pagination.itemPerPage = newLimit;
-			tableOptions.pagination.totalPage = Math.ceil(tableOptions.pagination.totalItem/tableOptions.pagination.itemPerPage);
-			tableOptions.pagination.rgPage = getTimes(tableOptions.pagination.totalPage);
+	 	$scope.$watch('table.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
+			$scope.table.pagination.itemPerPage = newLimit;
+			$scope.table.pagination.totalPage = Math.ceil($scope.table.pagination.totalItem/$scope.table.pagination.itemPerPage);
+			$scope.table.pagination.rgPage = getTimes($scope.table.pagination.totalPage);
 			renderSelectionOnChange();
 	 	});
 
 	 	function toFirstPage(){
-	 		tableOptions.pagination.currentPage = 1;
+	 		$scope.table.pagination.currentPage = 1;
 	 	}
 
 	 	function toLastPage(){
-	 		tableOptions.pagination.currentPage = tableOptions.pagination.totalPage;
+	 		$scope.table.pagination.currentPage = $scope.table.pagination.totalPage;
 	 	}
 
 	 	function toNextPage(){
-	 		if(tableOptions.pagination.currentPage < tableOptions.pagination.totalPage)
-	 			tableOptions.pagination.currentPage++;
+	 		if($scope.table.pagination.currentPage < $scope.table.pagination.totalPage)
+	 			$scope.table.pagination.currentPage++;
 	 		else
 	 			feedbackServices.errorFeedback('Last page', 'autofill-feedbackMessage');
 	 	}
 
 	 	function toPreviousPage(){
-	 		if(tableOptions.pagination.currentPage > 1)
-	 			tableOptions.pagination.currentPage--;
+	 		if($scope.table.pagination.currentPage > 1)
+	 			$scope.table.pagination.currentPage--;
 	 		else
 	 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
 
@@ -103,9 +105,9 @@ angular.module('dataTable')
 	  		var elementId = '';
 	  		for ( var i = 0; i < elementList.length; i++) {
 	  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-	  			if(action==='add' && tableOptions.selection.selectedId.indexOf(elementId) === -1){
+	  			if(action==='add' && $scope.table.selection.selectedId.indexOf(elementId) === -1){
 	  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-	  			}else if(action==='remove' && tableOptions.selection.selectedId.indexOf(elementId) != -1){
+	  			}else if(action==='remove' && $scope.table.selection.selectedId.indexOf(elementId) != -1){
 	  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
 	  			}
 	  		}
@@ -120,9 +122,9 @@ angular.module('dataTable')
 	 	}
 
 	 	function deselectAll(){
-	 		tableOptions.selection.checked = { headerChecked:false };
-	 		tableOptions.selection.selectedId = [];
-	 		tableOptions.selection.selected = [];
+	 		$scope.table.selection.checked = { headerChecked:false };
+	 		$scope.table.selection.selectedId = [];
+	 		$scope.table.selection.selected = [];
 	 		renderSelectionOnChange();
 	 	}
 
@@ -130,17 +132,17 @@ angular.module('dataTable')
 			return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
 
 			function addToSelection(target, id){
-				if(tableOptions.selection.selectedId.indexOf(id) === -1){
-					tableOptions.selection.selectedId.push(id);
-					if(target && (!tableOptions.selection.checked.hasOwnProperty(id) || (!tableOptions.selection.checked[id] && !tableOptions.selection.checked.hasOwnProperty(id))))
+				if($scope.table.selection.selectedId.indexOf(id) === -1){
+					$scope.table.selection.selectedId.push(id);
+					if(target && (!$scope.table.selection.checked.hasOwnProperty(id) || (!$scope.table.selection.checked[id] && !$scope.table.selection.checked.hasOwnProperty(id))))
 						target.checked = true;
 				}
 			}
 
 			function removeFromSelection(target,id){
-				if(tableOptions.selection.selectedId.indexOf(id) !== -1){
-					tableOptions.selection.selectedId.splice(tableOptions.selection.selectedId.indexOf(id), 1);
-					if(target && (!tableOptions.selection.checked.hasOwnProperty(id) || tableOptions.selection.checked[id]))
+				if($scope.table.selection.selectedId.indexOf(id) !== -1){
+					$scope.table.selection.selectedId.splice($scope.table.selection.selectedId.indexOf(id), 1);
+					if(target && (!$scope.table.selection.checked.hasOwnProperty(id) || $scope.table.selection.checked[id]))
 						target.checked = false;
 				}
 			}
@@ -154,19 +156,19 @@ angular.module('dataTable')
 				for(var i = 0 ; i < elementList.length; i++){
 					
 					elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-					if( tableOptions.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
+					if( $scope.table.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
 						elementList[i].MaterialCheckbox.uncheck();
-					}else if(tableOptions.selection.selectedId.indexOf(elementId) !== -1 && !angular.element(elementList[i]).hasClass('is-checked')){
+					}else if($scope.table.selection.selectedId.indexOf(elementId) !== -1 && !angular.element(elementList[i]).hasClass('is-checked')){
 						elementList[i].MaterialCheckbox.check();
 					}
 				}
 				//header
 				if(elementList && elementList.length > 0 ){
 					if(isAllChecked(elementList)){
-							tableOptions.selection.checked.headerChecked = true;
+							$scope.table.selection.checked.headerChecked = true;
 							headerCheckbox.MaterialCheckbox.check();
 					}else{
-							tableOptions.selection.checked.headerChecked = false;
+							$scope.table.selection.checked.headerChecked = false;
 							headerCheckbox.MaterialCheckbox.uncheck();
 					}
 				}
@@ -186,34 +188,34 @@ angular.module('dataTable')
 
 	 	function getDataFromId(){
 	 		var lookup = {};
-			for( var i = 0, len = tableOptions.tableData.data.length; i < len; i++) {
-	    		lookup[tableOptions.tableData.data[i]._id] = tableOptions.tableData.data[i];
+			for( var i = 0, len = $scope.table.tableData.data.length; i < len; i++) {
+	    		lookup[$scope.table.tableData.data[i]._id] = $scope.table.tableData.data[i];
 			}
-			for( var index = 0, length = tableOptions.selection.selectedId.length; index < length; index++){
-				console.log(tableOptions.selection.selectedId[index]);
-				tableOptions.selection.selected.push(lookup[tableOptions.selection.selectedId[index]]);
+			for( var index = 0, length = $scope.table.selection.selectedId.length; index < length; index++){
+				console.log($scope.table.selection.selectedId[index]);
+				$scope.table.selection.selected.push(lookup[$scope.table.selection.selectedId[index]]);
 			}
-			console.log(tableOptions.selection.selected);
+			console.log($scope.table.selection.selected);
 		}
 
 		//SORTING AND FILTERING
 		function sort(sortBy){
-	 		tableOptions.sorting.sortBy = sortBy;
-			tableOptions.sorting.sortReverse = !tableOptions.sorting.sortReverse;
+	 		$scope.table.sorting.sortBy = sortBy;
+			$scope.table.sorting.sortReverse = !$scope.table.sorting.sortReverse;
 			renderSelectionOnChange();
 	 	}
 
 	 	function filterByKeyword(element) {
-			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
+			if($scope.table.filterQuery === 'undefined' || !$scope.table.filterQuery){
 				return true;
 			}
             for (var property in element) {
-                for (var i=0; i < tableOptions.tableData.columnDefs.length; i++) {
-			        if (tableOptions.tableData.columnDefs[i].fieldName === property) {
+                for (var i=0; i < $scope.table.tableData.columnDefs.length; i++) {
+			        if ($scope.table.tableData.columnDefs[i].fieldName === property) {
 			            if (element.hasOwnProperty(property)) {
 		                    if (typeof element[property] === 'string') {
-		                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
-		                            tableOptions.count++;
+		                        if (element[property].toLowerCase().indexOf($scope.table.filterQuery.toLowerCase()) != -1) {
+		                            $scope.table.count++;
 		                            return true;
 		                        }
 		                    }
@@ -238,7 +240,7 @@ angular.module('dataTable')
         		return false;
         }
 
-        $scope.$watch('tableOptions.filterQuery', function() {
+        $scope.$watch('table.filterQuery', function() {
      		renderSelectionOnChange();
 		});
 
@@ -254,15 +256,15 @@ angular.module('dataTable')
 
 		function exportSelected(){
 			getDataFromId();
-			if(tableOptions.selection.selected == [] || tableOptions.selection.selected.length < 1)
+			if($scope.table.selection.selected == [] || $scope.table.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
 			else	
-				return download(Papa.unparse(tableOptions.selection.selected));
+				return download(Papa.unparse($scope.table.selection.selected));
 		}
 
 		function exportAll(){
 			console.log('all');
-			var csv = Papa.unparse(tableOptions.tableData.data);
+			var csv = Papa.unparse($scope.table.tableData.data);
 			return download(csv);
 		}
 
@@ -297,9 +299,9 @@ angular.module('dataTable')
 		}
 
 		function deleteSelected(){
-			tableOptions.dataServices.delete(tableOptions.selection.selectedId)
+			$scope.table.dataServices.delete($scope.table.selection.selectedId)
 			.then(function successCallback(){
-				if(tableOptions.selection.selectedId.length === 0){
+				if($scope.table.selection.selectedId.length === 0){
 					$timeout(function() {
 						renderSelectionOnChange();
 					}, 500);
@@ -309,7 +311,7 @@ angular.module('dataTable')
 		}
 
 		function saveEdit(){
-			return tableOptions.dataServices.save($scope.rowInEdit);
+			return $scope.table.dataServices.save($scope.rowInEdit);
 		}
 
 		// function savePromise(){
@@ -324,6 +326,7 @@ angular.module('dataTable')
 		}
 		//HELPER FUNCTION
 		function getTimes(number){
+			console.log(number);
 			return new Array(number);
 		}
 
