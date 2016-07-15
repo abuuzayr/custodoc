@@ -16,14 +16,14 @@
             <br>
             <!-- Password input -->
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="userPassword" class="mdl-textfield__input" type="password" placeholder="Password" ng-model="vm.password" ng-required="true" ng-minlength="8" ng-maxlength="24" />
+                <input id="userPassword" class="mdl-textfield__input" type="password" placeholder="Password (8-24 characters)" ng-model="vm.password" ng-required="true" ng-minlength="8" ng-maxlength="24" />
                 <label class="mdl-textfield__label" for="userPassword">Password*</label>
             </div>
             <br>
             <!-- Access type select -->
             <div class="mdl-selectfield">
                 <label for="userType-select" class="mdl-selectfield__label">Access Type</label>
-                <select id="userType-select" ng-model="vm.selectedUserType" ng-required="vm.required">
+                <select id="userType-select" ng-model="vm.selectedUserType" ng-required="vm.required" style="width:100%">
 						<option value="">----- Select option -----</option>
 						<option ng-repeat="group in vm.userGroups" value="{{ group }}">{{ group }}</option>
 				</select>
@@ -32,18 +32,19 @@
         <div class="mdl-dialog__actions">
             <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('userDialog')">Cancel</button>
             <div class="mdl-layout-spacer"></div>
-            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.addUser();">Add</button>
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.addUser();" ng-if="vm.isAddUser">Add</button>
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.editUser();" ng-if="vm.isEditUser">Save</button>
         </div>
     </form>
 </dialog>
 <dialog id="confirmDelete" class="mdl-dialog">
     <div class="mdl-dialog__content">
-        Confirm delete {{}}?
+        Confirm delete user?<br>{{ vm.userToBeDeleted }}
     </div>
     <div class="mdl-dialog__actions">
-        <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('confirmDialog')">Cancel</button>
+        <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('confirmDelete')">Cancel</button>
         <div class="mdl-layout-spacer"></div>
-        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.removeUser();vm.closeDialog('confirmDialog');">Delete</button>
+        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.removeUser(vm.userToBeDeleted);vm.closeDialog('confirmDelete');">Delete</button>
 
     </div>
 </dialog>
@@ -54,9 +55,8 @@
         <main class="mdl-layout__content">
             <div id="newUser-main" class="mdl-layout mdl-js-layout">
                 <div class="top-row-buttons">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.openDialog('userDialog');"><i class="material-icons">add</i> Add new user</button>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.openDialog('userDialog');vm.isAddUser=true;vm.isEditUser=false;"><i class="material-icons">add</i> Add new user</button>
                 </div>
-                <!-- Insert table here -->
                 <div class="mdl-cell mdl-cell--12-col">
                     <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width:100%; margin:auto">
                         <thead>
@@ -75,8 +75,8 @@
                                 <td class="mdl-data-table__cell--non-numeric">{{ user.password }}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{ user.selectedUserType }}</td>
                                 <td>
-                                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" type="button" ng-click="vm.openDialog('userDialog');vm.loadEditInfo('{{ user.username }}');"><i class="material-icons">edit</i></button>
-                                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" type="button" ng-click="vm.removeUser('{{ user.username }}')"><i class="material-icons">delete</i></button>
+                                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" type="button" ng-click="vm.openDialog('userDialog');vm.isAddUser=false;vm.isEditUser=true;vm.loadEditInfo('{{ user.username }}');"><i class="material-icons">edit</i></button>
+                                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" type="button" ng-click="vm.openDialog('confirmDelete');vm.userToBeDeleted=user.username"><i class="material-icons">delete</i></button>
                                 </td>
                             </tr>
                         </tbody>

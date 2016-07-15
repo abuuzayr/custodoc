@@ -1,10 +1,15 @@
 angular
     .module("app.core")
-    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', 'dialogServices', function ($scope, $q, $location, $timeout, dialogServices) {
+    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', function ($scope, $q, $location, $timeout, dialogServices, feedbackServices) {
         var vm = this;
         var addUserId = 0;
+        var MIN_PASSWORD_LENGTH = 8;
+        var MAX_PASSWORD_LENGTH = 24;
         vm.users = [];
         vm.userGroups = ["Admin", "User+", "User"];
+        // TODO
+        vm.companyName = '';
+        vm.companyId = '';
 
         vm.openDialog = openDialog;
         vm.closeDialog = closeDialog;
@@ -32,8 +37,15 @@ angular
                 pushElement();
                 clearFormInputs();
                 closeDialog('userDialog');
+                feedbackServices.successFeedback('User added successfully', 'newUser-feedbackMessage');
             } else {
+                if (vm.password.length <= MIN_PASSWORD_LENGTH && vm.password.length >= MAX_PASSWORD_LENGTH) {
+                    errMsg = 'Password length should be 8-24 characters';
+                } else {
+                    errMsg = 'Invalid form submission';
+                }
                 console.log('Add user unsuccessful');
+                feedbackServices.errorFeedback(errMsg, 'newUser-feedbackMessage');
             }
         }
 
@@ -62,21 +74,22 @@ angular
                 vm.users[vm.editId].email = vm.email;
                 vm.users[vm.editId].selectedUserType = vm.selectedUserType;
                 clearFormInputs();
-                // feedbackServices.successFeedback('Edited successfully', '#newUser-feedbackMessage');
+                feedbackServices.successFeedback('Users edited successfully', 'newUser-feedbackMessage');
+                closeDialog('userDialog');
             } else {
                 console.log('edituser PHAIL');
-                // feedbackServices.errorFeedback('Invalid form submission', '#newUser-feedbackMessage');
+                feedbackServices.errorFeedback('Invalid form submission', 'newUser-feedbackMessage');
             }
         }
 
         function removeUser(username) {
-            // TODO: delete user, remember add pop up
+            // TODO: delete user in database
             for (var i = 0; i < vm.users.length; i++) {
                 if (vm.users[i].username === username) {
                     vm.users.splice(i, 1);
                 }
             }
-            addAppId--; 
+            addUserId--;
         }
 
         function loadEditInfo(username) {
@@ -99,4 +112,84 @@ angular
         function closeDialog(dialogName) {
             dialogServices.closeDialog(dialogName);
         }
+
+        function convertUserData() {
+            var path = '/protected/user';
+            var newUserData = {};
+            newUserData.companyId = vm.companyId;
+            newUserData.companyName = vm.companyName;
+            newUserData.email = vm.users[i].email;
+            newUserData.username = vm.users[i].username;
+            newUserData.password = vm.users[i].password;
+            newUserData.bulletform = {};
+            newUserData.bulletform.usertype = vm.users[i].selectedUserType;
+            return newUserData;
+        }
+
+
+        /* =========================================== API =========================================== */
+        function createInDatabase() {
+            var newUserData = convertUserData();
+            var path = '/protected/user';
+            var req = {
+                method: 'POST',
+                url: appConstant.API_URL + path,
+                headers: {},
+                data: {
+                    userData: newUserData
+                }
+            };
+            
+            // TODO
+            if ($window.sessionStorage.token) {
+                req.headers.Authorization = $window.sessionStorage.token;
+            }
+
+            $http(req)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
+                    .then(feedbackServices.successFeedback('User created', '#newUser-feedbackMessage', 2000))
+                    .then(delayGoState(3000));
+            }
+
+            function ErrorCallback(err) {
+                return feedbackServices.hideFeedback('#newUser-feedbackMessage').
+                    then(feedbackServices.errorFeedback(err.data, '#newUser-feedbackMessage'));
+            }
+        }
+
+        function updateDatabase() {
+            var newUserData = convertUserData();
+            var path = '/protected/user/';
+            var req = {
+                method: 'PUT',
+                url: appConstant.API_URL + path + vm.userId,
+                headers: {},
+                data: {
+                    userData: newUserData
+                }
+            };
+            
+            // TODO
+            if ($window.sessionStorage.token) {
+                req.headers.Authorization = $window.sessionStorage.token;
+            }
+
+            $http(req)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                return feedbackServices.successFeedback('User info updated', '#editUser-feedbackMessage', 2000).then(delayGoState(3000));
+            }
+
+            function ErrorCallback(err) {
+                return feedbackServices.errorFeedback(err.data, '#editUser-feedbackMessage');
+            }
+        }
+
+
     }]);
