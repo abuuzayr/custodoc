@@ -16,7 +16,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -31,7 +31,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null  && authService.getUserInfo().usertype === "admin") {
+                        if (authServices.getToken() && authService.getUserInfo().usertype === "admin") {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -46,7 +46,7 @@ angular
                 controllerAs: 'entries',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -61,7 +61,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -76,7 +76,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -85,19 +85,19 @@ angular
                 }
             })
             .state('formBuilder', {
-                url: '/formBuilder/',
+                url: '/formBuilder//:groupName/:formName',
                 templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm',
-                // resolve: {
-                //     security: ['$q', 'authServices', function ($q, authServices) {
-                //         if (authServices.getToken() === null  && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
-                //             return $q.resolve();
-                //         } else {
-                //             return $q.reject(false);
-                //         }
-                //     }]
-                // }
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('autofill', {
                 url: '/autofill',
@@ -106,7 +106,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
