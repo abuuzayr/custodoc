@@ -5,7 +5,7 @@ var entryRoutes = express.Router();
 var http403 = require('../../utils/403')();
 
 //ACCESS CONTROL
-entryRoutes.use('*',http403.verifyAccess('entrymgmt'));
+//entryRoutes.use('*',http403.verifyAccess('entrymgmt'));
 
 entryRoutes.route('/')	
 	// display all entries in the database
