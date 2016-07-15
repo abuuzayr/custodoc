@@ -90,10 +90,6 @@ select {
     transition: 0.2s ease-in all;
 }
 
-.mdl-selectfield .mdl-selectfield__label {
-    display: none;
-}
-
 /* Settings */
 #account-settings {
     padding: 0px 30px;
@@ -108,8 +104,9 @@ select {
 }
 
 /* Commons */
-#top-row-buttons {
+.top-row-buttons {
     padding: 10px 10px;
+    left: 0;
 }
 
 .divider {
