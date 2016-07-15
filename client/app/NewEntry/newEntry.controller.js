@@ -46,9 +46,8 @@ angular
 
 	/* this entryData stores the final data structure for an entry, which contains the groupName  
 		and the relevant fields obtained from the form database	*/
-	vm.entryData = '';
+	vm.entryData = [];
 
-	vm.finalData = [];
 	/*****************************************************************/
 	
 
@@ -93,9 +92,16 @@ angular
 		.then(function() {
 				var arrayOfKeys = [];
 					var key;
+					vm.entryData = [{
+						groupName    : vm.groupName,
+						creationDate : Date(),
+						lastModified : Date(),
+						data: {}
+				    }];
 					for (var i = 0; i < vm.formData.length ; i++){
 				 	   var data = vm.formData[i];
 				  	  	var elements = data.elements;
+				  	  	vm.entryData.formName = vm.formData[i].formName;
 				   	 for (key in elements) {
 						var element = elements[key];
 						//console.log("how many times");
@@ -227,18 +233,7 @@ angular
 					    }
 				    }
 				}
-				vm.parsedFormData = arrayOfKeys;
-		})
-		.then(function() {
-
-		    vm.finalData = [{
-				groupName    : vm.groupName,
-				creationDate : Date(),
-				lastModified : Date(),
-				data: vm.entryData
-		    }];
-		 
-		    console.log("Next log: " + JSON.stringify(vm.entryData));	     	
+				vm.entryData.data = arrayOfKeys;
 		})
 		.then(function(){
 			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
