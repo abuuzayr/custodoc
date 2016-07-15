@@ -1,8 +1,10 @@
+(function() {"use strict";
+	  
 angular.module('dataTable')
 	.controller('dataTableController',dataTableController);
 
-	dataTableController.$inject = ['$scope','$timeout','feedbackServices','dialogServices'];
-	function dataTableController($scope,$timeout,feedbackServices,dialogServices){
+	dataTableController.$inject = ['$scope','$timeout','$q','feedbackServices','dialogServices'];
+	function dataTableController($scope,$timeout,$q,feedbackServices,dialogServices){
 		var tableOptions = $scope.tableOptions;
 		getPagination();
 		//PAGE
@@ -10,12 +12,13 @@ angular.module('dataTable')
 		$scope.toLastPage = toLastPage;
 		$scope.toNextPage = toNextPage;
 		$scope.toPreviousPage = toPreviousPage;
-		//SORT
+		//SORT 
 		$scope.sort = sort;
 		$scope.getTimes = getTimes;
 		//SELETION
 		$scope.selectOne = selectOne;
 		$scope.selectVisible = selectVisible;
+		$scope.deselectAll = deselectAll;
 		//EXPORT IMPORT
 		$scope.exportCSV = exportCSV;
 		//EDIT
@@ -26,13 +29,18 @@ angular.module('dataTable')
 		$scope.saveEdit = saveEdit;
 		//SEARCH
 		$scope.filterByKeyword = filterByKeyword;
-		$scope.filterQuery = '';
-		
-		// console.log(tableOptions.pagination);
+		$scope.filterActionCol = filterActionCol;
+		$scope.filterDefaultCol = filterDefaultCol; 
+		$scope.updatePaginationOnFilter = updatePaginationOnFilter;
 
+		function updatePaginationOnFilter(){
+			tableOptions.pagination.totalPage = 1;
+			console.log('haha');
+		}
+
+		tableOptions.count = 0;
 		function getPagination(){
 			try{
-				console.log(tableOptions);
 				tableOptions.pagination.limitOptions = $scope.dtRowPerPageOptions;
 				if(tableOptions.pagination.limitOptions.constructor !== Array)
 					throw new Error('Type Error: limitOptions expect array');
@@ -42,10 +50,15 @@ angular.module('dataTable')
 			}
 			finally{
 					tableOptions.pagination.itemPerPage = tableOptions.pagination.limitOptions[0];
+					tableOptions.pagination.totalPage = 292929;
+					console.log(tableOptions.pagination);
 			}	
 		}
 
-		
+		$scope.$watch('tableOptions.filterQuery',function (newVal, oldVal){
+			tableOptions.count = 0;
+			console.log(newVal, tableOptions.count);
+	 	});
 		//PAGINATION
 	 	$scope.$watch('tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
 			tableOptions.pagination.startingIndex = (newPage - 1) * tableOptions.pagination.itemPerPage + 1 < tableOptions.pagination.totalItem ? (newPage - 1) * tableOptions.pagination.itemPerPage : tableOptions.pagination.totalItem;
@@ -54,7 +67,7 @@ angular.module('dataTable')
 
 	 	$scope.$watch('tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
 			tableOptions.pagination.itemPerPage = newLimit;
-			tableOptions.pagination.totalPage = Math.ceil(tableOptions.pagination.totalItem/tableOptions.pagination.itemPerPage)
+			tableOptions.pagination.totalPage = Math.ceil(tableOptions.pagination.totalItem/tableOptions.pagination.itemPerPage);
 			tableOptions.pagination.rgPage = getTimes(tableOptions.pagination.totalPage);
 			renderSelectionOnChange();
 	 	});
@@ -104,6 +117,13 @@ angular.module('dataTable')
 	  		var action = (checkbox.checked ? 'add' : 'remove');
 	  		updateSelection(checkbox, action, row._id);
 	  		renderSelectionOnChange();
+	 	}
+
+	 	function deselectAll(){
+	 		tableOptions.selection.checked = { headerChecked:false };
+	 		tableOptions.selection.selectedId = [];
+	 		tableOptions.selection.selected = [];
+	 		renderSelectionOnChange();
 	 	}
 
 	 	function updateSelection(target, action , id){
@@ -176,7 +196,6 @@ angular.module('dataTable')
 			console.log(tableOptions.selection.selected);
 		}
 
-
 		//SORTING AND FILTERING
 		function sort(sortBy){
 	 		tableOptions.sorting.sortBy = sortBy;
@@ -186,20 +205,37 @@ angular.module('dataTable')
 
 	 	function filterByKeyword(element) {
 			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
-				$scope.tableOptions.filterQuery = '';
+				return true;
 			}
             for (var property in element) {
-                if (tableOptions.tableData.columnDefs.indexOf(property) === -1)
-                    continue;
-                if (element.hasOwnProperty(property)) {
-                    if (typeof element[property] === 'string') {
-                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
-                            return true;
-                        }
-                    }
-                }
+                for (var i=0; i < tableOptions.tableData.columnDefs.length; i++) {
+			        if (tableOptions.tableData.columnDefs[i].fieldName === property) {
+			            if (element.hasOwnProperty(property)) {
+		                    if (typeof element[property] === 'string') {
+		                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
+		                            tableOptions.count++;
+		                            return true;
+		                        }
+		                    }
+		                }
+			        }
+			    }
             }
             return false;
+        }
+
+        function filterActionCol(element){
+        	if(element.hasOwnProperty('type') && element.type === 'action')
+        		return true;
+        	else
+        		return false;
+        }
+
+        function filterDefaultCol(element){
+        	if(!element.hasOwnProperty('type') || element.type === 'default')
+        		return true;
+        	else
+        		return false;
         }
 
         $scope.$watch('tableOptions.filterQuery', function() {
@@ -217,13 +253,11 @@ angular.module('dataTable')
 		}
 
 		function exportSelected(){
-			var csv = null;
 			getDataFromId();
 			if(tableOptions.selection.selected == [] || tableOptions.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
 			else	
-				csv = Papa.unparse(tableOptions.selection.selected);
-			return download(csv);
+				return download(Papa.unparse(tableOptions.selection.selected));
 		}
 
 		function exportAll(){
@@ -282,7 +316,6 @@ angular.module('dataTable')
 		// 	var promise = saveEdit();
 		// }
 		
-
 		function openDialog(){
 			dialogServices.openDialog('table-edit-dialog');
 		}
@@ -295,4 +328,17 @@ angular.module('dataTable')
 		}
 
 		//function for external use
-}
+		var viewContentLoaded = $q.defer();
+		$scope.$on('$viewContentLoaded', function () {
+			$timeout(function () {
+				getPagination();
+				viewContentLoaded.resolve();
+			}, 0);
+		});
+		viewContentLoaded.promise.then(function () {
+			$timeout(function () {
+				componentHandler.upgradeDom();
+			}, 0);
+		});	
+	}
+})();

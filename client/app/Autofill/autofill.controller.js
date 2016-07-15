@@ -287,14 +287,25 @@ angular.module('app.autofill')
 			return autofillServices.getElement()
 			.then(function SuccessCallback(res){
 				for(var i = 0; i < res.data.length; i++){
-					vm.tableOptions.tableData.columnDefs.push(res.data[i].fieldName);
+					vm.tableOptions.tableData.columnDefs.push({
+						type:'default',
+						displayName:res.data[i].fieldName.toUpperCase(),
+						fieldName:res.data[i].fieldName
+					});
 				}
+				vm.tableOptions.tableData.columnDefs.push({ 
+					type:'action',
+					icon:'delete',
+					action: function(row){
+						console.log('row');
+						console.log(row);
+					} 
+				});
 				vm.tableOptions.sorting.sortBy = vm.tableOptions.tableData.columnDefs[0];
 			}).catch(function ErrorCallback (err) {
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
 		}
-
 		function getDataBody(){
 			vm.tableOptions.tableData.data = [];
 			return autofillServices.getRecords(vm.query)
@@ -308,7 +319,6 @@ angular.module('app.autofill')
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
 		}
-
 		//PAGINATION
 		function onDataLoaded(){
 			vm.tableOptions.pagination.totalItem = vm.tableOptions.tableData.data.length;
@@ -325,14 +335,6 @@ angular.module('app.autofill')
 	 		vm.tableOptions.selection.checked = { headerChecked:false };
 	 	}
 		
-		//Query
-		$scope.$watch('vm.query',function query(newVal,oldVal){
-			console.log(newVal,oldVal);
-			if(newVal != oldVal){
-				vm.table.options.page = 1;
-				return getDataBody();
-			}
-		});
 
 		function init(){
 			vm.tableOptions.selection.selectedId = [];
