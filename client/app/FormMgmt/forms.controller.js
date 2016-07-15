@@ -108,20 +108,23 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	var rows = [];
 
 	function downloadSeparate() {
+		var pdf,
+			deferred,
+			p, i, j, k;
 		usSpinnerService.spin('spinner-1');
 		rows = vm.gridApi.selection.getSelectedRows();
-		var deferred = $q.defer();
+		deferred = $q.defer();
 		deferred.resolve(1);
-		var p = deferred.promise;
-		for (var i = 1; i <= rows.length; i++) {
+		p = deferred.promise;
+		for (i = 1; i <= rows.length; i++) {
 			p = p.then(function (formNumber) { return generateForm(formNumber); });
 			p = p.then(function (formNumber) { return generateImage(formNumber); });
 		}
 		p.then(function () {
-			for (var j = 0; j < pagesImage.length; j++) {
-				var pdf = new jsPDF();
-				for (var k = 0; k < pagesImage[j].length; k++) {
-					if (k != 0) {
+			for (j = 0; j < pagesImage.length; j++) {
+				pdf = new jsPDF();
+				for (k = 0; k < pagesImage[j].length; k++) {
+					if (k !== 0) {
 						pdf.addPage();
 					}
 					pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
@@ -139,20 +142,25 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function downloadAsOne() {
+		var pdf,
+			pages,
+			deferred,
+			p, i, j, k;
+
 		usSpinnerService.spin('spinner-1');
 		rows = vm.gridApi.selection.getSelectedRows();
-		var pdf = new jsPDF();
-		var deferred = $q.defer();
+		pdf = new jsPDF();
+		deferred = $q.defer();
 		deferred.resolve(1);
-		var p = deferred.promise;
-		for (var i = 1; i <= rows.length; i++) {
+		p = deferred.promise;
+		for (i = 1; i <= rows.length; i++) {
 			p = p.then(function (formNumber) { return generateForm(formNumber); });
 			p = p.then(function (formNumber) { return generateImage(formNumber); });
 		}
 		p.then(function () {
-			for (var j = 0; j < pagesImage.length; j++) {
-				for (var k = 0; k < pagesImage[j].length; k++) {
-					if (j != 0 || k != 0) {
+			for (j = 0; j < pagesImage.length; j++) {
+				for (k = 0; k < pagesImage[j].length; k++) {
+					if (j !== 0 || k !== 0) {
 						pdf.addPage();
 					}
 					pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
@@ -160,7 +168,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 			}
 			usSpinnerService.stop('spinner-1');
 			pdf.save();
-			var pages = Array.from(document.getElementsByClassName('page'));
+			pages = Array.from(document.getElementsByClassName('page'));
 			pages.forEach(function (item, index) {
 				item.parentNode.removeChild(item);
 			});
@@ -207,28 +215,42 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function generateForm(formNumber) {
+		var key, 
+			formData,
+			newPage,
+			element,
+			j;
 		var deferred = $q.defer();
 		var groupName = rows[formNumber - 1].groupName;
 		var formName = rows[formNumber - 1].formName;
 		$http.get(serverURL+"/forms/" + groupName + '/' + formName)
 			.then(function (res) {
-				var formData = res.data;
+				var node,
+					page,
+					option,
+					options,
+					checkbox,
+					span,
+					label,
+					display,
+					i, j;
+				formData = res.data;
 				elements = formData.elements;
 				vm.numberOfPages = formData.numberOfPages;
-				for (var j = 1; j <= vm.numberOfPages; j++) {
-					var newPage = formsFactory.newPage.cloneNode(true);
+				for (j = 1; j <= vm.numberOfPages; j++) {
+					newPage = formsFactory.newPage.cloneNode(true);
 					newPage.setAttribute("id", 'form' + formNumber + "page" + j);
 					newPage.style.display = "none";
 					forms.appendChild(newPage);
 				}
 				for (key in elements) {
-					var element = elements[key];
+					element = elements[key];
 					if (element.name.startsWith('background_')) {
-						var node = document.createElement('img');
+						node = document.createElement('img');
 						node.src = element.src;
 						node.style.zIndex = "0";
 					} else if (element.name.startsWith('label_')) {
-						var node = document.createElement('div');
+						node = document.createElement('div');
 						node.innerHTML = element.content;
 						node.style.whiteSpace = "pre-wrap";
 						node.style.color = element.color;
@@ -238,7 +260,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('text_') || element.name.startsWith('auto_text_')) {
-						var node = document.createElement('input');
+						node = document.createElement('input');
 						node.type = 'text';
 						node.placeholder = element.default;
 						node.style.color = element.color;
@@ -248,10 +270,10 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')) {
-						var node = document.createElement('select');
-						var options = element.options;
-						for (var i = 0; i < options.length; i++) {
-							var option = document.createElement('option');
+						node = document.createElement('select');
+						options = element.options;
+						for (i = 0; i < options.length; i++) {
+							option = document.createElement('option');
 							option.innerHTML = options[i];
 							if (options[i]===element.default) option.setAttribute("selected",true);
 							node.appendChild(option);
@@ -263,19 +285,19 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
 					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
-						var node = document.createElement('form');
-						var options = element.options;
-						if (element.display==="radioInline") var display = "inline";
-						else var display = "block";
+						node = document.createElement('form');
+						options = element.options;
+						if (element.display==="radioInline") display = "inline";
+						else display = "block";
 						if(options.length>0){
-							for(var i=0; i<options.length; i++){
-								var label = document.createElement("label");
-								var option = document.createElement("input");
+							for(i=0; i<options.length; i++){
+								label = document.createElement("label");
+								option = document.createElement("input");
 								option.type = "radio";
 								option.name = element.name;
 								option.value = options[i];
 								if(options[i]===element.default) option.setAttribute("checked",true);
-								var span = document.createElement("span");
+								span = document.createElement("span");
 								span.innerHTML=options[i]+" ";
 								label.style.display = display;
 								label.appendChild(option);
@@ -291,17 +313,17 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					} else if (element.name.startsWith('signature_')) {
-						var node = document.createElement('canvas');
+						node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('image_')) {
-						var node = document.createElement('canvas');
+						node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex = "1";
 					} else if (element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')) {
-						var node = document.createElement('label');
-						var span = document.createElement('span');
-						var checkbox = document.createElement('input');
+						node = document.createElement('label');
+						span = document.createElement('span');
+						checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
 						if(element.default) checkbox.setAttribute("checked",true);
 						checkbox.setAttribute("ng-checked",element.default);
@@ -328,7 +350,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 					node.style.top = element.top + 'px';
 					node.style.left = element.left + 'px';
 					node.style.position = "absolute";
-					var page = document.getElementById('form' + formNumber + 'page' + element.page);
+					page = document.getElementById('form' + formNumber + 'page' + element.page);
 					page.appendChild(node);
 				}
 				deferred.resolve(formNumber);
@@ -466,7 +488,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	vm.goEditForm = function (groupName, formName) {
 		$state.go('formBuilder', { groupName: groupName, formName: formName });
-	}
+	};
 
 	function getTableHeight() {
 		var rowHeight = 37; //  row height
@@ -474,7 +496,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		return {
 			height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length * rowHeight + headerHeight) + "px"
 		};
-	};
+	}
 	vm.gridOptions.showGridFooter = true;
 	vm.gridOptions.enableColumnMenus = false;
 	vm.gridOptions.enableGridMenu = true;
