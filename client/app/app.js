@@ -13,48 +13,106 @@ angular
                 url: '/newentry/:groupName',
                 templateUrl: 'app/NewEntry/newEntry.html', //TOFIX
                 controller: 'newEntryCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('users', {
                 url: '/users',
                 templateUrl: 'app/UserMgmt/usermgmt.html',
                 controller: 'usersCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null  && authService.getUserInfo().usertype === "admin") {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('entries', {
                 url: '/entries',
                 templateUrl: 'views/entries.html', //TOFIX
                 controller: 'entriesCtrl',
-                controllerAs: 'entries'
+                controllerAs: 'entries',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('settings', {
                 url: '/settings',
                 templateUrl: 'app/Settings//settings.html',
                 controller: 'settingsCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('forms', {
                 url: '/forms',
                 templateUrl: 'app/FormMgmt/forms.html',
                 controller: 'formsCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('formBuilder', {
                 url: '/formBuilder/:groupName/:formName',
                 templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
-                controllerAs: 'vm'
-            })
-            .state('formBuilderBase', {
-                url: '/formBuilderBase',
-                templateUrl: 'app/FormBuilder/FBBase.html',
-                controller: 'formBuilderCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null  && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
             })
             .state('autofill', {
                 url: '/autofill',
                 templateUrl: 'app/Autofill/autofill.html',
                 controller: 'autofillCtrl',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    security: ['$q', 'authServices', function ($q, authServices) {
+                        if (authServices.getToken() === null) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(false);
+                        }
+                    }]
+                }
+
             });
     }]);
