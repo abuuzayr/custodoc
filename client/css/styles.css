@@ -64,7 +64,7 @@ html, body {
 }
 
 /* Delete buttons .color */
-#delete-button {
+.delete-button {
     background: #ff0000;
 }
 
@@ -113,12 +113,6 @@ select {
     width: 10px; 
     height: 10px;
 }
-
-/* Forms */
-/*.mdl-dialog {
-    height: auto;
-    width: 30%;
-}*/
 
 /* New entry */
 #elements-drawer {

@@ -85,19 +85,19 @@ angular
                 }
             })
             .state('formBuilder', {
-                url: '/formBuilder/:groupName/:formName',
+                url: '/formBuilder/',
                 templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm',
-                resolve: {
-                    security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() === null  && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
-                            return $q.resolve();
-                        } else {
-                            return $q.reject(false);
-                        }
-                    }]
-                }
+                // resolve: {
+                //     security: ['$q', 'authServices', function ($q, authServices) {
+                //         if (authServices.getToken() === null  && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
+                //             return $q.resolve();
+                //         } else {
+                //             return $q.reject(false);
+                //         }
+                //     }]
+                // }
             })
             .state('autofill', {
                 url: '/autofill',

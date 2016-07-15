@@ -1,36 +1,36 @@
 [draggable=true] {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  /* Required to make elements draggable in old WebKit */
-  -khtml-user-drag: element;
-  -webkit-user-drag: element;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	/* Required to make elements draggable in old WebKit */
+	-khtml-user-drag: element;
+	-webkit-user-drag: element;
 }
 
 .notSelectable {
-    user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-} 
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+}
 
-.radioInline label{
+.radioInline label {
 	display: inline;
 }
 
-.radioMultiline label{
+.radioMultiline label {
 	display: block;
 }
 
-#sec1{
+#sec1 {
 	position: absolute;
-	width:30%;
+	width: 30%;
 	height: 100%;
 }
 
-#previewDialog{
+#previewDialog {
 	background-color: grey;
 	position: absolute;
 	border: 2px solid black;
@@ -39,40 +39,46 @@
 	overflow-y: auto;
 }
 
-#toolbar{
+#toolbar {
 	border: 2px solid lightslategrey;
 	width: 96%;
-	height: 30%; 
 	margin: 2%;
 }
 
-#form{
+#form {
 	background-color: white;
 	position: absolute;
 	width: 794px;
 	height: 1123px;
-	left: 34%; 
+	left: 34%;
 }
 
-#placeholder{
+#placeholder {
 	background-color: black;
 }
 
-.page{
+.page {
 	width: 794px;
 	height: 1123px;
 }
 
-#border-panel, #font-panel, #background-panel {
+#border-panel,
+#font-panel,
+#background-panel {
 	vertical-align: middle;
 }
 
-#border-panel label, #font-panel label, #background-panel label, #content-panel label {
+#border-panel label,
+#font-panel label,
+#background-panel label,
+#content-panel label {
 	padding: 15px;
 	display: inline-block;
 }
 
-#border-panel select, #font-panel select, #background-panel select {
+#border-panel select,
+#font-panel select,
+#background-panel select {
 	display: inline-block;
 	width: auto;
 }
@@ -102,20 +108,50 @@
 	text-align: center;
 }
 
-#dropdownCreation #dropdownName, #dropdownCreation select, #dropdownCreation #editOpacity, 
-#checkboxCreation #checkboxName,#checkboxCreation #checkboxLabel, #checkboxCreation select, #checkboxCreation #editOpacity,
-#labelCreation textarea, #labelCreation select, #labelCreation #editOpacity,
-#textFieldCreation #textFieldName, #textFieldCreation select, #textFieldCreation #editOpacity,
-#imageFieldCreation #imageFieldName, #imageFieldCreation #editOpacity {
+/*#dropdownCreation #dropdownName,
+#dropdownCreation select,
+#dropdownCreation #editOpacity,
+#checkboxCreation #checkboxName,
+#checkboxCreation #checkboxLabel,
+#checkboxCreation select,
+#checkboxCreation #editOpacity,
+#labelCreation textarea,
+#labelCreation select,
+#labelCreation #editOpacity,
+#textFieldCreation #textFieldName,
+#textFieldCreation select,
+#textFieldCreation #editOpacity,
+#imageFieldCreation #imageFieldName,
+#imageFieldCreation #editOpacity {
 	width: 80%;
 	border: 1px solid grey;
-	-ms-box-sizing:content-box;
-	-moz-box-sizing:content-box;
-	-webkit-box-sizing:content-box; 
-	box-sizing:content-box;
+	-ms-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+*/
+.standard-box {
+	width: 80%;
+	border: 1px solid grey;
+	-ms-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 }
 
-#label, #text {
+input,
+select {
+	width: 80%;
+	border: 1px solid grey;
+	-ms-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+#label,
+#text {
 	height: auto;
 	width: 60%;
 }

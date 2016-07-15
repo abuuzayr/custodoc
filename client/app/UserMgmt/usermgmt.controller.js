@@ -64,7 +64,7 @@ angular
             vm.username = '';
             vm.password = '';
             vm.email = '';
-            selectedUserType = '';
+            vm.selectedUserType = '';
         }
 
         function editUser() {
@@ -114,15 +114,14 @@ angular
         }
 
         function convertUserData() {
-            var path = '/protected/user';
             var newUserData = {};
             newUserData.companyId = vm.companyId;
             newUserData.companyName = vm.companyName;
-            newUserData.email = vm.users[i].email;
-            newUserData.username = vm.users[i].username;
-            newUserData.password = vm.users[i].password;
+            newUserData.email = vm.users[addUserId].email;
+            newUserData.username = vm.users[addUserId].username;
+            newUserData.password = vm.users[addUserId].password;
             newUserData.bulletform = {};
-            newUserData.bulletform.usertype = vm.users[i].selectedUserType;
+            newUserData.bulletform.usertype = vm.users[addUserId].selectedUserType;
             return newUserData;
         }
 
@@ -166,6 +165,7 @@ angular
             var path = '/protected/user/';
             var req = {
                 method: 'PUT',
+                // TODO retrieve vm.userId
                 url: appConstant.API_URL + path + vm.userId,
                 headers: {},
                 data: {
@@ -190,6 +190,4 @@ angular
                 return feedbackServices.errorFeedback(err.data, '#editUser-feedbackMessage');
             }
         }
-
-
     }]);
