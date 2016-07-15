@@ -69,7 +69,13 @@ angular.module("app.core")
 
             function SuccessCallback(res) {
                 successFeedback('Logged in');
-                $state.go('forms');
+                return $http.get(appConfig.API_URL + '/auth/')
+                .then(function(res){
+                    $state.go('forms');
+                })
+                .catch(function(err){
+                    errorFeedback('Login blocked by app server');
+                });
             }
 
             function ErrorCallback(err) {

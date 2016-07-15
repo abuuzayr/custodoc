@@ -93,21 +93,21 @@ module.exports = function(){
 			switch(req.method){
 				case 'GET':
 						console.log('GET',module.read,module.read == true);//TOFIX
-						if(module.read == true)
+						if(module.read === true)
 							next();
 						else 
 							send403(req,res,'Unauthorized user group');
 						break;
 				case 'POST':
 						console.log('POSt');//TOFIX
-						if(module.create == true)
+						if(module.create === true)
 							next();
 						else 
 							send403(req,res,'Unauthorized user group');
 
 					break;
 				case 'PUT':	console.log('PUt');//TOFIX
-						if(module.update == true)
+						if(module.update === true)
 							next();
 						else 
 							send403(req,res,'Unauthorized user group');
@@ -115,7 +115,7 @@ module.exports = function(){
 					break;
 				case 'DELETE':
 						console.log('DELETe');//TOFIX
-						if(module.delete == true)
+						if(module.delete === true)
 							next();
 						else 
 							send403(req,res,'Unauthorized user group');
