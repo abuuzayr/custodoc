@@ -119,6 +119,19 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.data = def;
+						        object.width = element.width+'px';
+						        object.height = element.height+'px';
+						        object.border = element.border;
+						        object.borderRadius = element.borderRadius;
+						        object.opacity = element.opacity;
+						        object.top = element.top+'px';
+						        object.left = element.left+'px';
+						        object.backgroundColor = element.backgroundColor;
+						        object.fontSize = element.fontSize;
+						        object.color = element.color;
+						        object.fontFamily = element.fontFamily;
+						        object.textDecoration = element.textDecoration;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -145,6 +158,18 @@ angular
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
+						       	object.width = element.width+'px';
+						        object.height = element.height+'px';
+						        object.border = element.border;
+						        object.borderRadius = element.borderRadius;
+						        object.opacity = element.opacity;
+						        object.top = element.top+'px';
+						        object.left = element.left+'px';
+						        object.backgroundColor = element.backgroundColor;
+						        object.fontSize = element.fontSize;
+						        object.color = element.color;
+						        object.fontFamily = element.fontFamily;
+						        object.textDecoration = element.textDecoration;
 						    }
 
 						    arrayOfKeys.push(object);
@@ -169,6 +194,18 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.data = def;
+						        object.width = element.width+'px';
+						        object.height = element.height+'px';
+						        object.border = element.border;
+						        object.borderRadius = element.borderRadius;
+						        object.opacity = element.opacity;
+						        object.top = element.top+'px';
+						        object.left = element.left+'px';
+						        object.backgroundColor = element.backgroundColor;
+						        object.fontSize = element.fontSize;
+						        object.color = element.color;
+						        object.fontFamily = element.fontFamily;
+						        object.textDecoration = element.textDecoration;
 						    }
 
 						    arrayOfKeys.push(object);
@@ -195,6 +232,18 @@ angular
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
+		        				object.width = element.width+'px';
+						        object.height = element.height+'px';
+						        object.border = element.border;
+						        object.borderRadius = element.borderRadius;
+						        object.opacity = element.opacity;
+						        object.top = element.top+'px';
+						        object.left = element.left+'px';
+						        object.backgroundColor = element.backgroundColor;
+						        object.fontSize = element.fontSize;
+						        object.color = element.color;
+						        object.fontFamily = element.fontFamily;
+						        object.textDecoration = element.textDecoration;						        
 						    }
 
 						    arrayOfKeys.push(object);
@@ -205,7 +254,15 @@ angular
 							object.type = 'image';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = vm.image;
+					        object.data = '';
+					        object.width = element.width+'px';
+					        object.height = element.height+'px';
+					        object.border = element.border;
+					        object.borderRadius = element.borderRadius;
+					        object.opacity = element.opacity;
+					        object.top = element.top+'px';
+					        object.left = element.left+'px';
+					        object.backgroundColor = element.backgroundColor;
 
 					        arrayOfKeys.push(object);
 
@@ -216,7 +273,15 @@ angular
 							object.type = 'signature';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = vm.signature;
+					        object.data = '';
+						    object.width = element.width+'px';
+					        object.height = element.height+'px';
+					        object.border = element.border;
+					        object.borderRadius = element.borderRadius;
+					        object.opacity = element.opacity;
+					        object.top = element.top+'px';
+					        object.left = element.left+'px';
+					        object.backgroundColor = element.backgroundColor;
 
 					        arrayOfKeys.push(object);
 					    }
