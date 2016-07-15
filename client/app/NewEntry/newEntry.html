@@ -48,7 +48,7 @@
                 <div ng-if="key.type=='text'">
                     <label >{{key.label}}</label>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                    <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="vm.entryData">
+                    <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="vm.entryData.{{key.name}}">
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@
                 <div ng-if="key.type=='dropdown'">
                     <label >{{key.label}}</label>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                    <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData" ng-options="option for option in key.options"> </select>
+                    <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData.{{key.name}}" ng-options="option for option in key.options"> </select>
                     </div>
                 </div>
                 
@@ -65,7 +65,7 @@
                    <label >{{key.label}}</label>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
                     <label>
-                    <input type="checkbox" class="mdl-checkbox__input" ng-model="vm.entryData" value={{option}}>        
+                    <input type="checkbox" class="mdl-checkbox__input" ng-model="vm.entryData.{{key.name}}" value={{option}}>        
                             {{option}} </label>    
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                     <label>{{key.label}}</label>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label" ng-repeat="option in key.options">
                     <label>
-                    <input type="radio" name="key.name" value={{option}} ng-model="vm.entryData">
+                    <input type="radio" name="key.name" value={{option}} ng-model="vm.entryData.{{key.name}}">
                             {{option}} </label>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                 <div ng-if="key.type=='image'">
                     <label class="mdl-textfield__label">{{key.label}}</label>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                        <input type="file" ng-model="key.data" name="image" base-sixty-four-input accept="image/*">
+                        <input type="file" ng-model="vm.entryData.{{key.name}}" name="image" base-sixty-four-input accept="image/*">
                     </div>
                     <label> Preview </label>
                     <img width="90%" ng-src='data:image/png;base64,{{vm.entryData.base64}}'/>
@@ -103,7 +103,7 @@
                                     </div>
                                     <div>
                                         <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-                                        <button type="button" class="mdl-button" ng-click="vm.entryData = vm.save()">Save</button> 
+                                        <button type="button" class="mdl-button" ng-click="vm.entryData.{{key.name}} = vm.save()">Save</button> 
                                         <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
                                     </div>
                                 </div>  
