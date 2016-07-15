@@ -1,9 +1,9 @@
 angular.module("app.core")
     .controller("loginCtrl", loginCtrl);
     
-    loginCtrl.$inject = ['$scope','$q','$location','$timeout','$state','$http','appConfig','feedbackServices', 'dialogServices'];
+    loginCtrl.$inject = ['$scope','$q','$location','$timeout','$state','$http','appConfig','feedbackServices', 'dialogServices', 'authServices'];
     
-    function loginCtrl($scope, $q, $location, $timeout, $state, $http, appConfig, feedbackServices, dialogServices) {
+    function loginCtrl($scope, $q, $location, $timeout, $state, $http, appConfig, feedbackServices, dialogServices, authServices) {
     	
     /* =========================================== Initialisation =========================================== */
     var vm = this;
@@ -35,7 +35,7 @@ angular.module("app.core")
         } else if (!isValidPassword(vm.password)) {
             errMsg = 'Password is between '+ MIN_PASSWORD_LENGTH + ' and ' + MAX_PASSWORD_LENGTH + ' characters.';
         } else {
-            email = vm.loginEmail
+            email = vm.loginEmail;
             password = vm.password;
             return login(email, password);
         }
@@ -51,7 +51,7 @@ angular.module("app.core")
             return errorFeedback(errMsg);
         }
         else {
-            email = vm.resetPwdEmail
+            email = vm.resetPwdEmail;
             return sendEmail(email);
         }
     }
@@ -79,6 +79,8 @@ angular.module("app.core")
             }
 
             function ErrorCallback(err) {
+                // Delete cookie if there is
+                authServices.deleteToken();
                 errorFeedback(err.data);
             }
     }
@@ -100,23 +102,23 @@ angular.module("app.core")
 
     /* =========================================== Helper Function =========================================== */
     function openDialog() {
-        return dialogServices.openDialog('forgot-password-dialog')
+        return dialogServices.openDialog('forgot-password-dialog');
     }
 
     function closeDialog() {
-        return dialogServices.closeDialog('forgot-password-dialog')
+        return dialogServices.closeDialog('forgot-password-dialog');
     }
 
     function successFeedback(msg,timeout){
-        return feedbackServices.successFeedback(msg,'login-feedbackMessage',timeout)
+        return feedbackServices.successFeedback(msg,'login-feedbackMessage',timeout);
     }
 
     function errorFeedback(errData,timeout){
-        return feedbackServices.errorFeedback(errData,'login-feedbackMessage',timeout)
+        return feedbackServices.errorFeedback(errData,'login-feedbackMessage',timeout);
     }
 
     function isEmpty(str) {
-        return str == null || str == undefined || str.length < 1 ;
+        return str === null || str === undefined || str.length < 1 ;
     }
 
     function isValidEmail(str) {
@@ -125,7 +127,7 @@ angular.module("app.core")
     }
 
     function isValidPassword(str) {
-        return str.length >= MIN_PASSWORD_LENGTH && str.length <= MAX_PASSWORD_LENGTH
+        return str.length >= MIN_PASSWORD_LENGTH && str.length <= MAX_PASSWORD_LENGTH;
     }
 
     /* =========================================== Load animation =========================================== */
