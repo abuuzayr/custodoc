@@ -65,7 +65,7 @@ html, body {
 
 /* Delete buttons .color */
 .delete-button {
-    background: #ff0000;
+    background: #ff0000 !important;
 }
 
 /* Login */
