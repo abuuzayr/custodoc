@@ -57,7 +57,7 @@
 						</select>
 					</label>
 					<label>Border Color:
-						<select id="editBorderColor" ng-model="vm.element.style.borderColor" ng-style="{color: vm.element.style.borderColor}">
+						<select id="editBorderColor" ng-model="vm.element.style.borderColor" ng-style="{'color': vm.element.style.borderColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -69,12 +69,12 @@
 						</select>
 					</label>
 					<label>Font Type:
-						<select id="editFontFamily" ng-model="vm.element.style.fontFamily" ng-style="{font-family: vm.element.style.fontFamily}">
+						<select id="editFontFamily" ng-model="vm.element.style.fontFamily" ng-style="{'font-family': vm.element.style.fontFamily}">
 							<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
 					<label>Font Color:
-						<select id="editFontColor" ng-model="vm.element.style.color" ng-style="{color: vm.element.style.color}">
+						<select id="editFontColor" ng-model="vm.element.style.color" ng-style="{'color': vm.element.style.color}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -89,7 +89,7 @@
 				</div>
 				<div class="mdl-tabs__panel" id="background-panel">
 					<label id="editBackgroundColorLabel">Background Color:
-						<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{background-color: vm.element.style.backgroundColor}">
+						<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{'background-color': vm.element.style.backgroundColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -223,13 +223,13 @@
 					<textarea name="labelContent" ng-model="vm.labelContent" style="resize:none" required="true"></textarea>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{'font-family': vm.FontType}"></select>
 				</label><br>
 				<label>Font Size:<br>
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}"></select>
 				</label><br>
 				<label>Text Decoration:<br>
 					<select ng-model="vm.TextDecoration">
@@ -242,7 +242,7 @@
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Background Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
@@ -262,7 +262,7 @@
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}"></select>
 				</label><br>
 			</div>
 		</div>
@@ -290,15 +290,15 @@
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize"></select>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{'font-family': vm.FontType}"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}"></select>
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Background Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
@@ -318,7 +318,7 @@
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}"></select>
 				</label><br>
 			</div>
 		</div>
@@ -350,15 +350,15 @@
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize"></select>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{'font-family': vm.FontType}"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}"></select>
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Background Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
@@ -378,7 +378,7 @@
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}"></select>
 				</label><br>
 			</div>
 		</div>
@@ -404,10 +404,10 @@
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize"></select>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{'font-family': vm.FontType}"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}"></select>
 				</label><br>
 				<label>Display: <br>
 					<select ng-init="vm.radioDisplay = 'radioInline'" ng-model="vm.radioDisplay">
@@ -428,7 +428,7 @@
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Background Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
@@ -448,7 +448,7 @@
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}"></select>
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--12-col">
@@ -484,10 +484,10 @@
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize" class="selectInDialog"></select>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}" class="selectInDialog"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{'font-family': vm.FontType}" class="selectInDialog"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}" class="selectInDialog"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Add option:<br>
 					<input type="text" ng-model="vm.newOption">
@@ -497,7 +497,7 @@
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Background Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
@@ -517,7 +517,7 @@
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--12-col">
@@ -546,7 +546,7 @@
 				<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 			</label><br>
 			<label>Backgroud Color:<br>
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}" class="selectInDialog"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Style:<br>
 				<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -563,7 +563,7 @@
 				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Color:<br>
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>
 			</label><br>
 		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
@@ -586,7 +586,7 @@
 				<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 			</label><br>
 			<label>Background Color:
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}" class="selectInDialog"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Style:
 				<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -603,7 +603,7 @@
 				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Color:
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>
 			</label><br>
 		</div>
 		<div class="divider"></div>
@@ -640,7 +640,7 @@
 					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 				</label><br>
 				<label> Select Border Color:
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>
 				</label><br>
 				<label> Select Border Radius:
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
