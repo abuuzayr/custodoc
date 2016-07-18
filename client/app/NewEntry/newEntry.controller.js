@@ -28,7 +28,6 @@ angular
     var viewContentLoaded = $q.defer();
         
 	var vm = this;
-	var hello = document.getElementById('hello');
 	var forms = document.getElementById('forms');
 
 	/*****************************************************************/
@@ -277,7 +276,7 @@ angular
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
-					body.appendChild(newPage);
+					forms.appendChild(newPage);
 				}
 				for (key in elements){
 					var element = elements[key];
