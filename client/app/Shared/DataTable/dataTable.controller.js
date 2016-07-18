@@ -45,7 +45,7 @@ angular.module('dataTable')
 		function getPagination(){
 			try{
 				$scope.table.pagination.limitOptions = $scope.dtRowPerPageOptions;
-				if($scope.table.pagination.limitOptions.constructor !== Array)
+				if($scope.table.pagination.limitOptions.constructor !== Array || $scope.table.pagination.limitOptions.length === 0)
 					throw new Error('Type Error: limitOptions expect array');
 			}catch(err){
 				$scope.table.pagination.limitOptions = [10,20,30];
@@ -53,7 +53,6 @@ angular.module('dataTable')
 			}
 			finally{
 					$scope.table.pagination.itemPerPage = $scope.table.pagination.limitOptions[0];
-					console.log($scope.table.pagination);
 			}	
 		}
 
@@ -86,14 +85,14 @@ angular.module('dataTable')
 	 		if($scope.table.pagination.currentPage < $scope.table.pagination.totalPage)
 	 			$scope.table.pagination.currentPage++;
 	 		else
-	 			feedbackServices.errorFeedback('Last page', 'autofill-feedbackMessage');
+	 			feedbackServices.errorFeedback('Last page', 'dataTable-feedbackMessage');
 	 	}
 
 	 	function toPreviousPage(){
 	 		if($scope.table.pagination.currentPage > 1)
 	 			$scope.table.pagination.currentPage--;
 	 		else
-	 			return feedbackServices.errorFeedback('First page', 'autofill-feedbackMessage');
+	 			return feedbackServices.errorFeedback('First page', 'dataTable-feedbackMessage');
 
 	 	}
 
@@ -251,13 +250,13 @@ angular.module('dataTable')
 			else if( exportBy === 'All')
 				return exportAll();
 			else 
-				return feedbackServices.errorFeedback('Please select a valid export option','autofill-feedbackMessage');
+				return feedbackServices.errorFeedback('Please select a valid export option','dataTable-feedbackMessage');
 		}
 
 		function exportSelected(){
 			getDataFromId();
 			if($scope.table.selection.selected == [] || $scope.table.selection.selected.length < 1)
-				return feedbackServices.errorFeedback('Please select at least one row','autofill-feedbackMessage'); 
+				return feedbackServices.errorFeedback('Please select at least one row','dataTable-feedbackMessage'); 
 			else	
 				return download(Papa.unparse($scope.table.selection.selected));
 		}

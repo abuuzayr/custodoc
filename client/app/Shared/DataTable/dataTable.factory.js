@@ -6,7 +6,7 @@
 
 	function dataTableServices(){
 		var services = {
-			getDefaultDataSchema: getDefaultDataSchema
+			getDataSchema: getDataSchema
 		};
 		return services;
 		function getDataSchema(){
