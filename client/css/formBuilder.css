@@ -155,3 +155,7 @@ select {
 	height: auto;
 	width: 60%;
 }
+
+#mouseover-go, #mouseover-move {
+	width: 50px;
+}

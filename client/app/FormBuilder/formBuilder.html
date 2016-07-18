@@ -184,11 +184,11 @@
 					<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
 					<form ng-submit="vm.goToPage()" style="display:inline">
 						<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+						<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 					</form>
 					<form ng-submit="vm.movePage()" style="display:inline">
 						<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+						<input id="mouseover-move"type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 					</form>
 				</div>
 			</div>
