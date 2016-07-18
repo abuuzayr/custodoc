@@ -1090,6 +1090,7 @@
 				document.getElementById("borderPanel").classList.add('is-active');
 				document.getElementById("font-panel").classList.remove('is-active');
 				document.getElementById("border-panel").classList.add('is-active');
+				console.log(element.style.textDecoration);
 				document.getElementById("editTextDecoration").value = element.style.textDecoration;
 				document.getElementById("editFontColor").style.color = element.style.color;
 				document.getElementById("editFontColor").value = element.style.color;
