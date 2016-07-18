@@ -79,7 +79,7 @@ angular.module("app.core")
             }
 
             function ErrorCallback(err) {
-                // Delete cookie if there is
+                // Delete cookie if there is error logging in
                 authServices.deleteToken();
                 errorFeedback(err.data);
             }
@@ -114,7 +114,7 @@ angular.module("app.core")
     }
 
     function errorFeedback(errData,timeout){
-        return feedbackServices.errorFeedback(errData,'login-feedbackMessage',timeout);
+        return feedbackServices.errorFeedback(errData,'login-feedbackMessage');
     }
 
     function isEmpty(str) {

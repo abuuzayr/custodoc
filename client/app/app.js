@@ -89,15 +89,15 @@ angular
                 templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm',
-                resolve: {
-                    security: ['$q', 'authServices', function ($q, authServices) {
-                        if ((authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {
-                            return $q.resolve();
-                        } else {
-                            return $q.reject(false);
-                        }
-                    }]
-                }
+                // resolve: {
+                //     security: ['$q', 'authServices', function ($q, authServices) {
+                //         if (authServices.getToken() && (authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {
+                //             return $q.resolve();
+                //         } else {
+                //             return $q.reject(false);
+                //         }
+                //     }]
+                // }
             })
             .state('autofill', {
                 url: '/autofill',
