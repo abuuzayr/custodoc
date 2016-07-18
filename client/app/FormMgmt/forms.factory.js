@@ -22,5 +22,5 @@ function formsFactory() {
 	return {
 		newPage: newPage,
 		whiteDiv: whiteDiv,
-	}
+	};
 }

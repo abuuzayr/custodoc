@@ -94,12 +94,6 @@ angular
 		.then(function() {
 				var arrayOfKeys = [];
 					var key;
-					vm.entryData = [{
-						groupName    : vm.groupName,
-						creationDate : Date(),
-						lastModified : Date(),
-						data: {}
-				    }];
 					for (var i = 0; i < vm.formData.length ; i++){
 				 	   var data = vm.formData[i];
 				  	  	var elements = data.elements;
