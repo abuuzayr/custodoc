@@ -140,7 +140,7 @@
 	box-sizing: content-box;
 }
 
-input,
+/*input,
 select {
 	width: 80%;
 	border: 1px solid grey;
@@ -148,7 +148,7 @@ select {
 	-moz-box-sizing: content-box;
 	-webkit-box-sizing: content-box;
 	box-sizing: content-box;
-}
+}*/
 
 #label,
 #text {
