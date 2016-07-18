@@ -26,7 +26,7 @@
 		/* jshint validthis: true */
 		var vm = this;
 		vm.saved = true;
-		vm.mousedowned = false;
+		vm.onmousedowned = false;
 		vm.mousetarget = null;
 		vm.boolToStr = function(arg) {
 			return arg ? 'Checked' : 'Unchecked';
