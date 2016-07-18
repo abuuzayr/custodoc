@@ -161,14 +161,14 @@
 					<a name="createImageAttachment" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 				</div>
 				<div id="savedElement-panel" class="mdl-tabs__panel">
-					<label>Search: <input ng-model="vm.searchSavedElement"></label>
+					<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
 						<div class="divider"></div>
 						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
 					</div>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
-					<label>Search: <input ng-model="vm.searchAutofillElement"></label>
+					<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
 						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
@@ -246,7 +246,7 @@
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
 				<label>Border Style:<br>
 					<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -283,10 +283,10 @@
 				<legend>
 					<h4>Create Text Field</h4></legend>
 				<label>Text Field Name:<br>
-					<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true" />
+					<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true" class="selectInDialog" />
 				</label><br>
 				<label>Default Value:<br>
-					<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault" />
+					<input type="text" name="text" id="textFieldDefault" ng-model="vm.textFieldDefault" class="selectInDialog" />
 				</label><br>
 				<label>Font Size:<br>
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize" class="selectInDialog"></select>
@@ -303,7 +303,7 @@
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
 				<label>Border Style:<br>
 					<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -364,7 +364,7 @@
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
 				<label>Border Style:<br>
 					<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -419,8 +419,8 @@
 						<option value="radioMultiline">Multiple lines</option>
 					</select>
 				</label><br>
-				<label>Add option:<br>
-					<input type="text" ng-model="vm.newOption">
+				<label>Add Option:<br>
+					<input type="text" ng-model="vm.newOption" style="border: 1px solid grey;">
 					<input type="button" value="Add" ng-click="vm.addNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 					<input type="button" value="Delete" ng-click="vm.deleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
 				</label>
@@ -494,10 +494,10 @@
 				<label>Font Color:<br>
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}" class="selectInDialog"></select>
 				</label><br>
-				<label>Add option:<br>
-					<input type="text" ng-model="vm.newOption" class="selectInDialog">
-					<input type="button" value="Add" ng-click="vm.addNewOption()">
-					<input type="button" value="Delete" ng-click="vm.deleteOption()"><br>
+				<label>Add Option:<br>
+					<input type="text" ng-model="vm.newOption" style="border: 1px solid grey;">
+					<input type="button" value="Add" ng-click="vm.addNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+					<input type="button" value="Delete" ng-click="vm.deleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><br>
 				</label>
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
@@ -625,12 +625,13 @@
 <dialog id="imgUpload" class="mdl-dialog">
 	<form name="imgUpload" ng-submit="vm.addImg()">
 		<div class="mdl-dialog__content mdl-grid">
-			<legend>Upload image attachment</legend>
+				<legend>
+					<h4>Upload Image Attachment</h4></legend>
 			<label for="file">Select File:<br>
 				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" /><br>
 			</label>
 			<div>
-				<span ng-style="vm.maxSizeWarning()">maximun size: 2Mb</span><br>
+				<span ng-style="vm.maxSizeWarning()">Maximum upload size: 2MB</span><br>
 				<label>Opacity:
 					<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 						<span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span>
