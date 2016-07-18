@@ -1,175 +1,130 @@
 <body ng-controller="newEntryCtrl as vm">
-	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	    <!-- Ng-include nav bars -->
-	    <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <!---------------------------------------- Ng-include nav bars ---------------------------------------->
+    <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
+    {{vm.entryData}}
+    <div class="mdl-layout__content">
+        <div id="pagebar" class="mdl-grid">
+            
+            <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>  
+            <div class="divider"></div>
+            <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
+            <div class="divider"></div>
+            <button name="toPreviousForm" value="Previous Form" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
+            <div class="divider"></div>
+            <button name="toNextForm" value="Next Form" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
+        
+        </div>
+        
+        <section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
+            <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false"> 
+                     <div id="hidden-pagebar" ng-show="displayPagebar">
+                    <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+                    <label>{{"Current Form: "+vm.currentFormNumber+"/"+ vm.numberOfForms}}</label>
+                    <form ng-submit="vm.goToPage()" style="display:inline">
+                        <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+                        <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+                    </form>
+                </div>
+            </div>
+            
+            <div class="page" id="form1page1" style="height:1123px;width:794px">
+                </div>
+        </section>
 
-	    <div class="mdl-layout__content">
-	        <div id="pagebar" class="mdl-grid">
+        <main class="mdl-layout__content">
+        <div class="mdl-grid" id="newEntry-content">
+        <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
+        <div id="elements-heading" class="mdl-card__title mdl-color--accent mdl-color-text--white">
+            <h1 class="mdl-card__title-text">Elements</h1>
+        </div>
+        <form name="myForm" role="form" ng-submit="vm.createEntry()" style="overflow: scroll; height: 400px;">
 
-	            <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
-	            <div class="divider"></div>
-	            <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
-	            <div class="divider"></div>
-	            <button name="toPreviousForm" value="Previous Form" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
-	            <div class="divider"></div>
-	            <button name="toNextForm" value="Next Form" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
+                <div ng-repeat="key in vm.parsedFormData">
+                <ng-form name="form">
+                
+                <!-- TEXT FIELDS -->
+                <div ng-if="key.type=='text'">
+                    <label >{{key.label}}</label>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                    <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="vm.entryData[key.name]">
+                    </div>
+                </div>
 
+                <!-- DROPDOWN FIELDS -->
+                <div ng-if="key.type=='dropdown'">
+                    <label >{{key.label}}</label>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                    <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options="option for option in key.options"> </select>
+                    </div>
+                </div>  
+                
+                <!-- CHECKBOX FIELDS -->
+                <div ng-if="key.type=='checkbox'">
+                   <label >{{key.label}}</label>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                    <input type="checkbox" ng-model="vm.entryData[key.name]">            
+                    </div>
+                </div>
+
+                <!-- RADIO FIELDS -->
+                <div ng-if="key.type=='radio'">
+                    <label>{{key.label}}</label>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label" ng-repeat="option in key.options">
+                    <label>
+                    <input type="radio" name="key.name" value={{option}} ng-model="vm.entryData[key.name]">
+                            {{option}} </label>
+                    </div>
+                </div>
+
+                <!-- IMAGE FIELDS -->
+                <div ng-if="key.type=='image'">
+                    <label class="mdl-textfield__label">{{key.label}}</label>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                        <input type="file" ng-model="vm.entryData[key.name]" name="image" base-sixty-four-input accept="image/*">
+                    </div>
+                    <label> Preview </label>
+                    <img width="90%" ng-src='data:image/png;base64,{{vm.entryData[key.name].base64}}'/>
+                </div> 
+
+                <!-- SIGNATURE FIELDS -->
+                <div ng-if="key.type=='signature'">
+                    <div id="signature-field-div">
+                        <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
+                        <dialog id="signature-modal" class="mdl-dialog">
+                            <p>Sign below</p>
+                            <div class="mdl-dialog__content">
+                                <div id="signature-pad" >
+                                    <div>
+                                        <canvas id="signature-canvas"></canvas>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
+                                        <button type="button" class="mdl-button" ng-click=" vm.save()">Save</button> 
+                                        <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
+                                    </div>
+                                </div>  
+                            </div>   
+                        </dialog>
+                    
+                        <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
+                            <div class="mdl-snackbar__text"></div>
+                            <button class="mdl-snackbar__action" type="button"></button> 
+                        </div>  
+                    </div>                     
+                </div>
+
+                </ng-form>
             </div>
 
-	        <section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
-	            <div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false">
-	                <div id="hidden-pagebar" ng-show="displayPagebar">
-	                    <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
-                        <label>{{"Current Form: "+vm.currentFormNumber+"/"+ vm.numberOfForms}}</label>
-	                    <form ng-submit="vm.goToPage()" style="display:inline">
-                            <label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-                            <input type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
-                        </form>
-                    </div>
-                </div>
-
-	            <ng-form ng-model="vm.entryData.data">
-                    <div ng-repeat="form in vm.formData">
-                        <h1>{{form.order}}</h1>
-                            <div ng-repeat="element in form.elements track by $index">
-
-                                <img ng-if="element.type==='background'" ng-src="data:image/png;base64,{{element.data.base64}}">
-
-                                <input ng-if="element.type==='text'" type="text" ng-style="{'width': element.width+'px', 'height': element.height+'px', 'border': element.border, 'border-radius': element.borderRadius, 'opacity': element.opacity, 'top': element.top+'px', 'left': element.left+'px', 'background-color': element.backgroundColor, 'font-size': element.fontSize, 'color': element.color, 'font-family': element.fontFamily, 'text-decoration': element.textDecoration}" ng-model="vm.entryData[element.name]" style="position: absolute;">
-
-                                <select ng-if="element.type==='dropdown'" ng-model="vm.entryData[element.name]"" style="position: absolute;" ng-options="option for option in element.options" value={{option}} ng-style="{'width': element.width+'px', 'height': element.height+'px', 'border': element.border, 'border-radius': element.borderRadius, 'opacity': element.opacity, 'top': element.top+'px', 'left': element.left+'px', 'background-color': element.backgroundColor, 'font-size': element.fontSize, 'color': element.color, 'font-family': element.fontFamily, 'text-decoration': element.textDecoration}"> </select>
-
-                                <input ng-if="element.type==='checkbox'" type="checkbox" ng-style="{'width': element.width+'px', 'height': element.height+'px', 'border': element.border, 'border-radius': element.borderRadius, 'opacity': element.opacity, 'top': element.top+'px', 'left': element.left+'px', 'background-color': element.backgroundColor, 'font-size': element.fontSize, 'color': element.color, 'font-family': element.fontFamily, 'text-decoration': element.textDecoration}" ng-model="vm.entryData[element.name]" style="position: absolute;" value={{option}}>
-
-                                <div ng-if="element.type==='radio'" ng-repeat="option in element.options">
-                                    <input type="radio" value={{option}} ng-style="{'width': element.width+'px', 'height': element.height+'px', 'border': element.border, 'border-radius': element.borderRadius, 'opacity': element.opacity, 'top': element.top+'px', 'left': element.left+'px', 'background-color': element.backgroundColor, 'font-size': element.fontSize, 'color': element.color, 'font-family': element.fontFamily, 'text-decoration': element.textDecoration}" ng-model="vm.entryData[element.name]" style="position: absolute;">{{option}}
-                                </div>
-
-                                <input ng-if="element.type==='image'" type="file" ng-style="{'width': element.width+'px', 'height': element.height+'px', 'border': element.border, 'border-radius': element.borderRadius, 'opacity': element.opacity, 'top': element.top+'px', 'left': element.left+'px', 'background-color': element.backgroundColor, 'font-size': element.fontSize, 'color': element.color, 'font-family': element.fontFamily, 'text-decoration': element.textDecoration}" ng-model="vm.entryData[element.name]" style="position: absolute;" base-sixty-four-input accept="image/*">
-                                <img width="25%" ng-src='data:image/png;base64,{{element.data.base64}}'/>
-
-                                <div ng-if="element.type==='signature'" id="signature-field-div">
-                                    <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
-                                    <dialog id="signature-modal" class="mdl-dialog">
-                                        <p>Sign below</p>
-                                        <div class="mdl-dialog__content">
-                                            <div id="signature-pad">
-                                                <div>
-                                                    <canvas id="signature-canvas"></canvas>
-                                                </div>
-                                                <div>
-                                                    <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-                                                    <button type="button" class="mdl-button" ng-click="vm.entryData[element.name] = vm.save()">Save</button> {{element.data}}
-                                                    <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>    
-                                    </dialog>
-
-                                    <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
-                                        <div class="mdl-snackbar__text"></div>
-                                        <button class="mdl-snackbar__action" type="button"></button>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>  
-                </ng-form>
-                <span>{{vm.entryData.data}}</span>
-            </section> 
-
-            <main class="mdl-layout__content">
-                <div class="mdl-grid">
-                    <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
-	                    <div id="elements-heading" class="mdl-card__title mdl-color--accent mdl-color-text--white">
-                            <h1 class="mdl-card__title-text">Elements</h1>
-                        </div>
-                        <form name="myForm" role="form" ng-submit="vm.createEntry()" style="overflow: scroll; height: 400px;">
-                            <div ng-repeat="form in vm.formData">
-                                <div ng-repeat="key in form.elements track by $index">
-                                    <ng-form name="form">
-
-                                        <!-- TEXT FIELDS -->
-                                        <div ng-if="key.type==='text'">
-                                            <label>{{key.label}}</lab1el>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                            <input class="mdl-textfield__input" type="text" placeholder="{{key.name}}" ng-model="vm.entryData[key.name]">
-                                            </div>
-                                        </div>
-
-                                        <!-- DROPDOWN FIELDS -->
-                                        <div ng-if="key.type==='dropdown'">
-                                            <label >{{key.label}}</label>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                                <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options="option for option in key.options"> </select>
-                                            </div>
-                                        </div>
-
-                                        <!-- CHECKBOX FIELDS -->
-                                        <div ng-if="key.type==='checkbox'">
-                                            <label>{{key.label}}</label>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                                <label>
-                                                <input type="checkbox" class="mdl-checkbox__input" ng-model="vm.entryData[key.name]" value={{option}}>        
-                                            {{option}} </label>
-                                            </div>
-                                        </div>
-
-                                        <!-- RADIO FIELDS -->
-                                        <div ng-if="key.type==='radio'">
-                                            <label>{{key.label}}</label>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label" ng-repeat="option in key.options">
-                                                <label>
-                                                <input type="radio" name="key.name" value={{option}} ng-model="vm.entryData[key.name]">
-                                                        {{option}} </label>
-                                            </div>
-                                        </div>
-
-                                        <!-- IMAGE FIELDS -->
-                                        <div ng-if="key.type==='image'">
-                                            <label>{{key.label}}</label>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
-                                                <input type="file" ng-model="vm.entryData[key.name]" name="image" base-sixty-four-input accept="image/*">
-                                            </div>
-                                            <label> Preview </label>
-                                            <img width="90%" ng-src='data:image/png;base64,{{vm.entryData[key.name].base64}}' />
-                                        </div>
-
-                                        <!-- SIGNATURE FIELDS -->
-                                        <div ng-if="key.type==='signature'">
-	                                        <div id="signature-field-div">
-	                                            <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
-	                                            <dialog id="signature-modal" class="mdl-dialog">
-	                                                <p>Sign below</p>
-	                                                <div class="mdl-dialog__content">
-	                                                    <div id="signature-pad">
-	                                                        <div>
-	                                                            <canvas id="signature-canvas"></canvas>
-	                                                        </div>
-	                                                        <div>
-	                                                            <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-	                                                            <button type="button" class="mdl-button" ng-click="vm.entryData[key.name] = vm.save()">Save</button> {{key.data}}
-	                                                            <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
-	                                                        </div>
-                                                        </div>
-	                                                </div>
-                                                </dialog>
-	                                            <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
-	                                                <div class="mdl-snackbar__text">
-	                                                    <button class="mdl-snackbar__action" type="button"></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-	                                    </div>
-                                    </ng-form>
-                                </div>
-                            </div>
-                            <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+            <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
                             Submit entry
-                            </button>   
-                        </form>
-                    </div>
-                </div>
-            </main>
+            </button>
+            </br>
+        </form>
         </div>
+        </div>
+        </main>
     </div>
+</div>
 </body>
