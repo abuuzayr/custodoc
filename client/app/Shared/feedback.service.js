@@ -11,9 +11,10 @@
 
 		this.errorFeedback = function (errData, domElementId) {
 			var snackbarContainer = document.querySelector('#' + domElementId);
-			if(snackbarContainer.classList){
+			console.log(snackbarContainer);
+			if(snackbarContainer){
 				snackbarContainer.classList.remove("mdl-snackbar--active");
-				snackbarContainer.MaterialSnackbar.active = false;//
+				snackbarContainer.MaterialSnackbar.active = false;
 			}
 			
 			var errMsg = '';
@@ -33,10 +34,11 @@
 
 		this.successFeedback = function (msg, domElementId, timeout) {
 			var snackbarContainer = document.querySelector('#' + domElementId);
-			if(snackbarContainer.classList){
+			console.log(snackbarContainer);
+			if(snackbarContainer){
 				snackbarContainer.classList.remove("mdl-snackbar--active");
 				snackbarContainer.MaterialSnackbar.active = false;//
-			}//
+			}
 			var feedback = {
 				message: msg,
 				timeout: timeout ? timeout : 5000
