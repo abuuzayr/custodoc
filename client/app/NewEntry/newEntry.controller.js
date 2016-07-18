@@ -107,7 +107,7 @@ angular
 
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
-		    vm.formData = res;
+		    vm.formData = res.data;
 			for(var x = 0; x < vm.formData.length; x++) {
 				vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
 			}
