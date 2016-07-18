@@ -3,7 +3,7 @@
 
 	angular
 		.module("app.shared")
-		.factory("authServices", authServices)
+		.factory("authServices", authServices);
 
 	authServices.$inject = ['appConfig', 'feedbackServices', '$state', '$location','$cookies'];
 
@@ -14,7 +14,7 @@
 			deleteToken: deleteToken,
 			decodeToken: decodeToken,
 			getUserInfo: getUserInfo
-		}
+		};
 		return service;
 
 		function logout() {
@@ -25,7 +25,7 @@
 
 		function getToken() {
 			console.log($cookies.get('id'));
-			return $cookies.get('id')
+			return $cookies.get('id');
 		}
 
 		function deleteToken() {
@@ -35,7 +35,7 @@
 		function decodeToken(token) {
 			console.log(token);
 			if (!token)
-				console.log('no cookie')//	return logout();
+				console.log('no cookie');//	return logout();
 			var payload = token.split('.')[1];
 			var decoded = JSON.parse(atob(payload));
 			return decoded;
@@ -44,8 +44,8 @@
 		function getUserInfo() {
 			var token = getToken();
 			var userInfo = JSON.parse(JSON.stringify(decodeToken(token)));
-			console.log(token);
-			console.log(userInfo);
+			console.log('Auth get token:' + token);
+			console.log('Auth get user info:' + userInfo);
 			return {
 				username: userInfo.username,
 				email: userInfo.email,
