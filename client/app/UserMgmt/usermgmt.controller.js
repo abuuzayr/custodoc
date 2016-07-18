@@ -17,6 +17,9 @@ angular
         vm.editUser = editUser;
         vm.removeUser = removeUser;
         vm.loadEditInfo = loadEditInfo;
+        vm.createInDatabase = createInDatabase;
+        vm.updateDatabase = vm.updateDatabase;
+        // vm.deleteFromDatabase = vm.deleteFromDatabase;
 
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
@@ -36,8 +39,8 @@ angular
             if ($scope.newUserForm.$valid) {
                 pushElement();
                 clearFormInputs();
+                createInDatabase();
                 closeDialog('userDialog');
-                feedbackServices.successFeedback('User added successfully', 'newUser-feedbackMessage');
             } else {
                 if (vm.password.length <= MIN_PASSWORD_LENGTH && vm.password.length >= MAX_PASSWORD_LENGTH) {
                     errMsg = 'Password length should be 8-24 characters';
@@ -73,6 +76,7 @@ angular
                 vm.users[vm.editId].password = vm.password;
                 vm.users[vm.editId].email = vm.email;
                 vm.users[vm.editId].selectedUserType = vm.selectedUserType;
+                // updateDatabase(userId);
                 clearFormInputs();
                 feedbackServices.successFeedback('Users edited successfully', 'newUser-feedbackMessage');
                 closeDialog('userDialog');
