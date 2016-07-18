@@ -254,8 +254,8 @@ angular
 				vm.parsedFormData = arrayOfKeys;
 		})
 		.then(function(){
-			for(var k=1; k<=1; k++){ //k is the form number
-				var form = vm.formData[0];
+			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
+				var form = vm.formData[k-1];
 				var elements = form.elements;
 				for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
 					var newPage = newPageTemplate.cloneNode(true);
