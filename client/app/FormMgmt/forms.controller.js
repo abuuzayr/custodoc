@@ -46,6 +46,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	//group management
 
 	vm.getGroupData();
+	
 	function getGroupData() {
 		vm.groups = [];
 		$http.get(serverURL+"/groups")
