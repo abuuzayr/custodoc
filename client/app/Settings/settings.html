@@ -1,7 +1,6 @@
 <div class="mdl-layout__container">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
-        <div class="mdl-layout__drawer" ng-include="'views/sideNavBar.html'"></div>
         <main class="mdl-layout__content">
             <div id="account-settings" class="mdl-layout mdl-js-layout">
                 <div class="mdl-grid">
@@ -9,15 +8,16 @@
                         <h3>Account Settings</h3>
                         <form id="change-settings" action="#">
                             <!-- Username input -->
+                            <!-- BIND USERNAME HERE -->
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input id="username" class="mdl-textfield__input" type="text" />
-                                <label class="mdl-textfield__label" for="username" required>Username*</label>
+                                <label class="mdl-textfield__label" for="username" ng-required="true">Username*</label>
                             </div>
                             <br>
                             <!-- Password input -->
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input id="password" class="mdl-textfield__input" type="password" />
-                                <label class="mdl-textfield__label" for="password" required>Password*</label>
+                                <label class="mdl-textfield__label" for="password" ng-required="true">Password*</label>
                             </div>
                             <br>
                             <!-- New password input -->

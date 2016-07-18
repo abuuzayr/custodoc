@@ -129,21 +129,16 @@ angular
         /* =========================================== API =========================================== */
         function createInDatabase() {
             var newUserData = convertUserData();
-            var path = '/protected/user';
+            var path = '/usermgmt';
             var req = {
                 method: 'POST',
-                url: appConstant.API_URL + path,
+                url: appConfig.UM_URL + path,
                 headers: {},
                 data: {
                     userData: newUserData
                 }
             };
             
-            // TODO
-            if ($window.sessionStorage.token) {
-                req.headers.Authorization = $window.sessionStorage.token;
-            }
-
             $http(req)
                 .then(SuccessCallback)
                 .catch(ErrorCallback);
@@ -160,24 +155,18 @@ angular
             }
         }
 
-        function updateDatabase() {
+        function updateDatabase(userId) {
             var newUserData = convertUserData();
-            var path = '/protected/user/';
             var req = {
                 method: 'PUT',
                 // TODO retrieve vm.userId
-                url: appConstant.API_URL + path + vm.userId,
+                url: appConfig.UM_URL + userId,
                 headers: {},
                 data: {
                     userData: newUserData
                 }
             };
             
-            // TODO
-            if ($window.sessionStorage.token) {
-                req.headers.Authorization = $window.sessionStorage.token;
-            }
-
             $http(req)
                 .then(SuccessCallback)
                 .catch(ErrorCallback);

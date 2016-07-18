@@ -31,7 +31,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() && authService.getUserInfo().usertype === "admin") {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
@@ -91,7 +91,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() && (authService.getUserInfo().usertype === "admin" || authService.getUserInfo().usertype === "user+")) {
+                        if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
