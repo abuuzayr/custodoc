@@ -64,7 +64,9 @@
 
 #border-panel,
 #font-panel,
-#background-panel {
+#background-panel,
+#content-panel,
+#options-panel {
 	vertical-align: middle;
 }
 
@@ -95,7 +97,9 @@
 	vertical-align: middle;
 }
 
-#newElement-panel {
+#newElement-panel,
+#savedElement-panel,
+#autofillElement-panel {
 	padding: 10px;
 }
 

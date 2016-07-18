@@ -16,7 +16,7 @@
 			<div class="divider"></div>
 			<button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i> Save</button>
 			<div class="mdl-layout-spacer"></div>
-			<button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">delete</i> Delete page</button>
+			<button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button"><i class="material-icons">delete</i> Delete page</button>
 		</div>
 		<!---------------------------------------- Top elements card ---------------------------------------->
 		<div id="toolbar" style="display:none">
@@ -29,7 +29,7 @@
 					<a id="optionsPanel" href="#options-panel" class="mdl-tabs__tab">Options</a>
 					<div style="padding: 5px; vertical-align:middle;">
 						<!-- Delete element -->
-						<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="margin-left: 35px;">
+						<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button" style="margin-left: 35px;">
 						<i class="material-icons" role="presentation">delete</i> Delete Element</button>
 					</div>
 					<div class="mdl-layout-spacer"></div>
@@ -112,8 +112,8 @@
 				<div class="mdl-tabs__panel" id="options-panel">
 					<label>{{"Options: " + vm.editOptions.join(', ')}}</label><br>
 					<input type="text" ng-model="vm.editNewOption">
-					<input type="button" value="Add" ng-click="vm.editAddNewOption()">
-					<input type="button" value="Delete" ng-click="vm.editDeleteOption()"><br>
+					<input type="button" value="Add" ng-click="vm.editAddNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					<input type="button" value="Delete" ng-click="vm.editDeleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
 					<label id="editDropdownDefault">Drop-down List Default Value:
 						<select  ng-model="vm.element.value" >
 							<option value=""></option>
@@ -184,11 +184,11 @@
 					<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
 					<form ng-submit="vm.goToPage()" style="display:inline">
 						<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+						<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
 					</form>
 					<form ng-submit="vm.movePage()" style="display:inline">
 						<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input id="mouseover-move"type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+						<input id="mouseover-move" type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
 					</form>
 				</div>
 			</div>
@@ -218,7 +218,8 @@
 	<form novalidate id="labelCreation" name="labelCreation" ng-submit="vm.createLabel()">
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
-				<legend><h4>Create Label</h4></legend>
+				<legend>
+					<h4>Create Label</h4></legend>
 				<label for="labelContent">Label Name:<br> 
 					<textarea name="labelContent" ng-model="vm.labelContent" style="resize:none" required="true" class="selectInDialog"></textarea>
 				</label><br>
@@ -279,7 +280,8 @@
 	<form id="textFieldCreation" name="textFieldCreation" ng-submit="vm.createTextField()">
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
-				<legend><h4>Create Text Field</h4></legend>
+				<legend>
+					<h4>Create Text Field</h4></legend>
 				<label>Text Field Name:<br>
 					<input type="text" name="text" id="textFieldName" ng-model="vm.textFieldName" required="true" />
 				</label><br>
@@ -334,7 +336,8 @@
 <!-- create checkbox -->
 <dialog id="checkbox" class="mdl-dialog">
 	<form id="checkboxCreation" name="checkboxCreation" ng-submit="vm.createCheckbox()">
-		<legend><h4>Create Checkbox</h4></legend>
+		<legend>
+			<h4>Create Checkbox</h4></legend>
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Checkbox Field Name:<br>
@@ -394,7 +397,8 @@
 <!-- create radio button -->
 <dialog id='radio' class="mdl-dialog">
 	<form id="radioCreation" name="radioCreation" ng-submit="vm.createRadio()">
-		<legend><h4>Create Radio Button</h4></legend>
+		<legend>
+			<h4>Create Radio Button</h4></legend>
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Radio Button Name:<br>
@@ -417,8 +421,8 @@
 				</label><br>
 				<label>Add option:<br>
 					<input type="text" ng-model="vm.newOption">
-					<input type="button" value="Add" ng-click="vm.addNewOption()">
-					<input type="button" value="Delete" ng-click="vm.deleteOption()"><br>
+					<input type="button" value="Add" ng-click="vm.addNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					<input type="button" value="Delete" ng-click="vm.deleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
 				</label>
 				<label>Radio Button Default Value:<br>
 					<select type="text" name="text" id="radioDefault" ng-model="vm.radioDefault" class="selectInDialog">
@@ -431,7 +435,7 @@
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
 				<label>Border Style:<br>
 					<select ng-model="vm.BorderStyle" class="selectInDialog">
@@ -469,7 +473,8 @@
 <!-- Create drop-down list -->
 <dialog id='dropdown' class="mdl-dialog">
 	<form id="dropdownCreation" name="dropdownCreation" ng-submit="vm.createDropdownList()">
-		<legend><h4>Create Drop-down List</h4></legend>
+		<legend>
+			<h4>Create Drop-down List</h4></legend>
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Drop-down List Name:<br>
@@ -538,7 +543,8 @@
 <dialog id="imageField" class="mdl-dialog">
 	<form id="imageFieldCreation" name="imageFieldCreation" ng-submit="vm.createImageField()">
 		<div class="mdl-dialog__content">
-			<legend><h4>Create Image Field</h4></legend>
+			<legend>
+				<h4>Create Image Field</h4></legend>
 			<label>Image Field Name:<br>
 				<input type="text" name="text" id="imageFieldName" ng-model="vm.imageFieldName" required="true" class="selectInDialog" />
 			</label><br>
@@ -578,7 +584,8 @@
 <dialog id="signatureField" class="mdl-dialog">
 	<form id="signatureFieldCreation" name="signatureFieldCreation" ng-submit="vm.createSignatureField()">
 		<div class="mdl-dialog__content">
-			<legend><h4>Create Signature Field</h4></legend>
+			<legend>
+				<h4>Create Signature Field</h4></legend>
 			<label>Signature Field Name: 
 				<input type="text" name="text" id="signatureFieldName" ng-model="vm.signatureFieldName" required="true" class="selectInDialog" />
 			</label><br>
@@ -619,8 +626,8 @@
 	<form name="imgUpload" ng-submit="vm.addImg()">
 		<div class="mdl-dialog__content mdl-grid">
 			<legend>Upload image attachment</legend>
-			<label for="file">File:<br>
-				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" class="selectInDialog" /><br>
+			<label for="file">Select File:<br>
+				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" /><br>
 			</label>
 			<div>
 				<span ng-style="vm.maxSizeWarning()">maximun size: 2Mb</span><br>
@@ -651,8 +658,9 @@
 			</div>
 		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
-			<input type="submit" value="Add Image as Attachment"><br>
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.file=null;vm.closeDialog()" value="Cancel">
+			<div class="mdl-layout-spacer"></div>
+			<input type="submit" value="Add Image as Attachment" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><br>
 		</div>
 	</form>
 </dialog>
