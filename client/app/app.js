@@ -91,7 +91,7 @@ angular
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
-                        if (authServices.getToken() && (authService.getUserInfo().usertype === "Admin" || authService.getUserInfo().usertype === "User+")) {
+                        if ((authService.getUserInfo().usertype === "Admin" || authService.getUserInfo().usertype === "User+")) {
                             return $q.resolve();
                         } else {
                             return $q.reject(false);
