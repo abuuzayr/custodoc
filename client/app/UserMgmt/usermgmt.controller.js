@@ -1,6 +1,6 @@
 angular
     .module("app.core")
-    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', function ($scope, $q, $location, $timeout, dialogServices, feedbackServices) {
+    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices', function ($scope, $q, $location, $timeout, dialogServices, feedbackServices, authServices) {
         var vm = this;
         var addUserId = 0;
         var MIN_PASSWORD_LENGTH = 8;
@@ -8,8 +8,8 @@ angular
         vm.users = [];
         vm.userGroups = ["Admin", "User+", "User"];
         // TODO
-        vm.companyName = '';
-        vm.companyId = '';
+        var companyName = authServices.getUserInfo().companyName;
+        var companyId = authServices.getUserInfo().companyId;
 
         vm.openDialog = openDialog;
         vm.closeDialog = closeDialog;
@@ -115,8 +115,8 @@ angular
 
         function convertUserData() {
             var newUserData = {};
-            newUserData.companyId = vm.companyId;
-            newUserData.companyName = vm.companyName;
+            newUserData.companyId = companyId;
+            newUserData.companyName = companyName;
             newUserData.email = vm.users[addUserId].email;
             newUserData.username = vm.users[addUserId].username;
             newUserData.password = vm.users[addUserId].password;
@@ -138,7 +138,7 @@ angular
                     userData: newUserData
                 }
             };
-            
+
             $http(req)
                 .then(SuccessCallback)
                 .catch(ErrorCallback);
@@ -166,7 +166,7 @@ angular
                     userData: newUserData
                 }
             };
-            
+
             $http(req)
                 .then(SuccessCallback)
                 .catch(ErrorCallback);
@@ -177,6 +177,44 @@ angular
 
             function ErrorCallback(err) {
                 return feedbackServices.errorFeedback(err.data, '#editUser-feedbackMessage');
+            }
+
+            getFromDatabase(companyId);
+            function getFromDatabase(company_id) {
+                var path = '/usermgmt';
+                var req = {
+                    method: 'GET',
+                    url: appConstant.API_URL + path + '/' + company_id,
+                    headers: {}
+                };
+                if ($window.sessionStorage.token) {
+                    req.headers.Authorization = $window.sessionStorage.token;
+                }
+                $http(req)
+                    .then(SuccessCallback)
+                    .catch(ErrorCallback);
+
+                function SuccessCallback(res) {
+                    vm.userData = res.data.userData;
+
+                    if (vm.userData.application.bulletform.enabled === true && vm.userData.application.bulletform.isUser === true) {
+                        vm.users.push({
+                            username: vm.userData.username,
+                            password: vm.userData.password,
+                            email: vm.userData.email,
+                            selectedUserType: vm.userData.application.bulletform.usertype
+
+                        });
+                        addUserId++;
+                    }
+                    $timeout(function () {
+                        componentHandler.upgradeDom();
+                    }, 0);
+                }
+
+                function ErrorCallback(err) {
+                    console.log('GET USER INFO ERROR BLOP BLOP.');
+                }
             }
         }
     }]);

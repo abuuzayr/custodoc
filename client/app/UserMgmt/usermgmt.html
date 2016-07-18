@@ -63,7 +63,7 @@
                             <tr>
                                 <th class="mdl-data-table__cell--non-numeric">Username</th>
                                 <th class="mdl-data-table__cell--non-numeric">Email</th>
-                                <th class="mdl-data-table__cell--non-numeric">Password</th>
+                                <!--<th class="mdl-data-table__cell--non-numeric">Password</th>-->
                                 <th class="mdl-data-table__cell--non-numeric">User type</th>
                                 <th></th>
                             </tr>
@@ -72,7 +72,7 @@
                             <tr ng-repeat="user in vm.users">
                                 <td class="mdl-data-table__cell--non-numeric">{{ user.username }}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{ user.email }}</td>
-                                <td class="mdl-data-table__cell--non-numeric">{{ user.password }}</td>
+                                <!--<td class="mdl-data-table__cell--non-numeric">{{ user.password }}</td>-->
                                 <td class="mdl-data-table__cell--non-numeric">{{ user.selectedUserType }}</td>
                                 <td>
                                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" type="button" ng-click="vm.openDialog('userDialog');vm.isAddUser=false;vm.isEditUser=true;vm.loadEditInfo('{{ user.username }}');"><i class="material-icons">edit</i></button>
