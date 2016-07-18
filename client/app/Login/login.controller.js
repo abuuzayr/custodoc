@@ -68,8 +68,8 @@ angular.module("app.core")
             .catch(ErrorCallback);
 
             function SuccessCallback(res) {
-                successFeedback('Logged in');
-                return $http.get(appConfig.API_URL + '/auth/')
+                return successFeedback('Logged in')
+                .then($http.get(appConfig.API_URL + '/auth/'))
                 .then(function(res){
                     $state.go('forms');
                 })
