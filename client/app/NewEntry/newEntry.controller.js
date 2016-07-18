@@ -101,6 +101,15 @@ angular
         }, 0);
     });
 
+    function slugify(text) {
+	  	return text.toString().toLowerCase()
+	    .replace(/\s+/g, '-')           // Replace spaces with -
+	    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+	    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+	    .replace(/^-+/, '')             // Trim - from start of text
+	    .replace(/-+$/, '');            // Trim - from end of text
+	}
+
 
 	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
@@ -126,6 +135,7 @@ angular
 						//console.log("how many times");
 						var object = {};
 						if (element.name.startsWith('text_')) {
+							var slugName = slugify(element.name);
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 					    	var def = element.default;
@@ -142,7 +152,7 @@ angular
 
 						    if (noDuplicate) {
 						    	object.type = 'text';
-						        object.name = fieldName;
+						        object.name = slugName;
 						        object.label = fieldName;
 						        object.data = def;
 
@@ -151,6 +161,7 @@ angular
 						    arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('dropdown_')) {
+							var slugName = slugify(element.name);
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 					    	var options = element.options;
@@ -164,11 +175,11 @@ angular
 								    noDuplicate = false;
 								    break;
 								}
-						    }
+						    }						    
 
 						    if (noDuplicate) {
 						    	object.type = 'dropdown';
-						        object.name = fieldName;
+						        object.name = slugName;
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
@@ -178,6 +189,7 @@ angular
 						    arrayOfKeys.push(object);
 
 						}  else if (element.name.startsWith('checkbox_')) {
+							var slugName = slugify(element.name);
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 					    	var def = element.default;
@@ -194,7 +206,7 @@ angular
 
 						    if (noDuplicate) {
 						    	object.type = 'checkbox';
-						        object.name = fieldName;
+						        object.name = slugName;
 						        object.label = fieldName;
 						        object.data = def;
 
@@ -203,6 +215,7 @@ angular
 						    arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('radio_')) {
+							var slugName = slugify(element.name);
 						    var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 					    	var options = element.options;
@@ -220,7 +233,7 @@ angular
 
 						    if (noDuplicate) {
 						    	object.type = 'radio';
-						        object.name = fieldName;
+						        object.name = slugName;
 						        object.label = fieldName;
 						        object.options = options;
 						        object.data = def;
@@ -230,21 +243,23 @@ angular
 						    arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('image_')) {
+							var slugName = slugify(element.name);
 							var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 							object.type = 'image';
-					        object.name = fieldName;
+					        object.name = slugName;
 					        object.label = fieldName;
 					        object.data = '';
 
 					        arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('signature_')) {
+							var slugName = slugify(element.name);
 							// vm.gotSignature = true;
 							var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 							object.type = 'signature';
-					        object.name = fieldName;
+					        object.name = slugName;
 					        object.label = fieldName;
 					        object.data = '';
 
