@@ -108,29 +108,6 @@
 	text-align: center;
 }
 
-/*#dropdownCreation #dropdownName,
-#dropdownCreation select,
-#dropdownCreation #editOpacity,
-#checkboxCreation #checkboxName,
-#checkboxCreation #checkboxLabel,
-#checkboxCreation select,
-#checkboxCreation #editOpacity,
-#labelCreation textarea,
-#labelCreation select,
-#labelCreation #editOpacity,
-#textFieldCreation #textFieldName,
-#textFieldCreation select,
-#textFieldCreation #editOpacity,
-#imageFieldCreation #imageFieldName,
-#imageFieldCreation #editOpacity {
-	width: 80%;
-	border: 1px solid grey;
-	-ms-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	box-sizing: content-box;
-}
-*/
 .standard-box {
 	width: 80%;
 	border: 1px solid grey;
@@ -140,22 +117,20 @@
 	box-sizing: content-box;
 }
 
-/*input,
-select {
-	width: 80%;
-	border: 1px solid grey;
-	-ms-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	box-sizing: content-box;
-}*/
-
 #label,
-#text {
+#text,
+#checkbox,
+#radio,
+#dropdown {
 	height: auto;
 	width: 60%;
 }
 
-#mouseover-go, #mouseover-move {
+#mouseover-go,
+#mouseover-move {
 	width: 50px;
+}
+
+.mdl-dialog__actions {
+	padding: 8px;
 }

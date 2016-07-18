@@ -266,7 +266,7 @@
 				</label><br>
 			</div>
 		</div>
-		<div class="mdl-dialog__actions" style="padding-left:0px;">
+		<div class="mdl-dialog__actions">
 			<!-- Dialog cancel button here HELLO -->
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 			<div class="mdl-layout-spacer"></div>
@@ -338,7 +338,7 @@
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Checkbox Field Name:<br>
-					<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true" class="standard-box">
+					<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true" class="selectInDialog">
 				</label><br>
 				<label>Checked by default?<br>
 					<select ng-model="vm.checkboxdefault" ng-init="vm.checkboxdefault=true" ng-options="vm.boolToStr(item) for item in [true, false]"></select>
@@ -476,18 +476,18 @@
 					<input type="text" name="text" id="dropdownListName" ng-model="vm.dropdownListName" required="true">
 				</label><br>
 				<label>Drop-down List Default Value:<br>
-					<select type="text" name="text" id="dropdownListDefault" ng-model="vm.dropdownListDefault" class="standard-box">
+					<select type="text" name="text" id="dropdownListDefault" ng-model="vm.dropdownListDefault" class="selectInDialog">
 						<option ng-repeat="option in vm.options" value={{option}}>{{option}}</option>
 					</select>
 				</label><br>
 				<label>Font Size:<br>
-					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize" class="standard-box"></select>
+					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize" class="selectInDialog"></select>
 				</label><br>
 				<label>Font Type:<br>
-					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}" class="standard-box"></select>
+					<select ng-options="option for option in vm.fontsArray" ng-model="vm.FontType" ng-style="{font-family: vm.FontType}" class="selectInDialog"></select>
 				</label><br>
 				<label>Font Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}" class="standard-box"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{color: vm.FontColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Add option:<br>
 					<input type="text" ng-model="vm.newOption">
@@ -500,7 +500,7 @@
 					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
 				</label><br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="standard-box">
+					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
 				<label>Border Style:<br>
 					<select ng-model="vm.BorderStyle">
@@ -511,13 +511,13 @@
 					</select>
 				</label><br>
 				<label>Border Width:<br>
-					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="standard-box"></select>
+					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 				</label><br>
 				<label>Border Radius:<br>
-					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="standard-box"></select>
+					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 				</label><br>
 				<label>Border Color:<br>
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="standard-box"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--12-col">
@@ -543,13 +543,13 @@
 				<input type="text" name="text" id="imageFieldName" ng-model="vm.imageFieldName" required="true">
 			</label><br>
 			<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-				<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+				<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 			</label><br>
 			<label>Backgroud Color:<br>
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}" class="standard-box"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Style:<br>
-				<select ng-model="vm.BorderStyle" class="standard-box">
+				<select ng-model="vm.BorderStyle" class="selectInDialog">
 					<option value="solid">Solid</option>
 					<option value="dashed">Dashed</option>
 					<option value="dotted">Dotted</option>
@@ -557,19 +557,18 @@
 				</select>
 			</label><br>
 			<label>Border Width:<br>
-				<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="standard-box"></select>
+				<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Radius:<br>
-				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="standard-box"></select>
+				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Color:<br>
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="standard-box"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
 			</label><br>
 		</div>
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
 			<!-- Dialog cancel button here HELLO -->
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
-			<div class="mdl-layout-spacer"></div>
 			<div class="mdl-layout-spacer"></div>
 			<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create image field">
 		</div>
@@ -581,16 +580,16 @@
 		<div class="mdl-dialog__content">
 			<legend><h4>Create Signature Field</h4></legend>
 			<label>Signature Field Name: 
-				<input type="text" name="text" id="signatureFieldName" ng-model="vm.signatureFieldName" required="true">
+				<input type="text" name="text" id="signatureFieldName" ng-model="vm.signatureFieldName" required="true" class="selectInDialog">
 			</label><br>
 			<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
-				<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+				<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 			</label><br>
 			<label>Background Color:
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{background-color: vm.BackgroundColor}" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Style:
-				<select ng-model="vm.BorderStyle">
+				<select ng-model="vm.BorderStyle" class="selectInDialog">
 					<option value="solid">Solid</option>
 					<option value="dashed">Dashed</option>
 					<option value="dotted">Dotted</option>
@@ -598,13 +597,13 @@
 				</select>
 			</label><br>
 			<label>Border Width:
-				<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+				<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Radius:
-				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Color:
-				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
 			</label><br>
 		</div>
 		<div class="divider"></div>
@@ -621,16 +620,16 @@
 		<div class="mdl-dialog__content mdl-grid">
 			<legend>Upload image attachment</legend>
 			<label for="file">Select File:<br>
-				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*"><br>
+				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" class="selectInDialog"><br>
 			</label>
 			<div>
 				<span ng-style="vm.maxSizeWarning()">maximun size: 2Mb</span><br>
 				<label>Opacity:
-					<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity">
+					<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 						<span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span>
 				</label><br>
 				<label>Select Border Style
-					<select ng-model="vm.BorderStyle">
+					<select ng-model="vm.BorderStyle" class="selectInDialog">
 						<option value="solid">Solid</option>
 						<option value="dashed">Dashed</option>
 						<option value="dotted">Dotted</option>
@@ -638,13 +637,13 @@
 					</select>
 				</label><br>
 				<label> Select Border Width:
-					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth"></select>
+					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 				</label><br>
 				<label> Select Border Color:
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{color: vm.BorderColor}" class="selectInDialog"></select>
 				</label><br>
 				<label> Select Border Radius:
-					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius"></select>
+					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 				</label><br>
 				<label ng-if="vm.file">Preview: <br>
 					<img width="90%"  ng-style="{opacity: vm.Opacity}" ng-src='data:image/png;base64,{{vm.file.base64}}'/>
