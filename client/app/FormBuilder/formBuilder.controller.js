@@ -1227,7 +1227,7 @@
 			newElement.style.fontSize = vm.Fontsize;
 			newElement.style.fontFamily = vm.FontType;
 			newElement.style.color = vm.FontColor;
-			newElement.style.textDecoration = "none"; //TEST: TypeError: Cannot read property 'textDecoration' of undefined - Calvyn Tng
+			newElement.style.textDecoration = vm.TextDecoration;
 			newElement.style.backgroundColor = vm.BackgroundColor;
 			newElement.style.borderStyle = vm.BorderStyle;
 			newElement.style.borderColor = vm.BorderColor;
