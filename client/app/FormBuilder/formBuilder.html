@@ -207,8 +207,8 @@
 
 <dialog id="previewDialog" class="mdl-dialog">
 	<div class="dialog__actions" ng-keydown="vm.isESCDeletePreview($event)">
-		<button ng-click="vm.downloadPreview();">Download As PDF</button>
-		<button ng-click="vm.previewDeleteAll();">Close</button>
+		<button ng-click="vm.downloadPreview();" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">Download As PDF</button>
+		<button ng-click="vm.previewDeleteAll();" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">Close</button>
 	</div>
 	<div id="preview" class="mdl-dialog__content"></div>
 </dialog>
