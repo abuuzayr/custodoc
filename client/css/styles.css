@@ -5,8 +5,6 @@ html, body {
 /* .color */
 /* Login background */
 .color > #login-background {
-    height: 100%;
-    width: 100%;
     background: #66ffff; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left top, #66ffff, #6699ff); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(bottom right, #66ffff, #6699ff); /* For Opera 11.1 to 12.0 */

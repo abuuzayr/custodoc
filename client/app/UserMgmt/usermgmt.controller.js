@@ -129,7 +129,6 @@ angular
             return newUserData;
         }
 
-
         /* =========================================== API =========================================== */
         function createInDatabase() {
             var newUserData = convertUserData();

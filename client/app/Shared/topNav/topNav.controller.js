@@ -13,7 +13,7 @@ angular
 
         // vm.userGroup = vm.userInfo.usertype;
         // vm.email = vm.userInfo.email;
-        // vm.username = vm.userInfo.username;
+        vm.username = authServices.getUserInfo().username;
 
         function logout() {
             authServices.logout();
