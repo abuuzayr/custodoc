@@ -56,7 +56,7 @@ angular
             })
             .state('settings', {
                 url: '/settings',
-                templateUrl: 'app/Settings//settings.html',
+                templateUrl: 'app/Settings/settings.html',
                 controller: 'settingsCtrl',
                 controllerAs: 'vm',
                 resolve: {
