@@ -297,7 +297,6 @@ angular
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 						var node = document.createElement('input');
-						node.setAttribute('ng-model', 'vm.entryData.' + element.name);
 						node.type='text';
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
@@ -311,8 +310,7 @@ angular
 						var checkbox = document.createElement('input');
 						checkbox.type="checkbox";
 						checkbox.checked = element.default;
-						var index2 = element.name.indexOf('_');
-						var newName = element.name.substring(index2+1, element.name.length);
+						var newName = slugify(element.name);
 						var testScope = 'vm.entryData.' + newName;
 						checkbox.setAttribute("ng-model", testScope);
 						span.innerHTML = element.label;
@@ -393,8 +391,7 @@ angular
 					node.style.top = element.top+'px';
 					node.style.left = element.left+'px';
 					node.style.position = "absolute";
-					var index2 = element.name.indexOf('_');
-					var newName = element.name.substring(index2+1, element.name.length);
+					var newName = slugify(element.name);
 					var testScope = 'vm.entryData.' + newName;
 					node.setAttribute("ng-model", testScope);
 					var page = document.getElementById('form'+k+'page'+element.page);
