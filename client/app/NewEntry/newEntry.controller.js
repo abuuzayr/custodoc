@@ -107,8 +107,7 @@ angular
 
 	vm.getFormData = entryService.getFormElements(vm.groupName)
 		.then(function(res){
-			vm.formData = res;
-			for(var x = 0; x < 1; x++) {
+			for(var x = 0; x < vm.formData.length; x++) {
 				vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
 			}
 			vm.numberOfForms = vm.totalNumberOfPages.length;
@@ -117,11 +116,13 @@ angular
 		.then(function() {
 				var arrayOfKeys = [];
 					var key;
-					for (var i = 0; i < 1 ; i++){
-				 	    var data = vm.formData[i];
-				  	  	var elements = data.elements; 
+					for (var i = 0; i < vm.formData.length ; i++){
+				 	   var data = vm.formData[i];
+				  	  	var elements = data.elements;
+				  	  	vm.entryData.formName = vm.formData[i].formName;
 				   	 for (key in elements) {
 						var element = elements[key];
+						//console.log("how many times");
 						var object = {};
 						if (element.name.startsWith('text_')) {
 						    var index = element.name.indexOf('_');
@@ -142,7 +143,8 @@ angular
 						    	object.type = 'text';
 						        object.name = fieldName;
 						        object.label = fieldName;
-						        object.data = vm.text;
+						        object.data = def;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -168,7 +170,8 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.options = options;
-						        object.data = vm.dropdown;
+						        object.data = def;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -193,7 +196,7 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.data = def;
-						        object.checked = def;
+
 						    }
 
 						    arrayOfKeys.push(object);
@@ -219,7 +222,8 @@ angular
 						        object.name = fieldName;
 						        object.label = fieldName;
 						        object.options = options;
-						        object.data = vm.radio;
+						        object.data = def;
+			        
 						    }
 
 						    arrayOfKeys.push(object);
@@ -230,18 +234,18 @@ angular
 							object.type = 'image';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = vm.image;
+					        object.data = '';
 
 					        arrayOfKeys.push(object);
 
 						} else if (element.name.startsWith('signature_')) {
-							vm.gotSignature = true;
+							// vm.gotSignature = true;
 							var index = element.name.indexOf('_');
 					    	var fieldName = element.name.substring(index+1, element.name.length);
 							object.type = 'signature';
 					        object.name = fieldName;
 					        object.label = fieldName;
-					        object.data = vm.signature;
+					        object.data = '';
 
 					        arrayOfKeys.push(object);
 					    }
