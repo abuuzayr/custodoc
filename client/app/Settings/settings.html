@@ -1,68 +1,56 @@
 <div class="mdl-layout__container">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <!---------------------------------------- Ng-include nav bars ---------------------------------------->
         <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
         <main class="mdl-layout__content">
-            <div id="account-settings" class="mdl-layout mdl-js-layout">
-                <div class="mdl-grid">
-                    <div id="settings-grid" class="mdl-cell mdl-cell--6-col">
-                        <h3>Account Settings</h3>
-                        <form id="change-settings" action="#">
-                            <!-- Username input -->
-                            <!-- BIND USERNAME HERE -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input id="username" class="mdl-textfield__input" type="text" />
-                                <label class="mdl-textfield__label" for="username" ng-required="true">Username*</label>
-                            </div>
-                            <br>
-                            <!-- Password input -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input id="password" class="mdl-textfield__input" type="password" />
-                                <label class="mdl-textfield__label" for="password" ng-required="true">Password*</label>
-                            </div>
-                            <br>
-                            <!-- New password input -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input id="newpassword1" class="mdl-textfield__input" type="password" />
-                                <label class="mdl-textfield__label" for="password">New Password</label>
-                            </div>
-                            <br>
-                            <!-- New password input again -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input id="newpassword2" class="mdl-textfield__input" type="password" />
-                                <label class="mdl-textfield__label" for="password">Confirm New Password</label>
-                            </div>
-                            <br>
-                    </div>
-                    <div id="settings-grid" class="mdl-cell mdl-cell--6-col">
-                        <br>
+            <!---------------------------------------- Main settings ---------------------------------------->
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col">
+                    <h3>Account Settings</h3>
+                    <form id="change-information" name="change-information">
+                        <!-- CHange username -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="username" class="mdl-textfield__input" type="text" ng-model="vm.username" ng-required="true" />
+                            <label class="mdl-textfield__label" for="username">Username*</label>
+                        </div>
                         <!-- Change email -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="email" class="mdl-textfield__input" type="text" ng-model="email" />
-                            <label class="mdl-textfield__label" for="password">Email</label>
+                            <input id="email" class="mdl-textfield__input" type="text" ng-model="vm.email" ng-required="true" />
+                            <label class="mdl-textfield__label" for="email">Email</label>
                         </div>
-                        <br><br>
-                        <!-- Change timezone -->
-                        <div id="timezone" class="mdl-selectfield">
-                            <label class="mdl-selectfield__label">Timezone</label>
-                            <select>
-                                <option value="singapore">Singapore GMT +8</option>
-                            </select>
-                        </div><br><br>
-                        </form>
-                        <div class="company-info">
-                            <p>Expiry date: {{ companyExpiry }}</p><br>
-                            <p>Storage space: {{ storageSpace }}
-                                <div id="progressBarStorage" class="mdl-progress mdl-js-progress"></div>
-                            </p>
+                        <p>Expiry date: {{ companyExpiry }}</p><br>
+                        <p>Storage space: {{ storageSpace }}
+                            <div id="progressBarStorage" class="mdl-progress mdl-js-progress"></div>
+                        </p>
+                        <div class="mdl-card__actions mdl-card--border"><br>
+                            <button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect" type='submit'>Update Info</button>
                         </div>
-                        <br><br>
-                        <!-- Submit button -->
-                        <div id="login-button" class="mdl-card__actions mdl-card--border"><br>
-                            <button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect">
-                            Save Changes
-                        </button>
+
+                    </form>
+                </div>
+                <div class="mdl-cell mdl-cell--6-col">
+                    <h3>Change password</h3>
+                    <form id="change-password" name="change-password">
+                        <!-- Password input -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="password" class="mdl-textfield__input" type="password" ng-model="vm.pwd.oldPwd" ng-required="true" />
+                            <label class="mdl-textfield__label" for="password">Old Password</label>
                         </div>
-                    </div>
+                        <br>
+                        <!-- New password input -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="newpassword1" class="mdl-textfield__input" type="password" ng-model="vm.newPwd" ng-required="true" />
+                            <label class="mdl-textfield__label" for="password">New Password</label>
+                        </div>
+                        <!-- New password input again -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input id="newpassword2" class="mdl-textfield__input" type="password" ng-model="vm.confirmNewPwd" ng-required="true" />
+                            <label class="mdl-textfield__label" for="password">Confirm New Password</label>
+                        </div>
+                        <div class="mdl-card__actions mdl-card--border"><br>
+                            <button class="mdl-button mdl-button--accent mdl-button--raised mdl-js-button mdl-js-ripple-effect" type='submit'>Update Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>

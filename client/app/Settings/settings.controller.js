@@ -15,6 +15,10 @@ angular
             }, 0);
         });
         /* =========================================== Stubs =========================================== */
+        var vm = this;
+        
+        
+        
         $scope.email = 'hello@example.com';
         $scope.companyExpiry = '1/1/2017';
         
