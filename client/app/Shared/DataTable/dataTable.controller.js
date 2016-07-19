@@ -41,7 +41,6 @@ angular.module('dataTable')
 			console.log($scope.table.pagination);
 		}
 
-		$scope.table.count = 0;
 		function getPagination(){
 			try{
 				$scope.table.pagination.limitOptions = $scope.dtRowPerPageOptions;
@@ -57,8 +56,6 @@ angular.module('dataTable')
 		}
 
 		$scope.$watch('table.filterQuery',function (newVal, oldVal){
-			$scope.table.count = 0;
-			console.log(newVal, $scope.table.count);
 	 	});
 		//PAGINATION
 	 	$scope.$watch('table.pagination.currentPage',function onPageChange(newPage, oldPage){
@@ -93,7 +90,6 @@ angular.module('dataTable')
 	 			$scope.table.pagination.currentPage--;
 	 		else
 	 			return feedbackServices.errorFeedback('First page', 'dataTable-feedbackMessage');
-
 	 	}
 
 	 	//Selection Handler
@@ -214,7 +210,6 @@ angular.module('dataTable')
 			            if (element.hasOwnProperty(property)) {
 		                    if (typeof element[property] === 'string') {
 		                        if (element[property].toLowerCase().indexOf($scope.table.filterQuery.toLowerCase()) != -1) {
-		                            $scope.table.count++;
 		                            return true;
 		                        }
 		                    }
@@ -312,11 +307,7 @@ angular.module('dataTable')
 		function saveEdit(){
 			return $scope.table.dataServices.save($scope.rowInEdit);
 		}
-
-		// function savePromise(){
-		// 	var promise = saveEdit();
-		// }
-		
+                   		
 		function openDialog(){
 			dialogServices.openDialog('table-edit-dialog');
 		}

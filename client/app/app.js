@@ -41,9 +41,9 @@ angular
             })
             .state('entries', {
                 url: '/entries',
-                templateUrl: 'views/entries.html', //TOFIX
-                controller: 'entriesCtrl',
-                controllerAs: 'entries',
+                templateUrl: 'app/EntryMgmt/entryMgmt.html', //TOFIX
+                controller: 'entryMgmtCtrl',
+                controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
