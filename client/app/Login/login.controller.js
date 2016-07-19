@@ -29,7 +29,7 @@ angular.module("app.core")
         var errMsg = '';
 
         if (isEmpty(vm.loginEmail) || isEmpty(vm.password)) {
-            return;
+	        errMsg = 'Email or Password is empty.';
         } else if (!isValidEmail(vm.loginEmail)) {
             errMsg = 'Email is invalid.';
         } else if (!isValidPassword(vm.password)) {
