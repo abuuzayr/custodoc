@@ -8,13 +8,10 @@ angular
         $interval(function () {
             vm.date = new Date();
         }, 1000);
-        
-        // vm.userInfo = authServices.getUserInfo();
 
-        // vm.userGroup = vm.userInfo.usertype;
-        // vm.email = vm.userInfo.email;
         vm.username = authServices.getUserInfo().username;
-
+        vm.userType = authServices.getUserInfo().usertype;
+        
         function logout() {
             authServices.logout();
         }

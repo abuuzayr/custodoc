@@ -38,7 +38,7 @@
                     controllerAs: 'vm',
                     resolve: {
                         security: ['$q', 'authServices', function($q, authServices) {
-                            if (authServices.getToken()) {
+                            if (authServices.getToken() && authServices.getUserInfo().usertype === "Admin") {
                                 return $q.resolve();
                             } else {
                                 return $q.reject(false);
