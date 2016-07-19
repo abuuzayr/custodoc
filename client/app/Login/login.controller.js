@@ -69,13 +69,7 @@ angular.module("app.core")
 
             function SuccessCallback(res) {
                 successFeedback('Logged in')
-                .then($http.get(appConfig.API_URL + '/auth/'))
-                .then(function(res){
-                    $state.go('forms');
-                })
-                .catch(function(err){
-                    errorFeedback('Login blocked by app server');
-                });
+                .then(getIdCookie);
             }
 
             function ErrorCallback(err) {
@@ -83,6 +77,16 @@ angular.module("app.core")
                 authServices.deleteToken();
                 errorFeedback(err.data);
             }
+
+     	    function getIdCookie(){
+		$http.get(appConfig.API_URL + '/auth/')
+		.then(function(res){
+			$state.go('forms');
+     		})
+                .catch(function(err){
+               		errorFeedback('Login blocked by app server');
+               	});	
+	    }
     }
 
     function sendEmail(email) {
