@@ -18,41 +18,39 @@
     </div>
 </dialog>
 <!-- BODY -->
-<div class="color mdl-layout mdl-js-layout">
-    <div id="login-background">
-        <div id="login-card" class="mdl-card">
-            <main class="mdl-layout__content mdl-color--white">
-                <div id="login-heading" class="mdl-card__title mdl-color-text--white">
-                    <h2 class="mdl-card__title-text">BulletForms Login</h2>
-                </div>
-                <div class="mdl-card__supporting-text">
-                    <form id="login-form" ng-submit="vm.validateBeforeLogin()">
-                        <!-- Email input -->
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id="login-email-input" ng-model="vm.loginEmail" class="mdl-textfield__input" type="text" />
-                            <label class="mdl-textfield__label" for="login-email-input">Email</label>
-                        </div>
-                        <br>
-                        <!-- Password input -->
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input id='login-password-input' ng-model="vm.password" class="mdl-textfield__input" type="password" />
-                            <label class="mdl-textfield__label" for="login-password-input">Password</label>
-                        </div>
-                        <!-- Login button -->
-                        <div class="mdl-card__actions">
-                            <button id="login-button" type="submit" ng-click="vm.validateBeforeLogin()" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
+<div class="login-background mdl-layout mdl-js-layout center-content">
+    <div class="mdl-card">
+        <main class="mdl-layout__content mdl-color--white">
+            <div id="login-heading" class="mdl-card__title mdl-color-text--white">
+                <h2 class="mdl-card__title-text">BulletForms Login</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <form id="login-form" ng-submit="vm.validateBeforeLogin()">
+                    <!-- Email input -->
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="login-email-input" ng-model="vm.loginEmail" class="mdl-textfield__input" type="text" />
+                        <label class="mdl-textfield__label" for="login-email-input">Email</label>
+                    </div>
+                    <br>
+                    <!-- Password input -->
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id='login-password-input' ng-model="vm.password" class="mdl-textfield__input" type="password" />
+                        <label class="mdl-textfield__label" for="login-password-input">Password</label>
+                    </div>
+                    <!-- Login button -->
+                    <div class="mdl-card__actions">
+                        <button id="login-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">
                         Log in
                         </button>
-                        </div>
-                    </form>
-
-                    <br>
-                    <div class="mdl-card__actions mdl-card--border">
-                        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type='button' ng-click="vm.openDialog()">Forgot password?</button>
                     </div>
+                </form>
+
+                <br>
+                <div class="mdl-card__actions mdl-card--border">
+                    <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type='button' ng-click="vm.openDialog()">Forgot password?</button>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
     <!-- SNACKBAR -->
     <div id="login-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">

@@ -1,39 +1,63 @@
-html, body {
+html,
+body {
     font-family: 'Roboto', 'Helvetica', 'sans-serif';
 }
 
-/* .color */
-/* Login background */
-.color > #login-background {
-    background: #66ffff; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(left top, #66ffff, #6699ff); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right, #66ffff, #6699ff); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right, #66ffff, #6699ff); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right, #66ffff, #6699ff); /* Standard syntax (must be last) */
+.center-content {
+    align-items: center;
+    justify-content: center;
 }
 
+/* .color */
+
+
+/* Login background */
+
+.login-background {
+    background: #66ffff;
+    /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left top, #66ffff, #6699ff);
+    /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, #66ffff, #6699ff);
+    /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, #66ffff, #6699ff);
+    /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, #66ffff, #6699ff);
+    /* Standard syntax (must be last) */
+}
+
+
 /* Login heading */
+
 #login-heading {
     background: #3F51BF;
 }
 
+
 /* Login feedback message */
+
 #fail-feedback-message {
     color: #ff5050;
 }
 
+
 /* Header row nav bar */
+
 .mdl-layout__header-row {
     background: #303F9F;
     color: #e6ecff;
 }
 
+
 /* Header row menu button for side nav */
+
 .mdl-layout__drawer-button {
     background: #303F9F !important;
 }
 
+
 /* Side nav bar drawer */
+
 .mdl-layout__drawer .color {
     background: #37474F;
     height: 100%;
@@ -56,23 +80,22 @@ html, body {
     background: #263238;
 }
 
+
 /* New entry elements header .color */
+
 #elements-heading {
     background: #3F51BF !important;
 }
 
+
 /* Delete buttons .color */
+
 .delete-button {
     background: #ff0000 !important;
 }
 
-/* Login */
-#login-card {
-    align-items: center;
-    justify-content: center;
-    margin: 8% 37%;
-}
 
+/* Login */
 #login-button {
     width: 100%;
 }
@@ -88,7 +111,9 @@ select {
     transition: 0.2s ease-in all;
 }
 
+
 /* Settings */
+
 #account-settings {
     padding: 0px 30px;
 }
@@ -101,25 +126,31 @@ select {
     width: 300px;
 }
 
+
 /* Commons */
+
 .top-row-buttons {
     padding: 10px 10px;
     left: 0;
 }
 
 .divider {
-    width: 10px; 
+    width: 10px;
     height: 10px;
 }
 
+
 /* New entry */
+
 #elements-drawer {
     background: white;
     padding: 10px 0px;
     position: fixed;
 }
 
+
 /* Entries */
+
 #grid-entries {
     height: 400px !important;
 }
@@ -132,13 +163,13 @@ select {
 }
 
 .img {
-  padding: 16px 32px;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex-start;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+    padding: 16px 32px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex-start;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 #submit-button {
@@ -146,12 +177,12 @@ select {
 }
 
 .selectInDialog {
-	width: 80%;
-	border: 1px solid grey;
-	-ms-box-sizing:content-box;
-	-moz-box-sizing:content-box;
-	-webkit-box-sizing:content-box; 
-	box-sizing:content-box;
+    width: 80%;
+    border: 1px solid grey;
+    -ms-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 .mdl-menu__item {
@@ -162,4 +193,3 @@ select {
 .mdl-layout__header-row {
     padding: 0 16px 0 30px !important;
 }
-
