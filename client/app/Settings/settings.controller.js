@@ -16,17 +16,21 @@ angular
         });
         /* =========================================== Stubs =========================================== */
         var vm = this;
-        
-        
-        
-        $scope.email = 'hello@example.com';
-        $scope.companyExpiry = '1/1/2017';
-        
+
+        function validateNewPassword() {
+            if (vm.confirmNewPwd === vm.newPwd) {
+                vm.pwd.newPwd = vm.newPwd;
+                return changePassword();
+            }
+            return feedbackServices.hideFeedback('#settings-feedbackMessage').
+                then(feedbackServices.errorFeedback('New password inputs do not match', '#settings-feedbackMessage'));
+        }
+
         /* =========================================== Progress bar =========================================== */
         // Retrieve max and used storage here.
-        $scope.storageSpace = '80GB/100GB';
+        vm.storageSpace = '80GB/100GB';
         var usedStorage = 80;
-        document.querySelector('#progressBarStorage').addEventListener('mdl-componentupgraded', function() {
-         this.MaterialProgress.setProgress(usedStorage);
-      });
+        document.querySelector('#progressBarStorage').addEventListener('mdl-componentupgraded', function () {
+            this.MaterialProgress.setProgress(usedStorage);
+        });
     }]);

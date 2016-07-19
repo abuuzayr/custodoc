@@ -13,16 +13,16 @@
                             <input id="username" class="mdl-textfield__input" type="text" ng-model="vm.username" ng-required="true" />
                             <label class="mdl-textfield__label" for="username">Username*</label>
                         </div>
-                        <br><br>
+                        <br>
                         <!-- Change email -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="email" class="mdl-textfield__input" type="text" ng-model="vm.email" ng-required="true" />
                             <label class="mdl-textfield__label" for="email">Email</label>
                         </div>
                         <br><br>
-                        <p>Expiry date: {{ companyExpiry }}</p>
+                        <p>Expiry date: {{ vm.companyExpiry }}</p>
                         <br>
-                        <p>Storage space: {{ storageSpace }}
+                        <p>Storage space: {{ vm.storageSpace }}
                             <div id="progressBarStorage" class="mdl-progress mdl-js-progress"></div>
                         </p>
                         <div class="mdl-card__actions mdl-card--border"><br>
@@ -39,13 +39,13 @@
                             <input id="password" class="mdl-textfield__input" type="password" ng-model="vm.pwd.oldPwd" ng-required="true" />
                             <label class="mdl-textfield__label" for="password">Old Password</label>
                         </div>
-                        <br>
+                        <br><br>
                         <!-- New password input -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="newpassword1" class="mdl-textfield__input" type="password" ng-model="vm.newPwd" ng-required="true" />
                             <label class="mdl-textfield__label" for="password">New Password</label>
                         </div>
-                        <br>
+                        <br><br>
                         <!-- New password input again -->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input id="newpassword2" class="mdl-textfield__input" type="password" ng-model="vm.confirmNewPwd" ng-required="true" />
@@ -56,6 +56,10 @@
                         </div>
                     </form>
                 </div>
+            </div>
+            <div id="settings-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+                <div class="mdl-snackbar__text"></div>
+                <button class="mdl-snackbar__action" type="button"></button>
             </div>
         </main>
     </div>
