@@ -1,1 +1,4 @@
-angular.module('dataTable',['app.shared']);
+(function() {
+	"use strict";
+	angular.module('dataTable',['app.shared']);
+})();	

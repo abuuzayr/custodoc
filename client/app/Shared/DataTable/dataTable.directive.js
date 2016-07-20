@@ -1,4 +1,5 @@
-(function(){
+(function() {
+	"use strict";
 angular.module('dataTable')
 	.directive('customMdlDataTable',customMdlDataTable)
 	.directive('postRepeatUpgrade', postRepeatUpgrade)

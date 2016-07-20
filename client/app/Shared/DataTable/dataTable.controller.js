@@ -1,5 +1,5 @@
-(function() {"use strict";
-	  
+(function() {
+	"use strict";  
 angular.module('dataTable')
 	.controller('dataTableController',dataTableController);
 

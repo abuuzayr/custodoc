@@ -123,7 +123,7 @@
     <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
         <!-- <span id='item-info'> -->
          <div id='item-info' class='menu-wrapper'>
-			<p id='item-info-text'>{{tableOptions.pagination.startingIndex + 1}} - {{tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage }} of {{tableOptions.pagination.totalItem}}</p>
+			<p id='item-info-text'>{{tableOptions.pagination.startingIndex + 1}} - {{tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage > tableOptions.pagination.totalItem ? tableOptions.pagination.totalItem : tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage}} of {{tableOptions.pagination.totalItem}}</p>
 		</div>
 		<!-- </span> -->
 	</div>

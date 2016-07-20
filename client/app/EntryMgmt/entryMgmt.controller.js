@@ -1,4 +1,5 @@
 (function(){
+	"use strict";
 angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
