@@ -35,48 +35,17 @@ angular.module('app.autofill')
 			default:''
 		};
 
-		vm.tableOptions = {
-			tableData:{
-				columnDefs:[],
-				data: []
-			},
-			selection:{
-				multiSelect: true,
-				checked:{},
-				selectedId:[],
-				selected:[]
-			},
-			sorting:{
-				sortBy: '',
-				sortReverse: true
-			},
-			pagination:{
-				currentPage: 1,
-				totalPage: 0,
-				itemPerPage: 10,
-				totalItem: 0,
-				limitOptions: [10,20,30],
-				startingIndex: 0
-			},
-			exportOptions: {
-				exportBy:['Selected','All'],
-				ignoreProperty:[],
-			},
-			importOptions:{ 
-				allowedExtension: '.csv',
-				maxSize: '10MB'
-			},
-			dataServices: {
-				save: function(rowData){
-					console.log(rowData);
-				},
-				delete: deleteSelected
-			}
-		};
-
-
+		vm.tableOptions = {};
+		vm.tableOptions.data = [];
+		vm.tableOptions.columnDefs = [];
+		vm.tableOptions.enableMultiSelect = true;
+		vm.tableOptions.enablePagination = true;
+		vm.tableOptions.enableEdit = true;
+		vm.tableOptions.enableDelete = true;
+		vm.tableOptions.enableExport = true;
+		vm.tableOptions.enableImport = true;
+		init();
 		vm.query ='';
-		
 		
 	// ===========================================   UI Buttons  =========================================== //
 		vm.upgradeDom = upgradeDom;
@@ -258,7 +227,6 @@ angular.module('app.autofill')
 		}
 
 		function postDeleteUpdate(){
-			clearAll();
 			init();
 		}
 
@@ -283,17 +251,17 @@ angular.module('app.autofill')
 		vm.deleteSelected = deleteSelected;
 		vm.reset = init;
 		function getDataHeader(){
-			vm.tableOptions.tableData.columnDefs = [];
+			vm.tableOptions.columnDefs = [];
 			return autofillServices.getElement()
 			.then(function SuccessCallback(res){
 				for(var i = 0; i < res.data.length; i++){
-					vm.tableOptions.tableData.columnDefs.push({
+					vm.tableOptions.columnDefs.push({
 						type:'default',
 						displayName:res.data[i].fieldName.toUpperCase(),
 						fieldName:res.data[i].fieldName
 					});
 				}
-				vm.tableOptions.tableData.columnDefs.push({ 
+				vm.tableOptions.columnDefs.push({ 
 					type:'action',
 					icon:'delete',
 					action: function(row){
@@ -301,48 +269,34 @@ angular.module('app.autofill')
 						console.log(row);
 					} 
 				});
-				vm.tableOptions.sorting.sortBy = vm.tableOptions.tableData.columnDefs[0];
+				vm.tableOptions.sorting.sortBy = vm.tableOptions.columnDefs[0];
 			}).catch(function ErrorCallback (err) {
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
 		}
+
 		function getDataBody(){
-			vm.tableOptions.tableData.data = [];
+			vm.tableOptions.data = [];
 			return autofillServices.getRecords(vm.query)
 			.then(function SuccessCallback(res){
-					for(var i = 0; i < res.data.length; i++){
-						vm.tableOptions.tableData.data.push(res.data[i]);
-					}
-
-					onDataLoaded();
+				for(var i = 0; i < res.data.length; i++){
+					vm.tableOptions.data.push(res.data[i]);
+				}
 			}).catch(function ErrorCallback(err){
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
 		}
-		//PAGINATION
-		function onDataLoaded(){
-			vm.tableOptions.pagination.totalItem = vm.tableOptions.tableData.data.length;
-			vm.tableOptions.pagination.totalPage = Math.ceil(vm.tableOptions.pagination.totalItem/vm.tableOptions.pagination.itemPerPage);
-			vm.tableOptions.pagination.currentPage = 1;
-			vm.tableOptions.pagination.rgPage = new Array(vm.tableOptions.pagination.totalPage);
-	 	}
 
-	 	function clearAll(){
-	 		var action = 'remove';
-	 		for ( var i = 0; i < vm.tableOptions.selection.selectedId.length; i++) {
-	 			//updateSelection(null, action, vm.tableOptions.selection.selectedId[i]);
-	 		}
-	 		vm.tableOptions.selection.checked = { headerChecked:false };
-	 	}
+
+
 		
 
 		function init(){
-			vm.tableOptions.selection.selectedId = [];
-			getDataHeader();
-			getDataBody();	
+			getDataBody();
+			getDataHeader();	
 		}
 
-		init();	
+			
 
 		// ===========================================   MDL LOADING  =========================================== //
 		var viewContentLoaded = $q.defer();
