@@ -2,11 +2,9 @@
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <main class="mdl-layout__content">
             <div id="entries" class="page-content">
-
-                {{vm.tableOptions.selection.selected.length}}
+                {{vm.tableOptions.selection.selectedId.length}}
                 <div class="mdl-grid">
-                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-                        download
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">download</button>
                     <div class="divider"></div>
                 </div>
                 <div id="top-row-buttons" class="mdl-grid">
@@ -18,7 +16,7 @@
                         <i class="material-icons" role="presentation">delete</i></button>
                 </div>
                 <!-- Table for forms stub -->
-                <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' dt-multi-select dt-pagination dt-edit dt-toolbar dt-toolbar-import dt-toolbar-export dt-toolbar-search />
+                <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page='' dt-row-per-page-options='[5,10,15]' dt-multi-select dt-pagination dt-edit dt-toolbar dt-toolbar-import dt-toolbar-export dt-toolbar-search />
             </div>
         </main>
     </div>

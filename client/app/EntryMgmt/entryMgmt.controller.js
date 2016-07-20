@@ -3,10 +3,17 @@ angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
 	entryMgmtCtrl.$inject = ['$scope','$q','$timeout','entryMgmtServices'];
-	function entryMgmtCtrl($scope, $q, $timeout, entryMgmtServices){
+	function entryMgmtCtrl($scope, $q, $timeout,entryMgmtServices){
 		var vm = this;
-
-		vm.tableOptions = entryMgmtServices.tableDataConstructor();
+		vm.tableOptions = {};
+		vm.tableOptions.data = [];
+		vm.tableOptions.columnDefs = [];
+		vm.tableOptions.enableMultiSelect = true;
+		vm.tableOptions.enablePagination = true;
+		vm.tableOptions.enableEdit = true;
+		vm.tableOptions.enableDelete = true;
+		vm.tableOptions.enableExport = true;
+		vm.tableOptions.enableImport = true;
 		getData();
 
 		function getData(){
@@ -15,17 +22,16 @@ angular.module('app.entryMgmt')
 			.catch(ErrorCallback);
 
 			function SuccessCallback(res){
-				vm.tableOptions.tableData.data = [];
-				vm.tableOptions.tableData.data = res.data;
-				vm.tableOptions.tableData.columnDefs = [];
-				vm.tableOptions.tableData.columnDefs.push({type:'default', displayName:'Group name', fieldName: 'groupName'});
-				vm.tableOptions.tableData.columnDefs.push({type:'default', displayName:'Create at', fieldName: 'creationDate'});
+				vm.tableOptions.data = [];
+				vm.tableOptions.data = res.data;
+				vm.tableOptions.columnDefs = [];
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Group name', fieldName: 'groupName'});
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Create at', fieldName: 'creationDate'});
 				var entryData = res.data;
 				for(var i = 0 ; i  < entryData.length; i++){
 					for(var fieldName in entryData[i].data){
-						console.log(fieldName);
 						if(!fieldName.startsWith('image_') && !fieldName.startsWith('signature_')){
-							vm.tableOptions.tableData.columnDefs.push({
+							vm.tableOptions.columnDefs.push({
 								type:'default', 
 								displayName: getDisplayName(fieldName),
 								fieldName: fieldName});
@@ -33,8 +39,7 @@ angular.module('app.entryMgmt')
 					}
 				}
 				
-				vm.tableOptions.tableData.columnDefs.push({type:'action', icon:'get_app', action:downLoadAsOne});
-				vm.tableOptions.pagination = entryMgmtServices.getPagination(vm.tableOptions);
+				vm.tableOptions.columnDefs.push({type:'action', icon:'get_app', action:downLoadAsOne});
 			}
 			function ErrorCallback(err){
 				console.log(err);
@@ -52,9 +57,7 @@ angular.module('app.entryMgmt')
 				}else
 					return fieldName;
 			}
-				
 		}
-
 
 		function downLoadAsOne(row){
 			var pdf = new jsPDF();
@@ -83,7 +86,6 @@ angular.module('app.entryMgmt')
 			});
 		}
 
-
 		//UPGRADE UI
 		var viewContentLoaded = $q.defer();
 		$scope.$on('$viewContentLoaded', function () {
@@ -96,6 +98,5 @@ angular.module('app.entryMgmt')
 				componentHandler.upgradeDom();
 			}, 0);
 		});
-
-}
+	}
 })();
