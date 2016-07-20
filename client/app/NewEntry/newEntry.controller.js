@@ -429,6 +429,7 @@ angular
 	}
 
 	vm.goToPage = function() {
+	    currentPage = document.getElementById("form" + vm.currentFormNumber + "page" + vm.currentPageNumber);
 		//toolbar.style.display = "none";
 		currentPage.style.display = "none";
 		vm.currentPageNumber = vm.goToPageNumber;
