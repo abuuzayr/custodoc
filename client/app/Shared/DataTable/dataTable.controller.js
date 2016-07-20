@@ -5,89 +5,155 @@ angular.module('dataTable')
 
 	dataTableController.$inject = ['$scope','$timeout','$q','feedbackServices','dialogServices'];
 	function dataTableController($scope,$timeout,$q,feedbackServices,dialogServices){
-		$scope.table = $scope.tableOptions;
-		getPagination();
-		//PAGE
-		$scope.toFirstPage = toFirstPage;
-		$scope.toLastPage = toLastPage;
-		$scope.toNextPage = toNextPage;
-		$scope.toPreviousPage = toPreviousPage;
-		//SORT 
+		//VARIABLES
+		//$scope.$watch returns function to unregister watcher
+		var unregisterDataWatcher = $scope.$watch('tableOptions.data', dataWatcher, true);
+		var isDataLoaded = false;
+		$scope.sorting = {
+			sortBy: null,
+			sortReverse: false
+		};
+		//$SCOPE FUNCTIONS
 		$scope.sort = sort;
 		$scope.getTimes = getTimes;
-		//SELETION
 		$scope.selectOne = selectOne;
-		$scope.selectVisible = selectVisible;
 		$scope.deselectAll = deselectAll;
-		//EXPORT IMPORT
-		$scope.exportCSV = exportCSV;
-		//EDIT
-		$scope.editRow = editRow;
-		$scope.discardEdit = discardEdit;
-		//DATA SERVICES
-		$scope.deleteSelected = deleteSelected;
-		$scope.saveEdit = saveEdit;
-		//SEARCH
-		$scope.filterByKeyword = filterByKeyword;
 		$scope.filterActionCol = filterActionCol;
 		$scope.filterDefaultCol = filterDefaultCol; 
-		$scope.updatePaginationOnFilter = updatePaginationOnFilter;
 
-		function updatePaginationOnFilter(){
-			console.log($scope.filtered);
-			$scope.table.totalPage = Math.ceil($scope.filtered.length/$scope.pagination.itemPerPage);
-			$scope.table.totalItem = $scope.filtered.length;
-			$scope.table.pagination.rgPage = getTimes($scope.table.pagination.totalPage);
-			console.log($scope.table.pagination);
+		//data watcher, watching for data loading, initiate scope after data is loaded
+		function dataWatcher(newVal,oldVal){
+			if(newVal !== null && newVal !== 'undefined' && newVal.length !== 0){
+				isDataLoaded = true;
+				initScope();
+				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
+				unregisterDataWatcher();
+			}
+		}
+		
+		function initScope(){
+			constructTableOptions();
+			includeMethod($scope.tableOptions);
 		}
 
-		function getPagination(){
-			try{
-				$scope.table.pagination.limitOptions = $scope.dtRowPerPageOptions;
-				if($scope.table.pagination.limitOptions.constructor !== Array || $scope.table.pagination.limitOptions.length === 0)
-					throw new Error('Type Error: limitOptions expect array');
-			}catch(err){
-				$scope.table.pagination.limitOptions = [10,20,30];
-				console.log(err);
+		function constructTableOptions(){
+			$scope.tableOptions.selection = {
+				checked: {},
+				selectedId: [],
+				selected: []
+			};
+			$scope.tableOptions.exportOptions = {
+				exportBy:['Selected','All'],
+				exclude:[]
+			};
+			$scope.tableOptions.importOptions = {
+				allowedExtension: '.csv',
+				maxSize: '20'
+			};
+			//SET DEFAULT VALUES
+			if(typeof $scope.tableOptions.enablePagination === 'undefined' || $scope.tableOptions.enablePagination === null)
+				$scope.tableOptions.enablePagination = false;
+			if(typeof $scope.tableOptions.enableMultiSelect === 'undefined' || $scope.tableOptions.enableMultiSelect === null)
+				$scope.tableOptions.enableMultiSelect = true;
+			if(typeof $scope.tableOptions.enableDelete === 'undefined' || $scope.tableOptions.enableDelete === null)
+				$scope.tableOptions.enableDelete = true;
+			if(typeof $scope.tableOptions.enableEdit === 'undefined' || $scope.tableOptions.enableEdit === null)
+				$scope.tableOptions.enableEdit = false;
+			if(typeof $scope.tableOptions.enableExport === 'undefined' || $scope.tableOptions.enableExport === null)
+				$scope.tableOptions.enableExport = false;
+			if(typeof $scope.tableOptions.enableImport === 'undefined' || $scope.tableOptions.enableImport === null)
+				$scope.tableOptions.enableImport = false;
+			//Generate Options Based On Enabled Properties
+			setPagination($scope.tableOptions.enablePagination);
+		}
+
+		function includeMethod(tableOptions){
+
+			if(tableOptions.enablePagination){
+				$scope.toFirstPage = toFirstPage;
+				$scope.toLastPage = toLastPage;
+				$scope.toNextPage = toNextPage;
+				$scope.toPreviousPage = toPreviousPage;
 			}
-			finally{
-					$scope.table.pagination.itemPerPage = $scope.table.pagination.limitOptions[0];
+			if(tableOptions.enableMultiSelect){
+				$scope.selectVisible = selectVisible;
+			}
+			if(tableOptions.enableMultiSelection){
+
+			}
+			if(tableOptions.enableEdit){
+				$scope.editRow = editRow;
+				$scope.discardEdit = discardEdit;
+				$scope.saveEdit = saveEdit;
+			}
+			if(tableOptions.enableDelete){
+				$scope.deleteSelected = deleteSelected;
+			}
+			if(tableOptions.enableExport){
+				$scope.exportCSV = exportCSV;
+			}
+			if(tableOptions.enableImport){
+			}
+			if(tableOptions.enableSearch){
+				$scope.filterByKeyword = filterByKeyword;
+			}
+		}
+
+		function setPagination(isEnabled){
+			$scope.tableOptions.pagination = {};
+			if(isEnabled){
+				$scope.tableOptions.pagination.itemPerPage = $scope.dtRowPerPage;
+				$scope.tableOptions.pagination.limitOptions = $scope.dtRowPerPageOptions;
+				if($scope.tableOptions.pagination.limitOptions.constructor !== Array || $scope.tableOptions.pagination.limitOptions.length === 0)
+					$scope.tableOptions.pagination.limitOptions = [10,20,30];
+				if(typeof $scope.tableOptions.pagination.itemPerPage === 'undefined' || $scope.tableOptions.pagination.itemPerPage.constructor !== Number || $scope.tableOptions.pagination.itemPerPage < 1)
+					$scope.tableOptions.pagination.itemPerPage = $scope.tableOptions.pagination.limitOptions[0];
+				$scope.tableOptions.pagination.totalItem = $scope.tableOptions.data.length;
+				$scope.tableOptions.pagination.totalPage = Math.ceil($scope.tableOptions.pagination.totalItem/$scope.tableOptions.pagination.itemPerPage);
+				$scope.tableOptions.pagination.rgPage = getTimes($scope.tableOptions.pagination.totalPage);
+				$scope.tableOptions.pagination.currentPage = 1;
+			}else{
+				$scope.tableOptions.pagination.totalItem = $scope.tableOptions.data.length;
+				$scope.tableOptions.pagination.itemPerPage = $scope.tableOptions.pagination.totalItem;
+				$scope.tableOptions.pagination.totalPage = 1;
 			}	
 		}
 
-		$scope.$watch('table.filterQuery',function (newVal, oldVal){
-	 	});
 		//PAGINATION
-	 	$scope.$watch('table.pagination.currentPage',function onPageChange(newPage, oldPage){
-			$scope.table.pagination.startingIndex = (newPage - 1) * $scope.table.pagination.itemPerPage + 1 < $scope.table.pagination.totalItem ? (newPage - 1) * $scope.table.pagination.itemPerPage : $scope.table.pagination.totalItem;
-			renderSelectionOnChange();
+	 	$scope.$watch('tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
+	 		//if(isDataLoaded){
+				$scope.tableOptions.pagination.startingIndex = (newPage - 1) * $scope.tableOptions.pagination.itemPerPage + 1 < $scope.tableOptions.pagination.totalItem ? (newPage - 1) * $scope.tableOptions.pagination.itemPerPage : $scope.tableOptions.pagination.totalItem;
+				renderSelectionOnChange();
+	 		//}
 	 	});
 
-	 	$scope.$watch('table.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
-			$scope.table.pagination.itemPerPage = newLimit;
-			$scope.table.pagination.totalPage = Math.ceil($scope.table.pagination.totalItem/$scope.table.pagination.itemPerPage);
-			$scope.table.pagination.rgPage = getTimes($scope.table.pagination.totalPage);
-			renderSelectionOnChange();
+	 	$scope.$watch('tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
+	 		//if(isDataLoaded){
+				$scope.tableOptions.pagination.itemPerPage = newLimit;
+				$scope.tableOptions.pagination.totalPage = Math.ceil($scope.tableOptions.pagination.totalItem/$scope.tableOptions.pagination.itemPerPage);
+				$scope.tableOptions.pagination.rgPage = getTimes($scope.tableOptions.pagination.totalPage);
+				renderSelectionOnChange();
+			//}
 	 	});
 
 	 	function toFirstPage(){
-	 		$scope.table.pagination.currentPage = 1;
+	 		$scope.tableOptions.pagination.currentPage = 1;
 	 	}
 
 	 	function toLastPage(){
-	 		$scope.table.pagination.currentPage = $scope.table.pagination.totalPage;
+	 		$scope.tableOptions.pagination.currentPage = $scope.tableOptions.pagination.totalPage;
 	 	}
 
 	 	function toNextPage(){
-	 		if($scope.table.pagination.currentPage < $scope.table.pagination.totalPage)
-	 			$scope.table.pagination.currentPage++;
+	 		if($scope.tableOptions.pagination.currentPage < $scope.tableOptions.pagination.totalPage)
+	 			$scope.tableOptions.pagination.currentPage++;
 	 		else
 	 			feedbackServices.errorFeedback('Last page', 'dataTable-feedbackMessage');
 	 	}
 
 	 	function toPreviousPage(){
-	 		if($scope.table.pagination.currentPage > 1)
-	 			$scope.table.pagination.currentPage--;
+	 		if($scope.tableOptions.pagination.currentPage > 1)
+	 			$scope.tableOptions.pagination.currentPage--;
 	 		else
 	 			return feedbackServices.errorFeedback('First page', 'dataTable-feedbackMessage');
 	 	}
@@ -100,9 +166,9 @@ angular.module('dataTable')
 	  		var elementId = '';
 	  		for ( var i = 0; i < elementList.length; i++) {
 	  			elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-	  			if(action==='add' && $scope.table.selection.selectedId.indexOf(elementId) === -1){
+	  			if(action==='add' && $scope.tableOptions.selection.selectedId.indexOf(elementId) === -1){
 	  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
-	  			}else if(action==='remove' && $scope.table.selection.selectedId.indexOf(elementId) != -1){
+	  			}else if(action==='remove' && $scope.tableOptions.selection.selectedId.indexOf(elementId) != -1){
 	  				updateSelection(checkbox, action, elementList[i].id.replace('data-table-checkbox-label-',''));
 	  			}
 	  		}
@@ -117,9 +183,9 @@ angular.module('dataTable')
 	 	}
 
 	 	function deselectAll(){
-	 		$scope.table.selection.checked = { headerChecked:false };
-	 		$scope.table.selection.selectedId = [];
-	 		$scope.table.selection.selected = [];
+	 		$scope.tableOptions.selection.checked = { headerChecked:false };
+	 		$scope.tableOptions.selection.selectedId = [];
+	 		$scope.tableOptions.selection.selected = [];
 	 		renderSelectionOnChange();
 	 	}
 
@@ -127,17 +193,17 @@ angular.module('dataTable')
 			return action === 'add' ? addToSelection(target, id) : removeFromSelection(target,id);
 
 			function addToSelection(target, id){
-				if($scope.table.selection.selectedId.indexOf(id) === -1){
-					$scope.table.selection.selectedId.push(id);
-					if(target && (!$scope.table.selection.checked.hasOwnProperty(id) || (!$scope.table.selection.checked[id] && !$scope.table.selection.checked.hasOwnProperty(id))))
+				if($scope.tableOptions.selection.selectedId.indexOf(id) === -1){
+					$scope.tableOptions.selection.selectedId.push(id);
+					if(target && (!$scope.tableOptions.selection.checked.hasOwnProperty(id) || (!$scope.tableOptions.selection.checked[id] && !$scope.tableOptions.selection.checked.hasOwnProperty(id))))
 						target.checked = true;
 				}
 			}
 
 			function removeFromSelection(target,id){
-				if($scope.table.selection.selectedId.indexOf(id) !== -1){
-					$scope.table.selection.selectedId.splice($scope.table.selection.selectedId.indexOf(id), 1);
-					if(target && (!$scope.table.selection.checked.hasOwnProperty(id) || $scope.table.selection.checked[id]))
+				if($scope.tableOptions.selection.selectedId.indexOf(id) !== -1){
+					$scope.tableOptions.selection.selectedId.splice($scope.tableOptions.selection.selectedId.indexOf(id), 1);
+					if(target && (!$scope.tableOptions.selection.checked.hasOwnProperty(id) || $scope.tableOptions.selection.checked[id]))
 						target.checked = false;
 				}
 			}
@@ -151,19 +217,19 @@ angular.module('dataTable')
 				for(var i = 0 ; i < elementList.length; i++){
 					
 					elementId = elementList[i].id.replace('data-table-checkbox-label-','');
-					if( $scope.table.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
+					if( $scope.tableOptions.selection.selectedId.indexOf(elementId) === -1 && angular.element(elementList[i]).hasClass('is-checked') ){
 						elementList[i].MaterialCheckbox.uncheck();
-					}else if($scope.table.selection.selectedId.indexOf(elementId) !== -1 && !angular.element(elementList[i]).hasClass('is-checked')){
+					}else if($scope.tableOptions.selection.selectedId.indexOf(elementId) !== -1 && !angular.element(elementList[i]).hasClass('is-checked')){
 						elementList[i].MaterialCheckbox.check();
 					}
 				}
 				//header
 				if(elementList && elementList.length > 0 ){
 					if(isAllChecked(elementList)){
-							$scope.table.selection.checked.headerChecked = true;
+							$scope.tableOptions.selection.checked.headerChecked = true;
 							headerCheckbox.MaterialCheckbox.check();
 					}else{
-							$scope.table.selection.checked.headerChecked = false;
+							$scope.tableOptions.selection.checked.headerChecked = false;
 							headerCheckbox.MaterialCheckbox.uncheck();
 					}
 				}
@@ -183,33 +249,31 @@ angular.module('dataTable')
 
 	 	function getDataFromId(){
 	 		var lookup = {};
-			for( var i = 0, len = $scope.table.tableData.data.length; i < len; i++) {
-	    		lookup[$scope.table.tableData.data[i]._id] = $scope.table.tableData.data[i];
+			for( var i = 0, len = $scope.tableOptions.data.length; i < len; i++) {
+	    		lookup[$scope.tableOptions.data[i]._id] = $scope.tableOptions.data[i];
 			}
-			for( var index = 0, length = $scope.table.selection.selectedId.length; index < length; index++){
-				console.log($scope.table.selection.selectedId[index]);
-				$scope.table.selection.selected.push(lookup[$scope.table.selection.selectedId[index]]);
+			for( var index = 0, length = $scope.tableOptions.selection.selectedId.length; index < length; index++){
+				$scope.tableOptions.selection.selected.push(lookup[$scope.tableOptions.selection.selectedId[index]]);
 			}
-			console.log($scope.table.selection.selected);
 		}
 
 		//SORTING AND FILTERING
 		function sort(sortBy){
-	 		$scope.table.sorting.sortBy = sortBy;
-			$scope.table.sorting.sortReverse = !$scope.table.sorting.sortReverse;
+	 		$scope.sorting.sortBy = sortBy;
+			$scope.sorting.sortReverse = !$scope.sorting.sortReverse;
 			renderSelectionOnChange();
 	 	}
 
 	 	function filterByKeyword(element) {
-			if($scope.table.filterQuery === 'undefined' || !$scope.table.filterQuery){
+			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
 				return true;
 			}
             for (var property in element) {
-                for (var i=0; i < $scope.table.tableData.columnDefs.length; i++) {
-			        if ($scope.table.tableData.columnDefs[i].fieldName === property) {
+                for (var i=0; i < $scope.tableOptions.columnDefs.length; i++) {
+			        if ($scope.tableOptions.columnDefs[i].fieldName === property) {
 			            if (element.hasOwnProperty(property)) {
 		                    if (typeof element[property] === 'string') {
-		                        if (element[property].toLowerCase().indexOf($scope.table.filterQuery.toLowerCase()) != -1) {
+		                        if (element[property].toLowerCase().indexOf($scope.tableOptions.filterQuery.toLowerCase()) != -1) {
 		                            return true;
 		                        }
 		                    }
@@ -250,22 +314,20 @@ angular.module('dataTable')
 
 		function exportSelected(){
 			getDataFromId();
-			if($scope.table.selection.selected == [] || $scope.table.selection.selected.length < 1)
+			if($scope.tableOptions.selection.selected == [] || $scope.tableOptions.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','dataTable-feedbackMessage'); 
 			else	
-				return download(Papa.unparse($scope.table.selection.selected));
+				return download(Papa.unparse($scope.tableOptions.selection.selected));
 		}
 
 		function exportAll(){
-			console.log('all');
-			var csv = Papa.unparse($scope.table.tableData.data);
+			var csv = Papa.unparse($scope.tableOptions.data);
 			return download(csv);
 		}
 
 		function download(csv){
 			var blob =  new Blob([csv],{tpye:'text/csv;charset=utf-8;'});
 			var uagent = navigator.userAgent.toLowerCase();
-			console.log(/safari/.test(uagent) && !/chrome/.test(uagent));
 			if(/safari/.test(uagent) && !/chrome/.test(uagent))
 				window.open('data:attachment/csv;charset=utf-8,' + encodeURI(csv));
 			else if (window.navigator.msSaveOrOpenBlob)
@@ -293,19 +355,18 @@ angular.module('dataTable')
 		}
 
 		function deleteSelected(){
-			$scope.table.dataServices.delete($scope.table.selection.selectedId)
+			$scope.tableOptions.dataServices.delete($scope.tableOptions.selection.selectedId)
 			.then(function successCallback(){
-				if($scope.table.selection.selectedId.length === 0){
+				if($scope.tableOptions.selection.selectedId.length === 0){
 					$timeout(function() {
 						renderSelectionOnChange();
 					}, 500);
 				}
 			});
-			
 		}
 
 		function saveEdit(){
-			return $scope.table.dataServices.save($scope.rowInEdit);
+			return $scope.tableOptions.dataServices.save($scope.rowInEdit);
 		}
                    		
 		function openDialog(){

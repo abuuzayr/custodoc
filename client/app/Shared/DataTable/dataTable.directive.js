@@ -6,25 +6,31 @@ angular.module('dataTable')
 	
 function customMdlDataTable(){
 	var directive = {
-		restrict: 'E',
-		templateUrl: '/app/Shared/DataTable/dataTable.template.html',
-		scope:{
-			tableOptions: '=',
-			dtRowPerPageOptions: '=',
-			dtMultiSelect: '@',
-			dtPagination:'@',
-			dtEdit:'@',
-			dtToolbar:'@',
-			dtToolbarExport: '@',
-			dtToolbarImport: '@',
-			dtToolbarSearch: '@'
-		},
-		controller: 'dataTableController',
-		link:link
+			restrict: 'E',
+			templateUrl: '/app/Shared/DataTable/dataTable.template.html',
+			scope:{
+				tableOptions: '=',
+				dtRowPerPage: '=',
+				dtRowPerPageOptions: '=',
+				dtMultiSelect: '@',
+				dtPagination:'@',
+				dtEdit:'@',
+				dtToolbar:'@',
+				dtToolbarExport: '@',
+				dtToolbarImport: '@',
+				dtToolbarSearch: '@'
+			},
+			controller: 'dataTableController',
+			compile: function(elem,attrs){
+				return {
+					pre: preLink,
+					post: postLink
+				};
+			}
 	};
 	return directive;
 
-	function link(scope,elem,attrs){
+	function preLink(scope,elem,attrs){
 		attrs.$observe('dtMultiSelect', function(value) {
 			scope.hasMultiSelection = attrs.hasOwnProperty('dtMultiSelect') && ( value==='' || value==='true' );
 		});
@@ -47,13 +53,13 @@ function customMdlDataTable(){
 			scope.hasSearch =  attrs.hasOwnProperty('dtToolbarSearch') && ( value ==='' || value==='true' );
 		});
 	}
+	function postLink(){
+	}
 }
-
 
 function postRepeatUpgrade(){
 	return function(scope, element, attrs){
 		if(scope.$last){
-			console.log(scope.$last);
 			componentHandler.upgradeDom();
 		}
 	};
