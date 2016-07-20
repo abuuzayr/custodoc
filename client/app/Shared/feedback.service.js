@@ -11,7 +11,6 @@
 
 		this.errorFeedback = function (errData, domElementId) {
 			var snackbarContainer = document.querySelector('#' + domElementId);
-			console.log(snackbarContainer);
 			if(snackbarContainer){
 				snackbarContainer.classList.remove("mdl-snackbar--active");
 				snackbarContainer.MaterialSnackbar.active = false;
@@ -34,7 +33,6 @@
 
 		this.successFeedback = function (msg, domElementId, timeout) {
 			var snackbarContainer = document.querySelector('#' + domElementId);
-			console.log(snackbarContainer);
 			if(snackbarContainer){
 				snackbarContainer.classList.remove("mdl-snackbar--active");
 				snackbarContainer.MaterialSnackbar.active = false;//
