@@ -1,0 +1,66 @@
+#table-toolbar-import {
+    display: none;
+}
+
+#table-toolbar-search,
+#table-toolbar-search:focus {
+    outline: 0px !important;
+    border: 0;
+    padding: 0;
+    -webkit-appearance: none;
+}
+
+.mdl-progress {
+    width:100%;
+}
+
+.mdl-card {
+  overflow: auto;
+  width: 100%;
+  padding: 0,0,0,0;
+  margin: 0,0,0,0;
+  height: auto;
+  min-height: 10px;
+}
+
+.mdl-menu {
+    height: auto;
+    min-height: 50px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.menu-wrapper {
+    position: relative;
+    min-height: 36px 
+}
+
+.mdl-dialog__content {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.mdl-data-table{
+	min-width: 100%;
+	margin: 0,0,0,0;
+}
+
+.table-cell-no-stretch{
+	white-space:nowrap;
+	min-width:24px;
+	max-width:24px;
+	padding-left: 0px; 
+}
+
+#table-toolbar {
+    height: 50px;
+}
+
+#item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.table-header-text-link {
+	text-decoration: none;
+}

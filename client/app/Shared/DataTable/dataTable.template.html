@@ -1,69 +1,4 @@
-<style>
-#table-toolbar-import {
-    display: none;
-}
-
-#table-toolbar-search,
-#table-toolbar-search:focus {
-    outline: 0px !important;
-    border: 0;
-    padding: 0;
-    -webkit-appearance: none;
-}
-
-.mdl-progress {
-    width:100%;
-}
-
-.mdl-card {
-  overflow: auto;
-  width: 100%;
-  padding: 0,0,0,0;
-  margin: 0,0,0,0;
-  height: auto;
-  min-height: 10px;
-}
-
-.mdl-menu {
-    height: auto;
-    min-height: 50px;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-.menu-wrapper {
-    position: relative;
-    min-height: 36px 
-}
-
-.mdl-dialog__content {
-    height: 200px;
-    overflow-y: auto;
-}
-
-.mdl-data-table{
-	min-width: 100%;
-	margin: 0,0,0,0;
-}
-
-.table-cell-no-stretch{
-	white-space:nowrap;
-	min-width:24px;
-	max-width:24px;
-	padding-left: 0px; 
-}
-
-#table-toolbar {
-    height: 50px;
-}
-
-#item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-
-</style>
+<link rel="stylesheet" href="app/Shared/DataTable/dataTable.css" type="text/css">
 <!--toolbar-->
 <div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='hasToolbar'>
     <div class="mdl-cell mdl-cell--3-col mdl-cell--">
@@ -122,7 +57,7 @@
                 <th class="table-cell-no-stretch" ng-repeat="col in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index"/>
                 <!--default-->
                 <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in defaultCols = (tableOptions.columnDefs | filter: filterDefaultCol) track by $index">
-                    <a href="" ng-click="sort(col)">
+                    <a href="" class='table-header-text-link' ng-click="sort(col)">
                     {{col.displayName}}
                     <span ng-show="sorting.sortBy == header && !sorting.sortReverse" >^</span>
                     <span ng-show="sorting.sortBy == header && sorting.sortReverse" >v</span>
