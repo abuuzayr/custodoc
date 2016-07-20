@@ -73,13 +73,13 @@
                     </label>
                 </td>
                 <td ng-if='enableEdit'  class="table-cell-no-stretch">
-                    <a id='table-cell-icon-edit' ng-click='editRow(row)'>
+                    <a class='table-cell-icon-link' id='table-cell-icon-edit' ng-click='editRow(row)'>
                         <i class="material-icons">edit</i>
                     </a>
                 </td>
                 <!--icons-->
                 <td class="table-cell-no-stretch" ng-repeat="actionCol in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index">
-                	<a ng-click='actionCol.action(row)'>
+                	<a class='table-cell-icon-link' ng-click='actionCol.action(row)'>
                         <i class="material-icons" ng-if="actionCol.icon !== ''">{{actionCol.icon}}</i>
                     </a>
                 </td>

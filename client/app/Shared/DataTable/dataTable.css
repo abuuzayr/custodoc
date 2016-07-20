@@ -64,3 +64,10 @@
 .table-header-text-link {
 	text-decoration: none;
 }
+.table-header-text-link:active{
+	color: red;
+}
+
+.table-cell-icon-link:hover {
+	color: red;
+}

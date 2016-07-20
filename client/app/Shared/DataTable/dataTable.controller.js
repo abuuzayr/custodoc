@@ -6,13 +6,7 @@ angular.module('dataTable')
 	dataTableController.$inject = ['$scope','$timeout','$q','feedbackServices','dialogServices'];
 	function dataTableController($scope,$timeout,$q,feedbackServices,dialogServices){
 		//VARIABLES
-		//$scope.$watch returns function to unregister watcher
-		var unregisterDataWatcher = $scope.$watch('tableOptions.data', dataWatcher, true);
 		var isDataLoaded = false;
-		$scope.sorting = {
-			sortBy: null,
-			sortReverse: false
-		};
 		//$SCOPE FUNCTIONS
 		$scope.sort = sort;
 		$scope.getTimes = getTimes;
@@ -22,15 +16,17 @@ angular.module('dataTable')
 		$scope.filterDefaultCol = filterDefaultCol; 
 
 		//data watcher, watching for data loading, initiate scope after data is loaded
+		$scope.$watch('tableOptions.data', dataWatcher, true);
 		function dataWatcher(newVal,oldVal){
+			console.log('watching',newVal.length,oldVal.length);
 			if(newVal !== null && newVal !== 'undefined' && newVal.length !== 0){
 				isDataLoaded = true;
 				initScope();
 				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
-				unregisterDataWatcher();
 			}
 		}
 		
+		//functions to initialize $scope and tableOptions
 		function initScope(){
 			constructTableOptions();
 			includeMethod($scope.tableOptions);
@@ -68,6 +64,10 @@ angular.module('dataTable')
 		}
 
 		function includeMethod(tableOptions){
+			$scope.sorting = {
+				sortBy: $scope.tableOptions.columnDefs[0].fieldName ? $scope.tableOptions.columnDefs[0].fieldName : null,
+				sortReverse: false
+			};
 
 			if(tableOptions.enablePagination){
 				$scope.toFirstPage = toFirstPage;
@@ -119,23 +119,24 @@ angular.module('dataTable')
 			}	
 		}
 
-		//PAGINATION
+		//page change watchers
 	 	$scope.$watch('tableOptions.pagination.currentPage',function onPageChange(newPage, oldPage){
-	 		//if(isDataLoaded){
+	 		if(isDataLoaded){
 				$scope.tableOptions.pagination.startingIndex = (newPage - 1) * $scope.tableOptions.pagination.itemPerPage + 1 < $scope.tableOptions.pagination.totalItem ? (newPage - 1) * $scope.tableOptions.pagination.itemPerPage : $scope.tableOptions.pagination.totalItem;
 				renderSelectionOnChange();
-	 		//}
+	 		}
 	 	});
 
 	 	$scope.$watch('tableOptions.pagination.itemPerPage',function onItemPerPageChange(newLimit, oldLimit){
-	 		//if(isDataLoaded){
+	 		if(isDataLoaded){
 				$scope.tableOptions.pagination.itemPerPage = newLimit;
 				$scope.tableOptions.pagination.totalPage = Math.ceil($scope.tableOptions.pagination.totalItem/$scope.tableOptions.pagination.itemPerPage);
 				$scope.tableOptions.pagination.rgPage = getTimes($scope.tableOptions.pagination.totalPage);
 				renderSelectionOnChange();
-			//}
+			}
 	 	});
 
+	 	//page navigation
 	 	function toFirstPage(){
 	 		$scope.tableOptions.pagination.currentPage = 1;
 	 	}
@@ -158,7 +159,7 @@ angular.module('dataTable')
 	 			return feedbackServices.errorFeedback('First page', 'dataTable-feedbackMessage');
 	 	}
 
-	 	//Selection Handler
+	 	//functions to handle selection
 	 	function selectVisible($event){
 	 		var checkbox = $event.target;
 	  		var action = (checkbox.checked ? 'add' : 'remove');
@@ -258,8 +259,8 @@ angular.module('dataTable')
 		}
 
 		//SORTING AND FILTERING
-		function sort(sortBy){
-	 		$scope.sorting.sortBy = sortBy;
+		function sort(col){
+	 		$scope.sorting.sortBy = col.fieldName;
 			$scope.sorting.sortReverse = !$scope.sorting.sortReverse;
 			renderSelectionOnChange();
 	 	}
@@ -355,7 +356,7 @@ angular.module('dataTable')
 		}
 
 		function deleteSelected(){
-			$scope.tableOptions.dataServices.delete($scope.tableOptions.selection.selectedId)
+			$scope.tableOptions.delete($scope.tableOptions.selection.selectedId)
 			.then(function successCallback(){
 				if($scope.tableOptions.selection.selectedId.length === 0){
 					$timeout(function() {
