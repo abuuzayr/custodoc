@@ -45,6 +45,7 @@ angular.module('app.autofill')
 		vm.tableOptions.enableExport = true;
 		vm.tableOptions.enableImport = true;
 		init();
+		vm.tableOptions.delete = deleteSelected;
 		vm.query ='';
 		
 	// ===========================================   UI Buttons  =========================================== //
@@ -269,7 +270,6 @@ angular.module('app.autofill')
 						console.log(row);
 					} 
 				});
-				vm.tableOptions.sorting.sortBy = vm.tableOptions.columnDefs[0];
 			}).catch(function ErrorCallback (err) {
 				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 			});
