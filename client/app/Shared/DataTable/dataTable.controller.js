@@ -3,8 +3,8 @@
 angular.module('dataTable')
 	.controller('dataTableController',dataTableController);
 
-	dataTableController.$inject = ['$scope','$timeout','$q','feedbackServices','dialogServices'];
-	function dataTableController($scope,$timeout,$q,feedbackServices,dialogServices){
+	dataTableController.$inject = ['$scope','$timeout','$q','$filter','feedbackServices','dialogServices'];
+	function dataTableController($scope,$timeout,$q,$filter,feedbackServices,dialogServices){
 		//VARIABLES
 		var isDataLoaded = false;
 		//$SCOPE FUNCTIONS
@@ -19,7 +19,7 @@ angular.module('dataTable')
 		$scope.$watch('tableOptions.data', dataWatcher, true);
 		function dataWatcher(newVal,oldVal){
 			console.log('watching',newVal.length,oldVal.length);
-			if(newVal !== null && newVal !== 'undefined' && newVal.length !== 0){
+			if(newVal !== null && newVal !== 'undefined' && newVal.length !== 0 && newVal.length !== oldVal.length){
 				isDataLoaded = true;
 				initScope();
 				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
@@ -262,6 +262,7 @@ angular.module('dataTable')
 		function sort(col){
 	 		$scope.sorting.sortBy = col.fieldName;
 			$scope.sorting.sortReverse = !$scope.sorting.sortReverse;
+			$scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
 			renderSelectionOnChange();
 	 	}
 

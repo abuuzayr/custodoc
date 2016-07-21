@@ -19,8 +19,7 @@ angular.module('app.autofill')
 
 
 		function getElement(){
-			var path = '/protected/autofill/element';
-			return $http.get(appConfig.API_URL + path);
+			return $http.get(appConfig.API_URL + '/protected/autofill/element');
 		}
 
 		function getRecords(query){
@@ -36,10 +35,9 @@ angular.module('app.autofill')
 		}
 
 		function updateRecord(rowEntity){
-			var path = '/protected/autofill/';
 			var req = {
 					method: 'PUT',
-					url: appConfig.API_URL + path + rowEntity._id,
+					url: appConfig.API_URL + '/protected/autofill/' + rowEntity._id,
 					headers: { 'Content-type': 'application/json' },
 					data: rowEntity
 				};
@@ -47,10 +45,9 @@ angular.module('app.autofill')
 		}
 
 		function createRecord(rowEntity){
-			var path = '/protected/autofill/';
 			var req = {
 				method: 'POST',
-				url: appConfig.API_URL + path,
+				url: appConfig.API_URL + '/protected/autofill/',
 				data: {recordData: rowEntity} 
 			};
 			return $http(req);
@@ -58,10 +55,9 @@ angular.module('app.autofill')
 
 
 		function deleteOneRecord(selectedId){
-			var path = '/protected/autofill/';
 			var req = {
 				method: 'DELETE',
-				url: appConfig.API_URL + path + selectedId,
+				url: appConfig.API_URL + '/protected/autofill/' + selectedId,
 				data: selectedId 
 			};
 
@@ -69,10 +65,9 @@ angular.module('app.autofill')
 		}
 
 		function deleteRecords( rgSelectedId ){
-			var path = '/protected/autofill';
 			var req = {
 				method: 'DELETE',
-				url: appConfig.API_URL + path,
+				url: appConfig.API_URL + '/protected/autofill/',
 				params: { id: rgSelectedId }
 			};
 
@@ -80,16 +75,13 @@ angular.module('app.autofill')
 		}
 
 		function createElement(elementData){
-			var path = '/protected/autofill/element';
 			var req = {
 					method: 'POST',
-					url: appConfig.API_URL + path,
+					url: appConfig.API_URL + '/protected/autofill/element',
 					headers: { 'Content-type': 'application/json' },	
 					data: {elementData: elementData}
 				};
 			return $http(req);	
 		}
 	}
-
-
 })();
