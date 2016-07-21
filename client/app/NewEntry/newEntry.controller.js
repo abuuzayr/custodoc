@@ -8,6 +8,7 @@ angular
     	'$scope', 
     	'$q',
     	'$compile', 
+    	'pdfFactory',
     	'$rootScope',
     	'$location', 
     	'$timeout', 
@@ -20,6 +21,7 @@ angular
     	$scope, 
     	$q, 
     	$compile,
+    	pdfFactory,
     	$rootScope,
     	$location, 
     	$timeout
@@ -28,7 +30,9 @@ angular
     var viewContentLoaded = $q.defer();
         
 	var vm = this;
+	var preview = document.getElementById('preview');
 	var forms = document.getElementById('forms');
+	var pdf = new jsPDF();
 
 	/*****************************************************************/
 
@@ -75,7 +79,18 @@ angular
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = {};  
 
-	/*****************************************************************/
+	/********************** PREVIEW FUNCTIONS ************************/
+	
+	vm.previewStart = previewStart;
+	vm.generateImagePromise = generateImagePromise;
+	vm.addToPreviewPromise = addToPreviewPromise;
+	vm.isESCDeletePreview = isESCDeletePreview;
+	vm.openDialog = openDialog;
+	vm.previewDeleteAll = previewDeleteAll;	
+	vm.downloadPreview = downloadPreview;
+	vm.downloadPDF = downloadPDF;
+	vm.addPagePromise = addPagePromise;
+	vm.finishAddImagePromise = finishAddImagePromise;
 	
 
 	/****************** PAGE NAGIVATION VARIABLES ********************/
@@ -88,6 +103,9 @@ angular
 	vm.numberOfForms = 1;
 
 	/*****************************************************************/
+
+	vm.currentFormPreview = 1;
+	vm.numberOfPreviewPages = 1;
 
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function () {
@@ -121,6 +139,7 @@ angular
 			}
 			vm.numberOfForms = vm.totalNumberOfPages.length;
 			vm.numberOfPages = vm.totalNumberOfPages[0];
+			vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
 		})
 		.then(function() {
 				var arrayOfKeys = [];
@@ -470,11 +489,8 @@ angular
 
 	if (vm.gotSignature) {
 		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		console.log('wats my vm.wrapper' + vm.wrapper);
 		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		console.log('wats dialog ' + vm.dialog);
-		console.log('wats canvas ' + vm.canvas);
 		vm.signaturePad = new SignaturePad(vm.canvas);
 	}
 
@@ -497,7 +513,6 @@ angular
 		};
 
 		vm.save = function() {
-			console.log('haha');
 			if (vm.signaturePad.isEmpty()) {
 	    		var msg = "Please provide signature first.";
 	    		showSnackbar(msg);
@@ -509,7 +524,6 @@ angular
 				//Extract as base64 encoded
 				var data = dataURL.substr(dataURL.indexOf('base64') + 7)
 				vm.signature = data;
-				console.log(data);
 				//TODO: include in your json object
 			}
 		}
@@ -524,6 +538,235 @@ angular
 			snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
 		}
 	}
+
+	/*************************************************************************/
+
+	/*************************** PREVIEW FUNCTIONS ***************************/
+
+	function previewStart() {
+		while (preview.firstChild) {
+			preview.removeChild(preview.firstChild);
+		}
+		var p = beforeGeneratePDF();
+		for (var n = 1; n <= vm.numberOfForms; n++) {
+			for (var i = 1; i <= vm.numberOfPages; i++) {
+				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
+				p = p.then(function (pageNumber) { return addToPreviewPromise(pageNumber) });
+			}
+		}	
+		// re-initialize values
+		vm.currentFormPreview = 1;
+		vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
+		p.then(function (pageNumber) { return afterGeneratePDF(); });
+	}
+
+	function generateImagePromise(pageNumber) {
+		var deferred = $q.defer();
+		var formNumber = vm.currentFormPreview;
+		canvas = document.createElement("canvas");
+		canvas.width = 794;
+		canvas.height = 1123;
+		canvas.style.width = '794px';
+		canvas.style.height = '1123px';
+		var context = canvas.getContext('2d');
+		var code = document.getElementById("form" + formNumber + "page" + pageNumber).innerHTML;
+		code = code.replace(/ on\w+=".*?"/g, "");
+		rasterizeHTML.drawHTML(code).then(function (renderResult) {
+			context.drawImage(renderResult.image, 0, 0);
+			deferred.resolve(pageNumber);
+		});
+		return deferred.promise;
+	}
+
+	function addToPreviewPromise(pageNumber) {
+		var deferred = $q.defer();
+		var formNumber = vm.currentFormPreview;
+		imgurl = canvas.toDataURL('image/jpeg', 1);
+		pdfFactory.addData(imgurl);
+		var newImg = document.createElement("img");
+		newImg.style.position = "relative";
+		newImg.src = imgurl;
+		preview.appendChild(newImg);
+		newImg.style.margin = "5% 10% 5% 10%";
+		newImg.style.width = "794px";
+		newImg.style.height = "1123px";
+		if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages ) {
+			openDialog('previewDialog');
+		} else if (pageNumber === vm.numberOfPreviewPages) {
+			vm.currentFormPreview++;
+			if (vm.currentFormPreview <= vm.numberOfForms) {
+				vm.numberOfPreviewPages = vm.totalNumberOfPages[vm.currentFormPreview-1];
+				deferred.resolve(1);
+				//TODO: DIDNT RETURN HERE
+			} else {
+				openDialog('previewDialog');
+			}			
+		} else {
+			deferred.resolve(pageNumber + 1);
+		}		
+		return deferred.promise;
+	}
+
+
+	function beforeGeneratePDF(){
+		var deferred = $q.defer();
+		for (var s = 0; s < vm.formData.length; s++) {
+			var elements = vm.formData[s];
+
+			for(key in elements){
+				if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+					var radio = document.getElementById(key); //?
+					if(radio.firstChild){
+						for(var i=0; i<radio.childNodes.length;i++){
+							if (radio.childNodes[i].firstChild.checked === true) radio.childNodes[i].firstChild.setAttribute("checked",true);
+						}
+					}
+				}
+				if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+					var dropdown = document.getElementById(key);
+					if(dropdown.firstChild){
+						for(var i=0; i<dropdown.childNodes.length;i++){
+							if (dropdown.childNodes[i].value === dropdown.value) dropdown.childNodes[i].setAttribute("selected",true);
+						}
+					}
+				}
+				if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+					var label = document.getElementById(key);
+					if (label.firstChild.checked) label.firstChild.setAttribute("checked",true);
+				}
+			}
+		}		
+		deferred.resolve(1);
+		return deferred.promise;
+	}
+
+	function afterGeneratePDF(){
+		var deferred = $q.defer(); 
+		for (var t = 0; t < vm.formData.length; t++) {
+			var elements = vm.formData[t];
+
+			for(key in elements){
+				if (key.startsWith("auto_radio") || key.startsWith("radio")) {
+					var radio = document.getElementById(key);
+					if(radio.firstChild){
+						for(var i=0; i<radio.childNodes.length;i++){
+							if (radio.childNodes[i].firstChild.hasAttribute("checked")) {
+								radio.childNodes[i].firstChild.removeAttribute("checked");
+								radio.childNodes[i].firstChild.checked = true;
+							}
+						}
+					}
+				}
+				if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
+					var dropdown = document.getElementById(key);
+					if(dropdown.firstChild){
+						for(var i=0; i<dropdown.childNodes.length;i++){
+							if (dropdown.childNodes[i].hasAttribute("selected")) dropdown.childNodes[i].removeAttribute("selected");
+						}
+					}
+				}
+				if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
+					var label = document.getElementById(key);
+					if (label.firstChild.hasAttribute("checked")) {
+						label.firstChild.removeAttribute("checked");
+						label.firstChild.checked = true;
+					}
+				}
+			}
+		}
+		deferred.resolve();
+		return deferred.promise;
+	}
+
+	function isESCDeletePreview(e) {
+		var pressedKeyValue = e.keyCode;
+		if (pressedKeyValue === 27) {
+			vm.previewDeleteAll();
+		}
+	}
+
+	function openDialog(dialogName) {
+		var dialog = document.querySelector('#' + dialogName);
+		if (!dialog.showModal) {
+			dialogPolyfill.registerDialog(dialog);
+		}
+		dialog.showModal();
+	};
+
+	function previewDeleteAll() {
+		while (preview.firstChild) {
+			preview.removeChild(preview.firstChild);
+		}
+		previewDialog.close();
+		pdfFactory.resetData();
+	}
+
+	function downloadPreview() {
+		var pageData = pdfFactory.getData();
+		console.log('how many pages ' + pageData.length);
+		pdf = new jsPDF();
+		var page = vm.totalNumberOfPages[0];
+		var count = 1;
+		for (var f = 1; f <= vm.numberOfForms; f++) { 
+			for (var i = 1; i <= page; i++) {
+				if (i != 1) {
+					pdf.addPage();
+				}
+				pdf.addImage(pageData[count - 1], "JPEG", 0, 0);
+				count++;
+				if (i === page) {
+					page = vm.totalNumberOfPages[f];
+				}
+			}
+			if (f === vm.numberOfForms) {
+				pdf.save();
+			}
+		}
+	}
+
+	function downloadPDF() {
+		pdf = new jsPDF();
+		var p = beforeGeneratePDF();
+		for (var f = 1; f <= vm.numberOfForms; f++) {
+			for (var i = 1; i <= vm.numberOfPages; i++) {
+				p = p.then(function (pageNumber) { return addPagePromise(pageNumber) });
+				p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
+				p = p.then(function (pageNumber) { return finishAddImagePromise(pageNumber) });
+			}
+		}
+		// re-initialize values
+		vm.currentFormPreview = 1;
+		vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
+		p.then(function (pageNumber) { return afterGeneratePDF(); });
+	}
+
+	function addPagePromise(pageNumber) {
+		var deferred = $q.defer();
+		if (vm.currentFormPreview != 1 || pageNumber != 1) {
+			pdf.addPage();
+		}
+		deferred.resolve(pageNumber);
+		return deferred.promise;
+	}
+
+	function finishAddImagePromise(pageNumber) {
+		var deferred = $q.defer();
+		formNumber = vm.currentFormPreview;
+		imgurl = canvas.toDataURL('image/png');	
+		pdf.addImage(imgurl, "JPEG", 0, 0);
+		if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
+			pdf.save();
+		} else if (pageNumber === vm.numberOfPreviewPages) { // reached the end of the form, switch to next form
+			vm.currentFormPreview++;
+			if (vm.currentFormPreview <= vm.numberOfForms) {
+				vm.numberOfPreviewPages = vm.totalNumberOfPages[vm.currentFormPreview-1];
+				deferred.resolve(1);
+			}
+		} else { // havent reached the end of the form yet
+			deferred.resolve(pageNumber + 1);
+		}
+		return deferred.promise;
+	}	
 
 	/*************************************************************************/
 

@@ -2,7 +2,6 @@
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
-    {{vm.entryData}}
     <div class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
             
@@ -13,6 +12,10 @@
             <button name="toPreviousForm" value="Previous Form" ng-click="vm.toPreviousForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Previous form</button>
             <div class="divider"></div>
             <button name="toNextForm" value="Next Form" ng-click="vm.toNextForm()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next form</button>
+            <div class="divider"></div>
+            <button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
+            <div class="divider"></div>       
+            <button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
         
         </div>
         
@@ -32,6 +35,14 @@
                     </div>
             </div>
         </section>
+
+        <dialog id="previewDialog" class="mdl-dialog">
+            <div class="dialog__actions" ng-keydown="vm.isESCDeletePreview($event)">
+                <button ng-click="vm.downloadPreview();">Download As PDF</button>
+                <button ng-click="vm.previewDeleteAll();">Close</button>
+            </div>
+            <div id="preview" class="mdl-dialog__content"></div>
+        </dialog>
 
         <main class="mdl-layout__content">
         <div class="mdl-grid" id="newEntry-content">
