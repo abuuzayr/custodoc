@@ -25,7 +25,7 @@ module.exports = function(){
 		else{
 			jwt.verify(token,config.superSecret,function(err, decoded){
 				if(err){
-					return send403(req,res,"Authentication failed with error: " + err.message);
+					return send403(req,res,err.message);
 				}
 				else{
 					req.decoded = decoded;

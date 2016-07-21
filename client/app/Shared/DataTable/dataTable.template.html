@@ -149,10 +149,10 @@
 <!--editing modal-->
 <dialog class="mdl-dialog" id='table-edit-dialog' ng-if='enableEdit'>
     <div class="mdl-dialog__content">
-        <span ng-repeat='field in tableOptions.columnDefs track by $index'>
+        <span ng-repeat='col in tableOptions.columnDefs track by $index'>
 	    	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" upgrade-dom>
-	    		<input class="mdl-textfield__input" type="text" ng-attr-id="row-edit-field-{{$index}}" placeholder="{{rowInEdit[field]}}" ng-model='rowInEdit[field]'>
-	    		<label class="mdl-textfield__label" for="row-edit-field-{{$index}}">{{field}}</label>
+	    		<input class="mdl-textfield__input" type="text" ng-attr-id="row-edit-field-{{$index}}" placeholder="{{rowInEdit[col.fieldName]}}" ng-model='rowInEdit[col.fieldName]'>
+	    		<label class="mdl-textfield__label" for="row-edit-field-{{$index}}">{{col.displayName}}</label>
 	  		</div>
   		</span>
     </div>

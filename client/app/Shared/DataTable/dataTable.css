@@ -70,4 +70,5 @@
 
 .table-cell-icon-link:hover {
 	color: red;
+  cursor: pointer;
 }
