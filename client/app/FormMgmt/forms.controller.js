@@ -7,6 +7,59 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	var serverURL = "https://10.4.1.204/req/api/protected";
 	var forms = document.getElementById('forms');
 	var snackbarContainer = document.getElementById("snackbarContainer");
+	vm.gridOptions = {};
+	vm.gridOptions.enableDelete = true;
+	vm.gridOptions.enableSearch = true;
+	vm.gridOptions.enablePagination = false;
+	vm.gridOptions.columnDefs = [
+		{
+			type: 'default',
+			fieldName: 'groupName',
+			displayName: 'Group Name',
+		},
+		{
+			type: 'default',
+			fieldName: 'formName',
+			displayName: 'Form Name',
+			resizable: true,
+			cellTemplate: '<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
+		},
+		{
+			type: 'default',
+			fieldName: 'isImportant',
+			displayName: 'Importance',
+			resizable: true,
+		},
+		{
+			type: 'date',
+			fieldName: 'creationDate',
+			displayName: 'Creation Date',
+			format: 'EEEE MMM d, y h:mm:ss a'
+		}, 
+		{
+			type: 'default',
+			fieldName: 'creator',
+			displayName: 'Create By'
+		}, 
+		{
+			type: 'date',
+			fieldName: 'lastRecord',
+			displayName: 'Last Record',
+			format: 'EEEE MMM d, y h:mm:ss a'
+		}, 
+		{
+			type: 'date',
+			fieldName: 'lastModified',
+			displayName: 'Last Modified',
+			format: 'EEEE MMM d, y h:mm:ss a'
+		}, 
+		{
+			type: 'default',
+			fieldName: 'lastModifiedBy',
+			displayName: 'Last Modified By'
+		}
+	];
+
 	vm.addNewGroup = addNewGroup;
 	vm.deleteGroup = deleteGroup;
 	vm.createForm = createForm;
@@ -24,12 +77,14 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	vm.toNewEntry = toNewEntry;
 	vm.downloadAsOne = downloadAsOne;
 	vm.downloadSeparate = downloadSeparate;
-	vm.getTableHeight = getTableHeight;
+	vm.goEditForm = goEditForm;
+
+
 
 	//view controll
 
 	function showNewEntry() {
-		var rows = vm.gridApi.selection.getSelectedRows();
+		var rows = vm.gridOptions.selection ? vm.gridOptions.selection.selectedId : 0;
 		for (var i = 0; i < rows.length - 1; i++) {
 			if (rows[i].groupName !== rows[i + 1].groupName) return false;
 		}
@@ -37,8 +92,8 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	}
 
 	//submit new entry
-	function toNewEntry() {
-		var rows = vm.gridApi.selection.getSelectedRows();
+	function toNewEntry(){
+		var rows = vm.gridOptions.selection.selectedId;
 		var groupName = rows[0].groupName;
 		$state.go('newentry', { groupName: groupName });
 	}
@@ -62,7 +117,6 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 				}
 			});
 	}
-
 
 	function addNewGroup() {
 		$http.post(serverURL + "/groups", { groupName: vm.newGroupName }, { headers: { 'Content-Type': 'application/json' } })
@@ -103,7 +157,7 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	}
 
 	//form management
-	vm.gridOptions = {};
+	
 	vm.getFormData();
 	var pagesImage = [];
 	var rows = [];
@@ -111,20 +165,20 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	function downloadSeparate() {
 		var pdf,
 			deferred,
-			p, i, j, k;
+			p;
 		usSpinnerService.spin('spinner-1');
-		rows = vm.gridApi.selection.getSelectedRows();
+		rows = vm.gridOptions.selection.selectedId;
 		deferred = $q.defer();
 		deferred.resolve(1);
 		p = deferred.promise;
-		for (i = 1; i <= rows.length; i++) {
+		for (var i = 1; i <= rows.length; i++) {
 			p = p.then(function (formNumber) { return generateForm(formNumber); });
 			p = p.then(function (formNumber) { return generateImage(formNumber); });
 		}
 		p.then(function () {
-			for (j = 0; j < pagesImage.length; j++) {
+			for (var j = 0; j < pagesImage.length; j++) {
 				pdf = new jsPDF();
-				for (k = 0; k < pagesImage[j].length; k++) {
+				for (var k = 0; k < pagesImage[j].length; k++) {
 					if (k !== 0) {
 						pdf.addPage();
 					}
@@ -149,7 +203,7 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 			p, i, j, k;
 
 		usSpinnerService.spin('spinner-1');
-		rows = vm.gridApi.selection.getSelectedRows();
+		rows = vm.gridOptions.selection.selected;
 		pdf = new jsPDF();
 		deferred = $q.defer();
 		deferred.resolve(1);
@@ -367,22 +421,12 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 		vm.gridOptions.data = [];
 		$http.get(serverURL + "/forms")
 			.then(function (result) {
-				vm.formsData = result.data;
-				for (var i = 0; i < vm.formsData.length; i++) {
-					var formData = vm.formsData[i];
-					vm.gridOptions.data.push({
-						"groupName": formData.groupName,
-						"formName": formData.formName,
-						"creationDate": formData.creationDate.substring(4, 25),
-						"creator": formData.creator,
-						"lastRecord": formData.lastRecord,
-						"lastModified": formData.lastModified.substring(4, 25),
-						"lastModifiedName": formData.lastModifiedName,
-						"isImportant": formData.isImportant,
-					});
+				for (var i = 0; i < result.data.length; i++) {
+					var formData = result.data[i];
+					vm.gridOptions.data.push(result.data[i]);
 				}
-			}, function (result) {
-				console.log("error: ", result);
+			}, function (err) {
+				console.log("error: ", err);
 			});
 	}
 
@@ -398,25 +442,24 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 			});
 	}
 
-	function deleteForms() {
+	function deleteForms(rgRows) {
 		if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
-			angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-				$http.delete(serverURL + "/forms/" + data.groupName + '/' + data.formName)
+			angular.forEach(rgRows, function (data, index) {
+				$http.delete(serverURL+"/forms/" + data.groupName + '/' + data.formName)
 					.then(function (res) {
 						vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
-						if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
+						if (index === vm.gridOptions.selection.selectedId.length - 1) {
 							vm.getFormData();
 						}
 					});
 			});
-			vm.gridApi.selection.clearSelectedRows();
 		}
 	}
 
 	function renameForm() {
-		var groupName = vm.gridApi.selection.getSelectedRows()[0].groupName;
-		var renameFormOld = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.put(serverURL + "/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
+		var groupName = vm.gridOptions.selection.selectedId[0].groupName;
+		var renameFormOld = vm.gridOptions.selection.selectedId[0].formName;
+		$http.put(serverURL+"/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -430,9 +473,9 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	}
 
 	function duplicateForm() {
-		var duplicateFrom = vm.gridApi.selection.getSelectedRows()[0].groupName;
-		var formName = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.post(serverURL + "/forms/duplicate",
+		var duplicateFrom = vm.gridOptions.selection.selectedId[0].groupName;
+		var formName = vm.gridOptions.selection.selectedId[0].formName;
+		$http.post(serverURL+"/forms/duplicate",
 			{
 				duplicateFrom: duplicateFrom,
 				formName: formName,
@@ -456,22 +499,23 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 	}
 
 	function setImportant() {
-		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put(serverURL + "/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+		var selectedRows = [];
+
+		angular.forEach(vm.gridOptions.selection.selectedId, function (data, index) {
+			$http.put(serverURL+"/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
-					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
+					if (index === vm.gridOptions.selection.selectedId.length - 1) {
 						vm.getFormData();
-						vm.gridApi.selection.clearSelectedRows();
 					}
 				});
 		});
 	}
 
 	function setNormal() {
-		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put(serverURL + "/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+		angular.forEach(vm.gridOptions.selection.selectedId, function (data, index) {
+			$http.put(serverURL+"/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
-					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
+					if (index === vm.gridOptions.selection.selectedId.length - 1) {
 						vm.getFormData();
 						vm.gridApi.selection.clearSelectedRows();
 					}
@@ -481,175 +525,11 @@ function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConst
 
 
 	/* =========================================== UI grid =========================================== */
-	vm.numberOfSelected = 0;
-	$scope.msg = {};
-	vm.gridOptions.onRegisterApi = function (gridApi) {
-		vm.gridApi = gridApi;
-	};
-	vm.gridOptions.rowHeight = 30;
 
-	vm.goEditForm = function (groupName, formName) {
+
+	function goEditForm(groupName, formName) {
 		$state.go('formBuilder', { groupName: groupName, formName: formName });
-	};
-
-	function getTableHeight() {
-		var rowHeight = 37; //  row height
-		var headerHeight = 210; // header height
-		return {
-			height: (vm.gridApi.core.getVisibleRows(vm.gridApi.grid).length * rowHeight + headerHeight) + "px"
-		};
 	}
-	vm.gridOptions.showGridFooter = true;
-	vm.gridOptions.enableColumnMenus = false;
-	vm.gridOptions.enableGridMenu = true;
-	vm.gridOptions.enableHorizontalScrollbar = 0;
-	vm.gridOptions.enableVerticalScrollbar = 0;
-	vm.gridOptions.enableSorting = true;
-	vm.gridOptions.enableFiltering = true;
-	vm.gridOptions.paginationPageSize = 10;
-	vm.gridOptions.paginationPageSizes = [10, 25, 30, 50, 100, 250, 500, 1000, 5000, 10000];
-	vm.gridOptions.enablePaginationControls = true;
-	vm.gridOptions.columnDefs = [
-		{
-			name: 'groupName',
-			displayName: 'Group Name',
-			enableCellEdit: false,
-			sort: {
-				direction: uiGridConstants.ASC,
-				priority: 0
-			},
-			resizable: true,
-			cellTooltip: function (row, col) {
-				return row.entity.groupName;
-			}
-		},
-		{
-			name: 'formName',
-			displayName: 'Form Name',
-			resizable: true,
-			cellTemplate: '<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
-		},
-		{
-			name: 'isImportant',
-			displayName: 'Importance',
-			resizable: true,
-		},
-		{
-			name: 'creationDate',
-			displayName: 'Creation Date',
-			type: 'date',
-			resizable: true,
-			filters: [{
-				condition: function (term, value) {
-					if (!term) return true;
-					var valueDate = new Date(value);
-					var replaced = term.replace(/\\/g, '');
-					var termDate = new Date(replaced);
-					return valueDate > termDate;
-				},
-				placeholder: 'From:'
-
-			}, {
-					condition: function (term, value) {
-						if (!term) return true;
-						var valueDate = new Date(value);
-						var replaced = term.replace(/\\/g, '');
-						var termDate = new Date(replaced);
-						termDate.setDate(termDate.getDate() + 1);
-						return valueDate < termDate;
-					},
-					placeholder: 'To:'
-				}],
-			cellTooltip: function (row, col) {
-				return row.entity.creationDate;
-			}
-		}, {
-			name: 'creator',
-			displayName: 'Creator',
-			resizable: true,
-			cellTooltip: function (row, col) {
-				return row.entity.creator;
-			}
-		}, {
-			name: 'lastRecord',
-			displayName: 'Last Record',
-			type: 'date',
-			filters: [{
-				condition: function (term, value) {
-					if (!term) return true;
-					var valueDate = new Date(value);
-					var replaced = term.replace(/\\/g, '');
-					var termDate = new Date(replaced);
-					return valueDate > termDate;
-				},
-				placeholder: 'From:'
-
-			}, {
-					condition: function (term, value) {
-						if (!term) return true;
-						var valueDate = new Date(value);
-						var replaced = term.replace(/\\/g, '');
-						var termDate = new Date(replaced);
-						termDate.setDate(termDate.getDate() + 1);
-						return valueDate < termDate;
-					},
-					placeholder: 'To:'
-				}],
-			resizable: true,
-			cellTooltip: function (row, col) {
-				return row.entity.lastRecord;
-			}
-		}, {
-			name: 'lastModified',
-			displayName: 'Last Modified',
-			type: 'date',
-			cellFilter: 'date:"dd.MMM.yy"',
-			resizable: true,
-			filters: [{
-				condition: function (term, value) {
-					if (!term) return true;
-					var valueDate = new Date(value);
-					var replaced = term.replace(/\\/g, '');
-					var termDate = new Date(replaced);
-					return valueDate > termDate;
-				},
-				placeholder: 'From:'
-
-			}, {
-					condition: function (term, value) {
-						if (!term) return true;
-						var valueDate = new Date(value);
-						var replaced = term.replace(/\\/g, '');
-						var termDate = new Date(replaced);
-						termDate.setDate(termDate.getDate() + 1);
-						return valueDate < termDate;
-					},
-					placeholder: 'To:'
-				}],
-			cellTooltip: function (row, col) {
-				return row.entity.lastModified;
-			}
-		}, {
-			name: 'lastModifiedBy',
-			displayName: 'Last Modified By',
-			resizable: true,
-			cellTooltip: function (row, col) {
-				return row.entity.lastModifiedBy;
-			}
-		}];
-
-	//sorting and filtering
-
-	// var filter = $stateParams.filter;
-	// function showByFilter() {
-	// 	if(filter == "important") {
-	// 		showImportant();
-	// 	}
-
-	// 	if(filter == "recent") {
-	// 		showRecent();
-	// 	}
-	// }
 
 	function showRecent() {
 		if (vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term = '';

@@ -56,7 +56,7 @@
                 <th ng-if='tableOptions.enableEdit' class="table-cell-no-stretch"/>
                 <th class="table-cell-no-stretch" ng-repeat="col in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index"/>
                 <!--default-->
-                <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in defaultCols = (tableOptions.columnDefs | filter: filterDefaultCol) track by $index">
+                <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in textCols = (tableOptions.columnDefs | filter: filterTextCol) track by $index">
                     <a href="" class='table-header-text-link' ng-click="sort(col)">
                     {{col.displayName}}
                     <span ng-show="sorting.sortBy == header && !sorting.sortReverse" >^</span>
@@ -84,8 +84,9 @@
                     </a>
                 </td>
 
-                <td class="mdl-data-table__cell--non-numeric" ng-repeat="defaultCol in defaultCols = (tableOptions.columnDefs | filter: filterDefaultCol ) track by $index">
-                    {{row[defaultCol.fieldName]}}
+                <td class="mdl-data-table__cell--non-numeric" ng-repeat="textCol in textCols = (tableOptions.columnDefs | filter: filterTextCol ) track by $index">
+                    <p ng-if="textCol.type !== 'date'">{{row[textCol.fieldName]}}</p>
+                    <p ng-if="textCol.type === 'date'">{{row[textCol.fieldName] | date: textCol.format}}</p>
                 </td>
                 <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p> 
                 <p ng-show='filteredRows.length === 0 && tableOptions.data.length !== 0'>No match</p> 

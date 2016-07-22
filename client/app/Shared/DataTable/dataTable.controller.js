@@ -15,7 +15,7 @@ angular.module('dataTable')
 		$scope.selectOne = selectOne;
 		$scope.deselectAll = deselectAll;
 		$scope.filterActionCol = filterActionCol;
-		$scope.filterDefaultCol = filterDefaultCol; 
+		$scope.filterTextCol = filterTextCol; 
 		$scope.validateCSVBeforeUpload = validateCSVBeforeUpload;
 		//data watcher, watching for data loading, initiate scope after data is loaded
 		$scope.$watch('tableOptions.data', dataWatcher, true);
@@ -104,12 +104,19 @@ angular.module('dataTable')
 			}
 		}
 
+		function processData(){
+			var dateCol = [];
+			for(var i = 0 ; i < processData ; i++){
+			}
+			$scope.tableOptions.data
+		}
+
 		function setPagination(isEnabled){
 			$scope.tableOptions.pagination = {};
 			if(isEnabled){
 				$scope.tableOptions.pagination.itemPerPage = $scope.dtRowPerPage;
 				$scope.tableOptions.pagination.limitOptions = $scope.dtRowPerPageOptions;
-				if($scope.tableOptions.pagination.limitOptions.constructor !== Array || $scope.tableOptions.pagination.limitOptions.length === 0)
+				if(typeof $scope.tableOptions.pagination.limitOptions === 'undefined' || $scope.tableOptions.pagination.limitOptions.constructor !== Array || $scope.tableOptions.pagination.limitOptions.length === 0)
 					$scope.tableOptions.pagination.limitOptions = [10,20,30];
 				if(typeof $scope.tableOptions.pagination.itemPerPage === 'undefined' || $scope.tableOptions.pagination.itemPerPage.constructor !== Number || $scope.tableOptions.pagination.itemPerPage < 1)
 					$scope.tableOptions.pagination.itemPerPage = $scope.tableOptions.pagination.limitOptions[0];
@@ -267,11 +274,14 @@ angular.module('dataTable')
 
 		//SORTING AND FILTERING
 		function sort(col){
-	 		$scope.sorting.sortBy = col.fieldName;
+			$scope.sorting.sortBy = col.fieldName;
 			$scope.sorting.sortReverse = !$scope.sorting.sortReverse;
-			$scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
+			if(col.type ===  'default')
+				$scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
+			else
+				$scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
 			renderSelectionOnChange();
-	 	}
+		}
 
 	 	function filterByKeyword(element) {
 			if($scope.tableOptions.filterQuery === 'undefined' || !$scope.tableOptions.filterQuery){
@@ -300,8 +310,8 @@ angular.module('dataTable')
         		return false;
         }
 
-        function filterDefaultCol(element){
-        	if(!element.hasOwnProperty('type') || element.type === 'default')
+        function filterTextCol(element){
+        	if(!element.hasOwnProperty('type') || element.type === 'default' || element.type === 'date')
         		return true;
         	else
         		return false;

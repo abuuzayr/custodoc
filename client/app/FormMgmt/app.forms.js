@@ -7,5 +7,6 @@ angular
         'ui.grid.moveColumns',
         'ngTouch',
         'ui.grid.selection',
-        'angularSpinner'
+        'angularSpinner',
+        'dataTable'
     ]);
