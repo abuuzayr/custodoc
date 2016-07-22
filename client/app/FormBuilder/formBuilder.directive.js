@@ -2,33 +2,50 @@ angular.module('app.formBuilder')
 .directive('myOnDragStart',myOnDragStart)
 .directive('myOnDragOver',myOnDragOver)
 .directive('myOnDrop',myOnDrop);
+myOnDragStart.$inject = ['$parse'];
+myOnDragOver.$inject = ['$parse'];
+myOnDrop.$inject = ['$parse']; 
 
-function myOnDragStart() {
+function myOnDragStart($parse) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragStartHandler = scope.$eval(attrs.myOnDragStart);
-			element.bind('ondragstart',onDragStartHandler);
+			element.on('dragstart',onDragStartHandler);
+
+			function onDragStartHandler(event){
+				var onDragStartFunc = $parse(attrs.myOnDragStart);                                 
+    			onDragStartFunc(scope, { $event: event });
+    			scope.$apply();
+			}
 		}
 	};
 }
 
-function myOnDragOver() {
+function myOnDragOver($parse) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragOverHandler = scope.$eval(attrs.myOnDragOver);
-			element.bind('ondragover',onDragOverHandler);
+			element.on('dragover', onDragOverHandler);
+
+			function onDragOverHandler(){
+				var onDragOverFunc = $parse(attrs.myOnDragOver);                                 
+    			onDragOverFunc(scope, { $event: event });
+    			scope.$apply();
+			}
 		}
 	};
 }
 
-function myOnDrop() {
+function myOnDrop($parse) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDropHandler = scope.$eval(attrs.myOnDrop);
-			element.bind('ondrop',onDropHandler);
+			element.on('drop',onDropHandler);
+			function onDropHandler(event){
+				var onDragFunc = $parse(attrs.myOnDrop);                                 
+    			onDragFunc(scope, { $event: event });
+    			scope.$apply();
+			}
 		}
 	};
 }

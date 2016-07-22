@@ -148,7 +148,7 @@
 					<div class="divider"></div>
 					<!-- <a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br> -->
 					this is my own judgement
-					<a name="createTextField" my-on-drag-start="vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+					<a name="createTextField" my-on-drag-start="vm.dragStart($event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
 					<div class="divider"></div>
 					<a name="createCheckbox" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
 					<div class="divider"></div>
@@ -196,7 +196,7 @@
 			</div>
 
 			<!-- <div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)" ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px"> -->
-			<div class="page" id="page1" my-on-drop="vm.drop(event)" my-on-drag-over="vm.allowDrop(event)" style="height:1123px;width:794px">
+			<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
 				<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
 			</div>
 		</section>
