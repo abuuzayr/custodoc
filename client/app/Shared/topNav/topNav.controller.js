@@ -5,16 +5,16 @@ angular
 topNavCtrl.$inject = ['authServices', '$scope', '$interval'];
 
 function topNavCtrl(authServices, $scope, $interval) {
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();
-        }, 0);
-    });
+    // $scope.$on('$viewContentLoaded', function () {
+    //     $timeout(function () {
+    //         viewContentLoaded.resolve();
+    //     }, 0);
+    // });
+    // viewContentLoaded.promise.then(function () {
+    //     $timeout(function () {
+    //         componentHandler.upgradeDom();
+    //     }, 0);
+    // });
 
     var vm = this;
     vm.openNav = openNav;
