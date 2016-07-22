@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="app/Shared/DataTable/dataTable.css" type="text/css">
 <!--toolbar-->
-<div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='hasToolbar'>
+<div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='tableOptions.enableDelete || tableOptions.enableExport || tableOptions.enableImport || tableOptions.enableSearch'>
     <div class="mdl-cell mdl-cell--3-col mdl-cell--">
-        <div ng-if='hasSearch' class="menu-wrapper">
+        <div ng-if='tableOptions.enableSearch' class="menu-wrapper">
             <input class="mdl-textfield__input" type="text" id="table-toolbar-search" ng-model='tableOptions.filterQuery' placeholder="search...">
         </div>
     </div>
@@ -20,7 +20,7 @@
 		</button>
 	</div>
     <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
-        <div ng-if='hasImport'>
+        <div ng-if='tableOptions.enableImport'>
             <button class='mdl-button mdl-primary'>
                 <label for="table-toolbar-import">Import</label>
             </button>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class='menu-wrapper mdl-cell mdl-cell--1-col'>
-        <div ng-if='hasExport'>
+        <div ng-if='tableOptions.enableExport'>
             <button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
                 Export
             </button>
@@ -48,12 +48,12 @@
         <thead>
             <tr>
                 <th class='table-cell-no-stretch'>
-                    <label id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="data-table-header-checkbox"  class="table-cell-no-stretch">
-                        <input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked.headerChecked' ng-click='selectVisible($event)' />
+                    <label ng-if='tableOptions.enableMultiSelect' id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="data-table-header-checkbox"  class="table-cell-no-stretch">
+                        <input  type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked.headerChecked' ng-click='selectVisible($event)' />
                     </label>
                 </th>
                 <!--action-->
-                <th ng-if='enableEdit' class="table-cell-no-stretch"/>
+                <th ng-if='tableOptions.enableEdit' class="table-cell-no-stretch"/>
                 <th class="table-cell-no-stretch" ng-repeat="col in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index"/>
                 <!--default-->
                 <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in defaultCols = (tableOptions.columnDefs | filter: filterDefaultCol) track by $index">
@@ -72,7 +72,7 @@
                         <input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked[row._id]' ng-click='selectOne($event,row)' />
                     </label>
                 </td>
-                <td ng-if='enableEdit'  class="table-cell-no-stretch">
+                <td ng-if='tableOptions.enableEdit'  class="table-cell-no-stretch">
                     <a class='table-cell-icon-link' id='table-cell-icon-edit' ng-click='editRow(row)'>
                         <i class="material-icons">edit</i>
                     </a>
@@ -94,7 +94,7 @@
     </table>
 </div>
 <!--pagination-->
-<div class="mdl-grid">
+<div class="mdl-grid" ng-if='tableOptions.enablePagination'>
     <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
     <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
     <span flex=''></span>
@@ -147,7 +147,7 @@
     </div>
 </div>
 <!--editing modal-->
-<dialog class="mdl-dialog" id='table-edit-dialog' ng-if='enableEdit'>
+<dialog class="mdl-dialog" id='table-edit-dialog' ng-if='tableOptions.enableEdit'>
     <div class="mdl-dialog__content">
         <span ng-repeat='col in tableOptions.columnDefs track by $index'>
 	    	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" upgrade-dom>

@@ -38,7 +38,7 @@ angular.module('app.autofill')
 		vm.tableOptions = {};
 		vm.tableOptions.data = [];
 		vm.tableOptions.columnDefs = [];
-		vm.tableOptions.enableMultiSelect = true;
+		vm.tableOptions.enableMultiSelect = false;
 		vm.tableOptions.enablePagination = true;
 		vm.tableOptions.enableEdit = true;
 		vm.tableOptions.enableDelete = true;
@@ -208,8 +208,14 @@ angular.module('app.autofill')
 		}
 
 		function importFunc(objectArray){
-			for(var = i ; i < objectArray.length; i++){
-				
+		    var promises = [];
+			for(var i = 0 ; i < objectArray.length; i++){
+				promises.push(autofillServices.createRecord(objectArray[i]));
+			}
+			$q.all(promises).then(postImportUpdate);
+
+			function postImportUpdate(){
+				vm.tableOptions.data.unshift(objectArray);
 			}
 		}
 

@@ -182,6 +182,8 @@ angular.module('dataTable')
 	 	}
 
 	 	function selectOne($event, row){
+	 		if(!$scope.tableOptions.enableMultiSelect)
+	 			deselectAll();
 	 		var checkbox = $event.target;
 	  		var action = (checkbox.checked ? 'add' : 'remove');
 	  		updateSelection(checkbox, action, row._id);
