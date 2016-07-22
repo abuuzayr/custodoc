@@ -7,8 +7,6 @@ angular.module('dataTable')
 	function dataTableController($scope,$timeout,$q,$filter,feedbackServices,dialogServices){
 		//VARIABLES
 		var isDataLoaded = false;
-		$scope.tableOptions.filterQuery = '';
-		$scope.tableOptions.csvUpload = null;
 		//$SCOPE FUNCTIONS
 		$scope.sort = sort;
 		$scope.getTimes = getTimes;
@@ -48,6 +46,8 @@ angular.module('dataTable')
 				allowedExtension: '.csv',
 				maxSize: 10
 			};
+			$scope.tableOptions.filterQuery = '';
+			$scope.tableOptions.csvUpload = null;
 			//SET DEFAULT VALUES
 			if(typeof $scope.tableOptions.enablePagination === 'undefined' || $scope.tableOptions.enablePagination === null)
 				$scope.tableOptions.enablePagination = false;
