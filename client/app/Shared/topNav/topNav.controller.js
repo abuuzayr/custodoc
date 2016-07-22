@@ -4,7 +4,7 @@ angular
 
 topNavCtrl.$inject = ['authServices', '$scope', '$interval'];
 
-function sideNavCtrl(authServices, $scope, $interval) {
+function topNavCtrl(authServices, $scope, $interval) {
     var vm = this;
     vm.openNav = openNav;
     vm.closeNav = closeNav;
