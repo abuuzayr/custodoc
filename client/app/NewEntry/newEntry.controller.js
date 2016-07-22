@@ -487,7 +487,7 @@ angular
 
 
 	/****************** SIGNATURE PAD VARIABLES **********************/
-	if (gotSignature) { 
+	if (vm.gotSignature) { 
 		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
 		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
@@ -498,7 +498,7 @@ angular
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
 
-	if (gotSignature) {
+	if (vm.gotSignature) {
 		vm.openModal = function() {
 			vm.dialog.showModal();	
 		}
@@ -537,7 +537,7 @@ angular
 			snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
 		}
 	}
-	
+
 	/*************************************************************************/
 
 	/*************************** PREVIEW FUNCTIONS ***************************/
