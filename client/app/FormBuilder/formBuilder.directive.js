@@ -1,4 +1,4 @@
-angular.module('app.formBuilder',[])
+angular.module('app.formBuilder')
 .directive('myOnDragStart',myOnDragStart);
 
 function myOnDragStart() {
