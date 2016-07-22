@@ -24,8 +24,9 @@
 
 
 		function getToken() {
-			console.log($cookies.get('id'));
-			return $cookies.get('id');
+			var cookie = $cookies.get('id');
+			if (!cookie) logout();
+			else {return cookie;}
 		}
 
 		function deleteToken() {
@@ -33,19 +34,15 @@
 		}
 
 		function decodeToken(token) {
-			console.log(token);
-			if (!token)
-				console.log('no cookie');//	return logout();
 			var payload = token.split('.')[1];
 			var decoded = JSON.parse(atob(payload));
 			return decoded;
+			
 		}
 
 		function getUserInfo() {
 			var token = getToken();
 			var userInfo = JSON.parse(JSON.stringify(decodeToken(token)));
-			console.log('Auth get token:' + token);
-			console.log('Auth get user info:' + userInfo);
 			return {
 				username: userInfo.username,
 				email: userInfo.email,
