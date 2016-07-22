@@ -1,6 +1,6 @@
 <div id="body" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 	<!---------------------------------------- Ng-include nav bars ---------------------------------------->
-	<header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header>
+	<!-- <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header> -->
 
 	<div id="formBuilderBody" class="mdl-layout__content">
 		<div id="pagebar" class="mdl-grid">
@@ -146,7 +146,9 @@
 				<div class="mdl-tabs__panel is-active" id="newElement-panel">
 					<a name="createLabel" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
 					<div class="divider"></div>
-					<a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+					<!-- <a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br> -->
+					this is my own judgement
+					<a name="createTextField" my-on-drag-start="vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
 					<div class="divider"></div>
 					<a name="createCheckbox" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
 					<div class="divider"></div>

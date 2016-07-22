@@ -1,11 +1,11 @@
 angular.module('app.formBuilder',[])
-.directive('onDragStart',onDragStart);
+.directive('myOnDragStart',myOnDragStart);
 
-function onDragStart() {
+function myOnDragStart() {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragStartHandler = $scope.$eval(attrs.onDragStart);
+			var onDragStartHandler = $scope.$eval(attrs.myOnDragStart);
 			element.bind('ondragstart',onDragStartHandler);
 		}
 	};
