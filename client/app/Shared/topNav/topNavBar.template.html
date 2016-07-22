@@ -1,0 +1,105 @@
+<style>
+    /* The side navigation menu */
+    
+    .sidenav {
+        height: 100%;
+        /* 100% Full-height */
+        width: 0;
+        /* 0 width - change this with JavaScript */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Stay on top */
+        top: 0;
+        left: 0;
+        background-color: #111;
+        /* Black*/
+        overflow-x: hidden;
+        /* Disable horizontal scroll */
+        padding-top: 60px;
+        /* Place content 60px from the top */
+        transition: 0.5s;
+        /* 0.5 second transition effect to slide in the sidenav */
+    }
+    /* The navigation menu links */
+    
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s
+    }
+    /* When you mouse over the navigation links, change their color */
+    
+    .sidenav a:hover,
+    .offcanvas a:focus {
+        color: #f1f1f1;
+    }
+    /* Position and style the close button (top right corner) */
+    
+    .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px !important;
+        margin-left: 50px;
+    }
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    
+    #main {
+        transition: margin-left .5s;
+        padding: 20px;
+    }
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    
+    @media screen and (max-height: 450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+</style>
+<div>
+    <div class="mdl-layout__header-row">
+        <!-- Header top nav -->
+        <button id="sideNavMenu-button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.openNav()"><i class="material-icons">more_vert</i></button>
+        <!--<ul class="mdl-menu mdl-menu--lower-left mdl-js-menu mdl-js-ripple-effect" for="sideNavMenu-button">
+
+        <li class="mdl-menu__item mdl-navigation__link" ui-sref="forms">
+            <i class="material-icons" role="presentation">dashboard</i> Forms
+        </li>
+        <li class="mdl-menu__item mdl-navigation__link" ui-sref="entries">
+            <i class="material-icons" role="presentation">assessment</i> Entries
+        </li>
+        <li class="mdl-menu__item mdl-navigation__link" ui-sref="autofill">
+            <i class="material-icons" role="presentation">account_box</i> Autofill
+        </li>
+        <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.logout();">
+            <i class="material-icons">exit_to_app</i> Logout
+        </li>
+        <li class="mdl-menu__item mdl-navigation__link" ui-sref="settings">
+            <i class="material-icons">settings</i>Account settings
+        </li>
+        <li class="mdl-menu__item mdl-navigation__link" ui-sref="users" ng-if="vm.userType === 'Admin'">
+            <i class="material-icons">group</i>User management
+        </li>
+    </ul>-->
+        <div class="divider"></div>
+        <span class="mdl-layout-title">Bulletforms</span>
+        <div class="mdl-layout-spacer"></div>
+        <span>Welcome, {{ vm.username }}</span>
+        <div class="divider"></div>
+        <span>{{ vm.date | date: 'medium'}}</span><br>
+    </div>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" ng-click="vm.closeNav()">&times;</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
