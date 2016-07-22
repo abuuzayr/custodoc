@@ -33,7 +33,8 @@ formsRouter.route('/')
 				$set: {
 					"numberOfPages": formData.numberOfPages,
 					"elements": formData.elements,
-					"lastModified": Date()
+					"lastModified": Date(),
+					"lastModifiedBy": req.decoded.username
 				}
 			},function(err,result){
 				assert.equal(err, null);
@@ -65,8 +66,10 @@ formsRouter.route('/')
 							groupName:groupName,
 							elements: {},
 							isImportant: 'Normal',
-							creationDate:Date(),
+							creationDate: Date(),
+							creator: req.decoded.username,
 							lastModified: Date(),
+							lastModifiedBy: req.decoded.username,
 							order: order,
 							numberOfPages:1
 						}
@@ -101,7 +104,8 @@ formsRouter.route('/rename')
 					{"formName" : originalName},
 					{
 						$set: { 
-							"formName": newName
+							"formName": newName,
+							"lastModifiedBy": req.decoded.username
 						}
 					},function(err,result){
 						assert.equal(err, null);
@@ -139,8 +143,10 @@ formsRouter.route('/duplicate')
 						newItem.groupName = duplicateTo;
 						newItem.formName = duplicateName;
 						newItem.isImportant = 'Normal';
+						newItem.creator = req.decoded.username;
 						newItem.creationDate = Date();
 						newItem.lastModified = Date();
+						newItem.lastModifiedBy = req.decoded.username;
 						coll.insert(newItem, function(err, result) {
 							assert.equal(null,err);
 							res.send("Duplicated:"+formName);
