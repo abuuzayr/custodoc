@@ -44,8 +44,10 @@ angular.module('app.autofill')
 		vm.tableOptions.enableDelete = true;
 		vm.tableOptions.enableExport = true;
 		vm.tableOptions.enableImport = true;
+		vm.tableOptions.saveFunc = saveFunc;
+		vm.tableOptions.deleteFunc = deleteSelected;
+		vm.tableOptions.importFunc = importFunc;
 		init();
-		vm.tableOptions.delete = deleteSelected;
 		vm.query ='';
 		
 	// ===========================================   UI Buttons  =========================================== //
@@ -172,38 +174,6 @@ angular.module('app.autofill')
 
 		// ============================================== API ============================================== //
 
-		// function initGrid(){
-		// 	console.log('initing');
-		// 	vm.gridOptions.columnDefs = [];
-
-		// 	return autofillServices
-		// 	.getElement()
-		// 	.then(function SuccessCallback(res){
-		// 		console.log(res.data);
-		// 		for(var i = 0; i < res.data.length; i++){
-		// 			vm.gridOptions.columnDefs.push({
-		// 				name: res.data[i].fieldName,
-		// 				displayName: res.data[i].fieldName.charAt(0).toUpperCase() +  res.data[i].fieldName.slice(1),
-		// 				width: '20%'
-		// 			});
-		// 		} 
-		// 		return vm.read();
-		// 	})
-		// 	.catch(function ErrorCallback(err){ 
-		// 		console.log(err);
-		// 		return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage')
-		// 	});        
-		// }
-		
-		// function update( rowEntity ) {
-		// 	console.log(rowEntity);
-		// 	if(rowEntity && rowEntity._id != null && rowEntity._id != undefined)
-		// 		var promise = autofillServices.updateRecord(rowEntity);
-		// 	else
-		// 		var promise = autofillServices.createRecord(rowEntity);
-		// 	vm.gridApi.rowEdit.setSavePromise(rowEntity, promise)
-		// }
-
 		function deleteOne(selectedId){
 			return autofillServices
 			.deleteOneRecord(selectedId)
@@ -227,9 +197,27 @@ angular.module('app.autofill')
 			});
 		}
 
+		function saveFunc(rowEntity){
+			return autofillServices.updateRecord(rowEntity)
+			.then(function SuccessCallback(res){		
+				return feedbackServices.successFeedback('records updated', 'autofill-feedbackMessage');
+			})
+			.catch(function ErrorCallback(err) {
+				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+			});
+		}
+
+		function importFunc(objectArray){
+			for(var = i ; i < objectArray.length; i++){
+				
+			}
+		}
+
 		function postDeleteUpdate(){
 			init();
 		}
+
+		
 
 		/* =========================================== Element =========================================== */
 
@@ -287,16 +275,10 @@ angular.module('app.autofill')
 			});
 		}
 
-
-
-		
-
 		function init(){
 			getDataBody();
 			getDataHeader();	
 		}
-
-			
 
 		// ===========================================   MDL LOADING  =========================================== //
 		var viewContentLoaded = $q.defer();

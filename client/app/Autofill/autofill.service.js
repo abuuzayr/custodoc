@@ -31,7 +31,6 @@ angular.module('app.autofill')
 				path = '/protected/autofill/query';
 				return $http.get(appConfig.API_URL + path + '/' + query);
 			} 
-
 		}
 
 		function updateRecord(rowEntity){
