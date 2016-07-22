@@ -7,7 +7,7 @@ function myOnDragStart() {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragStartHandler = $scope.$eval(attrs.myOnDragStart);
+			var onDragStartHandler = scope.$eval(attrs.myOnDragStart);
 			element.bind('ondragstart',onDragStartHandler);
 		}
 	};
@@ -17,8 +17,8 @@ function myOnDragOver() {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragStartHandler = $scope.$eval(attrs.myOnDragOver);
-			element.bind('ondragstart',onDragStartHandler);
+			var onDragOverHandler = scope.$eval(attrs.myOnDragOver);
+			element.bind('ondragover',onDragOverHandler);
 		}
 	};
 }
@@ -27,8 +27,8 @@ function myOnDrop() {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs){
-			var onDragStartHandler = $scope.$eval(attrs.myOnDrop);
-			element.bind('ondragstart',onDragStartHandler);
+			var onDropHandler = scope.$eval(attrs.myOnDrop);
+			element.bind('ondrop',onDropHandler);
 		}
 	};
 }
