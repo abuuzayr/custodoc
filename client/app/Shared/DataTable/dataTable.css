@@ -72,3 +72,8 @@
 	color: red;
   cursor: pointer;`
 }
+
+.mdl-data-table tbody tr.row-in-edit{
+  background-color:#E0F7FA;
+}
+

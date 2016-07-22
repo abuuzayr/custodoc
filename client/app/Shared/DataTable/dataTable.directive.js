@@ -3,7 +3,8 @@
 angular.module('dataTable')
 	.directive('customMdlDataTable',customMdlDataTable)
 	.directive('postRepeatUpgrade', postRepeatUpgrade)
-	.directive('upgradeDom',upgradeDom);
+	.directive('upgradeDom',upgradeDom)
+	.directive('fileUploadOnchange', fileUploadOnchange);
 	
 function customMdlDataTable(){
 	var directive = {
@@ -72,6 +73,15 @@ function upgradeDom(){
 	};
 }
 
+function fileUploadOnchange() {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			var onChangeHandler = scope.$eval(attrs.fileUploadOnchange);
+			element.bind('change', onChangeHandler);
+		}
+	};
+}
 
 })();
 

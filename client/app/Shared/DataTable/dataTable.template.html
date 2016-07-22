@@ -24,7 +24,7 @@
             <button class='mdl-button mdl-primary'>
                 <label for="table-toolbar-import">Import</label>
             </button>
-            <input id="table-toolbar-import" type="file" accept='.csv' onchange="vm.validateCsvImport(this.value)">
+            <input id="table-toolbar-import" type="file" accept='.csv' file-upload-onchange="validateCSVBeforeUpload" />
         </div>
     </div>
     <div class='menu-wrapper mdl-cell mdl-cell--1-col'>
@@ -66,7 +66,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat='row in filteredRows = ( tableOptions.data | filter: filterByKeyword) | limitTo:tableOptions.pagination.itemPerPage : tableOptions.pagination.startingIndex-1 > 0 ? tableOptions.pagination.startingIndex : 0 track by $index' post-repeat-upgrade>
+            <tr ng-attr-id="{{'data-table-row-' + row._id}}" ng-class ng-repeat='row in filteredRows = ( tableOptions.data | filter: filterByKeyword) | limitTo:tableOptions.pagination.itemPerPage : tableOptions.pagination.startingIndex-1 > 0 ? tableOptions.pagination.startingIndex : 0 track by $index' post-repeat-upgrade>
                 <td  class="table-cell-no-stretch">
                     <label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="{{'data-table-checkbox-' + row._id}}">
                         <input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked[row._id]' ng-click='selectOne($event,row)' />

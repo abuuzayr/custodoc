@@ -7,6 +7,8 @@ angular.module('dataTable')
 	function dataTableController($scope,$timeout,$q,$filter,feedbackServices,dialogServices){
 		//VARIABLES
 		var isDataLoaded = false;
+		$scope.tableOptions.filterQuery = '';
+		$scope.tableOptions.csvUpload = null;
 		//$SCOPE FUNCTIONS
 		$scope.sort = sort;
 		$scope.getTimes = getTimes;
@@ -14,7 +16,7 @@ angular.module('dataTable')
 		$scope.deselectAll = deselectAll;
 		$scope.filterActionCol = filterActionCol;
 		$scope.filterDefaultCol = filterDefaultCol; 
-
+		$scope.validateCSVBeforeUpload = validateCSVBeforeUpload;
 		//data watcher, watching for data loading, initiate scope after data is loaded
 		$scope.$watch('tableOptions.data', dataWatcher, true);
 		function dataWatcher(newVal,oldVal){
@@ -44,7 +46,7 @@ angular.module('dataTable')
 			};
 			$scope.tableOptions.importOptions = {
 				allowedExtension: '.csv',
-				maxSize: '20'
+				maxSize: 10
 			};
 			//SET DEFAULT VALUES
 			if(typeof $scope.tableOptions.enablePagination === 'undefined' || $scope.tableOptions.enablePagination === null)
@@ -59,6 +61,8 @@ angular.module('dataTable')
 				$scope.tableOptions.enableExport = false;
 			if(typeof $scope.tableOptions.enableImport === 'undefined' || $scope.tableOptions.enableImport === null)
 				$scope.tableOptions.enableImport = false;
+			if(typeof $scope.tableOptions.enableSearch === 'undefined' || $scope.tableOptions.enableSearch === null)
+				$scope.tableOptions.enableSearch = true;
 			//Generate Options Based On Enabled Properties
 			setPagination($scope.tableOptions.enablePagination);
 		}
@@ -69,32 +73,33 @@ angular.module('dataTable')
 				sortReverse: false
 			};
 
-			if(tableOptions.enablePagination){
+			if($scope.tableOptions.enablePagination){
 				$scope.toFirstPage = toFirstPage;
 				$scope.toLastPage = toLastPage;
 				$scope.toNextPage = toNextPage;
 				$scope.toPreviousPage = toPreviousPage;
 			}
-			if(tableOptions.enableMultiSelect){
+			if($scope.tableOptions.enableMultiSelect){
 				$scope.selectVisible = selectVisible;
 			}
-			if(tableOptions.enableMultiSelection){
+			if($scope.tableOptions.enableMultiSelection){
 
 			}
-			if(tableOptions.enableEdit){
+			if($scope.tableOptions.enableEdit){
 				$scope.editRow = editRow;
 				$scope.discardEdit = discardEdit;
 				$scope.saveEdit = saveEdit;
 			}
-			if(tableOptions.enableDelete){
+			if($scope.tableOptions.enableDelete){
 				$scope.deleteSelected = deleteSelected;
 			}
-			if(tableOptions.enableExport){
+			if($scope.tableOptions.enableExport){
 				$scope.exportCSV = exportCSV;
 			}
-			if(tableOptions.enableImport){
+			if($scope.tableOptions.enableImport){
+				$scope.validateCSVBeforeUpload = validateCSVBeforeUpload;
 			}
-			if(tableOptions.enableSearch){
+			if($scope.tableOptions.enableSearch){
 				$scope.filterByKeyword = filterByKeyword;
 			}
 		}
@@ -300,7 +305,7 @@ angular.module('dataTable')
         		return false;
         }
 
-        $scope.$watch('table.filterQuery', function() {
+        $scope.$watch('tableOptions.filterQuery', function(newVal,oldVal) {
      		renderSelectionOnChange();
 		});
 
@@ -345,19 +350,80 @@ angular.module('dataTable')
 			}
 		}
 
+		function validateCSVBeforeUpload() {
+			var file = event.target.files[0];
+			console.log(event.target);
+			if(file.name){
+				if(file.name.substr(file.name.lastIndexOf('.')+1) === 'csv'){
+					if(file.size > $scope.tableOptions.importOptions.maxSize * 1000000)
+						return feedbackServices.errorFeedback('Max size allowed is ' + $scope.tableOptions.importOptions.maxSize + ' MB', 'dataTable-feedbackMessage');
+					else
+						return getFileContent(event,file);
+				}else
+					return feedbackServices.errorFeedback('Please choose .csv file','dataTable-feedbackMessage');
+			}
+		}
+
+		function getFileContent(event,file){
+			if(window.FileReader){
+				var reader = new FileReader();
+				reader.readAsText(file);
+				reader.onload = loadHandler;
+      			reader.onerror = errorHandler;
+			}else{
+				console.log('not supported');
+			}
+
+			function loadHandler(event) {
+  				csvToArray(event.target.result);
+			}
+
+			function errorHandler(evt) {
+				if(evt.target.error.name == "NotReadableError") {
+					feedbackServices.errorFeedback("Canno't read file !",'dataTable-feedbackMessage');
+				}
+		    }
+
+			function csvToArray(csv) {
+		        var lines = csv.split(/\r\n|\n/);
+		        var objectArray = [];
+		        var headerArray = [];
+		        for (var i=0; i<lines.length; i++) {
+		        	var tempObject = {};
+		        	var line = lines[i].split(',');
+		        	if(i === 0){
+		        		headerArray = line;
+		        	}else{
+		        		for(var j=0; j < headerArray.length; j++){
+	        				tempObject[headerArray[j]] = line[j];
+	        			}
+		        		objectArray.push(tempObject);
+		        	}
+		        }
+		        return updateTable(objectArray);
+		    }
+
+		    function updateTable(objectArray){
+		    	return $scope.tableOptions.importFunc(objectArray);
+		    }
+
+		}
+
 		//ROW EDIT
 		function editRow(row){
 			openDialog();
 			$scope.rowInEdit = row;
+			angular.element(document.querySelector('#data-table-row-'+$scope.rowInEdit._id)).addClass('row-in-edit');
 		}
 
 		function discardEdit(){
+			angular.element(document.querySelector('#data-table-row-'+$scope.rowInEdit._id)).removeClass('row-in-edit');
 			closeDialog();
 			$scope.rowInEdit = null;
 		}
 
 		function deleteSelected(){
-			$scope.tableOptions.delete($scope.tableOptions.selection.selectedId)
+			$scope.tableOptions.deleteFunc($scope.tableOptions.selection.selectedId)
 			.then(function successCallback(){
 				if($scope.tableOptions.selection.selectedId.length === 0){
 					$timeout(function() {
@@ -368,7 +434,8 @@ angular.module('dataTable')
 		}
 
 		function saveEdit(){
-			return $scope.tableOptions.dataServices.save($scope.rowInEdit);
+			angular.element(document.querySelector('#data-table-row-'+$scope.rowInEdit._id)).removeClass('row-in-edit');
+			return $scope.tableOptions.saveFunc($scope.rowInEdit);
 		}
                    		
 		function openDialog(){
@@ -382,6 +449,7 @@ angular.module('dataTable')
 			console.log(number);
 			return new Array(number);
 		}
+
 
 		//function for external use
 		var viewContentLoaded = $q.defer();
