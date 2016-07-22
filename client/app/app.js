@@ -92,7 +92,7 @@
                     }
                 })
                 .state('formBuilder', {
-                    url: '/formBuilder//:groupName/:formName',
+                    url: '/formBuilder/:groupName/:formName',
                     templateUrl: 'app/FormBuilder/formBuilder.html',
                     controller: 'formBuilderCtrl',
                     controllerAs: 'vm',
