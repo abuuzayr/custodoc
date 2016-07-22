@@ -1,8 +1,8 @@
 angular
 	.module("app.formMgmt")
-	.controller("formsCtrl", ['$compile','$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
+	.controller("formsCtrl", ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService', formsCtrl]);
 
-function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
+function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
 	var vm = this;
 	var serverURL = "https://10.4.1.204/req/api/protected";
 	var forms = document.getElementById('forms');
@@ -37,19 +37,19 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	//submit new entry
-	function toNewEntry(){
+	function toNewEntry() {
 		var rows = vm.gridApi.selection.getSelectedRows();
 		var groupName = rows[0].groupName;
-		$state.go('newentry', { groupName: groupName});
+		$state.go('newentry', { groupName: groupName });
 	}
 
 	//group management
 
 	vm.getGroupData();
-	
+
 	function getGroupData() {
 		vm.groups = [];
-		$http.get(serverURL+"/groups")
+		$http.get(serverURL + "/groups")
 			.then(function (res) {
 				for (var i = 0; i < res.data.length; i++) {
 					vm.groups.push(res.data[i].groupName);
@@ -65,7 +65,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 
 	function addNewGroup() {
-		$http.post(serverURL+"/groups", { groupName: vm.newGroupName }, { headers: { 'Content-Type': 'application/json' } })
+		$http.post(serverURL + "/groups", { groupName: vm.newGroupName }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -79,7 +79,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function deleteGroup() {
 		if (confirm("Do you really want to delete this group? All the forms and entries data of this group will be deleted?")) {
-			$http.delete(serverURL+"/groups/" + vm.deleteGroupName)
+			$http.delete(serverURL + "/groups/" + vm.deleteGroupName)
 				.then(function (res) {
 					vm.getGroupData();
 					vm.getFormData();
@@ -88,7 +88,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function renameGroup() {
-		$http.put(serverURL+"/groups", { originalName: vm.renameGroupOld, newName: vm.renameGroupNew }, { headers: { 'Content-Type': 'application/json' } })
+		$http.put(serverURL + "/groups", { originalName: vm.renameGroupOld, newName: vm.renameGroupNew }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -216,7 +216,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	}
 
 	function generateForm(formNumber) {
-		var key, 
+		var key,
 			formData,
 			newPage,
 			element,
@@ -224,7 +224,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 		var deferred = $q.defer();
 		var groupName = rows[formNumber - 1].groupName;
 		var formName = rows[formNumber - 1].formName;
-		$http.get(serverURL+"/forms/" + groupName + '/' + formName)
+		$http.get(serverURL + "/forms/" + groupName + '/' + formName)
 			.then(function (res) {
 				var node,
 					page,
@@ -276,7 +276,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						for (i = 0; i < options.length; i++) {
 							option = document.createElement('option');
 							option.innerHTML = options[i];
-							if (options[i]===element.default) option.setAttribute("selected",true);
+							if (options[i] === element.default) option.setAttribute("selected", true);
 							node.appendChild(option);
 						}
 						node.style.color = element.color;
@@ -285,21 +285,21 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex = "1";
-					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
+					} else if (element.name.startsWith('auto_radio') || element.name.startsWith('radio')) {
 						node = document.createElement('form');
 						options = element.options;
-						if (element.display==="radioInline") display = "inline";
+						if (element.display === "radioInline") display = "inline";
 						else display = "block";
-						if(options.length>0){
-							for(i=0; i<options.length; i++){
+						if (options.length > 0) {
+							for (i = 0; i < options.length; i++) {
 								label = document.createElement("label");
 								option = document.createElement("input");
 								option.type = "radio";
 								option.name = element.name;
 								option.value = options[i];
-								if(options[i]===element.default) option.setAttribute("checked",true);
+								if (options[i] === element.default) option.setAttribute("checked", true);
 								span = document.createElement("span");
-								span.innerHTML=options[i]+" ";
+								span.innerHTML = options[i] + " ";
 								label.style.display = display;
 								label.appendChild(option);
 								label.appendChild(span);
@@ -312,7 +312,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						node.style.fontFamily = element.fontFamily;
 						node.style.fontSize = element.fontSize;
 						node.style.textDecoration = element.textDecoration;
-						node.style.zIndex="1";
+						node.style.zIndex = "1";
 					} else if (element.name.startsWith('signature_')) {
 						node = document.createElement('canvas');
 						node.style.backgroundColor = element.backgroundColor;
@@ -326,8 +326,8 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						span = document.createElement('span');
 						checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
-						if(element.default) checkbox.setAttribute("checked",true);
-						checkbox.setAttribute("ng-checked",element.default);
+						if (element.default) checkbox.setAttribute("checked", true);
+						checkbox.setAttribute("ng-checked", element.default);
 						$compile(checkbox)($scope);
 						span.innerHTML = element.label;
 						node.appendChild(checkbox);
@@ -365,7 +365,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function getFormData() {
 		vm.gridOptions.data = [];
-		$http.get(serverURL+"/forms")
+		$http.get(serverURL + "/forms")
 			.then(function (result) {
 				vm.formsData = result.data;
 				for (var i = 0; i < vm.formsData.length; i++) {
@@ -374,6 +374,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 						"groupName": formData.groupName,
 						"formName": formData.formName,
 						"creationDate": formData.creationDate.substring(4, 25),
+						"creator": formData.creator,
 						"lastRecord": formData.lastRecord,
 						"lastModified": formData.lastModified.substring(4, 25),
 						"lastModifiedName": formData.lastModifiedName,
@@ -387,7 +388,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function createForm() {
 		var formData = { groupName: vm.newFormGroup, formName: vm.newFormName };
-		$http.post(serverURL+"/forms", { formData: formData }, { headers: { 'Content-Type': 'application/json' } })
+		$http.post(serverURL + "/forms", { formData: formData }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This form name already exists in the selected group.");
@@ -400,7 +401,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function deleteForms() {
 		if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
 			angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-				$http.delete(serverURL+"/forms/" + data.groupName + '/' + data.formName)
+				$http.delete(serverURL + "/forms/" + data.groupName + '/' + data.formName)
 					.then(function (res) {
 						vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
 						if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
@@ -415,7 +416,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function renameForm() {
 		var groupName = vm.gridApi.selection.getSelectedRows()[0].groupName;
 		var renameFormOld = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.put(serverURL+"/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
+		$http.put(serverURL + "/forms/rename", { groupName: groupName, originalName: renameFormOld, newName: vm.renameFormNew }, { headers: { 'Content-Type': 'application/json' } })
 			.then(function (res) {
 				if (res.data === "Existed") {
 					alert("This group name already exists");
@@ -431,7 +432,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 	function duplicateForm() {
 		var duplicateFrom = vm.gridApi.selection.getSelectedRows()[0].groupName;
 		var formName = vm.gridApi.selection.getSelectedRows()[0].formName;
-		$http.post(serverURL+"/forms/duplicate",
+		$http.post(serverURL + "/forms/duplicate",
 			{
 				duplicateFrom: duplicateFrom,
 				formName: formName,
@@ -456,7 +457,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function setImportant() {
 		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put(serverURL+"/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+			$http.put(serverURL + "/forms/important", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
 					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
 						vm.getFormData();
@@ -468,7 +469,7 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 
 	function setNormal() {
 		angular.forEach(vm.gridApi.selection.getSelectedRows(), function (data, index) {
-			$http.put(serverURL+"/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
+			$http.put(serverURL + "/forms/normal", { groupName: data.groupName, formName: data.formName }, { headers: { 'Content-Type': 'application/json' } })
 				.then(function (res) {
 					if (index === vm.gridApi.selection.getSelectedRows().length - 1) {
 						vm.getFormData();
@@ -563,11 +564,11 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 				return row.entity.creationDate;
 			}
 		}, {
-			name: 'creatorName',
+			name: 'creator',
 			displayName: 'Creator',
 			resizable: true,
 			cellTooltip: function (row, col) {
-				return row.entity.creatorName;
+				return row.entity.creator;
 			}
 		}, {
 			name: 'lastRecord',
@@ -629,22 +630,22 @@ function formsCtrl($compile,$scope, $q, $location, $timeout, $http, uiGridConsta
 				return row.entity.lastModified;
 			}
 		}, {
-			name: 'lastModifiedName',
+			name: 'lastModifiedBy',
 			displayName: 'Last Modified By',
 			resizable: true,
 			cellTooltip: function (row, col) {
-				return row.entity.lastModifiedName;
+				return row.entity.lastModifiedBy;
 			}
 		}];
 
 	//sorting and filtering
-	
+
 	// var filter = $stateParams.filter;
 	// function showByFilter() {
 	// 	if(filter == "important") {
 	// 		showImportant();
 	// 	}
-		
+
 	// 	if(filter == "recent") {
 	// 		showRecent();
 	// 	}
