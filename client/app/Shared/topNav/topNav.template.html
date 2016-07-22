@@ -66,7 +66,7 @@
 <div>
     <div class="mdl-layout__header-row">
         <!-- Header top nav -->
-        <button id="sideNavMenu-button" class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.openNav()"><i class="material-icons">more_vert</i></button>
+        <button class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.openNav()"><i class="material-icons">more_vert</i></button>
         <div class="divider"></div>
         <span class="mdl-layout-title">Bulletforms</span>
         <div class="mdl-layout-spacer"></div>
@@ -76,8 +76,7 @@
     </div>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" ng-click="vm.closeNav()">&times;</a>
-        <ul class="mdl-menu mdl-menu--lower-left mdl-js-menu mdl-js-ripple-effect" for="sideNavMenu-button">
-
+        <ul>
             <li class="mdl-menu__item mdl-navigation__link" ui-sref="forms">
                 <i class="material-icons" role="presentation">dashboard</i> Forms
             </li>
