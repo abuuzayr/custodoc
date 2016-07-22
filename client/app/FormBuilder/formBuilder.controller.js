@@ -353,7 +353,8 @@
 					node.style.position = "absolute";
 					var page = document.getElementById('page' + element.page);
 					page.appendChild(node);
-				}
+					$compile(node)($scope);
+
 			}, function(res) {
 				alert('Cannot find the form.');
 				$state.go('forms');
