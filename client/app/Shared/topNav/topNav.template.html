@@ -100,23 +100,21 @@
 </div>-->
 
 <!-- Always shows a header, even in smaller screens. -->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-            <span class="mdl-layout-title">Bulletforms</span>
-        </div>
-    </header>
-    <div class="mdl-layout__drawer">
-        <div id="userInformation" style="padding:20px;">
-            <span>Welcome, {{ vm.username }}</span><br>
-            <span>{{ vm.date | date: 'medium'}}</span>
-        </div>
-        <div class="mdl-menu__item--full-bleed-divider"></div>
-        <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" ui-sref="forms"><i class="material-icons" role="presentation">dashboard</i> Forms</a>
-            <a class="mdl-navigation__link" ui-sref="entries"><i class="material-icons" role="presentation">assessment</i> Entries</a>
-            <a class="mdl-navigation__link" ui-sref="autofill"><i class="material-icons" role="presentation">account_box</i> Autofill</a>
-            <a class="mdl-navigation__link" ui-sref="users" ng-if="vm.userType"><i class="material-icons">group</i> User management</a>
-        </nav>
+<header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">Bulletforms</span>
     </div>
+</header>
+<div class="mdl-layout__drawer">
+    <div id="userInformation" style="padding:20px;">
+        <span>Welcome, {{ vm.username }}</span><br>
+        <span>{{ vm.date | date: 'medium'}}</span>
+    </div>
+    <div class="mdl-menu__item--full-bleed-divider"></div>
+    <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" ui-sref="forms"><i class="material-icons" role="presentation">dashboard</i> Forms</a>
+        <a class="mdl-navigation__link" ui-sref="entries"><i class="material-icons" role="presentation">assessment</i> Entries</a>
+        <a class="mdl-navigation__link" ui-sref="autofill"><i class="material-icons" role="presentation">account_box</i> Autofill</a>
+        <a class="mdl-navigation__link" ui-sref="users" ng-if="vm.userType"><i class="material-icons">group</i> User management</a>
+    </nav>
 </div>
