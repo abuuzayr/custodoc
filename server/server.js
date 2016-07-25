@@ -1,4 +1,6 @@
-'use strict';
+(function(){
+    "use strict";
+
 // Import packages 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -49,3 +51,5 @@ MongoClient.connectAsync(config.dbURL)
 	.catch(function(err){
 		console.log(err);
 	});
+
+})();

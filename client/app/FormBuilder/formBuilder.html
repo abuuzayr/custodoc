@@ -344,7 +344,7 @@
 		<div class="mdl-dialog__content mdl-grid">
 			<div class="mdl-cell mdl-cell--6-col">
 				<label>Checkbox Field Name:<br>
-					<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true" class="selectInDialog" class="selectInDialog" />
+					<input type="text" name="text" id="checkboxName" ng-model="vm.checkboxName" required="true" class="selectInDialog"/>
 				</label><br>
 				<label>Checked by default?<br>
 					<select ng-model="vm.checkboxdefault" ng-init="vm.checkboxdefault=true" ng-options="vm.boolToStr(item) for item in [true, false]" class="selectInDialog"></select>
@@ -579,7 +579,7 @@
 			<!-- Dialog cancel button here HELLO -->
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 			<div class="mdl-layout-spacer"></div>
-			<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create image field">
+			<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" image field">
 		</div>
 	</form>
 </dialog>
@@ -620,7 +620,7 @@
 		<div class="mdl-dialog__actions" style="padding-left:0px;">
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 			<div class="mdl-layout-spacer"></div>
-			<input type="submit" value="Create Signature Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Create signature field">
+			<input type="submit" value="Create Signature Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" signature field">
 		</div>
 	</form><br>
 </dialog>
@@ -631,7 +631,7 @@
 				<legend>
 					<h4>Upload Image Attachment</h4></legend>
 			<label for="file">Select File:<br>
-				<input class="form-control" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" /><br>
+				<input class="form-control mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" type="file" ng-model="vm.file" name="inputFile" base-sixty-four-input accept="image/*" /><br>
 			</label>
 			<div>
 				<span ng-style="vm.maxSizeWarning()">Maximum upload size: 2MB</span><br>
