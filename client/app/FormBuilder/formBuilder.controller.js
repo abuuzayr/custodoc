@@ -1521,8 +1521,8 @@
 			}
 
 			if (mouseEvent.pageX || mouseEvent.pageY) {
-				result.x = mouseEvent.pageX + document.getElementsByClassName("mdl-layout__content")[0].scrollLeft;
-				result.y = mouseEvent.pageY + document.getElementsByClassName("mdl-layout__content")[0].scrollTop;
+				result.x = mouseEvent.pageX + document.getElementsByClassName("page")[0].scrollLeft;
+				result.y = mouseEvent.pageY + document.getElementsByClassName("page")[0].scrollTop;
 			} else if (mouseEvent.clientX || mouseEvent.clientY) {
 				result.x = mouseEvent.clientX + document.body.scrollLeft +
 					document.documentElement.scrollLeft;
