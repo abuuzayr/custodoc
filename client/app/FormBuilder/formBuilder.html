@@ -151,28 +151,28 @@
 					<div class="divider"></div>
 					<a name="createCheckbox" my-on-drag-start="vm.dragStart($event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
 					<div class="divider"></div>
-					<a name="createRadio" my-on-drag-start="vm.dragStart(event,'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
+					<a name="createRadio" my-on-drag-start="vm.dragStart($event,'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
 					<div class="divider"></div>
-					<a name="createDropdown" my-on-drag-start="vm.dragStart(event,'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
+					<a name="createDropdown" my-on-drag-start="vm.dragStart($event,'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
 					<div class="divider"></div>
-					<a name="createImageField" my-on-drag-start="vm.dragStart(event,'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
+					<a name="createImageField" my-on-drag-start="vm.dragStart($event,'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
 					<div class="divider"></div>
-					<a name="createSignature" my-on-drag-start="vm.dragStart(event,'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
+					<a name="createSignature" my-on-drag-start="vm.dragStart($event,'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
 					<div class="divider"></div>
-					<a name="createImageAttachment" my-on-drag-start="vm.dragStart(event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+					<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 				</div>
 				<div id="savedElement-panel" class="mdl-tabs__panel">
 					<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
 						<div class="divider"></div>
-						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart(event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
+						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart($event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
 					</div>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
 					<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
-						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart(event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
+						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart($event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
 					</div>
 				</div>
 			</div>
