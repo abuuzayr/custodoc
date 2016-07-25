@@ -4,9 +4,9 @@
         .module('app.shared')
         .controller('topNavCtrl', topNavCtrl);
 
-    topNavCtrl.$inject = ['authServices', '$scope', '$interval'];
+    topNavCtrl.$inject = ['authServices', '$scope', '$interval', '$q'];
 
-    function topNavCtrl(authServices, $scope, $interval) {
+    function topNavCtrl(authServices, $scope, $interval, $q) {
         var vm = this;
         vm.openNav = openNav;
         vm.closeNav = closeNav;
