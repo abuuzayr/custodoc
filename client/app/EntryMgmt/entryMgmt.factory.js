@@ -15,6 +15,12 @@ function entryMgmtServices($http,appConfig) {
 	}
 
 	function saveData(rowData){
+		return $http.post(appConfig.API_URL + '/protected/entries', {
+			rowData: rowData
+		});
+	}
+
+	function updateData(rowData){
 		return $http.put(appConfig.API_URL + '/protected/entries', {
 			rowData: rowData
 		});

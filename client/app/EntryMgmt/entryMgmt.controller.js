@@ -91,7 +91,7 @@ angular.module('app.entryMgmt')
 
 
 		function importFunc(rowArray){
-			var deferred = q.defer();
+			var deferred = $q.defer();
 			var saveAll = [];
 			//promise chaining
 			for(var i = 0 ; i < rowArray.length; i++){
@@ -108,14 +108,15 @@ angular.module('app.entryMgmt')
 		}
 
 		function saveRow(row){
-			var deferred = q.defer();
-			saveData(row).then(successCallback).catch(errorCallback);
+			var deferred = $q.defer();
+			entryMgmtServices.saveData(row).then(successCallback).catch(errorCallback);
 			return deferred.promise;
 
 			function successCallback(msg){
-				vm.tableOptions.unshift(row);
+				vm.tableOptions.data.unshift(row);
 				deferred.resolve(msg);
 			}
+			
 			function errorCallback(err){
 				deferred.reject(err);
 			}
