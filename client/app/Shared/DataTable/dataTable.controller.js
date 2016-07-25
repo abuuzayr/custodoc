@@ -335,8 +335,11 @@ angular.module('dataTable')
 			getDataFromId();
 			if($scope.tableOptions.selection.selected == [] || $scope.tableOptions.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','dataTable-feedbackMessage'); 
-			else	
+			else{
+				console.log($scope.tableOptions.selection.selected);
 				return download(Papa.unparse($scope.tableOptions.selection.selected));
+			}	
+				
 		}
 
 		function exportAll(){
@@ -457,12 +460,11 @@ angular.module('dataTable')
 
 			function resolve(msg){
 				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
-				console.log('yasss')
 			}
 
 			function reject(err){
 				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
-				console.log('to0 bad')
+				feedbackServices.errorFeedback(err.description , 'dataTable-feedbackMessage');
 			} 
 		}
                    		
