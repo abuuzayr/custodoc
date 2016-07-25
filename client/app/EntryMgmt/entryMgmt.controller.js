@@ -6,7 +6,7 @@ angular.module('app.entryMgmt')
 	entryMgmtCtrl.$inject = ['$scope','$q','$timeout','entryMgmtServices'];
 	function entryMgmtCtrl($scope, $q, $timeout,entryMgmtServices){
 		var vm = this;
-		var fieldArray = ['groupName','formName','createdAt','createdBy','modifiedAt','modifiedBy'];
+		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
 		vm.tableOptions = {};
 		vm.tableOptions.data = [];
 		vm.tableOptions.columnDefs = [];
@@ -135,14 +135,17 @@ angular.module('app.entryMgmt')
 
 		function updateRow(row){
 			var rowData = row;
-			rowData.data = {};
+			var data = {};
+			var deferred = $q.defer();	
 			for(var field in rowData){
 				if(fieldArray.indexOf(field) === -1){
-					rowData.data[field] = rowData[field];
+					data[field] = rowData[field];
+					delete rowData[field];
 				}
 			}
-			var deferred = $q.defer();
-			console.log(rowData.data);
+			rowData.data = data;
+
+			console.log(rowData);
 			entryMgmtServices.updateData(rowData)
 			.then(successCallback)
 			.catch(errorCallback);
