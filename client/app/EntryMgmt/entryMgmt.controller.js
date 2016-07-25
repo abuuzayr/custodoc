@@ -142,6 +142,7 @@ angular.module('app.entryMgmt')
 				}
 			}
 			var deferred = $q.defer();
+			console.log(rowData.data);
 			entryMgmtServices.updateData(rowData)
 			.then(successCallback)
 			.catch(errorCallback);
