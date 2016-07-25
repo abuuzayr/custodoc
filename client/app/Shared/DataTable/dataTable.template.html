@@ -1,150 +1,148 @@
 <link rel="stylesheet" href="app/Shared/DataTable/dataTable.css" type="text/css">
 <!--toolbar-->
-<div class="mdl-layout__content">
-    <div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='tableOptions.enableDelete || tableOptions.enableExport || tableOptions.enableImport || tableOptions.enableSearch'>
-        <div class="mdl-cell mdl-cell--3-col mdl-cell--">
-            <div ng-if='tableOptions.enableSearch' class="menu-wrapper">
-                <input class="mdl-textfield__input" type="text" id="table-toolbar-search" ng-model='tableOptions.filterQuery' placeholder="search...">
-            </div>
-        </div>
-        <div class='mdl-cell mdl-cell--4-col mdl-cell--6-col-tablet'></div>
-        <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
-            <i class="mdl-badge mdl-badge--overlap" data-badge="{{tableOptions.selection.selectedId.length}}" ng-show='tableOptions.selection.selectedId.length > 0'>
-            <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='deleteSelected()'>
-                <i class="material-icons">delete</i>
-            </button>
-            </i>
-        </div>
-        <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
-            <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='deselectAll()' ng-show='tableOptions.selection.selectedId.length > 0'>
-                <i class="material-icons">clear</i>
-            </button>
-        </div>
-        <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
-            <div ng-if='tableOptions.enableImport'>
-                <button class='mdl-button mdl-primary'>
-                    <label for="table-toolbar-import">Import</label>
-                </button>
-                <input id="table-toolbar-import" type="file" accept='.csv' file-upload-onchange="validateCSVBeforeUpload" />
-            </div>
-        </div>
-        <div class='menu-wrapper mdl-cell mdl-cell--1-col'>
-            <div ng-if='tableOptions.enableExport'>
-                <button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
-                    Export
-                </button>
-                <ul class="mdl-menu mdl-menu mdl-js-menu" for="table-toolbar-export-menu">
-                    <li class="mdl-menu__item" ng-repeat="exportOption in tableOptions.exportOptions.exportBy" ng-click="exportCSV(exportOption)">
-                        Export {{exportOption}}
-                    </li>
-                </ul>
-            </div>
+<div id='table-toolbar' class='mdl-grid mdl-shadow--4dp' ng-if='tableOptions.enableDelete || tableOptions.enableExport || tableOptions.enableImport || tableOptions.enableSearch'>
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--">
+        <div ng-if='tableOptions.enableSearch' class="menu-wrapper">
+            <input class="mdl-textfield__input" type="text" id="table-toolbar-search" ng-model='tableOptions.filterQuery' placeholder="search...">
         </div>
     </div>
-    <!--table-->
-    <div class="mdl-card mdl-shadow--2dp">
-        <table class="mdl-data-table mdl-shadow--2dp">
-            <div id="table-progress" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-            <thead>
-                <tr>
-                    <th class='table-cell-no-stretch'>
-                        <label ng-if='tableOptions.enableMultiSelect' id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="data-table-header-checkbox" class="table-cell-no-stretch">
-                            <input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked.headerChecked' ng-click='selectVisible($event)' />
-                        </label>
-                    </th>
-                    <!--action-->
-                    <th ng-if='tableOptions.enableEdit' class="table-cell-no-stretch" />
-                    <th class="table-cell-no-stretch" ng-repeat="col in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index" />
-                    <!--default-->
-                    <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in textCols = (tableOptions.columnDefs | filter: filterTextCol) track by $index">
-                        <a href="" class='table-header-text-link' ng-click="sort(col)">
+    <div class='mdl-cell mdl-cell--4-col mdl-cell--6-col-tablet'></div>
+    <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
+        <i class="mdl-badge mdl-badge--overlap" data-badge="{{tableOptions.selection.selectedId.length}}" ng-show='tableOptions.selection.selectedId.length > 0'>
+            <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='deleteSelected()'>
+                <i class="material-icons">delete</i>
+        </button>
+        </i>
+    </div>
+    <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
+        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" ng-click='deselectAll()' ng-show='tableOptions.selection.selectedId.length > 0'>
+            <i class="material-icons">clear</i>
+        </button>
+    </div>
+    <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
+        <div ng-if='tableOptions.enableImport'>
+            <button class='mdl-button mdl-primary'>
+                <label for="table-toolbar-import">Import</label>
+            </button>
+            <input id="table-toolbar-import" type="file" accept='.csv' file-upload-onchange="validateCSVBeforeUpload" />
+        </div>
+    </div>
+    <div class='menu-wrapper mdl-cell mdl-cell--1-col'>
+        <div ng-if='tableOptions.enableExport'>
+            <button id="table-toolbar-export-menu" class="mdl-button  mdl-primary mdl-js-button ">
+                Export
+            </button>
+            <ul class="mdl-menu mdl-menu mdl-js-menu" for="table-toolbar-export-menu">
+                <li class="mdl-menu__item" ng-repeat="exportOption in tableOptions.exportOptions.exportBy" ng-click="exportCSV(exportOption)">
+                    Export {{exportOption}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--table-->
+<div class="mdl-card mdl-shadow--2dp">
+    <table class="mdl-data-table mdl-shadow--2dp">
+        <div id="table-progress" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+        <thead>
+            <tr>
+                <th class='table-cell-no-stretch'>
+                    <label ng-if='tableOptions.enableMultiSelect' id='data-table-header-checkbox-label' class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="data-table-header-checkbox" class="table-cell-no-stretch">
+                        <input type="checkbox" id="data-table-header-checkbox" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked.headerChecked' ng-click='selectVisible($event)' />
+                    </label>
+                </th>
+                <!--action-->
+                <th ng-if='tableOptions.enableEdit' class="table-cell-no-stretch" />
+                <th class="table-cell-no-stretch" ng-repeat="col in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index" />
+                <!--default-->
+                <th class="mdl-data-table__cell--non-numeric" ng-repeat="col in textCols = (tableOptions.columnDefs | filter: filterTextCol) track by $index">
+                    <a href="" class='table-header-text-link' ng-click="sort(col)">
                     {{col.displayName}}
                     <span ng-show="sorting.sortBy == header && !sorting.sortReverse" >^</span>
                     <span ng-show="sorting.sortBy == header && sorting.sortReverse" >v</span>
                 </a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-attr-id="{{'data-table-row-' + row._id}}" ng-class ng-repeat='row in filteredRows = ( tableOptions.data | filter: filterByKeyword) | limitTo:tableOptions.pagination.itemPerPage : tableOptions.pagination.startingIndex-1 > 0 ? tableOptions.pagination.startingIndex : 0 track by $index' post-repeat-upgrade>
-                    <td class="table-cell-no-stretch">
-                        <label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="{{'data-table-checkbox-' + row._id}}">
-                            <input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked[row._id]' ng-click='selectOne($event,row)' />
-                        </label>
-                    </td>
-                    <td ng-if='tableOptions.enableEdit' class="table-cell-no-stretch">
-                        <a class='table-cell-icon-link' id='table-cell-icon-edit' ng-click='editRow(row)'>
-                            <i class="material-icons">edit</i>
-                        </a>
-                    </td>
-                    <!--icons-->
-                    <td class="table-cell-no-stretch" ng-repeat="actionCol in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index">
-                        <a class='table-cell-icon-link' ng-click='actionCol.action(row)'>
-                            <i class="material-icons" ng-if="actionCol.icon !== ''">{{actionCol.icon}}</i>
-                        </a>
-                    </td>
-                    <td class="mdl-data-table__cell--non-numeric" ng-repeat="textCol in textCols = (tableOptions.columnDefs | filter: filterTextCol ) track by $index">
-                        <p ng-if="textCol.type !== 'date'">{{row[textCol.fieldName]}}</p>
-                        <p ng-if="textCol.type === 'date'">{{row[textCol.fieldName] | date: textCol.format}}</p>
-                    </td>
-                    <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p>
-                    <p ng-show='filteredRows.length === 0 && tableOptions.data.length !== 0'>No match</p>
-                </tr>
-            </tbody>
-        </table>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-attr-id="{{'data-table-row-' + row._id}}" ng-class ng-repeat='row in filteredRows = ( tableOptions.data | filter: filterByKeyword) | limitTo:tableOptions.pagination.itemPerPage : tableOptions.pagination.startingIndex-1 > 0 ? tableOptions.pagination.startingIndex : 0 track by $index' post-repeat-upgrade>
+                <td class="table-cell-no-stretch">
+                    <label ng-attr-id="{{'data-table-checkbox-label-' + row._id}}" class="mdl-checkbox mdl-js-checkbox mdl-checkbox__input table-cell-no-stretch" for="{{'data-table-checkbox-' + row._id}}">
+                        <input type="checkbox" ng-attr-id="{{'data-table-checkbox-' + row._id}}" class="mdl-checkbox__input" ng-model='tableOptions.selection.checked[row._id]' ng-click='selectOne($event,row)' />
+                    </label>
+                </td>
+                <td ng-if='tableOptions.enableEdit' class="table-cell-no-stretch">
+                    <a class='table-cell-icon-link' id='table-cell-icon-edit' ng-click='editRow(row)'>
+                        <i class="material-icons">edit</i>
+                    </a>
+                </td>
+                <!--icons-->
+                <td class="table-cell-no-stretch" ng-repeat="actionCol in actionCols = (tableOptions.columnDefs | filter: filterActionCol) track by $index">
+                    <a class='table-cell-icon-link' ng-click='actionCol.action(row)'>
+                        <i class="material-icons" ng-if="actionCol.icon !== ''">{{actionCol.icon}}</i>
+                    </a>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric" ng-repeat="textCol in textCols = (tableOptions.columnDefs | filter: filterTextCol ) track by $index">
+                    <p ng-if="textCol.type !== 'date'">{{row[textCol.fieldName]}}</p>
+                    <p ng-if="textCol.type === 'date'">{{row[textCol.fieldName] | date: textCol.format}}</p>
+                </td>
+                <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p>
+                <p ng-show='filteredRows.length === 0 && tableOptions.data.length !== 0'>No match</p>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--pagination-->
+<div class="mdl-grid" ng-if='tableOptions.enablePagination'>
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+    <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
+    <span flex=''></span>
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
+        <div id='page-selection' class='menu-wrapper'>
+            <span>Page: </span>
+            <button id='page-selection-menu-button' class="mdl-button mdl-js-button">
+                {{tableOptions.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
+            </button>
+            <ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="page-selection-menu-button">
+                <li class="mdl-menu__item" ng-repeat='num in tableOptions.pagination.rgPage track by $index' ng-click='tableOptions.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
+            </ul>
+        </div>
     </div>
-    <!--pagination-->
-    <div class="mdl-grid" ng-if='tableOptions.enablePagination'>
-        <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
-        <div class="mdl-cell mdl-cell--1-col mdl-cell--2-col-phone"></div>
-        <span flex=''></span>
-        <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
-            <div id='page-selection' class='menu-wrapper'>
-                <span>Page: </span>
-                <button id='page-selection-menu-button' class="mdl-button mdl-js-button">
-                    {{tableOptions.pagination.currentPage}} <i class="material-icons">arrow_drop_down</i>
-                </button>
-                <ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="page-selection-menu-button">
-                    <li class="mdl-menu__item" ng-repeat='num in tableOptions.pagination.rgPage track by $index' ng-click='tableOptions.pagination.currentPage = $index + 1' ng-value='$index + 1'>{{$index + 1}}</li>
-                </ul>
-            </div>
+    <div class="mdl-cell mdl-cell--3-col">
+        <div id='item-per-page-selection' class='menu-wrapper'>
+            <span>Rows per page: </span>
+            <button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
+                {{tableOptions.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
+            </button>
+            <ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
+                <li class="mdl-menu__item" ng-repeat='option in tableOptions.pagination.limitOptions' ng-click='tableOptions.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
+            </ul>
         </div>
-        <div class="mdl-cell mdl-cell--3-col">
-            <div id='item-per-page-selection' class='menu-wrapper'>
-                <span>Rows per page: </span>
-                <button id='item-per-page-selection-menu-button' class="mdl-button mdl-js-button">
-                    {{tableOptions.pagination.itemPerPage}} <i class="material-icons">arrow_drop_down</i>
-                </button>
-                <ul class="mdl-menu mdl-menu--top-left mdl-js-menu" for="item-per-page-selection-menu-button">
-                    <li class="mdl-menu__item" ng-repeat='option in tableOptions.pagination.limitOptions' ng-click='tableOptions.pagination.itemPerPage = option' ng-value='option'>{{option}}</li>
-                </ul>
-            </div>
+    </div>
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
+        <!-- <span id='item-info'> -->
+        <div id='item-info' class='menu-wrapper'>
+            <p id='item-info-text'>{{tableOptions.pagination.startingIndex + 1}} - {{tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage > tableOptions.pagination.totalItem ? tableOptions.pagination.totalItem : tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage}} of {{tableOptions.pagination.totalItem}}</p>
         </div>
-        <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
-            <!-- <span id='item-info'> -->
-            <div id='item-info' class='menu-wrapper'>
-                <p id='item-info-text'>{{tableOptions.pagination.startingIndex + 1}} - {{tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage > tableOptions.pagination.totalItem ? tableOptions.pagination.totalItem : tableOptions.pagination.startingIndex + tableOptions.pagination.itemPerPage}} of {{tableOptions.pagination.totalItem}}</p>
-            </div>
-            <!-- </span> -->
+        <!-- </span> -->
+    </div>
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
+        <!-- <span id='page-navigator'> -->
+        <div id='item-info' class='menu-wrapper'>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='toFirstPage()'>
+                <i class="material-icons">first_page</i>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='toPreviousPage()'>
+                <i class="material-icons">chevron_left</i>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='toNextPage()'>
+                <i class="material-icons">chevron_right</i>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='toLastPage()'>
+                <i class="material-icons">last_page</i>
+            </button>
         </div>
-        <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">
-            <!-- <span id='page-navigator'> -->
-            <div id='item-info' class='menu-wrapper'>
-                <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-first' ng-click='toFirstPage()'>
-                    <i class="material-icons">first_page</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-previous' ng-click='toPreviousPage()'>
-                    <i class="material-icons">chevron_left</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-next' ng-click='toNextPage()'>
-                    <i class="material-icons">chevron_right</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--icon" id='page-navigator-to-last' ng-click='toLastPage()'>
-                    <i class="material-icons">last_page</i>
-                </button>
-            </div>
-            <!-- </span> -->
-        </div>
+        <!-- </span> -->
     </div>
 </div>
 <!--editing modal-->

@@ -7,7 +7,8 @@ entryMgmtServices.$inject = ['$http','appConfig'];
 function entryMgmtServices($http,appConfig) {
 	var service = {
 		getData: getData,
-		saveData: saveData
+		saveData: saveData,
+		updateData:updateData
 	};
 	return service;
 	function getData(){
@@ -21,7 +22,7 @@ function entryMgmtServices($http,appConfig) {
 	}
 
 	function updateData(rowData){
-		return $http.put(appConfig.API_URL + '/protected/entries', {
+		return $http.put(appConfig.API_URL + '/protected/entries/' + rowData._id, {
 			rowData: rowData
 		});
 	}

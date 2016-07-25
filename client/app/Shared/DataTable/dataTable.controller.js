@@ -450,8 +450,20 @@ angular.module('dataTable')
 		}
 
 		function saveEdit(){
+			angular.element(document.querySelector('#table-progress')).addClass('mdl-progress__indeterminate');
 			angular.element(document.querySelector('#data-table-row-'+$scope.rowInEdit._id)).removeClass('row-in-edit');
-			return $scope.tableOptions.saveFunc($scope.rowInEdit);
+			return $scope.tableOptions.saveFunc($scope.rowInEdit)
+			.then(resolve,reject);
+
+			function resolve(msg){
+				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
+				console.log('yasss')
+			}
+
+			function reject(err){
+				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
+				console.log('to0 bad')
+			} 
 		}
                    		
 		function openDialog(){

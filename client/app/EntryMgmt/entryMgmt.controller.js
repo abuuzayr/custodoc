@@ -17,6 +17,7 @@ angular.module('app.entryMgmt')
 		vm.tableOptions.enableImport = true;
 		//
 		vm.tableOptions.importFunc = importFunc;
+		vm.tableOptions.saveFunc = updateRow;
 		getData();
 
 		function getData(){
@@ -109,11 +110,29 @@ angular.module('app.entryMgmt')
 
 		function saveRow(row){
 			var deferred = $q.defer();
-			entryMgmtServices.saveData(row).then(successCallback).catch(errorCallback);
+			entryMgmtServices.saveData(row)
+			.then(successCallback)
+			.catch(errorCallback);
 			return deferred.promise;
 
 			function successCallback(msg){
 				vm.tableOptions.data.unshift(row);
+				deferred.resolve(msg);
+			}
+			
+			function errorCallback(err){
+				deferred.reject(err);
+			}
+		}
+
+		function updateRow(row){
+			var deferred = $q.defer();
+			entryMgmtServices.updateData(row)
+			.then(successCallback)
+			.catch(errorCallback);
+			return deferred.promise;
+
+			function successCallback(msg){
 				deferred.resolve(msg);
 			}
 			
