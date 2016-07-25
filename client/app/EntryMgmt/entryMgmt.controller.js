@@ -15,6 +15,8 @@ angular.module('app.entryMgmt')
 		vm.tableOptions.enableDelete = true;
 		vm.tableOptions.enableExport = true;
 		vm.tableOptions.enableImport = true;
+		//
+		vm.tableOptions.importFunc = importFunc;
 		getData();
 
 		function getData(){
@@ -85,6 +87,38 @@ angular.module('app.entryMgmt')
 				pagesImage = [];
 				rows = [];
 			});
+		}
+
+
+		function importFunc(rowArray){
+			var deferred = q.defer();
+			var saveAll = [];
+			//promise chaining
+			for(var i = 0 ; i < rowArray.length; i++){
+				saveAll.push(saveRow(rowArray[i]));
+			}
+
+			$q.all(saveAll).then(function resolve(){
+			  deferred.resolve('all saved');
+			}, function reject(err){
+			  deferred.reject(err);
+			});
+
+			return deferred.promise;
+		}
+
+		function saveRow(row){
+			var deferred = q.defer();
+			saveData(row).then(successCallback).catch(errorCallback);
+			return deferred.promise;
+
+			function successCallback(msg){
+				vm.tableOptions.unshift(row);
+				deferred.resolve(msg);
+			}
+			function errorCallback(err){
+				deferred.reject(err);
+			}
 		}
 
 		//UPGRADE UI

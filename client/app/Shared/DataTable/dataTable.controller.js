@@ -104,12 +104,12 @@ angular.module('dataTable')
 			}
 		}
 
-		function processData(){
-			var dateCol = [];
-			for(var i = 0 ; i < processData ; i++){
-			}
-			$scope.tableOptions.data
-		}
+		// function processData(){
+		// 	var dateCol = [];
+		// 	for(var i = 0 ; i < processData ; i++){
+		// 	}
+		// 	return importFunc();
+		// }
 
 		function setPagination(isEnabled){
 			$scope.tableOptions.pagination = {};
@@ -398,7 +398,7 @@ angular.module('dataTable')
 
 			function csvToArray(csv) {
 		        var lines = csv.split(/\r\n|\n/);
-		        var objectArray = [];
+		        var rowArray = [];
 		        var headerArray = [];
 		        for (var i=0; i<lines.length; i++) {
 		        	var tempObject = {};
@@ -409,10 +409,14 @@ angular.module('dataTable')
 		        		for(var j=0; j < headerArray.length; j++){
 	        				tempObject[headerArray[j]] = line[j];
 	        			}
-		        		objectArray.push(tempObject);
+		        		rowArray.push(tempObject);
 		        	}
 		        }
-		        return updateTable(objectArray);
+		        return updateTable(rowArray).then(function successCallback(result){
+		        	//Resolve
+		        },function errorCallback(reason){
+		        	//Reject
+		        });
 		    }
 
 		    function updateTable(objectArray){
