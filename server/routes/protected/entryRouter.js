@@ -1,4 +1,5 @@
 var express = require('express');
+var ObjectId = require('mongodb').ObjectId;
 var assert = require('assert');
 var connection = require('../../utils/connection')();
 var entryRoutes = express.Router();
@@ -49,7 +50,7 @@ entryRoutes.route('/')
 entryRoutes.route('/:entryId')
     .get(function(req, res) {
         connection.Do(function(db) {
-            db.collection("entries").find({ _id: entryId }).limit(1).next(function(err, doc) {
+            db.collection("entries").find({ _id:new ObjectId(req.params.entryId) }).limit(1).next(function(err, doc) {
                 if (err)
                     sendError(req, res, 400, err.message, 'Unsuccessful');
                 else
@@ -59,13 +60,14 @@ entryRoutes.route('/:entryId')
     })
     .put(function(req, res) {
         connection.Do(function(db) {
-            db.collection("entries").updateOne({ _id: entryId }, {
+            db.collection("entries").updateOne({ _id:new ObjectId(req.params.entryId) }, {
                 $set: {
                     data: req.body.entryData.data,
                     lastModifiedAt: new Date(),
                     lastModifiedBy: req.decoded.username
                 }
-            }).then(function(result) {
+            }).then(function(result){
+		console.log(result)//TOFIX
                 res.status(200).send('updated');
             }).catch(function(err) {
                 sendError(req, res, 400, err.message, 'Unsuccessful');
@@ -74,7 +76,7 @@ entryRoutes.route('/:entryId')
     })
     .delete(function(req, res) {
         connection.Do(function(db) {
-            db.collection("entries").deleteOne({ _id: entryId })
+            db.collection("entries").deleteOne({ _id:new ObjectId(req.params.entryId) })
                 .then(function(result) {
                     res.status(200).send('deleted');
                 }).catch(function(err) {

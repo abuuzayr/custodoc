@@ -23,7 +23,7 @@ function entryMgmtServices($http,appConfig) {
 
 	function updateData(rowData){
 		return $http.put(appConfig.API_URL + '/protected/entries/' + rowData._id, {
-			rowData: rowData
+			entryData: rowData
 		});
 	}
 
