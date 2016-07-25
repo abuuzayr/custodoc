@@ -189,3 +189,7 @@ select {
     line-height: 48px !important;
     color: black !important;
 }
+
+.mdl-layout__content {
+    margin: 64px 0px 0px 0px;
+}

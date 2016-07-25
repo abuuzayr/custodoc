@@ -1,8 +1,7 @@
-<div id="body" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<!-- <header class="mdl-layout__header" ng-include="'app/Shared/topNav/topNavBar.html'"></header> -->
-	<top-nav-bar></top-nav-bar>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div top-nav-bar></div>
 	<!-- =========================================== TABLE ========================================== -->
-	<div>
+	<div class="mdl-layout__content">
 		<custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
 	</div>
 </div>
