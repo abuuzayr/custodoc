@@ -1,7 +1,9 @@
-module.exports = function(req,res,status,description,msg){
+module.exports = function(req,res,status,errDescription,msg){
 	return res.status(status).send({
 			message: msg,
-      		description:description,
+      		description:errDescription,
   		    url: req.url
 	}); 
 }; 
+//description: String
+//msg: String
