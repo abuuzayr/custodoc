@@ -34,8 +34,8 @@ angular.module('app.entryMgmt')
 				vm.tableOptions.columnDefs.push({type:'default', displayName:'Form Name', fieldName: 'formName'});
 				vm.tableOptions.columnDefs.push({type:'date', displayName:'Created at', fieldName: 'createdAt', format:'MMM d, y'});
 				vm.tableOptions.columnDefs.push({type:'default', displayName:'Created by', fieldName: 'createdBy'});
-				vm.tableOptions.columnDefs.push({type:'date', displayName:'Last edit', fieldName: 'modifiedAt', format:'MMM d, y'});
-				vm.tableOptions.columnDefs.push({type:'default', displayName:'Edited by', fieldName: 'modifiedBy'});
+				vm.tableOptions.columnDefs.push({type:'date', displayName:'Last edit', fieldName: 'lastModifiedAt', format:'MMM d, y'});
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Edited by', fieldName: 'lastModifiedBy'});
 				for(var i = 0 ; i  < vm.tableOptions.data.length; i++){
 					for(var fieldName in vm.tableOptions.data[i].data){
 						vm.tableOptions.data[i][fieldName] = vm.tableOptions.data[i].data[fieldName];

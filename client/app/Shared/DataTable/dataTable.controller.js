@@ -336,15 +336,31 @@ angular.module('dataTable')
 			if($scope.tableOptions.selection.selected == [] || $scope.tableOptions.selection.selected.length < 1)
 				return feedbackServices.errorFeedback('Please select at least one row','dataTable-feedbackMessage'); 
 			else{
-				console.log($scope.tableOptions.selection.selected);
-				return download(Papa.unparse($scope.tableOptions.selection.selected));
+				var exportData = [];
+				for(var i = 0 ; i < $scope.tableOptions.selection.selected.length; i++){
+				var tempObject = {};
+				for(var j = 0 ; j <  $scope.tableOptions.columnDefs.length ; j++){
+					if($scope.tableOptions.columnDefs[j].type !== 'action')
+						tempObject[$scope.tableOptions.columnDefs[j].fieldName] = $scope.tableOptions.selection.selected[i][$scope.tableOptions.columnDefs[j].fieldName];
+				}
+				exportData.push(tempObject);
+			}
+				return download(Papa.unparse(exportData));
 			}	
 				
 		}
 
 		function exportAll(){
-			var csv = Papa.unparse($scope.tableOptions.data);
-			return download(csv);
+			var exportData = [];
+			for(var i = 0 ; i < $scope.tableOptions.data.length; i++){
+				var tempObject = {};
+				for(var j = 0 ; j <  $scope.tableOptions.columnDefs.length ; j++){
+					if($scope.tableOptions.columnDefs[j].type !== 'action')
+						tempObject[$scope.tableOptions.columnDefs[j].fieldName] = $scope.tableOptions.data[i][$scope.tableOptions.columnDefs[j].fieldName];
+				}
+				exportData.push(tempObject);
+			}
+			return download(Papa.unparse(exportData));
 		}
 
 		function download(csv){
