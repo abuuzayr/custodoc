@@ -27,7 +27,7 @@ function myOnDragOver($parse) {
 		link: function(scope, element, attrs){
 			element.on('dragover', onDragOverHandler);
 
-			function onDragOverHandler(){
+			function onDragOverHandler(event){
 				var onDragOverFunc = $parse(attrs.myOnDragOver);                                 
     			onDragOverFunc(scope, { $event: event });
     			scope.$apply();
