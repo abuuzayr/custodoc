@@ -6,6 +6,7 @@ angular.module('app.entryMgmt')
 	entryMgmtCtrl.$inject = ['$scope','$q','$timeout','entryMgmtServices'];
 	function entryMgmtCtrl($scope, $q, $timeout,entryMgmtServices){
 		var vm = this;
+		var fieldArray = ['groupName','formName','createdAt','createdBy','modifiedAt','modifiedBy'];
 		vm.tableOptions = {};
 		vm.tableOptions.data = [];
 		vm.tableOptions.columnDefs = [];
@@ -29,18 +30,25 @@ angular.module('app.entryMgmt')
 				vm.tableOptions.data = [];
 				vm.tableOptions.data = res.data;
 				vm.tableOptions.columnDefs = [];
-				vm.tableOptions.columnDefs.push({type:'default', displayName:'Group name', fieldName: 'groupName'});
-				vm.tableOptions.columnDefs.push({type:'default', displayName:'Create at', fieldName: 'creationDate'});
-				var entryData = res.data;
-				for(var i = 0 ; i  < entryData.length; i++){
-					for(var fieldName in entryData[i].data){
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Group Name', fieldName: 'groupName'});
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Form Name', fieldName: 'formName'});
+				vm.tableOptions.columnDefs.push({type:'date', displayName:'Created at', fieldName: 'createdAt', format:'MMM d, y'});
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Created by', fieldName: 'createdBy'});
+				vm.tableOptions.columnDefs.push({type:'date', displayName:'Last edit', fieldName: 'modifiedAt', format:'MMM d, y'});
+				vm.tableOptions.columnDefs.push({type:'default', displayName:'Edited by', fieldName: 'modifiedBy'});
+				for(var i = 0 ; i  < vm.tableOptions.data.length; i++){
+					for(var fieldName in vm.tableOptions.data[i].data){
+						vm.tableOptions.data[i][fieldName] = vm.tableOptions.data[i].data[fieldName];
 						if(!fieldName.startsWith('image_') && !fieldName.startsWith('signature_')){
 							vm.tableOptions.columnDefs.push({
 								type:'default', 
 								displayName: getDisplayName(fieldName),
-								fieldName: fieldName});
+								fieldName: fieldName,
+								enableEdit: true
+							});
 						}
 					}
+					delete vm.tableOptions.data[i].data;
 				}
 				
 				vm.tableOptions.columnDefs.push({type:'action', icon:'get_app', action:downLoadAsOne});
@@ -126,8 +134,16 @@ angular.module('app.entryMgmt')
 		}
 
 		function updateRow(row){
+			var rowData = row;
+			rowData.data = {};
+			for(var field in rowData){
+				if(fieldArray.indexOf(field) === -1){
+					rowData.data[field] = rowData[field];
+				}
+			}
 			var deferred = $q.defer();
-			entryMgmtServices.updateData(row)
+			console.log(rowData.data);
+			entryMgmtServices.updateData(rowData)
 			.then(successCallback)
 			.catch(errorCallback);
 			return deferred.promise;
