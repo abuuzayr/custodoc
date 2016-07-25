@@ -909,7 +909,7 @@
 		}
 
 		function dragStart(event, type) {
-			event.dataTransfer.setData('text/plain', '');
+			event.dataTransfer.setData('text', '');
 			vm.newElementType = type;
 			event.dataTransfer.setDragImage(dragIcon, 0, 0);
 		}
