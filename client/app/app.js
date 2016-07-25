@@ -8,10 +8,10 @@
             $compileProvider.debugInfoEnabled(false);
             // Set HTML5 mode
             $locationProvider.html5Mode(true);
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise('/forms');
             $stateProvider
                 .state('login', {
-                    url: '/',
+                    url: '/login',
                     templateUrl: 'app/Login/login.html',
                     controller: 'loginCtrl',
                     controllerAs: 'vm'
@@ -92,7 +92,7 @@
                     }
                 })
                 .state('formBuilder', {
-                    url: '/formBuilder/:groupName/:formName',
+                    url: '/formbuilder/:groupName/:formName',
                     templateUrl: 'app/FormBuilder/formBuilder.html',
                     controller: 'formBuilderCtrl',
                     controllerAs: 'vm',
@@ -120,7 +120,6 @@
                             }
                         }]
                     }
-
                 });
         }]);
 })();
