@@ -239,7 +239,7 @@ angular.module('dataTable')
 					}
 				}
 				//header
-				if(elementList && elementList.length > 0 ){
+				if($scope.tableOptions.enableMultiSelect && elementList && elementList.length > 0 ){
 					if(isAllChecked(elementList)){
 							$scope.tableOptions.selection.checked.headerChecked = true;
 							headerCheckbox.MaterialCheckbox.check();
@@ -431,10 +431,10 @@ angular.module('dataTable')
 		        		rowArray.push(tempObject);
 		        	}
 		        }
-		        return updateTable(rowArray).then(function successCallback(result){
-		        	//Resolve
+		        updateTable(rowArray).then(function successCallback(result){
+		        	feedbackServices.successFeedback('Records imported','dataTable-feedbackMessage');
 		        },function errorCallback(reason){
-		        	//Reject
+		        	feedbackServices.errorFeedback('Import error','dataTable-feedbackMessage');
 		        });
 		    }
 
@@ -476,6 +476,7 @@ angular.module('dataTable')
 
 			function resolve(msg){
 				angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
+				closeDialog();
 			}
 
 			function reject(err){

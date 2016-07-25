@@ -199,13 +199,12 @@ angular.module('app.autofill')
 
 		function saveFunc(rowEntity){
 			var deferred = $q.defer();
-
 			autofillServices.updateRecord(rowEntity)
 			.then(SuccessCallback)
 			.catch(ErrorCallback);
 			return deferred.promise;
 
-			function SuccessCallback(res){
+			function SuccessCallback(msg){
 				deferred.resolve(msg);		
 				feedbackServices.successFeedback('records updated', 'autofill-feedbackMessage');
 			}
@@ -217,16 +216,41 @@ angular.module('app.autofill')
 		}
 
 		function importFunc(objectArray){
+			var deferred = $q.defer();
 		    var promises = [];
 			for(var i = 0 ; i < objectArray.length; i++){
-				promises.push(autofillServices.createRecord(objectArray[i]));
+				promises.push(createRecord(objectArray[i]));
 			}
-			$q.all(promises).then(postImportUpdate);
+			$q.all(promises)
+			.then(SuccessCallback)
+			.catch(ErrorCallback);
+			return deferred.promise;
 
-			function postImportUpdate(){
-				vm.tableOptions.data.unshift(objectArray);
+			function SuccessCallback(res){
+				deferred.resolve(res.data);
+			}
+			function ErrorCallback(err){
+				deferred.reject(err.description);
 			}
 		}
+
+
+		function createRecord(autofillData){
+			var deferred = $q.defer();
+			autofillServices.createRecord(autofillData)
+			.then(SuccessCallback)
+			.catch(ErrorCallback);
+			return deferred.promise;
+
+			function SuccessCallback(res){
+				vm.tableOptions.data.unshift(autofillData);
+				deferred.resolve(res.data);
+			}
+			function ErrorCallback(err){
+				deferred.reject(err.description);
+			}
+		}
+
 
 		function postDeleteUpdate(){
 			init();
@@ -262,7 +286,8 @@ angular.module('app.autofill')
 					vm.tableOptions.columnDefs.push({
 						type:'default',
 						displayName:res.data[i].fieldName.toUpperCase(),
-						fieldName:res.data[i].fieldName
+						fieldName:res.data[i].fieldName,
+						enableEdit: true
 					});
 				}
 				vm.tableOptions.columnDefs.push({ 
