@@ -1,10 +1,11 @@
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <div top-nav-bar></div>
-	<!-- =========================================== TABLE ========================================== -->
-	<div class="mdl-layout__content with-navigation">
-		<custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
-	</div>
+<!---------------------------------------- Ng-include nav bars ---------------------------------------->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" top-nav-bar></div>
+<!---------------------------------------- Main Content ---------------------------------------->
+<!-- =========================================== TABLE ========================================== -->
+<div class="with-navigation">
+	<custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
 </div>
+
 
 <!-- =========================================== DIALOG ========================================== -->
 <dialog id="create-element-dialog" class="mdl-dialog">

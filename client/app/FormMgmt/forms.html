@@ -111,57 +111,55 @@
     </form>
 </dialog>
 <!---------------------------------------- Ng-include nav bars ---------------------------------------->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <div top-nav-bar></div>
-    <!---------------------------------------- Main forms ---------------------------------------->
-    <main class="mdl-layout__content with-navigation">
-        <div id="forms" class="page-content">
-            <span us-spinner="{radius:30, width:8, length: 30,speed:1.5,opacity:0.15,scale:1.5}" spinner-key="spinner-1"></span>
-            <div id="top-row-buttons" class="mdl-grid">
-                <button id="manageForms" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Manage forms</button>
-                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageForms">
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newForm')"><i class="material-icons">add</i> New form</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridOptions.selection.selectedId.length === 1" ng-click="vm.openDialog('renameForm')"><i class="material-icons">edit</i> Rename form</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridOptions.selection.selectedId.length === 1" ng-click="vm.openDialog('duplicateForm')"><i class="material-icons">content_copy</i> Duplicate form</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.deleteForms()"><i class="material-icons">delete</i> Delete form</li>
-                </ul>
-                <div class="divider"></div>
-                <button id="manageGroups" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons" role="presentation"></i>Manage groups</button>
-                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageGroups">
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newGroup')"><i class="material-icons">add</i> New group</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('renameGroup')"><i class="material-icons">edit</i> Rename group</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
-                </ul>
-                <div class="divider"></div>
-                <button ng-click="vm.toNewEntry()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()"><i class="material-icons" role="presentation">add</i> New Entry</button>
-                <div class="divider"></div>
-                <button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridOptions.selection.selectedId.length"><i class="material-icons">vertical_align_bottom</i> Download</button>
-                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="downloadMenu">
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadAsOne()">Download one</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadSeparate()">Download separately</li>
-                </ul>
-                <div class="divider"></div>
-                <div class="mdl-layout-spacer"></div>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showImportant()">Show Important</button>
-                <div class="divider"></div>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showRecent()">Show Recent</button>
-                <div class="divider"></div>
-                <button id="importance" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Importance</button>
-                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="importance">
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">bookmark</i>Set important</li>
-                    <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setNormal()"><i class="material-icons" role="presentation">bookmark_outline</i>Set normal</li>
-                </ul>
-            </div>
-            <!-- Table for forms stub -->
-            <div ng-style="vm.getTableHeight()">
-                <!-- <div id="grid-forms" ui-grid="vm.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection ui-grid-pagination ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div> -->
-            </div>
-            <custom-mdl-data-table table-options='vm.gridOptions' />
-            <!-- Snack Bar -->
-            <div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
-                <div class="mdl-snackbar__text"></div>
-                <button class="mdl-snackbar__action" type="button"></button>
-            </div>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" top-nav-bar></div>
+<!---------------------------------------- Main forms ---------------------------------------->
+<main class="with-navigation">
+    <div id="forms" class="page-content">
+        <span us-spinner="{radius:30, width:8, length: 30,speed:1.5,opacity:0.15,scale:1.5}" spinner-key="spinner-1"></span>
+        <div id="top-row-buttons" class="mdl-grid">
+            <button id="manageForms" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Manage forms</button>
+            <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageForms">
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newForm')"><i class="material-icons">add</i> New form</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridOptions.selection.selectedId.length === 1" ng-click="vm.openDialog('renameForm')"><i class="material-icons">edit</i> Rename form</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-show="vm.gridOptions.selection.selectedId.length === 1" ng-click="vm.openDialog('duplicateForm')"><i class="material-icons">content_copy</i> Duplicate form</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.deleteForms()"><i class="material-icons">delete</i> Delete form</li>
+            </ul>
+            <div class="divider"></div>
+            <button id="manageGroups" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons" role="presentation"></i>Manage groups</button>
+            <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="manageGroups">
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('newGroup')"><i class="material-icons">add</i> New group</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('renameGroup')"><i class="material-icons">edit</i> Rename group</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
+            </ul>
+            <div class="divider"></div>
+            <button ng-click="vm.toNewEntry()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()"><i class="material-icons" role="presentation">add</i> New Entry</button>
+            <div class="divider"></div>
+            <button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridOptions.selection.selectedId.length"><i class="material-icons">vertical_align_bottom</i> Download</button>
+            <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="downloadMenu">
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadAsOne()">Download one</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.downloadSeparate()">Download separately</li>
+            </ul>
+            <div class="divider"></div>
+            <div class="mdl-layout-spacer"></div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showImportant()">Show Important</button>
+            <div class="divider"></div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showRecent()">Show Recent</button>
+            <div class="divider"></div>
+            <button id="importance" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Importance</button>
+            <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="importance">
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">bookmark</i>Set important</li>
+                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setNormal()"><i class="material-icons" role="presentation">bookmark_outline</i>Set normal</li>
+            </ul>
         </div>
-    </main>
-</div>
+        <!-- Table for forms stub -->
+        <div ng-style="vm.getTableHeight()">
+            <!-- <div id="grid-forms" ui-grid="vm.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection ui-grid-pagination ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div> -->
+        </div>
+        <custom-mdl-data-table table-options='vm.gridOptions' />
+        <!-- Snack Bar -->
+        <div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+    </div>
+</main>
