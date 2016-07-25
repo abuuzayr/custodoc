@@ -188,7 +188,7 @@
 </dialog>
 
 <!-- create radio button -->
-<dialog id='radio' class="mdl-dialog">
+<dialog id="radio" class="mdl-dialog">
 	<form id="radioCreation" name="radioCreation" ng-submit="vm.createRadio()">
 		<legend>
 			<h4>Create Radio Button</h4></legend>
@@ -219,7 +219,7 @@
 				</label>
 				<label>Radio Button Default Value:<br>
 					<select type="text" name="text" id="radioDefault" ng-model="vm.radioDefault" class="selectInDialog">
-						<option ng-repeat="option in vm.options" value={{option}}>{{option}}</option>
+						<option ng-repeat="option in vm.options" ng-value="option">{{option}}</option>
 					</select>
 				</label><br>
 			</div>
@@ -264,7 +264,7 @@
 </dialog>
 
 <!-- Create drop-down list -->
-<dialog id='dropdown' class="mdl-dialog">
+<dialog id="dropdown" class="mdl-dialog">
 	<form id="dropdownCreation" name="dropdownCreation" ng-submit="vm.createDropdownList()">
 		<legend>
 			<h4>Create Drop-down List</h4></legend>
@@ -275,7 +275,7 @@
 				</label><br>
 				<label>Drop-down List Default Value:<br>
 					<select type="text" name="text" id="dropdownListDefault" ng-model="vm.dropdownListDefault" class="selectInDialog">
-						<option ng-repeat="option in vm.options" value={{option}}>{{option}}</option>
+						<option ng-repeat="option in vm.options" ng-value="option">{{option}}</option>
 					</select>
 				</label><br>
 				<label>Font Size:<br>
@@ -369,48 +369,48 @@
 			<!-- Dialog cancel button here HELLO -->
 			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
 			<div class="mdl-layout-spacer"></div>
-			<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" image field ">
+			<input type="submit" value="Create Image Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 		</div>
 	</form>
 </dialog>
 <!---------------------------------------- Create signature field ---------------------------------------->
 <dialog id="signatureField" class="mdl-dialog">
-	<form id="signatureFieldCreation " name="signatureFieldCreation " ng-submit="vm.createSignatureField() ">
-		<div class="mdl-dialog__content ">
+	<form id="signatureFieldCreation" name="signatureFieldCreation" ng-submit="vm.createSignatureField()">
+		<div class="mdl-dialog__content">
 			<legend>
 				<h4>Create Signature Field</h4></legend>
 			<label>Signature Field Name: 
-				<input type="text " name="text " id="signatureFieldName " ng-model="vm.signatureFieldName " required="true " class="selectInDialog " />
+				<input type="text" name="text" id="signatureFieldName" ng-model="vm.signatureFieldName" required="true" class="selectInDialog">
 			</label><br>
-			<label>Opacity: <span ng-style="{opacity: vm.Opacity} ">{{vm.Opacity | number:2}}</span><br>
-				<input type="range " max="1 " min="0 " step="0.01 "  ng-model="vm.Opacity " class="selectInDialog ">
+			<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
+				<input type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 			</label><br>
 			<label>Background Color:
-				<select ng-options="option for option in vm.colorsArray " ng-model="vm.BackgroundColor " ng-style="{ 'background-color': vm.BackgroundColor} " class="selectInDialog "></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{ 'background-color': vm.BackgroundColor}" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Style:
-				<select ng-model="vm.BorderStyle " class="selectInDialog ">
-					<option value="solid ">Solid</option>
-					<option value="dashed ">Dashed</option>
-					<option value="dotted ">Dotted</option>
-					<option value="none ">None</option>
+				<select ng-model="vm.BorderStyle" class="selectInDialog">
+					<option value="solid">Solid</option>
+					<option value="dashed">Dashed</option>
+					<option value="dotted">Dotted</option>
+					<option value="none">None</option>
 				</select>
 			</label><br>
 			<label>Border Width:
-				<select ng-options="option for option in vm.availableBorderWidth " ng-model="vm.BorderWidth " class="selectInDialog "></select>
+				<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Radius:
-				<select ng-options="option for option in vm.availableBorderRadii " ng-model="vm.BorderRadius " class="selectInDialog "></select>
+				<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 			</label><br>
 			<label>Border Color:
-				<select ng-options="option for option in vm.colorsArray " ng-model="vm.BorderColor " ng-style="{ 'color': vm.BorderColor} " class="selectInDialog "></select>
+				<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{ 'color': vm.BorderColor}" class="selectInDialog"></select>
 			</label><br>
 		</div>
-		<div class="divider "></div>
-		<div class="mdl-dialog__actions " style="padding-left:0px; ">
-			<input type="button " class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent " ng-click="vm.closeDialog() " value="Cancel ">
-			<div class="mdl-layout-spacer "></div>
-			<input type="submit " value="Create Signature Field " class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent " signature field">
+		<div class="divider"></div>
+		<div class="mdl-dialog__actions" style="padding-left:0px;">
+			<input type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" ng-click="vm.closeDialog()" value="Cancel">
+			<div class="mdl-layout-spacer"></div>
+			<input type="submit" value="Create Signature Field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 		</div>
 	</form><br>
 </dialog>
@@ -441,13 +441,13 @@
 					<select ng-options="option for option in vm.availableBorderWidth" ng-model="vm.BorderWidth" class="selectInDialog"></select>
 				</label><br>
 				<label>Border Color:
-					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>
+					<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{ 'color': vm.BorderColor}" class="selectInDialog"></select>
 				</label><br>
 				<label>Border Radius:
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 				</label><br>
 				<label ng-if="vm.file">Preview: <br>
-					<img width="90%"  ng-style="{opacity: vm.Opacity}" ng-src='data:image/png;base64,{{vm.file.base64}}'/>
+					<img width="90%"  ng-style="{opacity: vm.Opacity}" ng-src="data:image/png;base64,{{vm.file.base64}}"/>
 				</label>
 			</div>
 		</div>
@@ -517,7 +517,7 @@
 						</select>
 					</label>
 				<label>Border Color:
-						<select id="editBorderColor" ng-model="vm.element.style.borderColor" ng-style="{'color': vm.element.style.borderColor}">
+						<select id="editBorderColor" ng-model="vm.element.style.borderColor" ng-style="{ 'color': vm.element.style.borderColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -529,12 +529,12 @@
 						</select>
 					</label>
 				<label>Font Type:
-						<select id="editFontFamily" ng-model="vm.element.style.fontFamily" ng-style="{'font-family': vm.element.style.fontFamily}">
+						<select id="editFontFamily" ng-model="vm.element.style.fontFamily" ng-style="{ 'font-family': vm.element.style.fontFamily}">
 							<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
 				<label>Font Color:
-						<select id="editFontColor" ng-model="vm.element.style.color" ng-style="{'color': vm.element.style.color}">
+						<select id="editFontColor" ng-model="vm.element.style.color" ng-style="{ 'color': vm.element.style.color}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -549,7 +549,7 @@
 			</div>
 			<div class="mdl-tabs__panel" id="background-panel">
 				<label id="editBackgroundColorLabel">Background Color:
-						<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{'background-color': vm.element.style.backgroundColor}">
+						<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{ 'background-color': vm.element.style.backgroundColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
@@ -570,20 +570,20 @@
 					</label>
 			</div>
 			<div class="mdl-tabs__panel" id="options-panel">
-				<label>{{"Options: " + vm.editOptions.join(', ')}}</label><br>
+				<label>{{"Options:" + vm.editOptions.join(', ')}}</label><br>
 				<input type="text" ng-model="vm.editNewOption">
 				<input type="button" value="Add" ng-click="vm.editAddNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 				<input type="button" value="Delete" ng-click="vm.editDeleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
 				<label id="editDropdownDefault">Drop-down List Default Value:
 						<select  ng-model="vm.element.value" >
 							<option value=""></option>
-							<option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option>
+							<option ng-repeat="option in vm.editOptions" ng-value="option">{{option}}</option>
 						</select>
 					</label>
 				<label id="editRadioDefault">Default Value:
 						<select ng-model="vm.editRadioDefaultValue">
 							<option value=""></option>
-							<option ng-repeat="option in vm.editOptions" value={{option}}>{{option}}</option>
+							<option ng-repeat="option in vm.editOptions" ng-value="option">{{option}}</option>
 						</select>
 					</label>
 				<label id="editRadioDisplay">Display Style:
@@ -604,35 +604,35 @@
 				<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill</a>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="newElement-panel">
-				<a name="createLabel" my-on-drag-start="vm.dragStart($event,'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
+				<a name="createLabel" my-on-drag-start="vm.dragStart($event, 'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
 				<div class="divider"></div>
 
-				<a name="createTextField" my-on-drag-start="vm.dragStart($event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+				<a name="createTextField" my-on-drag-start="vm.dragStart($event, 'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
 				<div class="divider"></div>
-				<a name="createCheckbox" my-on-drag-start="vm.dragStart($event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
+				<a name="createCheckbox" my-on-drag-start="vm.dragStart($event, 'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
 				<div class="divider"></div>
-				<a name="createRadio" my-on-drag-start="vm.dragStart($event,'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
+				<a name="createRadio" my-on-drag-start="vm.dragStart($event, 'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
 				<div class="divider"></div>
-				<a name="createDropdown" my-on-drag-start="vm.dragStart($event,'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
+				<a name="createDropdown" my-on-drag-start="vm.dragStart($event, 'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
 				<div class="divider"></div>
-				<a name="createImageField" my-on-drag-start="vm.dragStart($event,'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
+				<a name="createImageField" my-on-drag-start="vm.dragStart($event, 'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
 				<div class="divider"></div>
-				<a name="createSignatureField" my-on-drag-start="vm.dragStart($event,'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
+				<a name="createSignatureField" my-on-drag-start="vm.dragStart($event, 'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
 				<div class="divider"></div>
-				<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+				<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event, 'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 			</div>
 			<div id="savedElement-panel" class="mdl-tabs__panel">
 				<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
 				<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
 					<div class="divider"></div>
-					<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart($event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
+					<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart($event, 'saved')" draggable="true">{{element.name.replace("_",":")}}</a>
 				</div>
 			</div>
 			<div class="mdl-tabs__panel" id="autofillElement-panel">
 				<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
 				<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 					<div class="divider"></div>
-					<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart($event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
+					<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart($event, 'auto')" draggable="true">{{element.type+":"+element.fieldName}}</a>
 				</div>
 			</div>
 		</div>
@@ -640,9 +640,9 @@
 	</section>
 
 	<section id="form" style="height: 1123px; width: 794px;border:2px solid black;">
-		<div ng-init="displayPageBar = false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar = true" ng-mouseleave="displayPagebar = false">
+		<div ng-init="displayPageBar=f alse" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar=t rue" ng-mouseleave="displayPagebar=f alse">
 			<div id="hidden-pagebar" ng-show="displayPagebar">
-				<label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+				<label>{{"Current Page:"+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
 				<form ng-submit="vm.goToPage()" style="display:inline">
 					<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
 					<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
