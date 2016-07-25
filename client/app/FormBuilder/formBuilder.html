@@ -144,36 +144,35 @@
 					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill</a>
 				</div>
 				<div class="mdl-tabs__panel is-active" id="newElement-panel">
-					<a name="createLabel" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
+					<a name="createLabel" my-on-drag-start="vm.dragStart($event,'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
 					<div class="divider"></div>
-					<!-- <a name="createTextField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br> -->
-					this is my own judgement
+
 					<a name="createTextField" my-on-drag-start="vm.dragStart($event,'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
 					<div class="divider"></div>
-					<a name="createCheckbox" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
+					<a name="createCheckbox" my-on-drag-start="vm.dragStart($event,'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
 					<div class="divider"></div>
-					<a name="createRadio" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
+					<a name="createRadio" my-on-drag-start="vm.dragStart(event,'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
 					<div class="divider"></div>
-					<a name="createDropdown" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
+					<a name="createDropdown" my-on-drag-start="vm.dragStart(event,'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
 					<div class="divider"></div>
-					<a name="createImageField" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
+					<a name="createImageField" my-on-drag-start="vm.dragStart(event,'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
 					<div class="divider"></div>
-					<a name="createSignature" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
+					<a name="createSignature" my-on-drag-start="vm.dragStart(event,'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
 					<div class="divider"></div>
-					<a name="createImageAttachment" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+					<a name="createImageAttachment" my-on-drag-start="vm.dragStart(event,'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
 				</div>
 				<div id="savedElement-panel" class="mdl-tabs__panel">
 					<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
 						<div class="divider"></div>
-						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
+						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart(event,'saved')" draggable="true">{{element.name.replace("_",": ")}}</a>
 					</div>
 				</div>
 				<div class="mdl-tabs__panel" id="autofillElement-panel">
 					<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
 					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
 						<div class="divider"></div>
-						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" ondragstart="angular.element(document.getElementById('formBuilderBody')).scope().vm.dragStart(event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
+						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart(event,'auto')" draggable="true">{{element.type+": "+element.fieldName}}</a>
 					</div>
 				</div>
 			</div>
@@ -195,7 +194,6 @@
 				</div>
 			</div>
 
-			<!-- <div class="page" id="page1" ondrop="angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)" ondragover="angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)" style="height:1123px;width:794px"> -->
 			<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
 				<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
 			</div>
