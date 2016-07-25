@@ -48,7 +48,7 @@ angular.module('app.autofill')
 		vm.tableOptions.deleteFunc = deleteSelected;
 		vm.tableOptions.importFunc = importFunc;
 		init();
-		vm.query ='';
+
 		
 	// ===========================================   UI Buttons  =========================================== //
 		vm.upgradeDom = upgradeDom;
@@ -198,13 +198,22 @@ angular.module('app.autofill')
 		}
 
 		function saveFunc(rowEntity){
-			return autofillServices.updateRecord(rowEntity)
-			.then(function SuccessCallback(res){		
-				return feedbackServices.successFeedback('records updated', 'autofill-feedbackMessage');
-			})
-			.catch(function ErrorCallback(err) {
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
+			var deferred = $q.defer();
+
+			autofillServices.updateRecord(rowEntity)
+			.then(SuccessCallback)
+			.catch(ErrorCallback);
+			return deferred.promise;
+
+			function SuccessCallback(res){
+				deferred.resolve(msg);		
+				feedbackServices.successFeedback('records updated', 'autofill-feedbackMessage');
+			}
+
+			function ErrorCallback(err) {
+				deferred.reject(err);
+				feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+			}
 		}
 
 		function importFunc(objectArray){
@@ -271,7 +280,7 @@ angular.module('app.autofill')
 
 		function getDataBody(){
 			vm.tableOptions.data = [];
-			return autofillServices.getRecords(vm.query)
+			return autofillServices.getRecords()
 			.then(function SuccessCallback(res){
 				for(var i = 0; i < res.data.length; i++){
 					vm.tableOptions.data.push(res.data[i]);
