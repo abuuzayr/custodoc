@@ -62,7 +62,6 @@ angular
 	vm.text = null;
 	vm.dropdown = null;
 	vm.radio = null;
-	vm.gotSignature = false;
 	
 	vm.groupName = $stateParams.groupName;
 	
@@ -122,13 +121,6 @@ angular
 			vm.signaturePad = new SignaturePad(vm.canvas);
         }, 0);
     });
-
-    vm.sign = function() {
-    	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
-	}
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()
@@ -520,44 +512,43 @@ angular
 
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
-	if (vm.signature === true) {
-		vm.openModal = function() {
-			vm.dialog.showModal();	
-		}
-		
-		vm.closeModal = function() {
-			vm.dialog.close();	
-		}
 
-		vm.clear = function() {
-			vm.signaturePad.clear();
-		};
+	vm.openModal = function() {
+		vm.dialog.showModal();	
+	}
+	
+	vm.closeModal = function() {
+		vm.dialog.close();	
+	}
 
-		vm.save = function() {
-			if (vm.signaturePad.isEmpty()) {
-	    		var msg = "Please provide signature first.";
-	    		showSnackbar(msg);
-			 	} else {
-			 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
-			 		//Open image in new window
-				//window.open(dataURL);
-				//..or
-				//Extract as base64 encoded
-				var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-				return data;
-				//TODO: include in your json object
-			}
-		}
+	vm.clear = function() {
+		vm.signaturePad.clear();
+	};
 
-		function showSnackbar(msg) {
-			var msgSnackbar = {
-				message: msg,
-				timeout: 5000
-			}
-			var snackbarContainer = document.querySelector('#snackbar-div');
-			console.log(snackbarContainer);
-			snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+	vm.save = function() {
+		if (vm.signaturePad.isEmpty()) {
+    		var msg = "Please provide signature first.";
+    		showSnackbar(msg);
+		 	} else {
+		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
+		 		//Open image in new window
+			//window.open(dataURL);
+			//..or
+			//Extract as base64 encoded
+			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+			return data;
+			//TODO: include in your json object
 		}
+	}
+
+	function showSnackbar(msg) {
+		var msgSnackbar = {
+			message: msg,
+			timeout: 5000
+		}
+		var snackbarContainer = document.querySelector('#snackbar-div');
+		console.log(snackbarContainer);
+		snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
 	}
 
 	/*************************************************************************/
