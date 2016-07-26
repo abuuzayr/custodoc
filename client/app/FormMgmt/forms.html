@@ -155,7 +155,7 @@
         <div ng-style="vm.getTableHeight()">
             <!-- <div id="grid-forms" ui-grid="vm.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection ui-grid-pagination ui-grid-auto-resize ng-style="vm.getTableHeight()" class="grid"></div> -->
         </div>
-        <custom-mdl-data-table table-options='vm.gridOptions' />
+        <custom-mdl-data-table table-options='vm.gridOptions' dt-row-per-page-options='[5,10,15]' />
         <!-- Snack Bar -->
         <div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
             <div class="mdl-snackbar__text"></div>

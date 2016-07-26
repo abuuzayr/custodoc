@@ -85,7 +85,15 @@
                 <td class="mdl-data-table__cell--non-numeric" ng-repeat="textCol in textCols = (tableOptions.columnDefs | filter: filterTextCol ) track by $index">
                     <p ng-if="textCol.type === 'default'">{{row[textCol.fieldName]}}</p>
                     <p ng-if="textCol.type === 'date'">{{row[textCol.fieldName] | date: textCol.format}}</p>
-                    <p ng-if="textCol.type === 'link'"><a class='table-cell-icon-link' ng-click='textCol.action(row)'>{{row[textCol.fieldName]}}</a></p>
+                    <p ng-if="textCol.type === 'link'">
+                        <a class='table-cell-icon-link' ng-click='textCol.action(row)'>{{row[textCol.fieldName]}}</a>
+                    </p>
+                    <p ng-if="textCol.type === 'toggle'">
+                        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for='table-cell-toggle-{{row._id}}' ng-id-attr='table-cell-toggle-label-{{row._id}}'>
+                            <input type="checkbox" ng-id-attr='table-cell-toggle-{{row._id}}' class="mdl-icon-toggle__input">
+                            <i class="mdl-icon-toggle__label material-icons">{{textCol.icon}}</i>
+                        </label>
+                    </p>
                 </td>
                 <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p>
                 <p ng-show='filteredRows.length === 0 && tableOptions.data.length !== 0'>No match</p>

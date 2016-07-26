@@ -5,9 +5,9 @@
 		.module('app.formMgmt')
 		.controller('formsCtrl', formsCtrl);
 
-	formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'uiGridConstants', 'formsFactory', '$state', 'usSpinnerService'];
+	formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'formsFactory', '$state', 'usSpinnerService', 'appConfig'];
 
-	function formsCtrl($compile, $scope, $q, $location, $timeout, $http, uiGridConstants, formsFactory, $state, usSpinnerService) {
+	function formsCtrl($compile, $scope, $q, $location, $timeout, $http, formsFactory, $state, usSpinnerService, appConfig) {
 		/* jshint validthis: true */
 		var vm = this;
 
@@ -28,9 +28,12 @@
 			action: goEditForm,
 			cellTemplate: '<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
 		}, {
-			type: 'default',
+			type: 'toggle',
 			fieldName: 'isImportant',
-			displayName: 'Importance',
+			displayName: 'Important',
+			icon: 'bookmark',
+			true: 'Important',
+			false: 'Normal'
 		}, {
 			type: 'date',
 			fieldName: 'creationDate',
@@ -288,7 +291,7 @@
 			}
 		}
 
-		function generateForm(formNumber) {/protected
+		function generateForm(formNumber) {
 			var key,
 				formData,
 				newPage,
@@ -297,7 +300,7 @@
 			var deferred = $q.defer();
 			var groupName = rows[formNumber - 1].groupName;
 			var formName = rows[formNumber - 1].formName;
-			$http.get(appConfig.API_URL + "/forms/" + groupName + '/' + formName)
+			$http.get(appConfig.API_URL + "/protected/forms/" + groupName + '/' + formName)
 				.then(function(res) {
 					var node,
 						page,
@@ -437,9 +440,9 @@
 			return deferred.promise;
 		}
 
-		function getFormData() {/protected
+		function getFormData() {
 			vm.gridOptions.data = [];
-			$http.get(appConfig.API_URL + "/forms")
+			$http.get(appConfig.API_URL + "/protected/forms")
 				.then(function(result) {
 					for (var i = 0; i < result.data.length; i++) {
 						var formData = result.data[i];
@@ -450,12 +453,12 @@
 				});
 		}
 
-		function createForm() {/protected
+		function createForm() {
 			var formData = {
 				groupName: vm.newFormGroup,
 				formName: vm.newFormName
 			};
-			$http.post(appConfig.API_URL + "/forms", {
+			$http.post(appConfig.API_URL + "/protected/forms", {
 					formData: formData
 				}, {
 					headers: {
@@ -474,10 +477,10 @@
 				});
 		}
 
-		function deleteForms(rgRows) {/protected
+		function deleteForms(rgRows) {
 			if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
 				angular.forEach(rgRows, function(data, index) {
-					$http.delete(appConfig.API_URL + "/forms/" + data.groupName + '/' + data.formName)
+					$http.delete(appConfig.API_URL + "/protected/forms/" + data.groupName + '/' + data.formName)
 						.then(function(res) {
 							vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
 							if (index === vm.gridOptions.selection.selectedId.length - 1) {
@@ -488,10 +491,10 @@
 			}
 		}
 
-		function renameForm() {/protected
+		function renameForm() {
 			var groupName = vm.gridOptions.selection.selectedId[0].groupName;
 			var renameFormOld = vm.gridOptions.selection.selectedId[0].formName;
-			$http.put(appConfig.API_URL + "/forms/rename", {
+			$http.put(appConfig.API_URL + "/protected/forms/rename", {
 					groupName: groupName,
 					originalName: renameFormOld,
 					newName: vm.renameFormNew
@@ -513,10 +516,10 @@
 				});
 		}
 
-		function duplicateForm() {/protected
+		function duplicateForm() {
 			var duplicateFrom = vm.gridOptions.selection.selectedId[0].groupName;
 			var formName = vm.gridOptions.selection.selectedId[0].formName;
-			$http.post(appConfig.API_URL + "/forms/duplicate", {
+			$http.post(appConfig.API_URL + "/protected/forms/duplicate", {
 					duplicateFrom: duplicateFrom,
 					formName: formName,
 					duplicateName: vm.duplicateName,
