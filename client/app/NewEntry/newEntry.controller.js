@@ -116,15 +116,19 @@ angular
         $timeout(function () {
             componentHandler.upgradeDom();			
         }, 0);
+        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+		vm.signaturePad = new SignaturePad(vm.canvas);
         
     });
 
-    vm.signatureFn = function() {
+    /*vm.signatureFn = function() {
 		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
 		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
 		vm.signaturePad = new SignaturePad(vm.canvas);
-	}
+	}*/
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()
@@ -303,7 +307,7 @@ angular
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
-					body.appendChild(newPage);
+					forms.appendChild(newPage);
 				}
 				for (key in elements){
 					var element = elements[key];
