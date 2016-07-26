@@ -111,15 +111,16 @@ angular
         $timeout(function () {
             viewContentLoaded.resolve();
         }, 0);
+        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+		vm.signaturePad = new SignaturePad(vm.canvas);
     });
     viewContentLoaded.promise.then(function () {
         $timeout(function () {
             componentHandler.upgradeDom();
         }, 0);
-        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
+        
     });
 
     function slugify(text) {
@@ -401,6 +402,7 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
+						vm.signature = true;
 						var node = document.createElement('img');
 						var newName = slugify(element.name);
 						var testScope = 'vm.entryData.' + newName;
@@ -511,43 +513,44 @@ angular
 
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
-
-	vm.openModal = function() {
-		vm.dialog.showModal();	
-	}
-	
-	vm.closeModal = function() {
-		vm.dialog.close();	
-	}
-
-	vm.clear = function() {
-		vm.signaturePad.clear();
-	};
-
-	vm.save = function() {
-		if (vm.signaturePad.isEmpty()) {
-    		var msg = "Please provide signature first.";
-    		showSnackbar(msg);
-		 	} else {
-		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
-		 		//Open image in new window
-			//window.open(dataURL);
-			//..or
-			//Extract as base64 encoded
-			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-			return data;
-			//TODO: include in your json object
+	if (vm.signature === true) {
+		vm.openModal = function() {
+			vm.dialog.showModal();	
 		}
-	}
-
-	function showSnackbar(msg) {
-		var msgSnackbar = {
-			message: msg,
-			timeout: 5000
+		
+		vm.closeModal = function() {
+			vm.dialog.close();	
 		}
-		var snackbarContainer = document.querySelector('#snackbar-div');
-		console.log(snackbarContainer);
-		snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+
+		vm.clear = function() {
+			vm.signaturePad.clear();
+		};
+
+		vm.save = function() {
+			if (vm.signaturePad.isEmpty()) {
+	    		var msg = "Please provide signature first.";
+	    		showSnackbar(msg);
+			 	} else {
+			 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
+			 		//Open image in new window
+				//window.open(dataURL);
+				//..or
+				//Extract as base64 encoded
+				var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+				return data;
+				//TODO: include in your json object
+			}
+		}
+
+		function showSnackbar(msg) {
+			var msgSnackbar = {
+				message: msg,
+				timeout: 5000
+			}
+			var snackbarContainer = document.querySelector('#snackbar-div');
+			console.log(snackbarContainer);
+			snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+		}
 	}
 
 	/*************************************************************************/
