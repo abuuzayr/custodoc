@@ -56,7 +56,7 @@ formsRouter.route('/')
                     if (item) {
                         res.send("Existed");
                     } else {
-                        coll.find({ groupName: groupName }).toArray(function(err, forms) {
+                        db.collection("forms").find({ groupName: groupName }).toArray(function(err, forms) {
                             assert.equal(null, err);
                             if (forms) {
                                 var order = 0;
@@ -76,7 +76,7 @@ formsRouter.route('/')
                                     order: order,
                                     numberOfPages: 1
                                 };
-                                coll.insert(formData, function(err, result) {
+                                db.collection("forms").insert(formData, function(err, result) {
                                     assert.equal(err, null);
                                     res.send({ groupName: groupName, formName: formName });
                                     console.log("Created new form");
@@ -104,7 +104,7 @@ formsRouter.route('/rename')
                     if (item) {
                         res.send("Existed");
                     } else {
-                        coll.updateOne({ "formName": originalName }, {
+                        db.collection("forms").updateOne({ "formName": originalName }, {
                             $set: {
                                 "formName": newName,
                                 "lastModifiedBy": req.decoded.username
@@ -153,7 +153,7 @@ formsRouter.route('/duplicate')
                                     newItem.creationDate = new Date();
                                     newItem.lastModified = new Date();
                                     newItem.lastModifiedBy = req.decoded.username;
-                                    coll.insert(newItem, function(err, result) {
+                                    db.collection("forms").insert(newItem, function(err, result) {
                                         assert.equal(null, err);
                                         res.send("Duplicated:" + formName);
                                         console.log("Duplicated the form");
