@@ -17,6 +17,7 @@
         $scope.filterActionCol = filterActionCol;
         $scope.filterTextCol = filterTextCol;
         $scope.validateCSVBeforeUpload = validateCSVBeforeUpload;
+        $scope.toggleIcon = toggleIcon;
         //data watcher, watching for data loading, initiate scope after data is loaded
         $scope.$watch('tableOptions.data', dataWatcher, true);
 
@@ -494,7 +495,13 @@
             return new Array(number);
         }
 
-
+        function toggleIcon(row,col){
+        	if (row[col.fieldName] === col.true){
+        		row[col.fieldName] = col.false;
+        	}else{
+        		row[col.fieldName] = col.true;
+        	}
+        }
         //function for external use
         var viewContentLoaded = $q.defer();
         $scope.$on('$viewContentLoaded', function() {

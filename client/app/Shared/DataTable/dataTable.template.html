@@ -89,7 +89,7 @@
                         <a class='table-cell-icon-link' ng-click='textCol.action(row)'>{{row[textCol.fieldName]}}</a>
                     </p>
                     <p ng-if="textCol.type === 'toggle'">
-                        <a><i class="mdl-icon-toggle__label material-icons">{{row[textCol.fieldName] === textCol.true ? textCol.iconTrue : textCol.iconFalse}}</i></a>
+                        <a ng-click='textCol.action(row);toggleIcon(row,textCol);'><i class="mdl-icon-toggle__label material-icons">{{row[textCol.fieldName] === textCol.true ? textCol.iconTrue : textCol.iconFalse}}</i></a>
                     </p>
                 </td>
                 <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p>
