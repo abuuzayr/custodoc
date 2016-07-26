@@ -195,14 +195,12 @@
             p.then(lastTask);
 
 
-            function generateFormTask(formNumber){
-            	console.log('generating form on formNumber: ' + formNumber)//TOFIX
-            	return generateForm(formNumber);
+            function generateFormTask(formNumber) {
+                return generateForm(formNumber);
             }
 
-            function generateImageTask(formNumber){
-            	console.log('generating image on formNumber: ' + formNumber)//TOFIX
-            	return generateImage(formNumber);
+            function generateImageTask(formNumber) {
+                return generateImage(formNumber);
             }
 
             function lastTask() {
@@ -240,26 +238,22 @@
             deferred = $q.defer();
             deferred.resolve(1);
             p = deferred.promise;
-            console.log(rows);
             for (var i = 1; i <= rows.length; i++) {
                 p = p.then(generateFormTask);
                 p = p.then(generateImageTask);
             }
             p.then(lastTask);
 
-            function generateFormTask(formNumber){
-            	console.log('generating form on formNumber: ' + formNumber)//TOFIX
-            	return generateForm(formNumber);
+            function generateFormTask(formNumber) {
+                return generateForm(formNumber);
             }
 
-            function generateImageTask(formNumber){
-            	console.log('generating image on formNumber: ' + formNumber)//TOFIX
-            	return generateImage(formNumber);
+            function generateImageTask(formNumber) {
+                return generateImage(formNumber);
             }
 
-            function lastTask(){
-            	console.log('lastTask')//TOFIX
-            	for (var j = 0; j < pagesImage.length; j++) {
+            function lastTask() {
+                for (var j = 0; j < pagesImage.length; j++) {
                     for (var k = 0; k < pagesImage[j].length; k++) {
                         if (j !== 0 || k !== 0) {
                             pdf.addPage();
@@ -276,9 +270,6 @@
                 pagesImage = [];
                 rows = [];
             }
-
-
-
         }
 
         function generateImage(formNumber) {
@@ -289,7 +280,6 @@
             deferred2.resolve(1);
             var p2 = deferred2.promise;
             while (document.getElementById('form' + formNumber + "page" + pageNumber)) {
-                console.log('image on page : ' + pageNumber);//TOFIX
                 p2 = p2.then(generateImagePromise);
                 pageNumber++;
             }
@@ -297,7 +287,6 @@
             return deferred.promise;
 
             function generateImagePromise(pageNumber) {
-            	console.log('generating images')//TOFIX
                 var deferred2 = $q.defer();
                 var canvas = document.createElement("canvas");
                 canvas.width = 794;
@@ -307,19 +296,13 @@
                 var context = canvas.getContext('2d');
                 var code = document.getElementById('form' + formNumber + "page" + pageNumber).innerHTML;
                 rasterizeHTML.drawHTML(code).then(function(renderResult) {
-                	console.log('drawing HTML');//TOFIX
                     context.drawImage(renderResult.image, 0, 0);
-                    console.log('drawing Image');//TOFIX
-                    console.log(canvas);//TOFIX
-                    imgurl = canvas.toDataURL('image/jpeg', 1);
-                    console.log(imgurl);//TOFIX
+                    var imgurl = canvas.toDataURL('image/jpeg', 1);
                     pagesImage[formNumber - 1].push(imgurl);
                     if (!document.getElementById('form' + formNumber + "page" + (pageNumber + 1))) {
-                    	console.log('images on from resolved');//TOFIX
                         deferred.resolve(formNumber + 1);
                         return;
                     }
-                    console.log('images on page resolved');//TOFIX
                     deferred2.resolve(pageNumber + 1);
                 });
                 return deferred2.promise;
@@ -347,7 +330,6 @@
                         display,
                         i, j;
                     formData = res.data;
-                    console.log(formData)//TOFIX
                     var elements = formData.elements;
                     vm.numberOfPages = formData.numberOfPages;
                     for (j = 1; j <= vm.numberOfPages; j++) {
@@ -599,7 +581,6 @@
 
 
         function toggleImportance(row) {
-            console.log('toggling', 'was', row.isImportant); //TOFIX
             var importance = row.isImportant.toLowerCase() === 'important' ? 'Normal' : 'Important';
             $http.put(appConfig.API_URL + "/protected/forms/importance", {
                     groupName: row.groupName,
