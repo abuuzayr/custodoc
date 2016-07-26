@@ -91,7 +91,7 @@
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
                                 <input type="file" ng-model="vm.entryData[key.name]" name="image" base-sixty-four-input accept="image/*">
                             </div>
-                            <label> Preview </label>
+                            <label> Preview Image</label>
                             <img width="90%" ng-src='data:image/png;base64,{{vm.entryData[key.name].base64}}' />
                         </div>
 
@@ -119,6 +119,8 @@
                                     <div class="mdl-snackbar__text"></div>
                                     <button class="mdl-snackbar__action" type="button"></button>
                                 </div>
+                                <label> Preview Signature </label>
+                                <img width="90%" ng-src='data:image/png;base64,{{vm.entryData[key.name].base64}}' />
                             </div>
                         </div>
 
