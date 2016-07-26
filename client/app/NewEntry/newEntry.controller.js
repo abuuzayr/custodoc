@@ -414,7 +414,7 @@ angular
 					}else if (element.name.startsWith('image_')) {
 						var node = document.createElement('img');
 						var newName = slugify(element.name);
-						var testScope = 'vm.entryData.' + newName;
+						var testScope = 'vm.entryData.' + newName + '.base64';
 						node.setAttribute('ng-model', testScope);
 						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
 						node.setAttribute('ng-src', testImageString); 
