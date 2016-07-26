@@ -109,38 +109,17 @@ angular
 
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function () {
-        	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-			vm.signaturePad = new SignaturePad(vm.canvas);
             viewContentLoaded.resolve();
             vm.wrapper = angular.element(document.getElementById('signature-field-div'));
 			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
 			vm.signaturePad = new SignaturePad(vm.canvas);
         }, 0);
-        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
     });
     viewContentLoaded.promise.then(function () {
         $timeout(function () {
-        	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-			vm.signaturePad = new SignaturePad(vm.canvas);
 	        componentHandler.upgradeDom();
-	        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-			vm.signaturePad = new SignaturePad(vm.canvas);
         }, 0);
-        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
-        
     });
 
     vm.sign = function() {
