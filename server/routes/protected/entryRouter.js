@@ -67,7 +67,6 @@ entryRoutes.route('/:entryId')
                     lastModifiedBy: req.decoded.username
                 }
             }).then(function(result){
-		console.log(result)//TOFIX
                 res.status(200).send('updated');
             }).catch(function(err) {
                 sendError(req, res, 400, err.message, 'Unsuccessful');
