@@ -118,11 +118,7 @@ angular
 
         }, 0);
         
-    })
-	.then(function (){			vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-			vm.signaturePad = new SignaturePad(vm.canvas);});
+    });
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()
@@ -448,6 +444,10 @@ angular
 			
 			document.getElementById("form1page1").style.display="block"; 
 		})
+	.then(function (){			vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+			vm.signaturePad = new SignaturePad(vm.canvas);})
 
 	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 
