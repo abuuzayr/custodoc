@@ -120,6 +120,7 @@ angular
     });
 
     vm.sign = function() {
+    	console.log('did i come i here ');
     	vm.wrapper = angular.element(document.getElementById('signature-field-div'));
 		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
 		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
