@@ -111,7 +111,7 @@
     </form>
 </dialog>
 <!---------------------------------------- Ng-include nav bars ---------------------------------------->
-<top-nav-bar></top-nav-bar>
+<!-- <top-nav-bar></top-nav-bar> -->
 <!---------------------------------------- Main forms ---------------------------------------->
 <main class="with-navigation">
     <div id="forms" class="page-content">
@@ -144,12 +144,6 @@
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showImportant()">Show Important</button>
             <div class="divider"></div>
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.showRecent()">Show Recent</button>
-            <div class="divider"></div>
-            <button id="importance" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Importance</button>
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="importance">
-                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setImportant()"><i class="material-icons" role="presentation">bookmark</i>Set important</li>
-                <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.setNormal()"><i class="material-icons" role="presentation">bookmark_outline</i>Set normal</li>
-            </ul>
         </div>
         <!-- Table for forms stub -->
         <div ng-style="vm.getTableHeight()">

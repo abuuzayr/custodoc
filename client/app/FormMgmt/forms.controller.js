@@ -31,9 +31,10 @@
 			type: 'toggle',
 			fieldName: 'isImportant',
 			displayName: 'Important',
-			icon: 'bookmark',
+			iconTrue: 'bookmark',
+			iconFalse: 'bookmark_border',
 			true: 'Important',
-			false: 'Normal'
+			action: toggleImportance
 		}, {
 			type: 'date',
 			fieldName: 'creationDate',
@@ -567,9 +568,10 @@
 
 		function setNormal() {
 			angular.forEach(vm.gridOptions.selection.selectedId, function(data, index) {
-				$http.put(appConfig.API_URL + "/protected/forms/normal", {
+				$http.put(appConfig.API_URL + "/protected/forms/importance", {
 						groupName: data.groupName,
 						formName: data.formName
+						importance: //TODO,
 					}, {
 						headers: {
 							'Content-Type': 'application/json'
@@ -582,6 +584,22 @@
 						}
 					});
 			});
+		}
+
+		function toggleImportance(row){
+			$http.put(appConfig.API_URL + "/protected/forms/normal", {
+						groupName: data.groupName,
+						formName: data.formName
+					}, {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					.then(function(res) {
+						if (index === vm.gridOptions.selection.selectedId.length - 1) {
+							vm.getFormData();
+						}
+					});
 		}
 
 
