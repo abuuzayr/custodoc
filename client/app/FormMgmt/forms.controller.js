@@ -71,8 +71,6 @@
 		vm.duplicateForm = duplicateForm;
 		vm.showRecent = showRecent;
 		vm.showImportant = showImportant;
-		vm.setImportant = setImportant;
-		vm.setNormal = setNormal;
 		vm.showNewEntry = showNewEntry;
 		vm.toNewEntry = toNewEntry;
 		vm.downloadAsOne = downloadAsOne;
