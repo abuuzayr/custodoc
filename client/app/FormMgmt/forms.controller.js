@@ -13,6 +13,8 @@
 
 		var forms = document.getElementById('forms');
 		var snackbarContainer = document.getElementById("snackbarContainer");
+		var originalData = [];
+
 		vm.gridOptions = {};
 		vm.gridOptions.enableDelete = true;
 		vm.gridOptions.enableSearch = true;
@@ -34,6 +36,7 @@
 			iconTrue: 'bookmark',
 			iconFalse: 'bookmark_border',
 			true: 'Important',
+			false: 'Normal',
 			action: toggleImportance
 		}, {
 			type: 'date',
@@ -59,6 +62,8 @@
 			fieldName: 'lastModifiedBy',
 			displayName: 'Last Modified By'
 		}];
+
+		vm.gridOptions.deleteFunc = deleteForms;
 
 		vm.addNewGroup = addNewGroup;
 		vm.deleteGroup = deleteGroup;
@@ -562,22 +567,29 @@
 
 
 		function toggleImportance(row){
-			$http.put(appConfig.API_URL + "/protected/forms/normal", {
-						groupName: data.groupName,
-						formName: data.formName
+			console.log('toggling','was',row.isImportant);//TOFIX
+			var importance = row.isImportant.toLowerCase() === 'important' ? 'Normal' : 'Important';
+			$http.put(appConfig.API_URL + "/protected/forms/importance", {
+						groupName: row.groupName,
+						formName: row.formName,
+						importance: importance
 					}, {
 						headers: {
 							'Content-Type': 'application/json'
 						}
 					})
-					.then(function(res) {
-							vm.getFormData();
-					});
+					.then(SuccessCallback)
+					.catch(ErrorCallback);
+
+					function SuccessCallback(res){
+						console.log('success')
+					}
+					function ErrorCallback(err){
+						vm.getFormData();
+					}
 		}
 
-
 		/* =========================================== UI grid =========================================== */
-
 
 		function goEditForm(row) {
 			$state.go('formBuilder', {
@@ -587,24 +599,24 @@
 		}
 
 		function showRecent() {
-			if (vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term = '';
-			else {
-				var termDate = new Date();
-				termDate.setDate(termDate.getDate() - 10);
-				vm.gridApi.grid.columns[7].filters[0].term = termDate.toString().substring(4, 15);
-			}
+			// if (vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term = '';
+			// else {
+			// 	var termDate = new Date();
+			// 	termDate.setDate(termDate.getDate() - 10);
+			// 	vm.gridApi.grid.columns[7].filters[0].term = termDate.toString().substring(4, 15);
+			// }
+			
 		}
 
 		function showImportant() {
-			if (vm.gridApi.grid.columns[3].filters[0].term !== 'Important') {
-				vm.gridApi.grid.columns[3].filters[0] = {
-					term: 'Important'
-				};
-			} else {
-				vm.gridApi.grid.columns[3].filters[0] = {
-					term: ''
-				};
+			var filteredData = [];
+			originalData = vm.gridOptions.data;
+			vm.gridOptions.data = [];
+			for(var i = 0; i < originalData.length ; i++){
+				if (originalData[i].isImportant.toLowerCase() === 'important')
+					filteredData.push(originalData[i]);
 			}
+			vm.gridOptions.data = filteredData;
 		}
 
 		/* =========================================== Dialog =========================================== */
