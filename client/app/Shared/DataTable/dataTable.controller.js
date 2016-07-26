@@ -211,6 +211,7 @@
             function addToSelection(target, id) {
                 if ($scope.tableOptions.selection.selectedId.indexOf(id) === -1) {
                     $scope.tableOptions.selection.selectedId.push(id);
+                    $scope.tableOptions.selection.selected.push(idLookup[id]);
                     if (target && (!$scope.tableOptions.selection.checked.hasOwnProperty(id) || (!$scope.tableOptions.selection.checked[id] && !$scope.tableOptions.selection.checked.hasOwnProperty(id))))
                         target.checked = true;
                 }
@@ -219,6 +220,12 @@
             function removeFromSelection(target, id) {
                 if ($scope.tableOptions.selection.selectedId.indexOf(id) !== -1) {
                     $scope.tableOptions.selection.selectedId.splice($scope.tableOptions.selection.selectedId.indexOf(id), 1);
+                    for (var i = $scope.tableOptions.selection.selected.length - 1; i >= 0; i--) {
+                        if ($scope.tableOptions.selection.selected[i]._id == id) {
+                            $scope.tableOptions.selection.selected.splice(i, 1);
+                            break;
+                        }
+                    }
                     if (target && (!$scope.tableOptions.selection.checked.hasOwnProperty(id) || $scope.tableOptions.selection.checked[id]))
                         target.checked = false;
                 }
@@ -264,6 +271,7 @@
         }
 
         function getDataFromId() {
+            $scope.tableOptions.selection.selected = [];
             for (var index = 0, length = $scope.tableOptions.selection.selectedId.length; index < length; index++) {
                 $scope.tableOptions.selection.selected.push(idLookup[$scope.tableOptions.selection.selectedId[index]]);
             }
@@ -380,7 +388,6 @@
 
         function validateCSVBeforeUpload() {
             var file = event.target.files[0];
-            console.log(event.target);
             if (file.name) {
                 if (file.name.substr(file.name.lastIndexOf('.') + 1) === 'csv') {
                     if (file.size > $scope.tableOptions.importOptions.maxSize * 1000000)
@@ -399,7 +406,7 @@
                 reader.onload = loadHandler;
                 reader.onerror = errorHandler;
             } else {
-                console.log('not supported');
+                feedbackServices.errorFeedback('no filereader found', 'dataTable-feedbackMessage');
             }
 
             function loadHandler(event) {
@@ -491,16 +498,15 @@
         }
         //HELPER FUNCTION
         function getTimes(number) {
-            console.log(number);
             return new Array(number);
         }
 
-        function toggleIcon(row,col){
-        	if (row[col.fieldName] === col.true){
-        		row[col.fieldName] = col.false;
-        	}else{
-        		row[col.fieldName] = col.true;
-        	}
+        function toggleIcon(row, col) {
+            if (row[col.fieldName] === col.true) {
+                row[col.fieldName] = col.false;
+            } else {
+                row[col.fieldName] = col.true;
+            }
         }
         //function for external use
         var viewContentLoaded = $q.defer();

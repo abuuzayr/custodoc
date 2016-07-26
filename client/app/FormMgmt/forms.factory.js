@@ -7,7 +7,7 @@
 
 	function formsFactory() {
 		var service = {
-			newPage: newPage,
+			getNewPage: getNewPage,
 			whiteDiv: whiteDiv
 		};
 
@@ -19,11 +19,16 @@
 		whiteDiv.style.position = "relative";
 		whiteDiv.style.top = "-7px";
 		whiteDiv.style.left = "-7px";
-		var newPage = document.createElement("div");
-		newPage.appendChild(whiteDiv.cloneNode(true));
-		newPage.style.width = "794px";
-		newPage.style.height = "1123px";
-		newPage.setAttribute("class", "page");
+		
+		function getNewPage(){
+			var newPage = document.createElement("div");
+			newPage.appendChild(whiteDiv.cloneNode(true));
+			newPage.style.width = "794px";
+			newPage.style.height = "1123px";
+			newPage.setAttribute("class", "page");
+			return newPage;	
+		}
+		
 
 		return service;
 	}
