@@ -28,10 +28,6 @@
                 for (var i = 0, len = $scope.tableOptions.data.length; i < len; i++) {
                     idLookup[$scope.tableOptions.data[i]._id] = $scope.tableOptions.data[i];
                 }
-                for (var j = 0; j < $scope.tableOptions.columnDefs.length; j++) {
-                    if ($scope.tableOptions.columnDefs[j].type === 'toggle')
-                        renderToggleOnChange($scope.tableOptions.columnDefs[j].fieldName);
-                }
                 angular.element(document.querySelector('#table-progress')).removeClass('mdl-progress__indeterminate');
             }
         }
@@ -140,6 +136,7 @@
             if (isDataLoaded) {
                 $scope.tableOptions.pagination.startingIndex = (newPage - 1) * $scope.tableOptions.pagination.itemPerPage + 1 < $scope.tableOptions.pagination.totalItem ? (newPage - 1) * $scope.tableOptions.pagination.itemPerPage : $scope.tableOptions.pagination.totalItem;
                 renderSelectionOnChange();
+                renderToggleOnChange();
             }
         });
 
@@ -254,31 +251,6 @@
                 }
             }, 0, false);
         }
-
-        function renderToggleOnChange(fieldName) {
-            $timeout(function() {
-                var elementList = angular.element(document.querySelectorAll("[id^='table-cell-toggle-label-']"));
-                var elementId = '';
-                var col = {};
-                console.log(elementList);
-                //get column definition 
-                for (var i = 0; i < $scope.tableOptions.columnDefs.length; i++) {
-                    if ($scope.tableOptions.columnDefs[i].fieldName === fieldName)
-                        col = $scope.tableOptions.columnDefs[i];
-                }
-
-                for (var j = 0; j < elementList.length; j++) {
-                    elementId = elementList[j].id.replace('table-cell-toggle-label-');
-                    if (idLookup.hasOwnProperty(elementId)) {
-                        if (idLookup[elementId][fieldName] === col.true)
-                            elementList[j].MaterialCheckbox.check();
-                        else
-                            elementList[j].MaterialCheckbox.uncheck();
-                    }
-                }
-            }, 0, false);
-        }
-
 
         function isAllChecked(elementList) {
             for (var i = 0; i < elementList.length; i++) {

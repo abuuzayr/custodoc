@@ -89,10 +89,7 @@
                         <a class='table-cell-icon-link' ng-click='textCol.action(row)'>{{row[textCol.fieldName]}}</a>
                     </p>
                     <p ng-if="textCol.type === 'toggle'">
-                        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for='table-cell-toggle-{{row._id}}' ng-id-attr='table-cell-toggle-label-{{row._id}}'>
-                            <input type="checkbox" ng-id-attr='table-cell-toggle-{{row._id}}' class="mdl-icon-toggle__input">
-                            <i class="mdl-icon-toggle__label material-icons">{{textCol.icon}}</i>
-                        </label>
+                        <a><i class="mdl-icon-toggle__label material-icons">{{row[textCol.fieldName] === textCol.true ? textCol.iconTrue : textCol.iconFalse}}</i></a>
                     </p>
                 </td>
                 <p ng-show='filteredRows.length !== 0 && tableOptions.data.length !== filteredRows.length'>{{filteredRows.length}} match found</p>
