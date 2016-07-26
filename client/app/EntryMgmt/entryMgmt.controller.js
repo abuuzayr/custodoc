@@ -101,13 +101,20 @@ angular.module('app.entryMgmt')
 
 		function importFunc(rowArray){
 			var deferred = $q.defer();
-			var saveAll = [];
+			var savePromises = [];
 			//promise chaining
 			for(var i = 0 ; i < rowArray.length; i++){
-				saveAll.push(saveRow(rowArray[i]));
+				var tempDataObject = {};
+				for(var field in rowArray[i]){
+					if(fieldArray.indexOf(field) === -1){
+						tempDataObject[field] = rowArray[i][field];
+						delete rowArray[i][field];
+					}
+				}
+				rowArray[i].data = tempDataObject;
+				savePromises.push(saveRow(rowArray[i]));
 			}
-
-			$q.all(saveAll).then(function resolve(){
+			$q.all(savePromises).then(function resolve(){
 			  deferred.resolve('all saved');
 			}, function reject(err){
 			  deferred.reject(err);
@@ -117,6 +124,7 @@ angular.module('app.entryMgmt')
 		}
 
 		function saveRow(row){
+			console.log(row);
 			var deferred = $q.defer();
 			entryMgmtServices.saveData(row)
 			.then(successCallback)

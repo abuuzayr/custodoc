@@ -11,28 +11,26 @@
 		/* jshint validthis: true */
 		var vm = this;
 
-		var serverURL = "https://10.4.1.204/req/api/protected";
 		var forms = document.getElementById('forms');
 		var snackbarContainer = document.getElementById("snackbarContainer");
 		vm.gridOptions = {};
 		vm.gridOptions.enableDelete = true;
 		vm.gridOptions.enableSearch = true;
-		vm.gridOptions.enablePagination = false;
+		vm.gridOptions.enablePagination = true;
 		vm.gridOptions.columnDefs = [{
 			type: 'default',
 			fieldName: 'groupName',
 			displayName: 'Group Name',
 		}, {
-			type: 'default',
+			type: 'link',
 			fieldName: 'formName',
 			displayName: 'Form Name',
-			resizable: true,
+			action: goEditForm,
 			cellTemplate: '<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
 		}, {
 			type: 'default',
 			fieldName: 'isImportant',
 			displayName: 'Importance',
-			resizable: true,
 		}, {
 			type: 'date',
 			fieldName: 'creationDate',
@@ -75,12 +73,9 @@
 		vm.toNewEntry = toNewEntry;
 		vm.downloadAsOne = downloadAsOne;
 		vm.downloadSeparate = downloadSeparate;
-		vm.goEditForm = goEditForm;
-
 
 
 		//view controll
-
 		function showNewEntry() {
 			var rows = vm.gridOptions.selection ? vm.gridOptions.selection.selectedId : 0;
 			for (var i = 0; i < rows.length - 1; i++) {
@@ -99,12 +94,11 @@
 		}
 
 		//group management
-
 		vm.getGroupData();
 
 		function getGroupData() {
 			vm.groups = [];
-			$http.get(serverURL + "/groups")
+			$http.get(appConfig.API_URL + "/protected/groups")
 				.then(function(res) {
 					for (var i = 0; i < res.data.length; i++) {
 						vm.groups.push(res.data[i].groupName);
@@ -119,7 +113,7 @@
 		}
 
 		function addNewGroup() {
-			$http.post(serverURL + "/groups", {
+			$http.post(appConfig.API_URL + "/protected/groups", {
 					groupName: vm.newGroupName
 				}, {
 					headers: {
@@ -140,7 +134,7 @@
 
 		function deleteGroup() {
 			if (confirm("Do you really want to delete this group? All the forms and entries data of this group will be deleted?")) {
-				$http.delete(serverURL + "/groups/" + vm.deleteGroupName)
+				$http.delete(appConfig.API_URL + "/protected/groups/" + vm.deleteGroupName)
 					.then(function(res) {
 						vm.getGroupData();
 						vm.getFormData();
@@ -149,7 +143,7 @@
 		}
 
 		function renameGroup() {
-			$http.put(serverURL + "/groups", {
+			$http.put(appConfig.API_URL + "/protected/groups", {
 					originalName: vm.renameGroupOld,
 					newName: vm.renameGroupNew
 				}, {
@@ -294,7 +288,7 @@
 			}
 		}
 
-		function generateForm(formNumber) {
+		function generateForm(formNumber) {/protected
 			var key,
 				formData,
 				newPage,
@@ -303,7 +297,7 @@
 			var deferred = $q.defer();
 			var groupName = rows[formNumber - 1].groupName;
 			var formName = rows[formNumber - 1].formName;
-			$http.get(serverURL + "/forms/" + groupName + '/' + formName)
+			$http.get(appConfig.API_URL + "/forms/" + groupName + '/' + formName)
 				.then(function(res) {
 					var node,
 						page,
@@ -443,9 +437,9 @@
 			return deferred.promise;
 		}
 
-		function getFormData() {
+		function getFormData() {/protected
 			vm.gridOptions.data = [];
-			$http.get(serverURL + "/forms")
+			$http.get(appConfig.API_URL + "/forms")
 				.then(function(result) {
 					for (var i = 0; i < result.data.length; i++) {
 						var formData = result.data[i];
@@ -456,12 +450,12 @@
 				});
 		}
 
-		function createForm() {
+		function createForm() {/protected
 			var formData = {
 				groupName: vm.newFormGroup,
 				formName: vm.newFormName
 			};
-			$http.post(serverURL + "/forms", {
+			$http.post(appConfig.API_URL + "/forms", {
 					formData: formData
 				}, {
 					headers: {
@@ -480,10 +474,10 @@
 				});
 		}
 
-		function deleteForms(rgRows) {
+		function deleteForms(rgRows) {/protected
 			if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
 				angular.forEach(rgRows, function(data, index) {
-					$http.delete(serverURL + "/forms/" + data.groupName + '/' + data.formName)
+					$http.delete(appConfig.API_URL + "/forms/" + data.groupName + '/' + data.formName)
 						.then(function(res) {
 							vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
 							if (index === vm.gridOptions.selection.selectedId.length - 1) {
@@ -494,10 +488,10 @@
 			}
 		}
 
-		function renameForm() {
+		function renameForm() {/protected
 			var groupName = vm.gridOptions.selection.selectedId[0].groupName;
 			var renameFormOld = vm.gridOptions.selection.selectedId[0].formName;
-			$http.put(serverURL + "/forms/rename", {
+			$http.put(appConfig.API_URL + "/forms/rename", {
 					groupName: groupName,
 					originalName: renameFormOld,
 					newName: vm.renameFormNew
@@ -519,10 +513,10 @@
 				});
 		}
 
-		function duplicateForm() {
+		function duplicateForm() {/protected
 			var duplicateFrom = vm.gridOptions.selection.selectedId[0].groupName;
 			var formName = vm.gridOptions.selection.selectedId[0].formName;
-			$http.post(serverURL + "/forms/duplicate", {
+			$http.post(appConfig.API_URL + "/forms/duplicate", {
 					duplicateFrom: duplicateFrom,
 					formName: formName,
 					duplicateName: vm.duplicateName,
@@ -552,7 +546,7 @@
 			var selectedRows = [];
 
 			angular.forEach(vm.gridOptions.selection.selectedId, function(data, index) {
-				$http.put(serverURL + "/forms/important", {
+				$http.put(appConfig.API_URL + "/protected/forms/important", {
 						groupName: data.groupName,
 						formName: data.formName
 					}, {
@@ -570,7 +564,7 @@
 
 		function setNormal() {
 			angular.forEach(vm.gridOptions.selection.selectedId, function(data, index) {
-				$http.put(serverURL + "/forms/normal", {
+				$http.put(appConfig.API_URL + "/protected/forms/normal", {
 						groupName: data.groupName,
 						formName: data.formName
 					}, {
@@ -591,10 +585,10 @@
 		/* =========================================== UI grid =========================================== */
 
 
-		function goEditForm(groupName, formName) {
+		function goEditForm(row) {
 			$state.go('formBuilder', {
-				groupName: groupName,
-				formName: formName
+				groupName: row.groupName,
+				formName: row.formName
 			});
 		}
 

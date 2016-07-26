@@ -18,7 +18,6 @@ angular.module('dataTable')
 		//data watcher, watching for data loading, initiate scope after data is loaded
 		$scope.$watch('tableOptions.data', dataWatcher, true);
 		function dataWatcher(newVal,oldVal){
-			console.log('watching',newVal.length,oldVal.length);
 			if(newVal !== null && newVal !== 'undefined' && newVal.length !== 0 && newVal.length !== oldVal.length){
 				isDataLoaded = true;
 				initScope();
@@ -104,12 +103,6 @@ angular.module('dataTable')
 			}
 		}
 
-		// function processData(){
-		// 	var dateCol = [];
-		// 	for(var i = 0 ; i < processData ; i++){
-		// 	}
-		// 	return importFunc();
-		// }
 
 		function setPagination(isEnabled){
 			$scope.tableOptions.pagination = {};
@@ -311,7 +304,7 @@ angular.module('dataTable')
         }
 
         function filterTextCol(element){
-        	if(!element.hasOwnProperty('type') || element.type === 'default' || element.type === 'date')
+        	if(!element.hasOwnProperty('type') || element.type === 'default' || element.type === 'date' || element.type === 'link')
         		return true;
         	else
         		return false;
