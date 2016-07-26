@@ -101,31 +101,29 @@
 
                 <!-- SIGNATURE FIELDS -->
                 <div ng-if="key.type=='signature'">
-                    <div ng-init="vm.signatureFn()">
-                        <div id="signature-field-div">
-                            <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
-                            <dialog id="signature-modal" class="mdl-dialog">
-                                <p>Sign below</p>
-                                <div class="mdl-dialog__content">
-                                    <div id="signature-pad" >
-                                        <div>
-                                            <canvas id="signature-canvas"></canvas>
-                                        </div>
-                                        <div>
-                                            <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
-                                            <button type="button" class="mdl-button" ng-click="vm.entryData[key.name] = vm.save()">Save</button> 
-                                            <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
-                                        </div>
-                                    </div>  
-                                </div>   
-                            </dialog>
-                        
-                            <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
-                                <div class="mdl-snackbar__text"></div>
-                                <button class="mdl-snackbar__action" type="button"></button> 
-                            </div>  
-                        </div>
-                    </div>                     
+                    <div id="signature-field-div" ng-init="vm.signatureFn()">
+                        <button type="button" class="mdl-button close" ng-click="vm.openModal()">Sign</button>
+                        <dialog id="signature-modal" class="mdl-dialog">
+                            <p>Sign below</p>
+                            <div class="mdl-dialog__content">
+                                <div id="signature-pad" >
+                                    <div>
+                                        <canvas id="signature-canvas"></canvas>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="mdl-button" ng-click="vm.clear()">Clear</button>
+                                        <button type="button" class="mdl-button" ng-click="vm.entryData[key.name] = vm.save()">Save</button> 
+                                        <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
+                                    </div>
+                                </div>  
+                            </div>   
+                        </dialog>
+                    
+                        <div id="snackbar-div" class="mdl-js-snackbar mdl-snackbar">
+                            <div class="mdl-snackbar__text"></div>
+                            <button class="mdl-snackbar__action" type="button"></button> 
+                        </div>  
+                    </div>               
                 </div>
 
                 </ng-form>
