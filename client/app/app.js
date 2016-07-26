@@ -2,13 +2,13 @@
     'use strict';
 
     angular
-        .module('app.core', ['ui.router', 'ngTouch', 'app.formBuilder', 'app.formMgmt', 'app.autofill', 'app.newEntry', 'app.shared','app.entryMgmt'])
+        .module('app.core', ['ui.router', 'ui.grid', 'ui.grid.autoResize', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ngTouch', 'ui.grid.selection', 'app.formBuilder', 'app.formMgmt', 'app.autofill', 'app.newEntry', 'app.shared','app.entryMgmt'])
         .config(['$urlRouterProvider', '$stateProvider', '$locationProvider', '$compileProvider', function($urlRouterProvider, $stateProvider, $locationProvider, $compileProvider) {
             // Set AngularJS production mode
             $compileProvider.debugInfoEnabled(false);
             // Set HTML5 mode
             $locationProvider.html5Mode(true);
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise('/forms');
             $stateProvider
                 .state('login', {
                     url: '/login',
