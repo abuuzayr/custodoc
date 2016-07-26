@@ -7,7 +7,7 @@
             // Set AngularJS production mode
             $compileProvider.debugInfoEnabled(false);
             // Set HTML5 mode
-            //$locationProvider.html5Mode(true);
+            $locationProvider.html5Mode(true);
             $urlRouterProvider.otherwise('/');
             $stateProvider
                 .state('login', {
@@ -53,11 +53,11 @@
                     controllerAs: 'vm',
                     resolve: {
                         security: ['$q', 'authServices', function($q, authServices) {
-                            // if (authServices.getToken()) {
+                            if (authServices.getToken()) {
                                 return $q.resolve();
-                            // } else {
-                                // return $q.reject(false);
-                            // }
+                            } else {
+                                return $q.reject(false);
+                            }
                         }]
                     }
                 })
@@ -83,11 +83,11 @@
                     controllerAs: 'vm',
                     resolve: {
                         security: ['$q', 'authServices', function($q, authServices) {
-                            // if (authServices.getToken()) {
+                            if (authServices.getToken()) {
                                 return $q.resolve();
-                            // } else {
-                                // return $q.reject(false);
-                            // }
+                            } else {
+                                return $q.reject(false);
+                            }
                         }]
                     }
                 })
@@ -98,11 +98,11 @@
                     controllerAs: 'vm',
                     resolve: {
                         security: ['$q', 'authServices', function($q, authServices) {
-                            // if (authServices.getToken() && (authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {
+                            if (authServices.getToken() && (authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {
                                 return $q.resolve();
-                            // } else {
-                                // return $q.reject(false);
-                            // }
+                            } else {
+                                return $q.reject(false);
+                            }
                         }]
                     }
                 })
@@ -113,11 +113,11 @@
                     controllerAs: 'vm',
                     resolve: {
                         security: ['$q', 'authServices', function($q, authServices) {
-                            // if (authServices.getToken()) {
+                            if (authServices.getToken()) {
                                 return $q.resolve();
-                            // } else {
-                                // return $q.reject(false);
-                            // }
+                            } else {
+                                return $q.reject(false);
+                            }
                         }]
                     }
                 });
