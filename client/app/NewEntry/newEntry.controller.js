@@ -303,7 +303,7 @@ angular
 					var newPage = newPageTemplate.cloneNode(true);
 					newPage.setAttribute("id", 'form' + k + 'page' + j);
 					newPage.style.display = "none";
-					forms.appendChild(newPage);
+					body.appendChild(newPage);
 				}
 				for (key in elements){
 					var element = elements[key];
