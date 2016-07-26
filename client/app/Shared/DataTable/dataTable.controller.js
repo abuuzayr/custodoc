@@ -136,7 +136,6 @@
             if (isDataLoaded) {
                 $scope.tableOptions.pagination.startingIndex = (newPage - 1) * $scope.tableOptions.pagination.itemPerPage + 1 < $scope.tableOptions.pagination.totalItem ? (newPage - 1) * $scope.tableOptions.pagination.itemPerPage : $scope.tableOptions.pagination.totalItem;
                 renderSelectionOnChange();
-                renderToggleOnChange();
             }
         });
 

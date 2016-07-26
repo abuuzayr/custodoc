@@ -547,44 +547,21 @@
 		}
 
 		function setImportant() {
-			var selectedRows = [];
-
-			angular.forEach(vm.gridOptions.selection.selectedId, function(data, index) {
-				$http.put(appConfig.API_URL + "/protected/forms/important", {
-						groupName: data.groupName,
-						formName: data.formName
-					}, {
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					})
-					.then(function(res) {
-						if (index === vm.gridOptions.selection.selectedId.length - 1) {
-							vm.getFormData();
-						}
-					});
-			});
+			$http.put(appConfig.API_URL + "/protected/forms/important", {
+					groupName: data.groupName,
+					formName: data.formName
+				}, {
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+				.then(function(res) {
+					if (index === vm.gridOptions.selection.selectedId.length - 1) {
+						vm.getFormData();
+					}
+				});
 		}
 
-		function setNormal() {
-			angular.forEach(vm.gridOptions.selection.selectedId, function(data, index) {
-				$http.put(appConfig.API_URL + "/protected/forms/importance", {
-						groupName: data.groupName,
-						formName: data.formName
-						importance: //TODO,
-					}, {
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					})
-					.then(function(res) {
-						if (index === vm.gridOptions.selection.selectedId.length - 1) {
-							vm.getFormData();
-							vm.gridApi.selection.clearSelectedRows();
-						}
-					});
-			});
-		}
 
 		function toggleImportance(row){
 			$http.put(appConfig.API_URL + "/protected/forms/normal", {
@@ -596,9 +573,7 @@
 						}
 					})
 					.then(function(res) {
-						if (index === vm.gridOptions.selection.selectedId.length - 1) {
 							vm.getFormData();
-						}
 					});
 		}
 
