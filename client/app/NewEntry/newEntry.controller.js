@@ -59,7 +59,6 @@ angular
 
 	// variables that contain base-64 encoding converted from user input
 	vm.image = null;
-	vm.signature = null;
 	vm.text = null;
 	vm.dropdown = null;
 	vm.radio = null;
@@ -117,6 +116,10 @@ angular
         $timeout(function () {
             componentHandler.upgradeDom();
         }, 0);
+        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+		vm.signaturePad = new SignaturePad(vm.canvas);
     });
 
     function slugify(text) {
@@ -316,6 +319,9 @@ angular
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 						var node = document.createElement('input');
+						var newName = slugify(element.name);
+						var testScope = 'vm.entryData.' + newName;
+						node.setAttribute('ng-value', testScope);						
 						node.type='text';
 						node.style.color = element.color;
 						node.style.backgroundColor = element.backgroundColor;
@@ -343,11 +349,15 @@ angular
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
 						var node = document.createElement('select');
+						var newName = slugify(element.name);
+						var testScope = 'vm.entryData.' + newName;
+						node.setAttribute('ng-value', testScope);
 						var options = element.options;
 						if(options.length>0){
 							for(var i = 0; i<options.length; i++){
 								var option = document.createElement('option');
 								option.innerHTML=options[i];
+								option.setAttribute('ng-selected', testScope + "==" + JSON.stringify(options[i]));								
 								node.appendChild(option);
 							}
 						}
@@ -360,6 +370,8 @@ angular
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
 						var node = document.createElement('form');
+						var newName = slugify(element.name);
+						var testScope = 'vm.entryData.' + newName;						
 						var options = element.options;
 						if(options.length>0){
 							if (element.display==="radioInline") var display = "inline";
@@ -368,6 +380,8 @@ angular
 								var label = document.createElement("label");
 								var option = document.createElement("input");
 								option.type = "radio";
+								option.setAttribute('ng-value', testScope);
+								option.setAttribute('ng-checked', testScope + "==" + JSON.stringify(options[i]));								
 								option.name = element.name;
 								option.value = options[i];
 								if(options[i]===element.default) option.checked = true;
@@ -387,11 +401,21 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
-						var node = document.createElement('canvas');
+						var node = document.createElement('img');
+						var newName = slugify(element.name);
+						var testScope = 'vm.entryData.' + newName;
+						node.setAttribute('ng-model', testScope);
+						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
+						node.setAttribute('ng-src', testImageString); 
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
 					}else if (element.name.startsWith('image_')) {
-						var node = document.createElement('canvas');
+						var node = document.createElement('img');
+						var newName = slugify(element.name);
+						var testScope = 'vm.entryData.' + newName;
+						node.setAttribute('ng-model', testScope);
+						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
+						node.setAttribute('ng-src', testImageString); 
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
 					}
@@ -486,56 +510,44 @@ angular
 	/*************************************************************************/
 
 
-	/****************** SIGNATURE PAD VARIABLES **********************/
-	if (vm.gotSignature) { 
-		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
-	}
-	/*****************************************************************/
-
-
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
 
-	if (vm.gotSignature) {
-		vm.openModal = function() {
-			vm.dialog.showModal();	
-		}
-		
-		vm.closeModal = function() {
-			vm.dialog.close();	
-		}
+	vm.openModal = function() {
+		vm.dialog.showModal();	
+	}
+	
+	vm.closeModal = function() {
+		vm.dialog.close();	
+	}
 
-		vm.clear = function() {
-			vm.signaturePad.clear();
-		};
+	vm.clear = function() {
+		vm.signaturePad.clear();
+	};
 
-		vm.save = function() {
-			if (vm.signaturePad.isEmpty()) {
-	    		var msg = "Please provide signature first.";
-	    		showSnackbar(msg);
-			 	} else {
-			 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
-			 		//Open image in new window
-				//window.open(dataURL);
-				//..or
-				//Extract as base64 encoded
-				var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-				vm.signature = data;
-				//TODO: include in your json object
-			}
+	vm.save = function() {
+		if (vm.signaturePad.isEmpty()) {
+    		var msg = "Please provide signature first.";
+    		showSnackbar(msg);
+		 	} else {
+		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
+		 		//Open image in new window
+			//window.open(dataURL);
+			//..or
+			//Extract as base64 encoded
+			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+			return data;
+			//TODO: include in your json object
 		}
+	}
 
-		function showSnackbar(msg) {
-			var msgSnackbar = {
-				message: msg,
-				timeout: 5000
-			}
-			var snackbarContainer = document.querySelector('#snackbar-div');
-			console.log(snackbarContainer);
-			snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
+	function showSnackbar(msg) {
+		var msgSnackbar = {
+			message: msg,
+			timeout: 5000
 		}
+		var snackbarContainer = document.querySelector('#snackbar-div');
+		console.log(snackbarContainer);
+		snackbarContainer.MaterialSnackbar.showSnackbar(msgSnackbar);
 	}
 
 	/*************************************************************************/
