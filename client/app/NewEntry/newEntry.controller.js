@@ -114,21 +114,14 @@ angular
     });
     viewContentLoaded.promise.then(function () {
         $timeout(function () {
-            componentHandler.upgradeDom();			
+            componentHandler.upgradeDom();
+            vm.wrapper = angular.element(document.getElementById('signature-field-div'));
+			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+			vm.signaturePad = new SignaturePad(vm.canvas);
         }, 0);
-        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
         
     });
-
-    /*vm.signatureFn = function() {
-		vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-		vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-		vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-		vm.signaturePad = new SignaturePad(vm.canvas);
-	}*/
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()
@@ -432,7 +425,7 @@ angular
 					node.style.border = element.border;
 					node.style.borderRadius = element.borderRadius;
 					node.className +=" notSelectable";
-//					node.id = key;
+					node.id = key;
 					node.setAttribute('name',element.name);
 					node.style.overflow = "hidden";
 					node.style.lineHeight="100%";
@@ -453,8 +446,7 @@ angular
 			}
 			
 			document.getElementById("form1page1").style.display="block"; 
-		});
-	
+		})
 
 	/******************* PAGE & FORM NAVIGATION FUNCTIONS ********************/
 
@@ -521,7 +513,7 @@ angular
 
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
-	if (vm.gotSignature === true) {
+	if (vm.signature === true) {
 		vm.openModal = function() {
 			vm.dialog.showModal();	
 		}
