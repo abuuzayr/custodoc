@@ -83,7 +83,7 @@
             })
             .state('forms', {
                 url: '/forms',
-                templateUrl: 'views/main.nav.html',
+                templateUrl: 'app/FormMgmt/forms.html',
                 controller: 'topNavCtrl',
                 controllerAs: 'vm',
                 resolve: {
