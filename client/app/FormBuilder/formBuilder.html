@@ -460,45 +460,46 @@
 </dialog>
 
 <!---------------------------------------- Ng-include nav bars ---------------------------------------->
-<top-nav-bar></top-nav-bar>
-<!---------------------------------------- content start ---------------------------------------->
-<div id="formBuilderBody" class="with-navigation">
-	<div id="pagebar" class="mdl-grid">
-		<button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
-		<div class="divider"></div>
-		<button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
-		<div class="divider"></div>
-		<button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
-		<div class="divider"></div>
-		<button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
-		<div class="divider"></div>
-		<button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
-		<div class="divider"></div>
-		<button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i> Save</button>
-		<div class="mdl-layout-spacer"></div>
-		<button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button"><i class="material-icons">delete</i> Delete page</button>
-	</div>
-	<!---------------------------------------- Top elements card ---------------------------------------->
-	<div id="toolbar" style="display:none">
-		<div class="mdl-tabs mdl-js-tabs">
-			<div class="mdl-tabs__tab-bar">
-				<a id="borderPanel" href="#border-panel" class="mdl-tabs__tab is-active">Border</a>
-				<a id="fontPanel" href="#font-panel" class="mdl-tabs__tab">Font</a>
-				<a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
-				<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
-				<a id="optionsPanel" href="#options-panel" class="mdl-tabs__tab">Options</a>
-				<div style="padding: 5px; vertical-align:middle;">
-					<!-- Delete element -->
-					<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button" style="margin-left: 35px;">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<top-nav-bar></top-nav-bar>
+	<!---------------------------------------- content start ---------------------------------------->
+	<div id="formBuilderBody" class="mdl-layout__content">
+		<div id="pagebar" class="mdl-grid">
+			<button name="addPage" value="Add Page" ng-click="vm.addPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i> Add page</button>
+			<div class="divider"></div>
+			<button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
+			<div class="divider"></div>
+			<button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
+			<div class="divider"></div>
+			<button name="Download PDF" value="Download PDF" ng-click="vm.downloadPDF()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">file_download</i> Download PDF</button>
+			<div class="divider"></div>
+			<button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
+			<div class="divider"></div>
+			<button name="saveForm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click="vm.saveForm()" type="button"><i class="material-icons">save</i> Save</button>
+			<div class="mdl-layout-spacer"></div>
+			<button name="deletePage" value="Delete This Page" ng-click="vm.deletePage()" id="delete-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button"><i class="material-icons">delete</i> Delete page</button>
+		</div>
+		<!---------------------------------------- Top elements card ---------------------------------------->
+		<div id="toolbar" style="display:none">
+			<div class="mdl-tabs mdl-js-tabs">
+				<div class="mdl-tabs__tab-bar">
+					<a id="borderPanel" href="#border-panel" class="mdl-tabs__tab is-active">Border</a>
+					<a id="fontPanel" href="#font-panel" class="mdl-tabs__tab">Font</a>
+					<a id="backgroundPanel" href="#background-panel" class="mdl-tabs__tab">Background</a>
+					<a id="contentPanel" href="#content-panel" class="mdl-tabs__tab">Content</a>
+					<a id="optionsPanel" href="#options-panel" class="mdl-tabs__tab">Options</a>
+					<div style="padding: 5px; vertical-align:middle;">
+						<!-- Delete element -->
+						<button id="delete-button" name="delete" ng-click="vm.deleteElement()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored delete-button" style="margin-left: 35px;">
 						<i class="material-icons" role="presentation">delete</i> Delete Element</button>
-				</div>
-				<div class="mdl-layout-spacer"></div>
-				<!-- Hide Toolbar -->
-				<button name="hide" id="hideToolbar" ng-click="vm.hideToolbar()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					</div>
+					<div class="mdl-layout-spacer"></div>
+					<!-- Hide Toolbar -->
+					<button name="hide" id="hideToolbar" ng-click="vm.hideToolbar()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
 	   							Hide</button>
-			</div>
-			<div class="mdl-tabs__panel is-active" id="border-panel">
-				<label>Border Style:
+				</div>
+				<div class="mdl-tabs__panel is-active" id="border-panel">
+					<label>Border Style:
 						<select id="editBorderStyle" ng-model="vm.element.style.borderStyle">
 							<option value="solid">Solid</option>
 							<option value="dashed">Dashed</option>
@@ -506,39 +507,39 @@
 							<option value="none">None</option>
 						</select>
 					</label>
-				<label>Border Width:
+					<label>Border Width:
 						<select id="editBorderWidth" ng-model="vm.element.style.borderWidth">
 							<option ng-repeat="option in vm.availableBorderWidth" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Border Radius:
+					<label>Border Radius:
 						<select id="editBorderRadius" ng-model="vm.element.style.borderRadius">
 							<option ng-repeat="option in vm.availableBorderRadii" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Border Color:
+					<label>Border Color:
 						<select id="editBorderColor" ng-model="vm.element.style.borderColor" ng-style="{ 'color': vm.element.style.borderColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-			</div>
-			<div class="mdl-tabs__panel" id="font-panel">
-				<label>Font Size:
+				</div>
+				<div class="mdl-tabs__panel" id="font-panel">
+					<label>Font Size:
 						<select id="editFontSize" ng-model="vm.element.style.fontSize">
 							<option ng-repeat="option in vm.availableFontsizes" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Font Type:
+					<label>Font Type:
 						<select id="editFontFamily" ng-model="vm.element.style.fontFamily" ng-style="{ 'font-family': vm.element.style.fontFamily}">
 							<option ng-repeat="option in vm.fontsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Font Color:
+					<label>Font Color:
 						<select id="editFontColor" ng-model="vm.element.style.color" ng-style="{ 'color': vm.element.style.color}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Text Decoration:
+					<label>Text Decoration:
 						<select id="editTextDecoration" ng-model="vm.element.style.textDecoration">
 							<option value="none">None</option>
 							<option value="overline">Overline</option>
@@ -546,120 +547,121 @@
 							<option value="underline">Underline</option>
 						</select>
 					</label>
-			</div>
-			<div class="mdl-tabs__panel" id="background-panel">
-				<label id="editBackgroundColorLabel">Background Color:
+				</div>
+				<div class="mdl-tabs__panel" id="background-panel">
+					<label id="editBackgroundColorLabel">Background Color:
 						<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{ 'background-color': vm.element.style.backgroundColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>
 					</label>
-				<label>Opacity:
+					<label>Opacity:
 						<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
 					</label>
-			</div>
-			<div class="mdl-tabs__panel" id="content-panel">
-				<label id="editContent">Content: <textarea rows="3"  ng-model="vm.element.innerHTML"></textarea></label>
-				<label id="editTextFieldDefault">Default Value: 
+				</div>
+				<div class="mdl-tabs__panel" id="content-panel">
+					<label id="editContent">Content: <textarea rows="3"  ng-model="vm.element.innerHTML"></textarea></label>
+					<label id="editTextFieldDefault">Default Value: 
 						<input type="text" ng-model="vm.element.placeholder">
 					</label>
-				<label id="editCheckboxDefault">Default Value: 
+					<label id="editCheckboxDefault">Default Value: 
 						<select ng-model="vm.element.firstChild.checked"  ng-options="vm.boolToStr(item) for item in [true, false]"></select>
 					</label>
-				<label id="editCheckboxLabel">Checkbox label: 
+					<label id="editCheckboxLabel">Checkbox label: 
 						<input type="text" ng-model="vm.element.firstChild.nextSibling.innerHTML"  >
 					</label>
-			</div>
-			<div class="mdl-tabs__panel" id="options-panel">
-				<label>{{"Options:" + vm.editOptions.join(', ')}}</label><br>
-				<input type="text" ng-model="vm.editNewOption">
-				<input type="button" value="Add" ng-click="vm.editAddNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
-				<input type="button" value="Delete" ng-click="vm.editDeleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
-				<label id="editDropdownDefault">Drop-down List Default Value:
+				</div>
+				<div class="mdl-tabs__panel" id="options-panel">
+					<label>{{"Options:" + vm.editOptions.join(', ')}}</label><br>
+					<input type="text" ng-model="vm.editNewOption">
+					<input type="button" value="Add" ng-click="vm.editAddNewOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored">
+					<input type="button" value="Delete" ng-click="vm.editDeleteOption()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored"><br>
+					<label id="editDropdownDefault">Drop-down List Default Value:
 						<select  ng-model="vm.element.value" >
 							<option value=""></option>
 							<option ng-repeat="option in vm.editOptions" ng-value="option">{{option}}</option>
 						</select>
 					</label>
-				<label id="editRadioDefault">Default Value:
+					<label id="editRadioDefault">Default Value:
 						<select ng-model="vm.editRadioDefaultValue">
 							<option value=""></option>
 							<option ng-repeat="option in vm.editOptions" ng-value="option">{{option}}</option>
 						</select>
 					</label>
-				<label id="editRadioDisplay">Display Style:
+					<label id="editRadioDisplay">Display Style:
 						<select ng-model="vm.editRadioDisplayClass">
 							<option value="radioInline">In-line</option>
 							<option value="radioMultiline">Multiple lines</option>
 						</select>
 					</label>
-			</div>
-		</div>
-	</div>
-	<!---------------------------------------- Left elements card ---------------------------------------->
-	<section id="sec1">
-		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-			<div class="mdl-tabs__tab-bar">
-				<a href="#newElement-panel" class="mdl-tabs__tab is-active">New</a>
-				<a href="#savedElement-panel" class="mdl-tabs__tab">Saved</a>
-				<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill</a>
-			</div>
-			<div class="mdl-tabs__panel is-active" id="newElement-panel">
-				<a name="createLabel" my-on-drag-start="vm.dragStart($event, 'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
-				<div class="divider"></div>
-
-				<a name="createTextField" my-on-drag-start="vm.dragStart($event, 'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
-				<div class="divider"></div>
-				<a name="createCheckbox" my-on-drag-start="vm.dragStart($event, 'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
-				<div class="divider"></div>
-				<a name="createRadio" my-on-drag-start="vm.dragStart($event, 'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
-				<div class="divider"></div>
-				<a name="createDropdown" my-on-drag-start="vm.dragStart($event, 'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
-				<div class="divider"></div>
-				<a name="createImageField" my-on-drag-start="vm.dragStart($event, 'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
-				<div class="divider"></div>
-				<a name="createSignatureField" my-on-drag-start="vm.dragStart($event, 'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
-				<div class="divider"></div>
-				<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event, 'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
-			</div>
-			<div id="savedElement-panel" class="mdl-tabs__panel">
-				<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
-				<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
-					<div class="divider"></div>
-					<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart($event, 'saved')" draggable="true">{{element.name.replace("_",":")}}</a>
-				</div>
-			</div>
-			<div class="mdl-tabs__panel" id="autofillElement-panel">
-				<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
-				<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
-					<div class="divider"></div>
-					<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart($event, 'auto')" draggable="true">{{element.type+":"+element.fieldName}}</a>
 				</div>
 			</div>
 		</div>
-	</section>
+		<!---------------------------------------- Left elements card ---------------------------------------->
+		<section id="sec1">
+			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+				<div class="mdl-tabs__tab-bar">
+					<a href="#newElement-panel" class="mdl-tabs__tab is-active">New</a>
+					<a href="#savedElement-panel" class="mdl-tabs__tab">Saved</a>
+					<a href="#autofillElement-panel" class="mdl-tabs__tab">Autofill</a>
+				</div>
+				<div class="mdl-tabs__panel is-active" id="newElement-panel">
+					<a name="createLabel" my-on-drag-start="vm.dragStart($event, 'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
+					<div class="divider"></div>
 
-	<section id="form" style="height: 1123px; width: 794px;border:2px solid black;" compile-on-page-change>
-		<div ng-init="displayPageBar=false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar=true" ng-mouseleave="displayPagebar=false">
-			<div id="hidden-pagebar" ng-show="displayPagebar">
-				<label>{{"Current Page:"+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
-				<form ng-submit="vm.goToPage()" style="display:inline">
-					<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-					<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
-				</form>
-				<form ng-submit="vm.movePage()" style="display:inline">
-					<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-					<input id="mouseover-move" type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
-				</form>
+					<a name="createTextField" my-on-drag-start="vm.dragStart($event, 'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
+					<div class="divider"></div>
+					<a name="createCheckbox" my-on-drag-start="vm.dragStart($event, 'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
+					<div class="divider"></div>
+					<a name="createRadio" my-on-drag-start="vm.dragStart($event, 'radio')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create radio button</a><br>
+					<div class="divider"></div>
+					<a name="createDropdown" my-on-drag-start="vm.dragStart($event, 'dropdown')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create drop down list</a><br>
+					<div class="divider"></div>
+					<a name="createImageField" my-on-drag-start="vm.dragStart($event, 'imageField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create image field</a><br>
+					<div class="divider"></div>
+					<a name="createSignatureField" my-on-drag-start="vm.dragStart($event, 'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
+					<div class="divider"></div>
+					<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event, 'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+				</div>
+				<div id="savedElement-panel" class="mdl-tabs__panel">
+					<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
+					<div ng-repeat="element in vm.savedElements | filter:vm.searchSavedElement">
+						<div class="divider"></div>
+						<a type="button" class="" ng-mousedown="vm.selectedSavedElement=element;" my-on-drag-start="vm.dragStart($event, 'saved')" draggable="true">{{element.name.replace("_",":")}}</a>
+					</div>
+				</div>
+				<div class="mdl-tabs__panel" id="autofillElement-panel">
+					<label>Search: <input ng-model="vm.searchAutofillElement" class="selectInDialog"></label>
+					<div ng-repeat="element in vm.autofillElements | filter:vm.searchAutofillElement">
+						<div class="divider"></div>
+						<a type="button" class="" ng-mousedown="vm.selectedAutofillElement=element;" my-on-drag-start="vm.dragStart($event, 'auto')" draggable="true">{{element.type+":"+element.fieldName}}</a>
+					</div>
+				</div>
 			</div>
-		</div>
+		</section>
 
-		<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
-			<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
-		</div>
-	</section>
+		<section id="form" style="height: 1123px; width: 794px;border:2px solid black;" compile-on-page-change>
+			<div ng-init="displayPageBar=false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar=true" ng-mouseleave="displayPagebar=false">
+				<div id="hidden-pagebar" ng-show="displayPagebar">
+					<label>{{"Current Page:"+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+					<form ng-submit="vm.goToPage()" style="display:inline">
+						<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+						<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
+					</form>
+					<form ng-submit="vm.movePage()" style="display:inline">
+						<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+						<input id="mouseover-move" type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
+					</form>
+				</div>
+			</div>
 
-	<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
-		<div class="mdl-snackbar__text"></div>
-		<button class="mdl-snackbar__action" type="button"></button>
+			<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
+				<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
+			</div>
+		</section>
+
+		<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+			<div class="mdl-snackbar__text"></div>
+			<button class="mdl-snackbar__action" type="button"></button>
+		</div>
 	</div>
 </div>
