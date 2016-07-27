@@ -404,7 +404,8 @@ angular
 						node.setAttribute('ng-model', testScope);
 						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
 						node.setAttribute('ng-src', testImageString); 
-						node.setAttribute('ng-click', 'vm.save('+'vm.signatureName'+')');
+						node.setAttribute('ng-click', 'vm.openImageModal(' + '"' + vm.uploadImageName + '"' + ')');
+//						node.setAttribute('ng-click', 'vm.openImageModal(' + 'vm.uploadImageName' + ')');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
 					}
