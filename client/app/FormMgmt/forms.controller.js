@@ -613,12 +613,15 @@
         }
 
         function showRecent() {
-            // if (vm.gridApi.grid.columns[7].filters[0].term) vm.gridApi.grid.columns[7].filters[0].term = '';
-            // else {
-            // 	var termDate = new Date();
-            // 	termDate.setDate(termDate.getDate() - 10);
-            // 	vm.gridApi.grid.columns[7].filters[0].term = termDate.toString().substring(4, 15);
-            // }
+        	var filteredData = [];
+        	originalData = vm.gridOptions.data;
+            vm.gridOptions.data = [];
+            for (var i = 0; i < originalData.length; i++) {
+            	//604800000 = 1 week in milisec
+            	if(Date.now() - new Date(originalData[i].lastModified).getTime() < 604800000)
+            		filteredData.push(originalData[i]);
+            }
+            vm.gridOptions.data = filteredData;
         }
 
         function showImportant() {
