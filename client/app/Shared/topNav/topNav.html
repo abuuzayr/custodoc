@@ -1,0 +1,14 @@
+<header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">BulletForms</span>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <a class="mdl-navigation__link" ui-sref="forms"><i class="material-icons" role="presentation">dashboard</i> Forms</a>
+            <a class="mdl-navigation__link" ui-sref="entries"><i class="material-icons" role="presentation">assessment</i> Entries</a>
+            <a class="mdl-navigation__link" ui-sref="autofill"><i class="material-icons" role="presentation">account_box</i> Autofill</a>
+            <a class="mdl-navigation__link" ui-sref="users" ng-if="vm.userType"><i class="material-icons" role="presentation">group</i> User management</a>
+            <a class="mdl-navigation__link" ui-sref="settings"><i class="material-icons" role="presentation">settings</i> Account settings</a>
+            <a class="mdl-navigation__link" ng-click="vm.logout();"><i class="material-icons" role="presentation">exit_to_app</i> Logout</a>
+        </nav>
+    </div>
+</header>
