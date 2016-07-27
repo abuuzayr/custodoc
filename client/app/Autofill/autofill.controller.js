@@ -1,38 +1,55 @@
-(function() {
-	  "use strict";
-angular.module('app.autofill')
-	.controller('autofillCtrl', autofillCtrl);
+(function () {
+	"use strict";
 
-	autofillCtrl.$inject = ['$scope', '$q', '$timeout', 'dialogServices','feedbackServices','autofillServices'];
+	angular.module('app.autofill')
+		.controller('autofillCtrl', autofillCtrl);
 
-	function autofillCtrl($scope , $q, $timeout, dialogServices, feedbackServices, autofillServices) {
+	autofillCtrl.$inject = ['$scope', '$q', '$timeout', 'dialogServices', 'feedbackServices', 'autofillServices'];
+
+	function autofillCtrl($scope, $q, $timeout, dialogServices, feedbackServices, autofillServices) {
+		// ===========================================   Initialization  =========================================== //
+        /* jshint validthis: true */
 		var vm = this;
 		vm.elementType = '';
 		vm.numOfOptions = 0;
 
+		vm.upgradeDom = upgradeDom;
+		vm.addOption = addOption;
+		vm.removeOption = removeOption;
+		vm.saveElement = saveElement;
+		vm.createTextfield = createTextfield;
+		vm.createCheckbox = createCheckbox;
+		vm.createRadio = createRadio;
+		vm.createDropdown = createDropdown;
+		vm.getTimes = getTimes;
+		vm.openDialog = openDialog;
+		vm.closeDialog = closeDialog;
+		vm.deleteSelected = deleteSelected;
+		vm.reset = init;
+
 		vm.textfield = {
-			fieldName:'',
-			type:'text',
-			default:''
+			fieldName: '',
+			type: 'text',
+			default: ''
 		};
 		vm.checkbox = {
-			fieldName:'',
-			type:'checkbox',
-			label:'',
-			default:false,
+			fieldName: '',
+			type: 'checkbox',
+			label: '',
+			default: false,
 		};
 		vm.radio = {
-			fieldName:'',
-			type:'radio',
+			fieldName: '',
+			type: 'radio',
 			options: [],
-			default:'',
-			display:'',
+			default: '',
+			display: '',
 		};
 		vm.dropdown = {
-			fieldName:'',
-			type:'dropdown',
+			fieldName: '',
+			type: 'dropdown',
 			options: [],
-			default:''
+			default: ''
 		};
 
 		vm.tableOptions = {};
@@ -49,56 +66,54 @@ angular.module('app.autofill')
 		vm.tableOptions.importFunc = importFunc;
 		init();
 
-		
-	// ===========================================   UI Buttons  =========================================== //
-		vm.upgradeDom = upgradeDom;
-		vm.addOption  = addOption;
-		vm.removeOption = removeOption;
-
-		vm.saveElement = saveElement;
-		vm.createTextfield	= createTextfield;
-		vm.createCheckbox	= createCheckbox;
-		vm.createRadio	= createRadio;
-		vm.createDropdown	= createDropdown;
-		vm.openDialog = openDialog;
-		vm.closeDialog = closeDialog;
-
-		function upgradeDom(){
-			console.log('upgrade DOM');
+		// ===========================================   UI Buttons  =========================================== //
+		function upgradeDom() {
 			return componentHandler.upgradeDom();
 		}
-		
-		function addOption(){
+
+		function addOption() {
 			vm.numOfOptions++;
 		}
 
-		function removeOption(elementType){
-			if(vm.numOfOptions > 0){
+		function removeOption(elementType) {
+			if (vm.numOfOptions > 0) {
 				vm.numOfOptions--;
-				if(elementType === 'radio'){
+				if (elementType === 'radio') {
 					vm.radio.options.pop();
 				}
-				else if(elementType == 'dropdown'){
+				else if (elementType == 'dropdown') {
 					vm.dropdown.options.pop();
 				}
-					
-			}	
-			else 
+
+			}
+			else
 				vm.numOfOptions = 0;
 		}
 
+		/**
+		 * If one item selected, deleteOne(selectedId). Else, deleteMany.
+		 * 
+		 * @param {any} rgSelectedId
+		 * @returns {function} 
+		 */
 		function deleteSelected(rgSelectedId) {
-			console.log('deleteSelected in autofill');//TOFIX
+			// console.log('deleteSelected in autofill');//TOFIX
 			var selectedId = rgSelectedId;
-			if(selectedId.length === 1)
+			if (selectedId.length === 1)
 				return deleteOne(selectedId);
 			return deleteMany(selectedId);
 		}
-		
-		function saveElement(elementType){
+
+		/**
+		 * Save element by creating it in the database. Else, returns error feedback message if element type is not found.
+		 * 
+		 * @param {any} elementType
+		 * @returns
+		 */
+		function saveElement(elementType) {
 			var elementData = {};
-			console.log(elementType);
-			switch(elementType){
+			// console.log(elementType);
+			switch (elementType) {
 				case 'text':
 					elementData = vm.textfield;
 					break;
@@ -112,101 +127,99 @@ angular.module('app.autofill')
 					elementData = vm.dropdown;
 					break;
 				default:
-					return feedbackServices.errorFeedback('selection error', 'autofill-feedbackMessage');
+					return feedbackServices.errorFeedback('Selection error', 'autofill-feedbackMessage');
 			}
 			return createElement(elementData)
-			.then(vm.closeDialog());
+				.then(vm.closeDialog());
 		}
-		
-		function createTextfield(){
+
+		function createTextfield() {
 			vm.elementType = 'text';
 			vm.openDialog();
 		}
-		
-		function createCheckbox(){
+
+		function createCheckbox() {
 			vm.elementType = 'checkbox';
 			vm.openDialog();
 		}
-		
-		function createRadio(){
+
+		function createRadio() {
 			vm.elementType = 'radio';
 			vm.openDialog();
 		}
-		
-		function createDropdown(){
+
+		function createDropdown() {
 			vm.elementType = 'dropdown';
 			vm.openDialog();
 		}
-		
-		function openDialog(){
-			dialogServices.openDialog('create-element-dialog');	
+
+		function openDialog() {
+			dialogServices.openDialog('create-element-dialog');
 		}
-	
-		function closeDialog(){
+
+		function closeDialog() {
 			vm.elementType = '';
-			dialogServices.closeDialog('create-element-dialog');	
+			dialogServices.closeDialog('create-element-dialog');
 		}
 
 		// ============================================== Helper Func ============================================== //
-		
 
-		vm.getTimes = function(number){
+		function getTimes(number) {
 			return new Array(number);
-		};
+		}
 
-		var handleFileSelect = function( event ){
-	    	var target = event.srcElement || event.target;
-	    	console.log(target.files);
+		var handleFileSelect = function (event) {
+			var target = event.srcElement || event.target;
 			if (target && target.files && target.files.length === 1) {
 				var fileObject = target.files[0];
-				vm.gridApi.importer.importFile( fileObject );
+				vm.gridApi.importer.importFile(fileObject);
 				target.form.reset();
 			}
 		};
-	 
+
 		var fileChooser = document.querySelectorAll('.file-chooser');
 
-		if ( fileChooser.length !== 1 ){
-			console.log('Found > 1 or < 1 file choosers within the menu item, error, cannot continue');
+		if (fileChooser.length !== 1) {
+			// console.log('Found > 1 or < 1 file choosers within the menu item, error, cannot continue');
 		} else {
 			fileChooser[0].addEventListener('change', handleFileSelect, false);  // TODO: why the false on the end?  Google  
 		}
 
 		// ============================================== API ============================================== //
 
-		function deleteOne(selectedId){
+		function deleteOne(selectedId) {
 			return autofillServices
-			.deleteOneRecord(selectedId)
-			.then(function SuccessCallback(res){
-				postDeleteUpdate();
-				return feedbackServices.successFeedback('record deleted', 'autofill-feedbackMessage');
-			})
-			.catch(function ErrorCallback(err) {
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
-		}
-		
-		function deleteMany(rgSelectedId){
-			return autofillServices.deleteRecords(rgSelectedId)
-			.then(function SuccessCallback(res){
-				postDeleteUpdate();			
-				return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage');
-			})
-			.catch(function ErrorCallback(err) {
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
+				.deleteOneRecord(selectedId)
+				.then(function SuccessCallback(res) {
+					postDeleteUpdate();
+					return feedbackServices.successFeedback('record deleted', 'autofill-feedbackMessage');
+				})
+				.catch(function ErrorCallback(err) {
+					return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+				});
 		}
 
-		function saveFunc(rowEntity){
+		function deleteMany(rgSelectedId) {
+			return autofillServices.deleteRecords(rgSelectedId)
+				.then(function SuccessCallback(res) {
+					postDeleteUpdate();
+					return feedbackServices.successFeedback('records deleted', 'autofill-feedbackMessage');
+				})
+				.catch(function ErrorCallback(err) {
+					return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+				});
+		}
+
+		function saveFunc(rowEntity) {
 			var deferred = $q.defer();
 			autofillServices.updateRecord(rowEntity)
-			.then(SuccessCallback)
-			.catch(ErrorCallback);
+				.then(SuccessCallback)
+				.catch(ErrorCallback);
 			return deferred.promise;
 
-			function SuccessCallback(msg){
-				deferred.resolve(msg);		
-				feedbackServices.successFeedback('records updated', 'autofill-feedbackMessage');
+			function SuccessCallback(msg) {
+				deferred.resolve(msg);
+				feedbackServices.successFeedback('Records updated', 'autofill-feedbackMessage');
 			}
 
 			function ErrorCallback(err) {
@@ -215,109 +228,105 @@ angular.module('app.autofill')
 			}
 		}
 
-		function importFunc(objectArray){
+		function importFunc(objectArray) {
 			var deferred = $q.defer();
-		    var promises = [];
-			for(var i = 0 ; i < objectArray.length; i++){
+			var promises = [];
+			for (var i = 0; i < objectArray.length; i++) {
 				promises.push(createRecord(objectArray[i]));
 			}
 			$q.all(promises)
-			.then(SuccessCallback)
-			.catch(ErrorCallback);
+				.then(SuccessCallback)
+				.catch(ErrorCallback);
 			return deferred.promise;
 
-			function SuccessCallback(res){
+			function SuccessCallback(res) {
 				deferred.resolve(res.data);
 			}
-			function ErrorCallback(err){
+			function ErrorCallback(err) {
 				deferred.reject(err.description);
 			}
 		}
 
 
-		function createRecord(autofillData){
+		function createRecord(autofillData) {
 			var deferred = $q.defer();
 			autofillServices.createRecord(autofillData)
-			.then(SuccessCallback)
-			.catch(ErrorCallback);
+				.then(SuccessCallback)
+				.catch(ErrorCallback);
 			return deferred.promise;
 
-			function SuccessCallback(res){
+			function SuccessCallback(res) {
 				vm.tableOptions.data.unshift(autofillData);
 				deferred.resolve(res.data);
 			}
-			function ErrorCallback(err){
+			function ErrorCallback(err) {
 				deferred.reject(err.description);
 			}
 		}
 
 
-		function postDeleteUpdate(){
+		function postDeleteUpdate() {
 			init();
 		}
 
-		
+
 
 		/* =========================================== Element =========================================== */
 
-		function createElement(elementData){
+		function createElement(elementData) {
 			return autofillServices.createElement(elementData)
-			.then(function SuccessCallback(res){
-				var elementType = elementData.type == 'text' ? 'textfield' : elementData.type;
-				return feedbackServices.successFeedback( elementType + ' saved', 'autofill-feedbackMessage');
-			})
-			.catch(function ErrorCallback(err){
-				console.log(err);
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
+				.then(function SuccessCallback(res) {
+					var elementType = elementData.type == 'text' ? 'textfield' : elementData.type;
+					return feedbackServices.successFeedback(elementType + ' saved', 'autofill-feedbackMessage');
+				})
+				.catch(function ErrorCallback(err) {
+					// console.log(err);
+					return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+				});
 		}
 
 
 		/* =========================================== mdl data table =========================================== */
-
-		
-		vm.deleteSelected = deleteSelected;
-		vm.reset = init;
-		function getDataHeader(){
+		function getDataHeader() {
 			vm.tableOptions.columnDefs = [];
 			return autofillServices.getElement()
-			.then(function SuccessCallback(res){
-				for(var i = 0; i < res.data.length; i++){
+				.then(function SuccessCallback(res) {
+					for (var i = 0; i < res.data.length; i++) {
+						vm.tableOptions.columnDefs.push({
+							type: 'default',
+							displayName: res.data[i].fieldName.toUpperCase(),
+							fieldName: res.data[i].fieldName,
+							enableEdit: true
+						});
+					}
 					vm.tableOptions.columnDefs.push({
-						type:'default',
-						displayName:res.data[i].fieldName.toUpperCase(),
-						fieldName:res.data[i].fieldName,
-						enableEdit: true
+						type: 'action',
+						icon: 'delete',
+						action: function (row) {
+							// console.log('row');
+							// console.log(row);
+						}
 					});
-				}
-				vm.tableOptions.columnDefs.push({ 
-					type:'action',
-					icon:'delete',
-					action: function(row){
-						console.log('row');
-						console.log(row);
-					} 
+				}).catch(function ErrorCallback(err) {
+					return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
 				});
-			}).catch(function ErrorCallback (err) {
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
 		}
 
-		function getDataBody(){
+		function getDataBody() {
 			vm.tableOptions.data = [];
 			return autofillServices.getRecords()
-			.then(function SuccessCallback(res){
-				for(var i = 0; i < res.data.length; i++){
-					vm.tableOptions.data.push(res.data[i]);
-				}
-			}).catch(function ErrorCallback(err){
-				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
-			});
+				.then(function SuccessCallback(res) {
+					for (var i = 0; i < res.data.length; i++) {
+						vm.tableOptions.data.push(res.data[i]);
+					}
+				}).catch(function ErrorCallback(err) {
+					return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+				});
 		}
 
-		function init(){
+		function init() {
 			getDataBody();
-			getDataHeader();	
+			getDataHeader();
 		}
 
 		// ===========================================   MDL LOADING  =========================================== //
@@ -331,6 +340,6 @@ angular.module('app.autofill')
 			$timeout(function () {
 				componentHandler.upgradeDom();
 			}, 0);
-		});		
+		});
 	}
 })();

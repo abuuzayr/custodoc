@@ -101,7 +101,7 @@
         }
 
         //group management
-        vm.getGroupData();
+        getGroupData();
 
         function getGroupData() {
             vm.groups = [];
