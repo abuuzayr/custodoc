@@ -508,9 +508,15 @@ angular
         vm.signaturePad = new SignaturePad(vm.canvas);  
         vm.dialog.showModal();  
     }
-	
+	vm.openImageModal = function(name){
+		vm.entryData[name] = '';
+		vm.uploadImageName = name;
+		vm.dialog = document.getElementById('image-modal');
+		vm.dialog.showModal();  
+	}
 	vm.closeModal = function() {
-		vm.dialog.close();	
+		vm.dialog.close();
+		vm.uploadImageName = '';	
 	}
 
 	/*vm.clear = function() {
