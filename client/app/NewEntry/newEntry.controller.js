@@ -117,8 +117,8 @@ angular
     viewContentLoaded.promise.then(function () {
         $timeout(function () {
             componentHandler.upgradeDom();          
-            vm.wrapper = angular.element(document.getElementById(vm.signatureId[0]));
         }, 0);  
+        vm.wrapper = angular.element(document.getElementById(vm.signatureId[0]));
     });
 
     function slugify(text) {
