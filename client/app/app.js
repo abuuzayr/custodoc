@@ -19,15 +19,7 @@
                 url: '/login',
                 templateUrl: 'app/Login/login.html',
                 controller: 'loginCtrl',
-                controllerAs: 'vm',
-                resolve: {
-                    security: ['$q', 'authServices', '$state', function ($q, authServices, $state) {
-                        if (authServices.getToken()) {
-                                $state.go('forms');
-                        }
-                        return $q.resolve();
-                    }]
-                }
+                controllerAs: 'vm'
             })
             .state('newentry', {
                 url: '/newentry/:groupName',
