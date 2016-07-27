@@ -7,6 +7,8 @@
     function topNavBar() {
         return {
             restrict: 'EA',
+            scope: {},
+            transclude: true,
             controller: 'topNavCtrl',
             controllerAs: 'vm',
             replace: true,
