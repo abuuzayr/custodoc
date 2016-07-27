@@ -1,13 +1,20 @@
+(function() {
+    'use strict';
+    
 angular
     .module("app.core")
-    .controller("usersCtrl", ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices', function ($scope, $q, $location, $timeout, dialogServices, feedbackServices, authServices) {
+    .controller('usersCtrl', usersCtrl);
+    
+    usersCtrl.$inject = ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices']; 
+    
+    function usersCtrl($scope, $q, $location, $timeout, dialogServices, feedbackServices, authServices) {
+        /* jshint validthis: true */
         var vm = this;
         var addUserId = 0;
         var MIN_PASSWORD_LENGTH = 8;
         var MAX_PASSWORD_LENGTH = 24;
         vm.users = [];
         vm.userGroups = ["Admin", "User+", "User"];
-        // TODO
         var companyName = authServices.getUserInfo().companyName;
         var companyId = authServices.getUserInfo().companyId;
 
@@ -220,4 +227,5 @@ angular
                 }
             }
         }
-    }]);
+    }
+})();

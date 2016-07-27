@@ -1,6 +1,13 @@
-angular
-    .module("app.core")
-    .controller("settingsCtrl", ['$scope', '$q', '$location', '$timeout', function ($scope, $q, $location, $timeout) {
+(function () {
+    'use strict';
+
+    angular
+        .module("app.core")
+        .controller('settingsCtrl', settingsCtrl);
+
+    settingsCtrl.$inject = ['$scope', '$q', '$location', '$timeout'];
+
+    function settingsCtrl($scope, $q, $location, $timeout) {
         /* =========================================== Load animation =========================================== */
         var viewContentLoaded = $q.defer();
 
@@ -15,6 +22,7 @@ angular
             }, 0);
         });
         /* =========================================== Stubs =========================================== */
+        /* jshint validthis: true */
         var vm = this;
 
         function validateNewPassword() {
@@ -33,4 +41,5 @@ angular
         document.querySelector('#progressBarStorage').addEventListener('mdl-componentupgraded', function () {
             this.MaterialProgress.setProgress(usedStorage);
         });
-    }]);
+    }
+})();
