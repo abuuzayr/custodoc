@@ -118,7 +118,6 @@ angular
         $timeout(function () {
             componentHandler.upgradeDom();          
         }, 0);  
-        vm.wrapper = angular.element(document.getElementById(vm.signatureId[0]));
     });
 
     function slugify(text) {
@@ -524,19 +523,14 @@ angular
 		vm.dialog.close();	
 	}
 
-	vm.clear = function() {
+	/*vm.clear = function() {
 		vm.signaturePad.clear();
-	};
+	};*/
 
 	vm.save = function() {
-		if (vm.signaturePad.isEmpty()) {
-    		var msg = "Please provide signature first.";
-    		showSnackbar(msg);
-		} else {
-		 	var dataURL = vm.signaturePad.toDataURL('image/png',1);
-			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-			return data;
-		}
+	 	var dataURL = vm.signaturePad.toDataURL('image/png',1);
+		var data = dataURL.substr(dataURL.indexOf('base64') + 7)
+		return data;
 	}
 
 	function showSnackbar(msg) {
