@@ -6,7 +6,7 @@ angular.module('app.formBuilder')
 myOnDragStart.$inject = ['$parse'];
 myOnDragOver.$inject = ['$parse'];
 myOnDrop.$inject = ['$parse'];
-compilePage.$inject = ['$compile'];
+compileOnPageChange.$inject = ['$compile'];
 
 function myOnDragStart($parse) {
     return {
