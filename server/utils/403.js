@@ -36,9 +36,9 @@ module.exports = function() {
         var config = require('../config.js');
         var jwt = require('jsonwebtoken');
         jwt.sign({
-            username: decoded.username,
-            email: decoded.email,
-            usertype: decoded.usertype
+            username: req.decoded.username,
+            email: req.decoded.email,
+            usertype: req.decoded.usertype
         }, config.appSecret, {
             expiresIn: '1h'
         }, function(err, token) {
