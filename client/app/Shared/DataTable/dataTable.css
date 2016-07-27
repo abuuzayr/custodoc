@@ -62,7 +62,6 @@ p {
 
 #table-toolbar {
     height: 50px;
-    position: absolute;
 }
 
 #item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
@@ -85,8 +84,3 @@ p {
 .mdl-data-table tbody tr.row-in-edit{
   background-color:#E0F7FA;
 }
-
-#pagination {
-    position: absolute;
-}
-
