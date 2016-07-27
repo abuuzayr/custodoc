@@ -595,7 +595,7 @@
                 .catch(ErrorCallback);
 
             function SuccessCallback(res) {
-                console.log('success')
+                console.log('success');
             }
 
             function ErrorCallback(err) {
