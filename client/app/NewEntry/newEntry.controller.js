@@ -502,7 +502,7 @@ angular
 
 	vm.openModal = function(name) {
 		vm.entryData[name] = '';
-		vm.signatureName = vm.entryData[name];
+		vm.signatureName = name;
         vm.dialog = document.getElementById('signature-modal');
 		vm.canvas = document.getElementById('signature-canvas');
         vm.signaturePad = new SignaturePad(vm.canvas);  
