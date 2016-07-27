@@ -401,7 +401,6 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
-						vm.signature = true;
 						var node = document.createElement('img');
 						var newName = slugify(element.name);
 						var testScope = 'vm.entryData.' + newName;
