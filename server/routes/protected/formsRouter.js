@@ -1,7 +1,5 @@
 var express = require('express');
-var morgan = require('morgan');
 var bodyParser = require('body-parser');
-var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
 var http403 = require('../../utils/403')();

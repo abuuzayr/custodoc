@@ -6,7 +6,7 @@ module.exports = {
 	superSecret : 'ilovescotchscotchyscotchscotch',
 	appSecret: 'secret_for_bulletform',
 	ObjectId : require('mongodb').ObjectID
-}
+};
 
 // 	Router Structure:  api (server/api.js) ---------->	protected (server/routes/protected.js)-----------> all the modules below 			
 //  

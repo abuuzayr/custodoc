@@ -19,7 +19,7 @@ autofillRoutes.get('/query/:query',function(req,res){
 		        	var results = [];
 		        	query = query.trim().toLowerCase();			
 		        	for(var i = 0 ; i < data.length ; i++){
-		        		for(fields in data[i]){
+		        		for(var fields in data[i]){
 		        			if(fields != '_id'){
 		        			 	if(data[i][fields].toString().toLowerCase().indexOf(query)!=-1){
 		        			 		results.push(data[i]);
@@ -87,7 +87,7 @@ autofillRoutes.route('/element')
             })
             .catch(function(err){
             	if(res.statusCode === 409)
-                	return sendError(req,res,409,err.message,"Conflict")
+                	return sendError(req,res,409,err.message,"Conflict");
                 else 
                 	return sendError(req,res,400,err.message,'Unsuccessful');
             });
@@ -108,7 +108,7 @@ autofillRoutes.route('/:record_id')
 				.catch(function(err){
 					return sendError(req,res,400,err.message,'Unsuccessful');
 				});
-		})
+		});
 	})
 
 	.delete(function(req,res){
@@ -117,12 +117,11 @@ autofillRoutes.route('/:record_id')
 			db.collection('autofill')
 				.findOneAndDelete({_id:id})
 				.then(function(result){
-					console.log(result)
 					res.send(200).send(result);
 				})
 				.catch(function(err){
 					return sendError(req,res,400,err.message,'Unsuccessful');
-				})
+				});
 		});
 	})
 
@@ -150,7 +149,7 @@ autofillRoutes.route('/:record_id')
 				console.log(err);
 				return sendError(req,res,400,err.message,'Unsuccessful');
 			});
-		})		
+		});		
 	});
 		
 //autofill entry CRUD endpoints
@@ -206,7 +205,7 @@ autofillRoutes.route('/')
 	});
 
 //UNDEFINED API END POINTS
-autofillRoutes.use('*',http404.notFoundMiddleware);
+autofillRoutes.use('*',http404.notFound);
 
 //export module
 module.exports = autofillRoutes;

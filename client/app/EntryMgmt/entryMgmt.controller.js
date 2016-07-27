@@ -167,18 +167,5 @@ angular.module('app.entryMgmt')
 				deferred.reject(err);
 			}
 		}
-
-		//UPGRADE UI
-		var viewContentLoaded = $q.defer();
-		$scope.$on('$viewContentLoaded', function () {
-			$timeout(function () {
-				viewContentLoaded.resolve();
-			}, 0);
-		});
-		viewContentLoaded.promise.then(function () {
-			$timeout(function () {
-				componentHandler.upgradeDom();
-			}, 0);
-		});
 	}
 })();

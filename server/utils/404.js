@@ -1,12 +1,12 @@
 //404 stands for NOT FOUND
 module.exports = function() {
   var service = {
-    notFoundMiddleware: notFoundMiddleware,
+    notFound: notFound,
     send404: send404
   };
   return service;
 
-  function notFoundMiddleware(req, res, next) {
+  function notFound(req, res, next) {
     send404(req, res, 'API endpoint not found');
   }
 

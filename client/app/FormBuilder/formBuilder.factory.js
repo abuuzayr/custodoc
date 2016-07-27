@@ -3,10 +3,9 @@ angular
     .module("app.formBuilder")
     .factory('formBuilderFactory', formBuilderFactory);
 
-formBuilderFactory.$inject = ['$http'];
+formBuilderFactory.$inject = ['$http','appConfig'];
 
-function formBuilderFactory($http) {
-	var serverURL = "https://10.4.1.204/req/api/protected";
+function formBuilderFactory($http, appConfig) {
 	var colors = ["aliceblue","antiquewhite","aqua","aquamarine","azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown","burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue","cornsilk","crimson","cyan","darkblue","darkcyan","darkgoldenrod","darkgray","darkgrey","darkgreen","darkkhaki","darkmagenta","darkolivegreen","darkorange","darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkslategrey","darkturquoise","darkviolet","deeppink","deepskyblue","dimgray","dimgrey","dodgerblue","firebrick","floralwhite","forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray","grey","green","greenyellow","honeydew","hotpink","indianred","indigo","ivory","khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue","lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgrey","lightgreen","lightpink","lightsalmon","lightseagreen","lightskyblue","lightslategray","lightslategrey","lightsteelblue","lightyellow","lime","limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue","mediumorchid","mediumpurple","mediumseagreen","mediumslateblue","mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue","mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive","olivedrab","orange","orangered","orchid","palegoldenrod","palegreen","paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum","powderblue","purple","red","rosybrown","royalblue","saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver","skyblue","slateblue","slategray","slategrey","snow","springgreen","steelblue","tan","teal","thistle","tomato","turquoise","violet","wheat","white","whitesmoke","yellow","yellowgreen"];
 	var fonts = ['Arial','"Comic Sans MS"','"Times New Roman"','"Courier New"'];
 	var whiteDiv=document.createElement("div");
@@ -23,10 +22,8 @@ function formBuilderFactory($http) {
 	newPage.style.width="794px";
 	newPage.style.height="1123px";	
 	newPage.setAttribute("class","page");
-	newPage.setAttribute("ondrop",
-	"angular.element(document.getElementById('formBuilderBody')).scope().vm.drop(event)");
-	newPage.setAttribute("ondragover",
-	"angular.element(document.getElementById('formBuilderBody')).scope().vm.allowDrop(event)");
+	newPage.setAttribute("my-on-drop","vm.drop($event)");
+	newPage.setAttribute("my-on-drag-over","vm.allowDrop($event)");
 
 	var availableFontsizes=[]; 
 	for (var i = 0; i < 30; i++) {
@@ -44,11 +41,11 @@ function formBuilderFactory($http) {
 	}
 
 	var saveFormData = function(formData){
-		return $http.put(serverURL+"/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} });
+		return $http.put(appConfig.API_URL+"/protected/forms", {formData:formData}, {headers: {'Content-Type': 'application/json'} });
 	};
 
 	var getFormData = function(groupName, formName){
-		return $http.get(serverURL+"/forms/"+groupName+'/'+formName);
+		return $http.get(appConfig.API_URL+"/protected/forms/"+groupName+'/'+formName);
 	};
 
 	return {

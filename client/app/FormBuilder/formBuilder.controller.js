@@ -5,24 +5,11 @@
 		.module('app.formBuilder')
 		.controller('formBuilderCtrl', formBuilderCtrl);
 
-	formBuilderCtrl.$inject = ['$scope', '$http', '$window', '$rootScope', '$q', '$compile', 'pdfFactory', 'ngProgressFactory', 'formBuilderFactory', '$timeout', '$stateParams', '$state'];
+	formBuilderCtrl.$inject = ['$scope', '$http', '$window', '$rootScope', '$q', '$compile', 'pdfFactory', 'ngProgressFactory', 'formBuilderFactory', '$timeout', '$stateParams', '$state', 'appConfig'];
 
-	function formBuilderCtrl($scope, $http, $window, $rootScope, $q, $compile, pdfFactory, ngProgressFactory, formBuilderFactory, $timeout, $stateParams, $state) {
-
-		var viewContentLoaded = $q.defer();
-		$scope.$on('$viewContentLoaded', function() {
-			$timeout(function() {
-				viewContentLoaded.resolve();
-			}, 0);
-		});
-		viewContentLoaded.promise.then(function() {
-			$timeout(function() {
-				componentHandler.upgradeDom();
-			}, 0);
-		});
+	function formBuilderCtrl($scope, $http, $window, $rootScope, $q, $compile, pdfFactory, ngProgressFactory, formBuilderFactory, $timeout, $stateParams, $state, appConfig) {
 
 		//initialization
-		var serverURL = "https://10.4.1.204/req/api/protected";
 		/* jshint validthis: true */
 		var vm = this;
 		vm.saved = true;
@@ -396,7 +383,7 @@
 		}
 
 		function getSavedElements() {
-			$http.get(serverURL + "/groups/getGroupElements/" + vm.groupName)
+			$http.get(appConfig.API_URL + "/protected/groups/getGroupElements/" + vm.groupName)
 				.then(function(res) {
 					vm.savedElements = res.data;
 				}, function(res) {
@@ -405,7 +392,7 @@
 		}
 
 		function getAutofillElements() {
-			$http.get(serverURL + "/autofill/element")
+			$http.get(appConfig.API_URL + "/protected/autofill/element")
 				.then(function(res) {
 					vm.autofillElements = res.data;
 				}, function(res) {
@@ -512,7 +499,7 @@
 							groupName: vm.groupName,
 							formName: vm.formName
 						};
-						$http.post(serverURL + "/forms", {
+						$http.post(appConfig.API_URL + "/protected/forms", {
 								formData: formData
 							}, {
 								headers: {
