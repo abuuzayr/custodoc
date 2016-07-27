@@ -661,7 +661,6 @@
             $timeout(function() {
                 componentHandler.upgradeDom();
             }, 0);
-            // showByFilter();
         });
     }
 })();

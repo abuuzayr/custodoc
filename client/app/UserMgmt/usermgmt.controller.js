@@ -1,13 +1,14 @@
-(function() {
+(function () {
     'use strict';
-    
-angular
-    .module("app.core")
-    .controller('usersCtrl', usersCtrl);
-    
-    usersCtrl.$inject = ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices']; 
-    
+
+    angular
+        .module("app.core")
+        .controller('usersCtrl', usersCtrl);
+
+    usersCtrl.$inject = ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices'];
+
     function usersCtrl($scope, $q, $location, $timeout, dialogServices, feedbackServices, authServices) {
+        /* =========================================== Initialization =========================================== */
         /* jshint validthis: true */
         var vm = this;
         var addUserId = 0;
@@ -29,19 +30,29 @@ angular
         // vm.deleteFromDatabase = vm.deleteFromDatabase;
 
         /* =========================================== Load animation =========================================== */
-        var viewContentLoaded = $q.defer();
-        $scope.$on('$viewContentLoaded', function () {
-            $timeout(function () {
-                viewContentLoaded.resolve();
-            }, 0);
-        });
-        viewContentLoaded.promise.then(function () {
-            $timeout(function () {
-                componentHandler.upgradeDom();
-            }, 0);
-        });
+        upgradeMDLDom();
+        /**
+         * Upgrades DOM of MDL components after page content has been loaded.
+         */
+        function upgradeMDLDom() {
+            var viewContentLoaded = $q.defer();
+
+            $scope.$on('$viewContentLoaded', function () {
+                $timeout(function () {
+                    viewContentLoaded.resolve();
+                }, 0);
+            });
+            viewContentLoaded.promise.then(function () {
+                $timeout(function () {
+                    componentHandler.upgradeDom();
+                }, 0);
+            });
+        }
 
         /* =========================================== Add/Edit user =========================================== */
+        /**
+         * Adds user to database and vm.users if form submission is valid. Returns display error feedback message otherwise.
+         */
         function addUser() {
             if ($scope.newUserForm.$valid) {
                 pushElement();
@@ -54,11 +65,14 @@ angular
                 } else {
                     errMsg = 'Invalid form submission';
                 }
-                console.log('Add user unsuccessful');
-                feedbackServices.errorFeedback(errMsg, 'newUser-feedbackMessage');
+                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
+                    .then(feedbackServices.errorFeedback(errMsg, 'newUser-feedbackMessage'));
             }
         }
 
+        /**
+         * Pushes a new user element into vm.users.
+         */
         function pushElement() {
             vm.users[addUserId] = {
                 id: addUserId,
@@ -70,6 +84,9 @@ angular
             addUserId++;
         }
 
+        /**
+         * Resets all fields in form. Triggered after every form submission. 
+         */
         function clearFormInputs() {
             vm.username = '';
             vm.password = '';
@@ -77,6 +94,9 @@ angular
             vm.selectedUserType = '';
         }
 
+        /**
+         * Edits user corresponding to vm.editId and update database if form is valid. Returns display error message otherwise.
+         */
         function editUser() {
             if ($scope.newUserForm.$valid) {
                 vm.users[vm.editId].username = vm.username;
@@ -89,12 +109,18 @@ angular
                 closeDialog('userDialog');
             } else {
                 console.log('edituser PHAIL');
-                feedbackServices.errorFeedback('Invalid form submission', 'newUser-feedbackMessage');
+                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
+                    .then(feedbackServices.errorFeedback('Invalid form submission', 'newUser-feedbackMessage'));
             }
         }
-
+        
+        /**
+         * Removes user from vm.users and database. 
+         * 
+         * @param {string} username
+         */
         function removeUser(username) {
-            // TODO: delete user in database
+            // TODO: delete user in database and add feedback message
             for (var i = 0; i < vm.users.length; i++) {
                 if (vm.users[i].username === username) {
                     vm.users.splice(i, 1);
@@ -103,6 +129,11 @@ angular
             addUserId--;
         }
 
+        /**
+         * Loads information of user to-be-edited into the form. Triggered when editDialog opens.
+         * 
+         * @param {any} username
+         */
         function loadEditInfo(username) {
             for (var i = 0; i < vm.users.length; i++) {
                 if (vm.users[i].username === username) {
@@ -116,14 +147,29 @@ angular
         }
 
         /* =========================================== Dialog =========================================== */
+        /**
+         * Opens modal dialog of dialogName.
+         * 
+         * @param {string} dialogName
+         */
         function openDialog(dialogName) {
             dialogServices.openDialog(dialogName);
         }
-
+        
+        /**
+         * Closes modal dialog of dialogName.
+         * 
+         * @param {string} dialogName
+         */
         function closeDialog(dialogName) {
             dialogServices.closeDialog(dialogName);
         }
-
+        
+        /**
+         * Converts user information in array to json form to be stored in database. 
+         * 
+         * @returns {json} newUserData
+         */
         function convertUserData() {
             var newUserData = {};
             newUserData.companyId = companyId;
