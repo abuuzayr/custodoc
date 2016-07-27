@@ -8,7 +8,7 @@
             <a class="mdl-navigation__link" ui-sref="autofill"><i class="material-icons" role="presentation">account_box</i> Autofill</a>
             <a class="mdl-navigation__link" ui-sref="users" ng-if="vm.userType"><i class="material-icons" role="presentation">group</i> User management</a>
             <a class="mdl-navigation__link" ui-sref="settings"><i class="material-icons" role="presentation">settings</i> Account settings</a>
-            <a class="mdl-navigation__link" ng-click="vm.logout();"><i class="material-icons" role="presentation">exit_to_app</i> Logout</a>
+            <a class="mdl-navigation__link" ui-sref="login" ng-click="vm.logout();"><i class="material-icons" role="presentation">exit_to_app</i> Logout</a>
         </nav>
     </div>
 </header>
