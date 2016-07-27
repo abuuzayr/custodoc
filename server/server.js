@@ -36,7 +36,7 @@ app.use( function(req, res, next) {
 // ROUTES
 // Connect all our routes to our application
 app.use('/api', routes);
-app.use('*',http404.notFoundMiddleware);
+app.use('*',http404.notFound);
 // STARTING SERVER
 // Open one database connection
 // one connection handles all request
