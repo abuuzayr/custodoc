@@ -62,7 +62,7 @@ p {
 
 #table-toolbar {
     height: 50px;
-    position: fixed;
+    position: absolute;
 }
 
 #item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
@@ -79,7 +79,7 @@ p {
 
 .table-cell-icon-link:hover {
 	color: red;
-  cursor: pointer;`
+  cursor: pointer;
 }
 
 .mdl-data-table tbody tr.row-in-edit{
@@ -87,6 +87,6 @@ p {
 }
 
 #pagination {
-    position: fixed;
+    position: absolute;
 }
 
