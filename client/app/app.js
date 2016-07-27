@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -21,10 +21,11 @@
                 controller: 'loginCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', '$state', function($q, authServices, $state) {
+                    security: ['$q', 'authServices', '$state', function ($q, authServices, $state) {
                         if (authServices.getToken()) {
-                            return $state.go('forms');
-                        } 
+                            $state.go('forms');
+                            return $q.resolve();
+                        }
                     }]
                 }
             })
@@ -34,7 +35,7 @@
                 controller: 'newEntryCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
@@ -49,7 +50,7 @@
                 controller: 'usersCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken() && authServices.getUserInfo().usertype === "Admin") {
                             return $q.resolve();
                         } else {
@@ -64,7 +65,7 @@
                 controller: 'entryMgmtCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
@@ -79,7 +80,7 @@
                 controller: 'settingsCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
@@ -94,7 +95,7 @@
                 controller: 'formsCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
@@ -109,7 +110,7 @@
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken() && (authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {
                             return $q.resolve();
                         } else {
@@ -124,7 +125,7 @@
                 controller: 'autofillCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    security: ['$q', 'authServices', function($q, authServices) {
+                    security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken()) {
                             return $q.resolve();
                         } else {
@@ -138,8 +139,8 @@
     init.$inject = ['$rootScope', '$timeout'];
 
     function init($rootScope, $timeout) {
-        $rootScope.$on('$viewContentLoaded', function() {
-            $timeout(function() {
+        $rootScope.$on('$viewContentLoaded', function () {
+            $timeout(function () {
                 componentHandler.upgradeAllRegistered();
             });
         });
