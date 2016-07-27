@@ -62,9 +62,11 @@ angular
 	vm.text = null;
 	vm.dropdown = null;
 	vm.radio = null;
-	
+
+	vm.signatureId = [];
+
 	vm.groupName = $stateParams.groupName;
-	
+
 
 	/*********** ARRAY VARIABLES THAT STORE FORM/ENTRY DATA **********/
 
@@ -114,12 +116,9 @@ angular
     });
     viewContentLoaded.promise.then(function () {
         $timeout(function () {
-	        componentHandler.upgradeDom();
-	        vm.wrapper = angular.element(document.getElementById('signature-field-div'));
-			vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
-			vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
-			vm.signaturePad = new SignaturePad(vm.canvas);
-        }, 0);
+            componentHandler.upgradeDom();          
+        }, 0);  
+        vm.wrapper = angular.element(document.getElementById(vm.signatureId[0]));
     });
 
     function slugify(text) {
@@ -284,6 +283,7 @@ angular
 					        object.name = slugName;
 					        object.label = fieldName;
 					        object.data = '';
+                            vm.signatureId.push(fieldName);
 
 					        arrayOfKeys.push(object);
 					    }
@@ -401,7 +401,6 @@ angular
 						node.style.textDecoration = element.textDecoration;
 						node.style.zIndex="1";
 					}else if(element.name.startsWith('signature_')){
-						vm.signature = true;
 						var node = document.createElement('img');
 						var newName = slugify(element.name);
 						var testScope = 'vm.entryData.' + newName;
@@ -513,9 +512,13 @@ angular
 
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
 
-	vm.openModal = function() {
-		vm.dialog.showModal();	
-	}
+	vm.openModal = function(name) {
+        vm.wrapper = angular.element(document.getElementById(name));
+        vm.dialog = angular.element(vm.wrapper.find('dialog'))[0];
+        vm.canvas = angular.element(vm.wrapper.find('canvas'))[0];
+        vm.signaturePad = new SignaturePad(vm.canvas);  
+        vm.dialog.showModal();  
+    }
 	
 	vm.closeModal = function() {
 		vm.dialog.close();	
@@ -529,15 +532,10 @@ angular
 		if (vm.signaturePad.isEmpty()) {
     		var msg = "Please provide signature first.";
     		showSnackbar(msg);
-		 	} else {
-		 		var dataURL = vm.signaturePad.toDataURL('image/png',1);
-		 		//Open image in new window
-			//window.open(dataURL);
-			//..or
-			//Extract as base64 encoded
+		} else {
+		 	var dataURL = vm.signaturePad.toDataURL('image/png',1);
 			var data = dataURL.substr(dataURL.indexOf('base64') + 7)
 			return data;
-			//TODO: include in your json object
 		}
 	}
 
