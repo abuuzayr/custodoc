@@ -84,7 +84,7 @@
             .state('forms', {
                 url: '/forms',
                 templateUrl: 'app/FormMgmt/forms.html',
-                controller: 'topNavCtrl',
+                controller: 'formsCtrl',
                 controllerAs: 'vm',
                 resolve: {
                     security: ['$q', 'authServices', function($q, authServices) {
