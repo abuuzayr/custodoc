@@ -25,7 +25,7 @@
                         if (authServices.getToken()) {
                             $timeout(function () {
                                 $state.go('forms');
-                            }
+                            });
                         }
                         return $q.resolve();
                     }]
