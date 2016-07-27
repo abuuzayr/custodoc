@@ -21,6 +21,20 @@
         </div>
     </div>
 </dialog>
+<!--caltest-->
+
+
+<dialog id="image-modal" class="mdl-dialog">
+    <p>Image below</p>
+    <div class="mdl-dialog__content">
+	    <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+	        <input type="file" ng-model="vm.entryData[vm.uploadImageName]" name="image" base-sixty-four-input accept="image/*">
+	    </div>
+	    <label> Preview </label>
+	    <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[vm.uploadImageName].base64}}" />
+        <button type="button" class="mdl-button close" ng-click="vm.closeModal()">Close</button>
+    </div>
+</dialog>
 
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
@@ -106,11 +120,11 @@
                             <!-- IMAGE FIELDS -->
                             <div ng-if="key.type=='image'">
                                 <label>{{key.label}}</label>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                                <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
                                     <input type="file" ng-model="vm.entryData[key.name]" name="image" base-sixty-four-input accept="image/*">
-                                </div>
-                                <label> Preview </label>
-                                <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[key.name].base64}}" />
+                                </div>-->
+                                <label ng-click="vm.openImageModal(key.name)"> Preview </label>
+                                <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[key.name].base64}}" ng-click="vm.openImageModal(key.name)"/>
                             </div>
 
                             <!-- SIGNATURE FIELDS -->
