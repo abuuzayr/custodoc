@@ -5,7 +5,8 @@ var connection = require('../utils/connection.js')();
 var http404 = require('../utils/404.js')();
 var http403 = require('../utils/403.js')();
 var ObjectID = require('mongodb').ObjectID;
-
+var bson = require('bson')
+var BSON = new bson.BSONPure.BSON();
 
 storageRoutes.get('/',http403.decodeSessionCookie,getFormStorage,getEntryStorage,getAutofillStorage,function(req,res){
 	return res.status(200).send({
@@ -23,7 +24,7 @@ function getFormStorage(req,res,next){
 				next();
 			else{
 				for(var i = 0 ; i < docs.length ; i++){
-					req.formStorage += Object.bsonSize(docs[i]);
+					req.formStorage += BSON.calculateObjectSize(docs[i]);
 				}
 				next();
 			}
@@ -38,7 +39,7 @@ function getEntryStorage(req,res,next){
 				next();
 			else{
 				for(var i = 0 ; i < docs.length ; i++){
-					req.entryStorage += Object.bsonSize(docs[i]);
+					req.entryStorage += BSON.calculateObjectSize(docs[i]);
 				}
 				next();
 			}
@@ -53,7 +54,7 @@ function getAutofillStorage(req,res,next){
 				next();
 			else{
 				for(var i = 0 ; i < docs.length ; i++){
-					req.autofillStorage += Object.bsonSize(docs[i]);
+					req.autofillStorage += BSON.calculateObjectSize(docs[i]);
 				}
 				next();
 			}
