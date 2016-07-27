@@ -9,6 +9,7 @@
             restrict: 'EA',
             controller: 'topNavCtrl',
             controllerAs: 'vm',
+            replace: true,
             templateUrl: 'app/Shared/topNav/topNav.html'
         };
     }
