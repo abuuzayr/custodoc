@@ -7,6 +7,7 @@
     function topNavBar() {
         return {
             restrict: 'EA',
+            replace: true,
             controller: 'topNavCtrl',
             controllerAs: 'vm',
             templateUrl: 'app/Shared/topNav/topNav.html'
