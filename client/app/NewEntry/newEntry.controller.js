@@ -108,18 +108,6 @@ angular
 	vm.currentFormPreview = 1;
 	vm.numberOfPreviewPages = 1;
 
-    $scope.$on('$viewContentLoaded', function () {
-        $timeout(function () {
-            viewContentLoaded.resolve();
-            
-        }, 0);
-    });
-    viewContentLoaded.promise.then(function () {
-        $timeout(function () {
-            componentHandler.upgradeDom();          
-        }, 0);  
-    });
-
     function slugify(text) {
 	  	return text.toString().toLowerCase()
 	    .replace(/\s+/g, '_')           // Replace spaces with -
@@ -291,6 +279,7 @@ angular
 				vm.parsedFormData = arrayOfKeys;
 		})
 		.then(function(){
+			
 			for(var k=1; k<=vm.formData.length; k++){ //k is the form number
 				var form = vm.formData[k-1];
 				var elements = form.elements;

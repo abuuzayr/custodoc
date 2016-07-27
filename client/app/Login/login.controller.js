@@ -160,26 +160,5 @@
         function isValidPassword(str) {
             return str.length >= MIN_PASSWORD_LENGTH && str.length <= MAX_PASSWORD_LENGTH;
         }
-
-        /* =========================================== Load animation =========================================== */
-        upgradeMDLDom();
-        /**
-         * Upgrades DOM of MDL components after page content has been loaded.
-         */
-        function upgradeMDLDom() {
-            var viewContentLoaded = $q.defer();
-
-            $scope.$on('$viewContentLoaded', function () {
-                $timeout(function () {
-                    viewContentLoaded.resolve();
-                }, 0);
-            });
-            viewContentLoaded.promise.then(function () {
-                $timeout(function () {
-                    componentHandler.upgradeDom();
-                }, 0);
-            });
-        }
     }
 })();
-
