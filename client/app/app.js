@@ -23,8 +23,7 @@
                 resolve: {
                     security: ['$q', 'authServices', '$state', function($q, authServices, $state) {
                         if (authServices.getToken()) {
-                            $state.go('forms');
-                            return $q.resolve();
+                            return $state.go('forms');
                         } 
                     }]
                 }
