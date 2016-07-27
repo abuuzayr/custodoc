@@ -517,10 +517,12 @@ angular
 		vm.signaturePad.clear();
 	};*/
 
-	vm.save = function() {
+	vm.save = function(name) {
 	 	var dataURL = vm.signaturePad.toDataURL('image/png',1);
-		var data = dataURL.substr(dataURL.indexOf('base64') + 7)
-		return data;
+		var data = dataURL.substr(dataURL.indexOf('base64') + 7);
+		vm.entryData[name] = data;
+		vm.signatureName = '';
+		vm.dialog.close();	
 	}
 
 	function showSnackbar(msg) {
