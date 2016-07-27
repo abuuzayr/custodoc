@@ -137,7 +137,6 @@ angular
 					for (var i = 0; i < vm.formData.length ; i++){
 				 	   var data = vm.formData[i];
 				  	  	var elements = data.elements;
-				  	  	vm.entryData.formName = vm.formData[i].formName;
 				   	 for (key in elements) {
 						var element = elements[key];
 						//console.log("how many times");
