@@ -394,7 +394,8 @@ angular
 						var testScope = 'vm.entryData.' + newName;
 						node.setAttribute('ng-model', testScope);
 						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
-						node.setAttribute('ng-src', testImageString); 
+						node.setAttribute('ng-src', testImageString);
+						node.setAttribute('ng-click', 'vm.openModal(' + '"' + newName + '"' + ')');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
 					}else if (element.name.startsWith('image_')) {
@@ -404,8 +405,7 @@ angular
 						node.setAttribute('ng-model', testScope);
 						var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
 						node.setAttribute('ng-src', testImageString); 
-						node.setAttribute('ng-click', 'vm.openImageModal(' + '"' + vm.uploadImageName + '"' + ')');
-//						node.setAttribute('ng-click', 'vm.openImageModal(' + 'vm.uploadImageName' + ')');
+						node.setAttribute('ng-click', 'vm.openImageModal(' + '"' + newName + '"' + ')');
 						node.style.backgroundColor = element.backgroundColor;
 						node.style.zIndex="1";
 					}
