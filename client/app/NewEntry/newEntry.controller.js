@@ -501,8 +501,8 @@ angular
 	/*********************** SIGNATURE PAD FUNCTIONS *************************/
 
 	vm.openModal = function(name) {
-        vm.dialog = angular.element(document.getElementById('signature-modal'));
-		vm.canvas = angular.element(document.getElementById('signature-canvas'));
+        vm.dialog = document.getElementById('signature-modal');
+		vm.canvas = document.getElementById('signature-canvas');
         vm.signaturePad = new SignaturePad(vm.canvas);  
         vm.dialog.showModal();  
     }
