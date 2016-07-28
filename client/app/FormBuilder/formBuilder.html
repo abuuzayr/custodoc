@@ -618,7 +618,6 @@
 				<div class="mdl-tabs__panel is-active" id="newElement-panel">
 					<a name="createLabel" my-on-drag-start="vm.dragStart($event, 'label')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create label</a><br>
 					<div class="divider"></div>
-
 					<a name="createTextField" my-on-drag-start="vm.dragStart($event, 'text')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create text field</a><br>
 					<div class="divider"></div>
 					<a name="createCheckbox" my-on-drag-start="vm.dragStart($event, 'checkbox')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create check box</a><br>
@@ -651,15 +650,14 @@
 		</section>
 
 		<section id="form" style="height: 1123px; width: 794px;border:2px solid black;" compile-on-page-change>
-			<div class="container" style="height:50px; width: 794px;z-index:100;position:absolute;">
-			</div>
-
 			<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
+				<div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
+			</div>
 		</section>
 
 		<div id="snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
 			<div class="mdl-snackbar__text"></div>
 			<button class="mdl-snackbar__action" type="button"></button>
 		</div>
-		</div>
 	</div>
+</div>
