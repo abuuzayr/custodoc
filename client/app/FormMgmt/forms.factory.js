@@ -11,11 +11,10 @@
         var service = {
             getNewPage: getNewPage,
             getGroups: getGroups,
-            getForms: getForms,
-            formsFactory: formsFactory
+            getForms: getForms
         };
 
-        function formsFactory() {
+        function getNewPage() {
             var whiteDiv=document.createElement("div");
             whiteDiv.style.backgroundColor="white";
             whiteDiv.style.width="794px";
@@ -24,9 +23,6 @@
             whiteDiv.style.position="relative";
             whiteDiv.style.top="-7px";
             whiteDiv.style.left="-7px";
-        }
-
-        function getNewPage() {
             var newPage = document.createElement("div");
             newPage.appendChild(whiteDiv.cloneNode(true));
             newPage.style.width = "794px";
