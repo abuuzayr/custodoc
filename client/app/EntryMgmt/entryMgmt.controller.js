@@ -108,7 +108,7 @@ angular.module('app.entryMgmt')
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
-
+				var key;
 				for(var x = 0; x < vm.formData.length; x++) {
 					vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
 				}
