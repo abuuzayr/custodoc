@@ -28,7 +28,7 @@ angular.module('app.entryMgmt')
 		vm.currentFormNumber = 1;
 		vm.numberOfForms = 1;
 		var forms = document.getElementById('forms');
-		var selectedRows = vm.tableOptions.selections.selected[0];
+		var selectedRows = {};
 
 		getData();
 
@@ -104,7 +104,7 @@ angular.module('app.entryMgmt')
 		}
 
 		function downLoadAsOne(){
-			
+			selectedRows = vm.tableOptions.selection.selected[0];
 			entryMgmtServices.getFormGroupData(selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
