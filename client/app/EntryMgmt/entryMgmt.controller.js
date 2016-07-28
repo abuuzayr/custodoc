@@ -3,8 +3,8 @@
 angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
-	entryMgmtCtrl.$inject = ['$scope','$q','$timeout','entryMgmtServices'];
-	function entryMgmtCtrl($scope, $q, $timeout,entryMgmtServices){
+	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout','entryMgmtServices'];
+	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices){
 		var vm = this;
 		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
 		var pdf = new jsPDF();
@@ -52,6 +52,15 @@ angular.module('app.entryMgmt')
 		var newPageTemplate = newPage2;
 
 		/************************************************************/
+
+		function slugify(text) {
+		  	return text.toString().toLowerCase()
+		    .replace(/\s+/g, '_')           // Replace spaces with -
+		    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+		    .replace(/\-\-+/g, '_')         // Replace multiple - with single -
+		    .replace(/^-+/, '')             // Trim - from start of text
+		    .replace(/-+$/, '');            // Trim - from end of text
+		}
 
 		function getData(){
 			return entryMgmtServices.getData()
@@ -291,7 +300,7 @@ angular.module('app.entryMgmt')
 			var deferred = $q.defer();
 			for (var s = 0; s < vm.formData.length; s++) {
 				var elements = vm.formData[s];
-
+				var key;
 				for(key in elements){
 					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 						var radio = document.getElementById(key); //?
@@ -351,7 +360,7 @@ angular.module('app.entryMgmt')
 		function finishAddImagePromise(pageNumber) {
 			var deferred = $q.defer();
 			formNumber = vm.currentFormPreview;
-			imgurl = canvas.toDataURL('image/png');	
+			var imgurl = canvas.toDataURL('image/png');	
 			pdf.addImage(imgurl, "JPEG", 0, 0);
 			if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
 				pdf.save();
@@ -371,7 +380,7 @@ angular.module('app.entryMgmt')
 			var deferred = $q.defer(); 
 			for (var t = 0; t < vm.formData.length; t++) {
 				var elements = vm.formData[t];
-
+				var key;
 				for(key in elements){
 					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 						var radio = document.getElementById(key);
