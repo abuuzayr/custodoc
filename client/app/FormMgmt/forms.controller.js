@@ -5,9 +5,9 @@
         .module('app.formMgmt')
         .controller('formsCtrl', formsCtrl);
 
-    formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'formsFactory', '$state', 'usSpinnerService', 'appConfig'];
+    formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'formServices', '$state', 'usSpinnerService', 'appConfig'];
 
-    function formsCtrl($compile, $scope, $q, $location, $timeout, $http, formsFactory, $state, usSpinnerService, appConfig) {
+    function formsCtrl($compile, $scope, $q, $location, $timeout, $http, formServices, $state, usSpinnerService, appConfig) {
         /* jshint validthis: true */
         var vm = this;
 
@@ -28,7 +28,6 @@
             fieldName: 'formName',
             displayName: 'Form Name',
             action: goEditForm,
-            cellTemplate: '<a title="{{\'Proceed to edit: \'+row.entity.formName}}" ui-sref="formBuilder({groupName:row.entity.groupName,formName:row.entity.formName})" class="ui-grid-cell-contents">{{row.entity.formName}}</a>'
         }, {
             type: 'toggle',
             fieldName: 'isImportant',
@@ -77,7 +76,7 @@
         vm.showRecent = showRecent;
         vm.showImportant = showImportant;
         vm.showNewEntry = showNewEntry;
-        vm.toNewEntry = toNewEntry;
+        vm.goNewEntry = goNewEntry;
         vm.downloadAsOne = downloadAsOne;
         vm.downloadSeparate = downloadSeparate;
 
@@ -91,8 +90,16 @@
             return rows.length > 0;
         }
 
-        //submit new entry
-        function toNewEntry() {
+        //go to formbuilder
+        function goEditForm(row) {
+            $state.go('formBuilder', {
+                groupName: row.groupName,
+                formName: row.formName
+            });
+        }
+
+        //go to newentry
+        function goNewEntry() {
             var rows = vm.gridOptions.selection.selected;
             var groupName = rows[0].groupName;
             $state.go('newentry', {
@@ -105,47 +112,62 @@
 
         function getGroupData() {
             vm.groups = [];
-            $http.get(appConfig.API_URL + "/protected/groups")
-                .then(function(res) {
-                    for (var i = 0; i < res.data.length; i++) {
-                        vm.groups.push(res.data[i].groupName);
-                    }
-                    if (vm.groups.length) {
-                        vm.newFormGroup = vm.groups[0];
-                        vm.deleteGroupName = vm.groups[0];
-                        vm.renameGroupOld = vm.groups[0];
-                        vm.duplicateTo = vm.groups[0];
-                    }
-                });
+            formServices.getGroupData().then()
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                for (var i = 0; i < res.data.length; i++) {
+                    vm.groups.push(res.data[i].groupName);
+                }
+                if (vm.groups.length) {
+                    vm.newFormGroup = vm.groups[0];
+                    vm.deleteGroupName = vm.groups[0];
+                    vm.renameGroupOld = vm.groups[0];
+                    vm.duplicateTo = vm.groups[0];
+                }
+            }
+
+            function ErrorCallback(err) {
+                //TODO body...
+            }
         }
 
         function addNewGroup() {
-            $http.post(appConfig.API_URL + "/protected/groups", {
-                    groupName: vm.newGroupName
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function(res) {
-                    if (res.data === "Existed") {
-                        alert("This group name already exists");
-                    } else {
-                        vm.getGroupData();
-                        snackbarContainer.MaterialSnackbar.showSnackbar({
-                            message: "Added new group"
-                        });
-                    }
-                });
+            formServices.createGroup(vm.newGroupName)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                if (res.data === "Existed") {
+                    alert("This group name already exists");
+                } else {
+                    vm.getGroupData();
+                    snackbarContainer.MaterialSnackbar.showSnackbar({
+                        message: "Added new group"
+                    });
+                }
+            }
+
+            function ErrorCallback(argument) {
+                // body...
+            }
         }
 
         function deleteGroup() {
             if (confirm("Do you really want to delete this group? All the forms and entries data of this group will be deleted?")) {
-                $http.delete(appConfig.API_URL + "/protected/groups/" + vm.deleteGroupName)
-                    .then(function(res) {
-                        vm.getGroupData();
-                        vm.getFormData();
-                    });
+                return formServices.deleteGroup(vm.deleteGroupName)
+                    .then(SuccessCallback)
+                    .catch(ErrorCallback);
+            }
+
+            function SuccessCallback() {
+                vm.getGroupData();
+                vm.getFormData();
+            }
+
+            function ErrorCallback(argument) {
+                // TODO body...
             }
         }
 
@@ -222,8 +244,6 @@
                 pagesImage = [];
                 rows = [];
             }
-
-
         }
 
         function downloadAsOne() {
@@ -297,7 +317,9 @@
                 var code = document.getElementById('form' + formNumber + "page" + pageNumber).innerHTML;
                 rasterizeHTML.drawHTML(code).then(function(renderResult) {
                     context.drawImage(renderResult.image, 0, 0);
-                    var imgurl = canvas.toDataURL('image/jpeg', 1);
+                    var
+
+                        imgurl = canvas.toDataURL('image/jpeg', 1);
                     pagesImage[formNumber - 1].push(imgurl);
                     if (!document.getElementById('form' + formNumber + "page" + (pageNumber + 1))) {
                         deferred.resolve(formNumber + 1);
@@ -333,7 +355,7 @@
                     var elements = formData.elements;
                     vm.numberOfPages = formData.numberOfPages;
                     for (j = 1; j <= vm.numberOfPages; j++) {
-                        newPage = formsFactory.getNewPage().cloneNode(true);
+                        newPage = formServices.getNewPage().cloneNode(true);
                         newPage.setAttribute("id", 'form' + formNumber + "page" + j);
                         newPage.style.display = "none";
                         forms.appendChild(newPage);
@@ -563,23 +585,6 @@
                 });
         }
 
-        function setImportant() {
-            $http.put(appConfig.API_URL + "/protected/forms/important", {
-                    groupName: data.groupName,
-                    formName: data.formName
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function(res) {
-                    if (index === vm.gridOptions.selection.selectedId.length - 1) {
-                        vm.getFormData();
-                    }
-                });
-        }
-
-
         function toggleImportance(row) {
             var importance = row.isImportant.toLowerCase() === 'important' ? 'Normal' : 'Important';
             $http.put(appConfig.API_URL + "/protected/forms/importance", {
@@ -591,35 +596,21 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(SuccessCallback)
                 .catch(ErrorCallback);
-
-            function SuccessCallback(res) {
-                console.log('success');
-            }
 
             function ErrorCallback(err) {
                 vm.getFormData();
             }
         }
 
-        /* =========================================== UI grid =========================================== */
-
-        function goEditForm(row) {
-            $state.go('formBuilder', {
-                groupName: row.groupName,
-                formName: row.formName
-            });
-        }
-
         function showRecent() {
-        	var filteredData = [];
-        	originalData = vm.gridOptions.data;
+            var filteredData = [];
+            originalData = vm.gridOptions.data;
             vm.gridOptions.data = [];
             for (var i = 0; i < originalData.length; i++) {
-            	//604800000 = 1 week in milisec
-            	if(Date.now() - new Date(originalData[i].lastModified).getTime() < 604800000)
-            		filteredData.push(originalData[i]);
+                //604800000 = 1 week in milisec
+                if (Date.now() - new Date(originalData[i].lastModified).getTime() < 604800000)
+                    filteredData.push(originalData[i]);
             }
             vm.gridOptions.data = filteredData;
         }
@@ -636,7 +627,6 @@
         }
 
         /* =========================================== Dialog =========================================== */
-
 
         // Check if form name is duplicated. If yes, display feedback. Else, change name and close dialog.
         vm.openDialog = function(dialogName) {
