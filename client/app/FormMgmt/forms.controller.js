@@ -112,7 +112,7 @@
 
         function getGroupData() {
             vm.groups = [];
-            formServices.getGroupData().then()
+            formServices.getGroups().then()
                 .then(SuccessCallback)
                 .catch(ErrorCallback);
 
