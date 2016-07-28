@@ -77,7 +77,7 @@
         function includeMethod(tableOptions) {
             $scope.sorting = {
                 sortBy: $scope.tableOptions.columnDefs[0].fieldName ? $scope.tableOptions.columnDefs[0].fieldName : null,
-                sortReverse: false
+                sortReverse: true
             };
 
             if ($scope.tableOptions.enablePagination) {

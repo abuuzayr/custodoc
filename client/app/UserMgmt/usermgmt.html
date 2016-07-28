@@ -1,3 +1,25 @@
+<!---------------------------------------- Ng-include nav bars ---------------------------------------->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <top-nav-bar></top-nav-bar>
+    <!---------------------------------------- Main forms ---------------------------------------->
+    <main class="mdl-layout__content">
+        <div id="newUser-main">
+            <div class="top-row-buttons">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.addUser()"><i class="material-icons">add</i> Add new user</button>
+            </div>
+        </div>
+        <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
+    </main>
+    <div id="newUser-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    </main>
+</div>
+<div id="usermgmt-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+</div>
 <dialog id="addUser-dialog" class="mdl-dialog">
     <form name="newUserForm" novalidate>
         <div class="mdl-dialog__content">
@@ -30,60 +52,55 @@
             </div>
         </div>
         <div class="mdl-dialog__actions">
-            <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('userDialog')">Cancel</button>
+            <button id="cancel" type="button" class="mdl-button" ng-click="vm.discardAdd()">Cancel</button>
             <div class="mdl-layout-spacer"></div>
-            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.addUser();" ng-if="vm.isAddUser">Add</button>
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.saveAdd()">Add</button>
         </div>
     </form>
 </dialog>
-
-<dialog id="confirmDelete" class="mdl-dialog">
-    <div class="mdl-dialog__content">
-        Confirm delete user?
-    </div>
-
-    <div class="mdl-dialog__actions">
-        <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('confirmDelete')">Cancel</button>
-        <div class="mdl-layout-spacer"></div>
-        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.removeUser(vm.userToBeDeleted);vm.closeDialog('confirmDelete');">Delete</button>
-    </div>
-</dialog>
-
-<dialog id="editUser-Dialog" class="mdl-dialog">
-    <div class="mdl-dialog__content">
-        <h3>Edit User</h3>
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ng-repeat = 'field in vm.userInEdit'>
-            <input ng-id-attr="{{field}}" class="mdl-textfield__input" type="text" placeholder="{{field}}" ng-model="vm.userInEdit[field]" ng-required="true" />
-            <label class="mdl-textfield__label" for="{{field}}">{{field + '*'}}</label>
+<dialog id="editUser-dialog" class="mdl-dialog">
+    <form name="editUserForm" novalidate>
+        <div class="mdl-dialog__content">
+            <h3>Edit User</h3>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="username" class="mdl-textfield__input" type="text" placeholder="Username" ng-model="vm.userInEdit.username" ng-required="true" />
+                <label class="mdl-textfield__label" for="username">Username*</label>
+            </div>
+            <br>
+            <!-- Email input -->
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="userEmail" class="mdl-textfield__input" type="email" placeholder="Email" ng-model="vm.userInEdit.email" ng-required="true" />
+                <label class="mdl-textfield__label" for="userEmail">Email*</label>
+            </div>
+            <br>
+            <!-- Password input -->
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="userPassword" class="mdl-textfield__input" placeholder="Password (8-24 characters)" ng-model="vm.userInEdit.newPassword" ng-required="true" ng-minlength="8" ng-maxlength="24" />
+                <label class="mdl-textfield__label" for="userPassword">Password*</label>
+            </div>
+            <br>
+            <!-- Access type select -->
+            <div class="mdl-selectfield">
+                <label for="userType-select" class="mdl-selectfield__label">Usertype</label>
+                <select id="userType-select" ng-model="vm.userInEdit.usertype" ng-required="vm.required" style="width:100%">
+                    <option ng-repeat="group in vm.userGroups" value="{{ group }}">{{ group }}</option>
+                </select>
+            </div>
         </div>
-    </div>
-
+    </form>
     <div class="mdl-dialog__actions">
         <button id="cancel" type="button" class="mdl-button" ng-click="vm.discardEdit()">Cancel</button>
         <div class="mdl-layout-spacer"></div>
         <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.saveEdit()">Save</button>
     </div>
 </dialog>
-
-<!---------------------------------------- Ng-include nav bars ---------------------------------------->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <top-nav-bar></top-nav-bar>
-    <!---------------------------------------- Main forms ---------------------------------------->
-    <main class="mdl-layout__content">
-        <div id="newUser-main" class="mdl-layout mdl-js-layout">
-            <div class="top-row-buttons">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.addUser"><i class="material-icons">add</i> Add new user</button>
-            </div>
-        </div>
-        <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
-    </main>
-    <div id="newUser-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
-        <div class="mdl-snackbar__text"></div>
-        <button class="mdl-snackbar__action" type="button"></button>
+<dialog id="confirmDelete" class="mdl-dialog">
+    <div class="mdl-dialog__content">
+        Confirm delete user?
     </div>
-    </main>
-</div>
-<div id="usermgmt-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
-    <div class="mdl-snackbar__text"></div>
-    <button class="mdl-snackbar__action" type="button"></button>
-</div>
+    <div class="mdl-dialog__actions">
+        <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('confirmDelete')">Cancel</button>
+        <div class="mdl-layout-spacer"></div>
+        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.removeUser(vm.userToBeDeleted);vm.closeDialog('confirmDelete');">Delete</button>
+    </div>
+</dialog>
