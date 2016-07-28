@@ -3,7 +3,7 @@
     <top-nav-bar></top-nav-bar>
     {{vm.selectedRows}}
     <main class="mdl-layout__content">
-        <div id="entries" class="page-content">
+        <div id="forms" class="page-content">
             <div class="mdl-grid">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">download</button>
                 <div class="divider"></div>
@@ -18,13 +18,6 @@
             </div>
             <!-- Table for forms stub -->
             <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page='5' dt-row-per-page-options='[5,10,15]' dt-multi-select dt-pagination dt-edit dt-toolbar dt-toolbar-import dt-toolbar-export dt-toolbar-search />
-
-            <div id="forms">
-                <div class="page" id="form1page1" style="height:1123px;width:794px">
-                    <div style="background-color:white;height:1123px;width:794px;z-index:-2;top:-7px;left:-7px;position:relative"></div>
-                </div>
-            </div>
-
         </div>
     </main>
 </div>
