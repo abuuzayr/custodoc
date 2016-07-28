@@ -1,13 +1,13 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module("app.core")
         .controller('usersCtrl', usersCtrl);
 
-    usersCtrl.$inject = ['$scope', '$q', '$location', '$timeout', 'dialogServices', 'feedbackServices', 'authServices'];
+    usersCtrl.$inject = ['$scope', '$q', '$timeout', 'dialogServices', 'feedbackServices', 'authServices', 'usermgmtServices'];
 
-    function usersCtrl($scope, $q, $location, $timeout, dialogServices, feedbackServices, authServices) {
+    function usersCtrl($scope, $q, $timeout, dialogServices, feedbackServices, authServices, usermgmtServices) {
         /* =========================================== Initialization =========================================== */
         /* jshint validthis: true */
         var vm = this;
@@ -16,30 +16,43 @@
         var MAX_PASSWORD_LENGTH = 24;
         vm.users = [];
         vm.userGroups = ["Admin", "User+", "User"];
-        var companyName = authServices.getUserInfo().companyName;
-        var companyId = authServices.getUserInfo().companyId;
 
         vm.tableOptions = {};
         vm.tableOptions.data = [];
+        vm.tableOptions.enableMultiSelect = true;
+        vm.tableOptions.eanblePagination = true;
+        getUsers();
         vm.tableOptions.columnDefs = [
-            {type:'action', icon:'edit', action: goEditUser},
-            {type:'default', displayNaem:'Username', fieldName:'username'},
-            {type:'default', displayNaem:'Email', fieldName:'email'},
-            {type:'default', displayNaem:'Usertype', fieldName:'usertype'}
+            { type: 'action', icon: 'edit', action: goEditUser },
+            { type: 'default', displayName: 'Username', fieldName: 'username' },
+            { type: 'default', displayName: 'Email', fieldName: 'email' },
+            { type: 'default', displayName: 'Usertype', fieldName: 'usertype' }
         ];
-
-
-
+        vm.tableOptions.deleteFunc = deleteUsers;
 
         vm.openDialog = openDialog;
         vm.closeDialog = closeDialog;
-        vm.addUser = addUser;
-        vm.editUser = editUser;
-        vm.removeUser = removeUser;
-        vm.loadEditInfo = loadEditInfo;
-        vm.createInDatabase = createInDatabase;
-        vm.updateDatabase = vm.updateDatabase;
-        // vm.deleteFromDatabase = vm.deleteFromDatabase;
+
+        function goEditUser() {
+            console.log('goEditUser') //TOFIX
+        }
+
+        /**
+         * Get users from database and load into vm.tableOptions.data
+         */
+        function getUsers() {
+            return usermgmtServices.getUsers().then(SuccessCallback).catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                vm.tableOptions.data = res.data;
+            }
+
+            function ErrorCallback(err) {
+                feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
+            }
+        }
+
+
 
         /* =========================================== Add/Edit user =========================================== */
         /**
@@ -103,21 +116,81 @@
                 return feedbackServices.errorFeedback('Invalid form submission', 'usermgmt-feedbackMessage');
             }
         }
-        
+
         /**
-         * Removes user from vm.users and database. 
+         * Removes one or many users from selection and database. 
          * 
-         * @param {string} username
+         * @param {Object Array} selected user data
          */
-        function removeUser(username) {
-            // TODO: delete user in database and add feedback message
-            for (var i = 0; i < vm.users.length; i++) {
-                if (vm.users[i].username === username) {
-                    vm.users.splice(i, 1);
-                }
+        function deleteUsers(rgUsers) {
+            var deferred = $q.defer();
+            var rgPromises = [];
+            for (var i = 0; i < rgUsers.length; i++) {
+                rgPromises.push(
+                    (rgUsers._id));
             }
-            addUserId--;
+            $q.all(rgPromises).then().catch();
+            return deferred.promise;
+
+            function SuccessCallback(res) {
+                deferred.resolve();
+            }
+
+            function ErrorCallback(err) {
+                deferred.reject(err);
+            }
         }
+
+
+        /**
+         * Removes one user from selection and database. 
+         * 
+         * @param {string} userId
+         */
+        function deleteOne(userId) {
+            var deferred = $q.defer();
+
+            usermgmtServices.deleteUser(userId)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            return deferred.promise;
+
+            function SuccessCallback(res) {
+                for (var i = 0; i < vm.tableOptions.length; i++) {
+                    if (vm.tableOptions.data[i]._id === userId) {
+                        vm.tableOptions.data.splice(i, 1);
+                    }
+                }
+                deferred.resolve();
+                return feedbackServices.successFeedback('User Deleted', 'usermgmt-feedbackMessage', 2000);
+            }
+
+            function ErrorCallback(err) {
+                deferred.reject(err);
+                return feedbackServices.successFeedback(err.data, 'usermgmt-feedbackMessage', 2000);
+            }
+        }
+
+        /**
+         * Add one user to database. 
+         * 
+         * @param {object} userData
+         */
+        function createUser(userData) {
+            return usermgmtServices.createUser(userData)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                return feedbackServices.successFeedback('User created', 'usermgmt-feedbackMessage', 2000).then(delayGoState(3000));
+            }
+
+            function ErrorCallback(err) {
+                return feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
+            }
+        }
+
 
         /**
          * Loads information of user to-be-edited into the form. Triggered when editDialog opens.
@@ -145,7 +218,7 @@
         function openDialog(dialogName) {
             dialogServices.openDialog('usermgmtDialog');
         }
-        
+
         /**
          * Closes modal dialog of dialogName.
          * 
@@ -154,7 +227,7 @@
         function closeDialog(dialogName) {
             dialogServices.closeDialog('usermgmtDialog');
         }
-        
+
         /**
          * Converts user information in array to json form to be stored in database. 
          * 
@@ -173,94 +246,6 @@
         }
 
         /* =========================================== API =========================================== */
-        function createInDatabase() {
-            var newUserData = convertUserData();
-            var path = '/usermgmt';
-            var req = {
-                method: 'POST',
-                url: appConfig.UM_URL + path,
-                headers: {},
-                data: {
-                    userData: newUserData
-                }
-            };
-
-            $http(req)
-                .then(SuccessCallback)
-                .catch(ErrorCallback);
-
-            function SuccessCallback(res) {
-                return feedbackServices.successFeedback('User created', 'usermgmt-feedbackMessage', 2000).then(delayGoState(3000));
-            }
-
-            function ErrorCallback(err) {
-                return feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
-            }
-        }
-
-        function updateDatabase(userId) {
-            var newUserData = convertUserData();
-            var req = {
-                method: 'PUT',
-                // TODO retrieve vm.userId
-                url: appConfig.UM_URL + userId,
-                headers: {},
-                data: {
-                    userData: newUserData
-                }
-            };
-
-            $http(req)
-                .then(SuccessCallback)
-                .catch(ErrorCallback);
-
-            function SuccessCallback(res) {
-                return feedbackServices.successFeedback('User info updated', 'usermgmt-feedbackMessage', 2000).then(delayGoState(3000));
-            }
-
-            function ErrorCallback(err) {
-                return feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
-            }
-
-            getFromDatabase(companyId);
-
-            function getFromDatabase(company_id) {
-                var path = '/usermgmt';
-                var req = {
-                    method: 'GET',
-                    url: appConstant.API_URL + path + '/' + company_id,
-                    headers: {}
-                };
-                if ($window.sessionStorage.token) {
-                    req.headers.Authorization = $window.sessionStorage.token;
-                }
-                $http(req)
-                    .then(SuccessCallback)
-                    .catch(ErrorCallback);
-
-                function SuccessCallback(res) {
-                    vm.userData = res.data.userData;
-
-                    if (vm.userData.application.bulletform.enabled === true && vm.userData.application.bulletform.isUser === true) {
-                        vm.users.push({
-                            username: vm.userData.username,
-                            password: vm.userData.password,
-                            email: vm.userData.email,
-                            selectedUserType: vm.userData.application.bulletform.usertype
-
-                        });
-                        addUserId++;
-                    }
-                    $timeout(function () {
-                        componentHandler.upgradeDom();
-                    }, 0);
-                }
-
-                function ErrorCallback(err) {
-                    console.log('GET USER INFO ERROR BLOP BLOP.');
-                }
-            }
-        }
 
 
 
