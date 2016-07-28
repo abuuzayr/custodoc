@@ -111,7 +111,7 @@
             function SuccessCallback(res) {
                 var data = res.data;
                 for (var i = 0; i < data.length; i++) {
-                    data.usertype = data.application.bulletform.usertype;
+                    data[i].usertype = data[i].application.bulletform.usertype;
                 }
                 vm.tableOptions.data = data;
             }
