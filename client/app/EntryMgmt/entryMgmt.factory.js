@@ -11,6 +11,7 @@ function entryMgmtServices($http,appConfig) {
 		updateData:updateData
 	};
 	return service;
+
 	function getData(){
 		return $http.get(appConfig.API_URL + '/protected/entries');
 	}
@@ -25,6 +26,10 @@ function entryMgmtServices($http,appConfig) {
 		return $http.put(appConfig.API_URL + '/protected/entries/' + rowData._id, {
 			entryData: rowData
 		});
+	}
+
+	function getFormGroupData(groupName){
+		return $http.get(serverURL+'/groups/getGroupForms/'+groupName);
 	}
 
 }

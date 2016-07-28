@@ -564,6 +564,7 @@ angular
 		p.then(function (pageNumber) { return afterGeneratePDF(); });
 	}
 
+	// drawing all the elements on a canvas, making it an image
 	function generateImagePromise(pageNumber) {
 		var deferred = $q.defer();
 		var formNumber = vm.currentFormPreview;
@@ -581,7 +582,8 @@ angular
 		});
 		return deferred.promise;
 	}
-
+	
+	// adds the image onto a page in html
 	function addToPreviewPromise(pageNumber) {
 		var deferred = $q.defer();
 		var formNumber = vm.currentFormPreview;
