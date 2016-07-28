@@ -28,7 +28,7 @@ angular.module('app.entryMgmt')
 		vm.currentFormNumber = 1;
 		vm.numberOfForms = 1;
 		var forms = document.getElementById('forms');
-		var selectedRows = {};
+		vm.selectedRows = {};
 
 		getData();
 
@@ -104,7 +104,7 @@ angular.module('app.entryMgmt')
 		}
 
 		function downLoadAsOne(){
-			selectedRows = vm.tableOptions.selection.selected[0];
+			vm.selectedRows = vm.tableOptions.selection.selected[0];
 			entryMgmtServices.getFormGroupData(selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
@@ -143,7 +143,7 @@ angular.module('app.entryMgmt')
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							var node = document.createElement('input');
-							var newName = slugify(element.name);							
+							var newName = slugify(element.name);
 							node.setAttribute('ng-value', 'selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;

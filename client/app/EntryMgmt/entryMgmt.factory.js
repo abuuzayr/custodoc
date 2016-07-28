@@ -8,7 +8,8 @@ function entryMgmtServices($http,appConfig) {
 	var service = {
 		getData: getData,
 		saveData: saveData,
-		updateData:updateData
+		updateData: updateData,
+		getFormGroupData: getFormGroupData
 	};
 	return service;
 
