@@ -300,7 +300,7 @@ angular.module('app.entryMgmt')
 			var deferred = $q.defer();
 			for (var s = 0; s < vm.formData.length; s++) {
 				var elements = vm.formData[s];
-
+				var key;
 				for(key in elements){
 					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 						var radio = document.getElementById(key); //?
@@ -359,8 +359,13 @@ angular.module('app.entryMgmt')
 		// adds the image onto a page in html
 		function finishAddImagePromise(pageNumber) {
 			var deferred = $q.defer();
-			formNumber = vm.currentFormPreview;
-			imgurl = canvas.toDataURL('image/png');	
+			var formNumber = vm.currentFormPreview;
+			var canvas = document.createElement("canvas");
+            canvas.width = 794;
+            canvas.height = 1123;
+            canvas.style.width = '794px';
+            canvas.style.height = '1123px';
+			var imgurl = canvas.toDataURL('image/png');	
 			pdf.addImage(imgurl, "JPEG", 0, 0);
 			if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
 				pdf.save();
@@ -380,7 +385,7 @@ angular.module('app.entryMgmt')
 			var deferred = $q.defer(); 
 			for (var t = 0; t < vm.formData.length; t++) {
 				var elements = vm.formData[t];
-
+				var key;
 				for(key in elements){
 					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
 						var radio = document.getElementById(key);
