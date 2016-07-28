@@ -105,7 +105,7 @@ angular.module('app.entryMgmt')
 
 		function downLoadAsOne(){
 			vm.selectedRows = vm.tableOptions.selection.selected[0];
-			entryMgmtServices.getFormGroupData(selectedRows.groupName)
+			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
 
