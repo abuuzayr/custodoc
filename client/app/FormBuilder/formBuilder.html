@@ -621,6 +621,17 @@
 					<a name="createSignatureField" my-on-drag-start="vm.dragStart($event, 'signatureField')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create signature field</a><br>
 					<div class="divider"></div>
 					<a name="createImageAttachment" my-on-drag-start="vm.dragStart($event, 'imgUpload')" draggable="true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Attach image</a><br>
+					<div id="hidden-pagebar">
+						<label>{{"Current Page:"+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
+						<form ng-submit="vm.goToPage()" style="display:inline">
+							<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+							<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
+						</form>
+						<form ng-submit="vm.movePage()" style="display:inline">
+							<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
+							<input id="mouseover-move" type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
+						</form>
+					</div>
 				</div>
 				<div id="savedElement-panel" class="mdl-tabs__panel">
 					<label>Search: <input ng-model="vm.searchSavedElement" class="selectInDialog"></label>
@@ -640,18 +651,7 @@
 		</section>
 
 		<section id="form" style="height: 1123px; width: 794px;border:2px solid black;" compile-on-page-change>
-			<div ng-init="displayPageBar=false" class="container" style="height:50px; width: 794px;z-index:100;position:absolute;" ng-mouseover="displayPagebar=true" ng-mouseleave="displayPagebar=false">
-				<div id="hidden-pagebar" ng-show="displayPagebar">
-					<label>{{"Current Page:"+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
-					<form ng-submit="vm.goToPage()" style="display:inline">
-						<label>Page: <input type="number" name="input" ng-model="vm.goToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input id="mouseover-go" type="submit" value="Go" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
-					</form>
-					<form ng-submit="vm.movePage()" style="display:inline">
-						<label>Move the current page to page number: <input type="number" name="input" ng-model="vm.moveToPageNumber" min="1" max="{{vm.numberOfPages}}" required></label>
-						<input id="mouseover-move" type="submit" value="Move" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" />
-					</form>
-				</div>
+			<div class="container" style="height:50px; width: 794px;z-index:100;position:absolute;">
 			</div>
 
 			<div class="page" id="page1" my-on-drop="vm.drop($event)" my-on-drag-over="vm.allowDrop($event)" style="height:1123px;width:794px">
