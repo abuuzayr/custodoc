@@ -267,7 +267,6 @@ angular.module('app.entryMgmt')
 						$compile(node)($scope);
 					}
 				}		
-				document.getElementById("form1page1").style.display="block"; 
 			})
 			.then(function(){
 				// get group name from rows
