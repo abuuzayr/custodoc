@@ -1,53 +1,70 @@
-<dialog id="userDialog" class="mdl-dialog">
+<dialog id="addUser-dialog" class="mdl-dialog">
     <form name="newUserForm" novalidate>
         <div class="mdl-dialog__content">
             <h3>Add new user</h3>
             <!-- Username input -->
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="username" class="mdl-textfield__input" type="text" placeholder="Username" ng-model="vm.username" ng-required="true" />
+                <input id="username" class="mdl-textfield__input" type="text" placeholder="Username" ng-model="vm.newUser.username" ng-required="true" />
                 <label class="mdl-textfield__label" for="username">Username*</label>
             </div>
             <br>
             <!-- Email input -->
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="userEmail" class="mdl-textfield__input" type="email" placeholder="Email" ng-model="vm.email" ng-required="true" />
+                <input id="userEmail" class="mdl-textfield__input" type="email" placeholder="Email" ng-model="vm.newUser.email" ng-required="true" />
                 <label class="mdl-textfield__label" for="userEmail">Email*</label>
             </div>
             <br>
             <!-- Password input -->
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="userPassword" class="mdl-textfield__input" type="password" placeholder="Password (8-24 characters)" ng-model="vm.password" ng-required="true" ng-minlength="8" ng-maxlength="24" />
+                <input id="userPassword" class="mdl-textfield__input" type="password" placeholder="Password (8-24 characters)" ng-model="vm.newUser.password" ng-required="true" ng-minlength="8" ng-maxlength="24" />
                 <label class="mdl-textfield__label" for="userPassword">Password*</label>
             </div>
             <br>
             <!-- Access type select -->
             <div class="mdl-selectfield">
                 <label for="userType-select" class="mdl-selectfield__label">Access Type</label>
-                <select id="userType-select" ng-model="vm.selectedUserType" ng-required="vm.required" style="width:100%">
-						<option value="">----- Select option -----</option>
-						<option ng-repeat="group in vm.userGroups" value="{{ group }}">{{ group }}</option>
-				</select>
+                <select id="userType-select" ng-model="vm.newUser.userType" ng-required="vm.required" style="width:100%">
+                    <option value="">----- Select option -----</option>
+                    <option ng-repeat="group in vm.userGroups" value="{{ group }}">{{ group }}</option>
+                </select>
             </div>
         </div>
         <div class="mdl-dialog__actions">
             <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('userDialog')">Cancel</button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.addUser();" ng-if="vm.isAddUser">Add</button>
-            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.editUser();" ng-if="vm.isEditUser">Save</button>
         </div>
     </form>
 </dialog>
+
 <dialog id="confirmDelete" class="mdl-dialog">
     <div class="mdl-dialog__content">
-        Confirm delete user?<br>{{ vm.userToBeDeleted }}
+        Confirm delete user?
     </div>
+
     <div class="mdl-dialog__actions">
         <button id="cancel" type="button" class="mdl-button" ng-click="vm.closeDialog('confirmDelete')">Cancel</button>
         <div class="mdl-layout-spacer"></div>
         <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.removeUser(vm.userToBeDeleted);vm.closeDialog('confirmDelete');">Delete</button>
-
     </div>
 </dialog>
+
+<dialog id="editUser-Dialog" class="mdl-dialog">
+    <div class="mdl-dialog__content">
+        <h3>Edit User</h3>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ng-repeat = 'field in vm.userInEdit'>
+            <input ng-id-attr="{{field}}" class="mdl-textfield__input" type="text" placeholder="{{field}}" ng-model="vm.userInEdit[field]" ng-required="true" />
+            <label class="mdl-textfield__label" for="{{field}}">{{field + '*'}}</label>
+        </div>
+    </div>
+
+    <div class="mdl-dialog__actions">
+        <button id="cancel" type="button" class="mdl-button" ng-click="vm.discardEdit()">Cancel</button>
+        <div class="mdl-layout-spacer"></div>
+        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect" type="submit" ng-click="vm.saveEdit()">Save</button>
+    </div>
+</dialog>
+
 <!---------------------------------------- Ng-include nav bars ---------------------------------------->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <top-nav-bar></top-nav-bar>
@@ -55,17 +72,16 @@
     <main class="mdl-layout__content">
         <div id="newUser-main" class="mdl-layout mdl-js-layout">
             <div class="top-row-buttons">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.openDialog('userDialog');vm.isAddUser=true;vm.isEditUser=false;"><i class="material-icons">add</i> Add new user</button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-click="vm.addUser"><i class="material-icons">add</i> Add new user</button>
             </div>
         </div>
-
         <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
     </main>
     <div id="newUser-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
     </div>
-</main>
+    </main>
 </div>
 <div id="usermgmt-feedbackMessage" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
     <div class="mdl-snackbar__text"></div>
