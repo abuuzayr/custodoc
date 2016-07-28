@@ -4,7 +4,7 @@ angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
 	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout','entryMgmtServices'];
-	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices,){
+	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices){
 		var vm = this;
 		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
 		var pdf = new jsPDF();
