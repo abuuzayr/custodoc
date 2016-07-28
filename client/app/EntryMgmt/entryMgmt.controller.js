@@ -360,6 +360,11 @@ angular.module('app.entryMgmt')
 		function finishAddImagePromise(pageNumber) {
 			var deferred = $q.defer();
 			var formNumber = vm.currentFormPreview;
+			var canvas = document.createElement("canvas");
+            canvas.width = 794;
+            canvas.height = 1123;
+            canvas.style.width = '794px';
+            canvas.style.height = '1123px';
 			var imgurl = canvas.toDataURL('image/png');	
 			pdf.addImage(imgurl, "JPEG", 0, 0);
 			if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
