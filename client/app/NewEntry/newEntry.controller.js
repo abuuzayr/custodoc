@@ -757,7 +757,7 @@ angular
 
 	function finishAddImagePromise(pageNumber) {
 		var deferred = $q.defer();
-		formNumber = vm.currentFormPreview;
+		var formNumber = vm.currentFormPreview;
 		imgurl = canvas.toDataURL('image/png');	
 		pdf.addImage(imgurl, "JPEG", 0, 0);
 		if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything

@@ -359,7 +359,7 @@ angular.module('app.entryMgmt')
 		// adds the image onto a page in html
 		function finishAddImagePromise(pageNumber) {
 			var deferred = $q.defer();
-			formNumber = vm.currentFormPreview;
+			var formNumber = vm.currentFormPreview;
 			var imgurl = canvas.toDataURL('image/png');	
 			pdf.addImage(imgurl, "JPEG", 0, 0);
 			if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
