@@ -11,9 +11,10 @@ var groupRoutes = require('./protected/groupsRouter.js');
 
 
 //PROTECTED ROUTES - REQUIRES TOKEN_AUTH & ACL CHECKINGS
-// protectedRoutes.use('*',http403.decodeSessionCookie);
-// protectedRoutes.use('*',http403.signIdCookie);
-// protectedRoutes.use('*',http403.decodeAccessInfo);
+protectedRoutes.use('*',http403.decodeSessionCookie);
+protectedRoutes.use('*',http403.signIdCookie);
+protectedRoutes.use('*',http403.decodeAccessInfo);
+
 //PATH
 protectedRoutes.use('/autofill', autofillRoutes);
 protectedRoutes.use('/entries',entryRoutes);

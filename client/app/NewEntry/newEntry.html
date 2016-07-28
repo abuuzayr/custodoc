@@ -81,8 +81,7 @@
                 </div>
                 <form name="myForm" role="form" ng-submit="vm.createEntry()" style="overflow: scroll; height: 400px;">
 
-                    <div ng-repeat="key in vm.parsedFormData">
-                        <ng-form name="form">
+                    <div ng-repeat="key in vm.parsedFormData">      
                             <!-- TEXT FIELDS -->
                             <div ng-if="key.type=='text'">
                                 <label>{{key.label}}</label>
@@ -120,7 +119,7 @@
                             <!-- IMAGE FIELDS -->
                             <div ng-if="key.type=='image'">
                                 <label>{{key.label}}</label>
-                                <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--text-aligning-label">
+                                <!--<div class="mdl-textfield mdl-js-textfield mdl-textfieldtext-aligning-label">
                                     <input type="file" ng-model="vm.entryData[key.name]" name="image" base-sixty-four-input accept="image/*">
                                 </div>-->
                                 <label ng-click="vm.openImageModal(key.name)"> Preview </label>
@@ -140,8 +139,6 @@
                                 <label> Preview Signature </label>
                                 <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[key.name]}}" />
                             </div>
-
-                        </ng-form>
                     </div>
                     <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Submit entry</button>
                 </form>
