@@ -22,7 +22,7 @@
         $scope.$watch('tableOptions.data', dataWatcher, true);
 
         function dataWatcher(newVal, oldVal) {
-            if (newVal !== null && newVal !== 'undefined' && newVal.length !== 0 && newVal.length !== oldVal.length) {
+            if (newVal !== null && typeof newVal !== 'undefined' && newVal.length !== 0 && newVal.length !== oldVal.length) {
                 isDataLoaded = true;
                 initScope();
                 idLookup = {};

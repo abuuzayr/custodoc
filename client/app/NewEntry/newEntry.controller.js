@@ -4,7 +4,7 @@ angular
     	'$stateParams', 
     	'entryService',
     	'autofillServices', 
-    	'formsFactory',
+    	'formServices',
     	'formBuilderFactory', 
     	'$scope', 
     	'$q',
@@ -15,10 +15,11 @@ angular
     	'$timeout', 
 
     function (
+    	
     	$stateParams, 
     	entryService, 
     	autofillServices,
-    	formsFactory, 
+    	formServices, 
     	formBuilderFactory,
     	$scope, 
     	$q, 
