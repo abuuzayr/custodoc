@@ -30,7 +30,7 @@ function entryMgmtServices($http,appConfig) {
 	}
 
 	function getFormGroupData(groupName){
-		return $http.get(serverURL+'/groups/getGroupForms/'+groupName);
+		return $http.get(appConfig.API_URL +'/protected/groups/getGroupForms/'+groupName);
 	}
 
 }
