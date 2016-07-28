@@ -383,6 +383,7 @@ angular.module('app.entryMgmt')
 
 		function afterGeneratePDF(){
 			var deferred = $q.defer(); 
+			pdf = new jsPDF(); // clear the current pdf 
 			for (var t = 0; t < vm.formData.length; t++) {
 				var elements = vm.formData[t];
 				var key;
