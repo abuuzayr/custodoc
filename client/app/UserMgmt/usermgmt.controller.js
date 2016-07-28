@@ -19,6 +19,18 @@
         var companyName = authServices.getUserInfo().companyName;
         var companyId = authServices.getUserInfo().companyId;
 
+        vm.tableOptions = {};
+        vm.tableOptions.data = [];
+        vm.tableOptions.columnDefs = [
+            {type:'action', icon:'edit', action: goEditUser},
+            {type:'default', displayNaem:'Username', fieldName:'username'},
+            {type:'default', displayNaem:'Email', fieldName:'email'},
+            {type:'default', displayNaem:'Usertype', fieldName:'usertype'}
+        ];
+
+
+
+
         vm.openDialog = openDialog;
         vm.closeDialog = closeDialog;
         vm.addUser = addUser;
@@ -45,8 +57,7 @@
                 } else {
                     errMsg = 'Invalid form submission';
                 }
-                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
-                    .then(feedbackServices.errorFeedback(errMsg, 'newUser-feedbackMessage'));
+                return feedbackServices.errorFeedback(errMsg, 'usermgmt-feedbackMessage');
             }
         }
 
@@ -85,12 +96,11 @@
                 vm.users[vm.editId].selectedUserType = vm.selectedUserType;
                 // updateDatabase(userId);
                 clearFormInputs();
-                feedbackServices.successFeedback('Users edited successfully', 'newUser-feedbackMessage');
+                feedbackServices.successFeedback('Users edited successfully', 'usermgmt-feedbackMessage');
                 closeDialog('userDialog');
             } else {
                 console.log('edituser PHAIL');
-                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
-                    .then(feedbackServices.errorFeedback('Invalid form submission', 'newUser-feedbackMessage'));
+                return feedbackServices.errorFeedback('Invalid form submission', 'usermgmt-feedbackMessage');
             }
         }
         
@@ -133,7 +143,7 @@
          * @param {string} dialogName
          */
         function openDialog(dialogName) {
-            dialogServices.openDialog(dialogName);
+            dialogServices.openDialog('usermgmtDialog');
         }
         
         /**
@@ -142,7 +152,7 @@
          * @param {string} dialogName
          */
         function closeDialog(dialogName) {
-            dialogServices.closeDialog(dialogName);
+            dialogServices.closeDialog('usermgmtDialog');
         }
         
         /**
@@ -180,14 +190,11 @@
                 .catch(ErrorCallback);
 
             function SuccessCallback(res) {
-                return feedbackServices.hideFeedback('#newUser-feedbackMessage')
-                    .then(feedbackServices.successFeedback('User created', '#newUser-feedbackMessage', 2000))
-                    .then(delayGoState(3000));
+                return feedbackServices.successFeedback('User created', 'usermgmt-feedbackMessage', 2000).then(delayGoState(3000));
             }
 
             function ErrorCallback(err) {
-                return feedbackServices.hideFeedback('#newUser-feedbackMessage').
-                    then(feedbackServices.errorFeedback(err.data, '#newUser-feedbackMessage'));
+                return feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
             }
         }
 
@@ -208,14 +215,15 @@
                 .catch(ErrorCallback);
 
             function SuccessCallback(res) {
-                return feedbackServices.successFeedback('User info updated', '#editUser-feedbackMessage', 2000).then(delayGoState(3000));
+                return feedbackServices.successFeedback('User info updated', 'usermgmt-feedbackMessage', 2000).then(delayGoState(3000));
             }
 
             function ErrorCallback(err) {
-                return feedbackServices.errorFeedback(err.data, '#editUser-feedbackMessage');
+                return feedbackServices.errorFeedback(err.data, 'usermgmt-feedbackMessage');
             }
 
             getFromDatabase(companyId);
+
             function getFromDatabase(company_id) {
                 var path = '/usermgmt';
                 var req = {
@@ -253,5 +261,8 @@
                 }
             }
         }
+
+
+
     }
 })();
