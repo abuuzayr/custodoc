@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var assert = require('assert');
 var groupsRouter = express.Router();
 var http403 = require('../../utils/403')();
+var connection = require('../../utils/connection')();
 
 
 groupsRouter.route('*', http403.verifyAccess('formmgmt'));
