@@ -148,6 +148,9 @@ angular.module('app.entryMgmt')
 			                p = p.then(generateImageTask);
 			            }
 			        }
+			        // refresh values for next use
+                	vm.numberOfForms = 0;
+                	vm.numberOfPages = 0;
 		            p.then(lastTask);
 		        });
 
@@ -176,8 +179,7 @@ angular.module('app.entryMgmt')
                 });
                 pagesImage = [];
                 vm.selectedRows = [];
-                vm.numberOfPages = 0;
-                vm.numberOfForms = 0;
+                
             }
         }
 
