@@ -2,7 +2,7 @@ module.exports = {
 	port : process.env.PORT || 8080,
 	environment : process.env.NODE_ENV,
 	//dbURL :'mongodb://localhost:27017/test',
-	dbURL:'mongodb://localhost:27017/bulletform',
+	dbURL: process.env.MONGO_DB || 'mongodb://localhost:27017/bulletform',
 	superSecret : 'ilovescotchscotchyscotchscotch',
 	appSecret: 'secret_for_bulletform',
 	ObjectId : require('mongodb').ObjectID
