@@ -150,6 +150,7 @@ angular.module('app.entryMgmt')
 			                p = p.then(generateImageTask);
 			            }
 			        }
+			        console.log('am i here then?');
 		            p.then(lastTask);
 
 		            function generateFormTask(formNumber) {
