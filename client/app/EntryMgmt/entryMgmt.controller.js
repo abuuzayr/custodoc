@@ -7,7 +7,6 @@ angular.module('app.entryMgmt')
 	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices){
 		var vm = this;
 		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
-		var pdf = new jsPDF();
 		vm.tableOptions = {};
 		vm.tableOptions.data = [];
 		vm.tableOptions.columnDefs = [];
@@ -112,12 +111,110 @@ angular.module('app.entryMgmt')
 			}
 		}
 
-		function downLoadAsOne(){
-			vm.selectedRows = vm.tableOptions.selection.selected[0];
+		// 
+		var pagesImage = [];
+
+		function downloadAsOne() {
+            var pdf,
+                pages,
+                deferred,
+                p;
+
+            //usSpinnerService.spin('spinner-1');
+            vm.selectedRows = vm.tableOptions.selection.selected[0];
+            pdf = new jsPDF();
+            deferred = $q.defer();
+            deferred.resolve(1);
+            p = deferred.promise;
+            console.log('wats length ' + vm.selectedRows.length);
+            for (var i = 1; i <= vm.selectedRows.length; i++) {
+                p = p.then(generateFormTask);
+                p = p.then(generateImageTask);
+            }
+            p.then(lastTask);
+
+            function generateFormTask(formNumber) {
+                return generateForm(formNumber);
+            }
+
+            function generateImageTask(formNumber) {
+                return generateImage(formNumber);
+            }
+
+            function lastTask() {
+                for (var j = 0; j < pagesImage.length; j++) {
+                    for (var k = 0; k < pagesImage[j].length; k++) {
+                        if (j !== 0 || k !== 0) {
+                            pdf.addPage();
+                        }
+                        pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
+                    }
+                }
+                //usSpinnerService.stop('spinner-1');
+                pdf.save();
+                pages = Array.from(document.getElementsByClassName('page'));
+                pages.forEach(function(item, index) {
+                    item.parentNode.removeChild(item);
+                });
+                pagesImage = [];
+                rows = [];
+            }
+        }
+
+				
+
+		/*************** DOWNLOAD PDF FUNCTIONS ***************/
+
+		function generateImage(formNumber) {
+            var deferred = $q.defer();
+            var pageNumber = 1;
+            pagesImage.push([]);
+            var deferred2 = $q.defer();
+            deferred2.resolve(1);
+            var p2 = deferred2.promise;
+            while (document.getElementById('form' + formNumber + "page" + pageNumber)) {
+                p2 = p2.then(generateImagePromise);
+                pageNumber++;
+            }
+
+            return deferred.promise;
+
+            function generateImagePromise(pageNumber) {
+                var deferred2 = $q.defer();
+                var canvas = document.createElement("canvas");
+                canvas.width = 794;
+                canvas.height = 1123;
+                canvas.style.width = '794px';
+                canvas.style.height = '1123px';
+                var context = canvas.getContext('2d');
+                var code = document.getElementById('form' + formNumber + "page" + pageNumber).innerHTML;
+                rasterizeHTML.drawHTML(code).then(function(renderResult) {
+                    context.drawImage(renderResult.image, 0, 0);
+                    var imgurl = canvas.toDataURL('image/jpeg', 1);
+                    pagesImage[formNumber - 1].push(imgurl);
+                    if (!document.getElementById('form' + formNumber + "page" + (pageNumber + 1))) { // if page does not exist then switch form
+                        deferred.resolve(formNumber + 1);
+                        return;
+                    }
+                    deferred2.resolve(pageNumber + 1); 
+                });
+                return deferred2.promise;
+            }
+        }
+        function generateForm(formNumber) {
+	        vm.selectedRows = vm.tableOptions.selection.selected[0];
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
-				var key;
+				var node,
+                    page,
+                    option,
+                    options,
+                    checkbox,
+                    span,
+                    label,
+                    display,
+                    k, j;
 				for(var x = 0; x < vm.formData.length; x++) {
 					vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
 				}
@@ -125,10 +222,10 @@ angular.module('app.entryMgmt')
 				vm.numberOfPages = vm.totalNumberOfPages[0];
 				vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
 
-				for(var k=1; k<=vm.formData.length; k++){ //k is the form number
+				for(k=1; k<=vm.formData.length; k++){ //k is the form number
 					var form = vm.formData[k-1];
 					var elements = form.elements;
-					for (var j = 1; j <= form.numberOfPages; j++) { //j is page number
+					for (j = 1; j <= form.numberOfPages; j++) { //j is page number
 						var newPage = newPageTemplate.cloneNode(true);
 						newPage.setAttribute("id", 'form' + k + 'page' + j);
 						newPage.style.display = "none";
@@ -137,11 +234,11 @@ angular.module('app.entryMgmt')
 					for (key in elements){
 						var element = elements[key];
 						if(element.name.startsWith('background_')){
-							var node = document.createElement('img');
+							node = document.createElement('img');
 							node.src = element.src;	
 							node.style.zIndex="0";
 						}else if(element.name.startsWith('label_')){
-							var node = document.createElement('div');
+							node = document.createElement('div');
 							node.innerHTML = element.content;
 							node.style.whiteSpace="pre-wrap";
 							node.style.color = element.color;
@@ -151,7 +248,7 @@ angular.module('app.entryMgmt')
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
-							var node = document.createElement('input');
+							node = document.createElement('input');
 							var newName = slugify(element.name);
 							node.setAttribute('ng-value', 'selectedRows.' + newName);				
 							node.type='text';
@@ -162,9 +259,9 @@ angular.module('app.entryMgmt')
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
-							var node = document.createElement('label');
-							var span = document.createElement('span');
-							var checkbox = document.createElement('input');
+							node = document.createElement('label');
+							span = document.createElement('span');
+							checkbox = document.createElement('input');
 							checkbox.type="checkbox";
 							//checkbox.setAttribute('checked', 'rows.' + element.name); //TODO: HERE										
 							var newName = slugify(element.name);
@@ -180,11 +277,11 @@ angular.module('app.entryMgmt')
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
-							var node = document.createElement('select');
+							node = document.createElement('select');
 							var newName = slugify(element.name);
 							var testScope = 'vm.entryData.' + newName;
 							node.setAttribute('ng-value', testScope);
-							var options = element.options;
+							options = element.options;
 							if(options.length>0){
 								for(var i = 0; i<options.length; i++){
 									var option = document.createElement('option');
@@ -201,10 +298,10 @@ angular.module('app.entryMgmt')
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
-							var node = document.createElement('form');
+							node = document.createElement('form');
 							var newName = slugify(element.name);
 							var testScope = 'vm.entryData.' + newName;						
-							var options = element.options;
+							options = element.options;
 							if(options.length>0){
 								if (element.display==="radioInline") var display = "inline";
 								else var display = "block";
@@ -233,7 +330,7 @@ angular.module('app.entryMgmt')
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
 						}else if(element.name.startsWith('signature_')){
-							var node = document.createElement('img');
+							node = document.createElement('img');
 							var newName = slugify(element.name);
 							var testScope = 'vm.entryData.' + newName;
 							node.setAttribute('ng-model', testScope);
@@ -243,7 +340,7 @@ angular.module('app.entryMgmt')
 							node.style.backgroundColor = element.backgroundColor;
 							node.style.zIndex="1";
 						}else if (element.name.startsWith('image_')) {
-							var node = document.createElement('img');
+							node = document.createElement('img');
 							var newName = slugify(element.name);
 							var testScope = 'vm.entryData.' + newName + '.base64';
 							node.setAttribute('ng-model', testScope);
@@ -271,154 +368,17 @@ angular.module('app.entryMgmt')
 						var newName = slugify(element.name);
 						var testScope = 'vm.entryData.' + newName;
 						node.setAttribute("ng-model", testScope);
-						var page = document.getElementById('form'+k+'page'+element.page);
+						page = document.getElementById('form'+k+'page'+element.page);
 						page.appendChild(node);
 						$compile(node)($scope);
-					}
+					}				
 				}		
-			})
-			.then(function(){
-				// get group name from rows
-				var p = beforeGeneratePDF();
-				for (var f = 1; f <= vm.numberOfForms; f++) {
-					for (var i = 1; i <= vm.numberOfPages; i++) {
-						p = p.then(function (pageNumber) { return addPagePromise(pageNumber) });
-						p = p.then(function (pageNumber) { return generateImagePromise(pageNumber) });
-						p = p.then(function (pageNumber) { return finishAddImagePromise(pageNumber) });
-					}
-				}
-
-				vm.currentFormPreview = 1;
-				vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
-				p.then(function (pageNumber) { return afterGeneratePDF(); });		
-			})	
-		}
-
-		/*************** DOWNLOAD PDF FUNCTIONS ***************/
-
-		function beforeGeneratePDF(){
-			var deferred = $q.defer();
-			for (var s = 0; s < vm.formData.length; s++) {
-				var elements = vm.formData[s];
-				var key;
-				for(key in elements){
-					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
-						var radio = document.getElementById(key); //?
-						if(radio.firstChild){
-							for(var i=0; i<radio.childNodes.length;i++){
-								if (radio.childNodes[i].firstChild.checked === true) radio.childNodes[i].firstChild.setAttribute("checked",true);
-							}
-						}
-					}
-					if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
-						var dropdown = document.getElementById(key);
-						if(dropdown.firstChild){
-							for(var i=0; i<dropdown.childNodes.length;i++){
-								if (dropdown.childNodes[i].value === dropdown.value) dropdown.childNodes[i].setAttribute("selected",true);
-							}
-						}
-					}
-					if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
-						var label = document.getElementById(key);
-						if (label.firstChild.checked) label.firstChild.setAttribute("checked",true);
-					}
-				}
-			}		
-			deferred.resolve(1);
-			return deferred.promise;
-		}
-
-		function addPagePromise(pageNumber) {
-			var deferred = $q.defer();
-			if (vm.currentFormPreview != 1 || pageNumber != 1) {
-				pdf.addPage();
-			}
-			deferred.resolve(pageNumber);
-			return deferred.promise;
-		}
-
-		// drawing all the elements on a canvas, making it an image
-		function generateImagePromise(pageNumber) {
-			var deferred = $q.defer();
-			var formNumber = vm.currentFormPreview;
-			var canvas = document.createElement("canvas");
-			canvas.width = 794;
-			canvas.height = 1123;
-			canvas.style.width = '794px';
-			canvas.style.height = '1123px';
-			var context = canvas.getContext('2d');
-			var code = document.getElementById("form" + formNumber + "page" + pageNumber).innerHTML;
-			code = code.replace(/ on\w+=".*?"/g, "");
-			rasterizeHTML.drawHTML(code).then(function (renderResult) {
-				context.drawImage(renderResult.image, 0, 0);
-				deferred.resolve(pageNumber);
+				deferred.resolve(formNumber);
 			});
 			return deferred.promise;
 		}
 
-		// adds the image onto a page in html
-		function finishAddImagePromise(pageNumber) {
-			var deferred = $q.defer();
-			var formNumber = vm.currentFormPreview;
-			var canvas = document.createElement("canvas");
-            canvas.width = 794;
-            canvas.height = 1123;
-            canvas.style.width = '794px';
-            canvas.style.height = '1123px';
-			var imgurl = canvas.toDataURL('image/png');	
-			pdf.addImage(imgurl, "JPEG", 0, 0);
-			if (formNumber === vm.numberOfForms && pageNumber === vm.numberOfPreviewPages) { // finished everything
-				pdf.save();
-			} else if (pageNumber === vm.numberOfPreviewPages) { // reached the end of the form, switch to next form
-				vm.currentFormPreview++;
-				if (vm.currentFormPreview <= vm.numberOfForms) {
-					vm.numberOfPreviewPages = vm.totalNumberOfPages[vm.currentFormPreview-1];
-					deferred.resolve(1);
-				}
-			} else { // havent reached the end of the form yet
-				deferred.resolve(pageNumber + 1);
-			}
-			return deferred.promise;
-		}	
 
-		function afterGeneratePDF(){
-			var deferred = $q.defer(); 
-			pdf = new jsPDF(); // clear the current pdf 
-			for (var t = 0; t < vm.formData.length; t++) {
-				var elements = vm.formData[t];
-				var key;
-				for(key in elements){
-					if (key.startsWith("auto_radio") || key.startsWith("radio")) {
-						var radio = document.getElementById(key);
-						if(radio.firstChild){
-							for(var i=0; i<radio.childNodes.length;i++){
-								if (radio.childNodes[i].firstChild.hasAttribute("checked")) {
-									radio.childNodes[i].firstChild.removeAttribute("checked");
-									radio.childNodes[i].firstChild.checked = true;
-								}
-							}
-						}
-					}
-					if (key.startsWith("auto_dropdown") || key.startsWith("dropdown")) {
-						var dropdown = document.getElementById(key);
-						if(dropdown.firstChild){
-							for(var i=0; i<dropdown.childNodes.length;i++){
-								if (dropdown.childNodes[i].hasAttribute("selected")) dropdown.childNodes[i].removeAttribute("selected");
-							}
-						}
-					}
-					if (key.startsWith("auto_checkbox") || key.startsWith("checkbox")) {
-						var label = document.getElementById(key);
-						if (label.firstChild.hasAttribute("checked")) {
-							label.firstChild.removeAttribute("checked");
-							label.firstChild.checked = true;
-						}
-					}
-				}
-			}
-			deferred.resolve();
-			return deferred.promise;
-		}
 
 		/******************************************************/
 
