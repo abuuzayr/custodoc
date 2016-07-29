@@ -125,63 +125,64 @@ angular.module('app.entryMgmt')
             vm.numberOfPages = 0;
             vm.numberOfForms = 0;
             vm.selectedRows = vm.tableOptions.selection.selected[0];
-            var res = entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
-            console.log('wats res ' + JSON.stringify(res.data));
-    		vm.formData = res.data;
-    		console.log('wats form ' + JSON.stringify(vm.formdata));
-    		console.log('then length leh? ' + vm.formData.length);
+            entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
+            	.then(function(res){
+            		vm.formData = res.data;
+            		console.log('wats form ' + JSON.stringify(vm.formdata));
+            		console.log('then length leh? ' + vm.formData.length);
 
-    		for(var w = 0; w < vm.formData.length; w++) {
-				vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
-				console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
-			}
-			vm.numberOfForms = vm.totalNumberOfPages.length;
-			vm.numberOfPages = vm.totalNumberOfPages[0];
-			vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
+            		for(var w = 0; w < vm.formData.length; w++) {
+						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
+						console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
+					}
+					vm.numberOfForms = vm.totalNumberOfPages.length;
+					vm.numberOfPages = vm.totalNumberOfPages[0];
+					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];            	
 
-            pdf = new jsPDF();
-            deferred = $q.defer();
-            deferred.resolve(1);
-            p = deferred.promise;
-            console.log('wats forms ' + vm.numberOfForms);
-            console.log('wats pages ' + vm.numberOfPages);
-            for (var c = 1; c <= vm.numberOfForms; c++) {
-	            for (var i = 1; i <= vm.numberOfPages; i++) { 
-	                p = p.then(generateFormTask);
-	                p = p.then(generateImageTask);
-	            }
-	        }
-            p.then(lastTask);
+		            pdf = new jsPDF();
+		            deferred = $q.defer();
+		            deferred.resolve(1);
+		            p = deferred.promise;
+		            console.log('wats forms ' + vm.numberOfForms);
+		            console.log('wats pages ' + vm.numberOfPages);
+		            for (var c = 1; c <= vm.numberOfForms; c++) {
+			            for (var i = 1; i <= vm.numberOfPages; i++) { 
+			                p = p.then(generateFormTask);
+			                p = p.then(generateImageTask);
+			            }
+			        }
+		            p.then(lastTask);
 
-            function generateFormTask(formNumber) {
-                return generateForm(formNumber);
-            }
+		            function generateFormTask(formNumber) {
+		                return generateForm(formNumber);
+		            }
 
-            function generateImageTask(formNumber) {
-                return generateImage(formNumber);
-            }
+		            function generateImageTask(formNumber) {
+		                return generateImage(formNumber);
+		            }
 
-            function lastTask() {
-                for (var j = 0; j < pagesImage.length; j++) {
-                    for (var k = 0; k < pagesImage[j].length; k++) {
-                        if (j !== 0 || k !== 0) {
-                            pdf.addPage();
-                        }
-                        pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
-                    }
-                }
-                //usSpinnerService.stop('spinner-1');
-                pdf.save();
-                pages = Array.from(document.getElementsByClassName('page'));
-                pages.forEach(function(item, index) {
-                    item.parentNode.removeChild(item);
-                });
-                pagesImage = [];
-                vm.selectedRows = [];
-                vm.numberOfPages = 0;
-                vm.numberOfForms = 0;
-            }
-        }
+		            function lastTask() {
+		                for (var j = 0; j < pagesImage.length; j++) {
+		                    for (var k = 0; k < pagesImage[j].length; k++) {
+		                        if (j !== 0 || k !== 0) {
+		                            pdf.addPage();
+		                        }
+		                        pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
+		                    }
+		                }
+		                //usSpinnerService.stop('spinner-1');
+		                pdf.save();
+		                pages = Array.from(document.getElementsByClassName('page'));
+		                pages.forEach(function(item, index) {
+		                    item.parentNode.removeChild(item);
+		                });
+		                pagesImage = [];
+		                vm.selectedRows = [];
+		                vm.numberOfPages = 0;
+		                vm.numberOfForms = 0;
+		            }
+		        })
+		}
 
 				
 
