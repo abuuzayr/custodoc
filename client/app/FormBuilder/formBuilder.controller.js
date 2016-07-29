@@ -51,7 +51,7 @@
 		vm.textFieldName = "";
 		vm.Fontsize = "16px";
 		vm.FontType = 'Arial';
-		vm.FontColor = "black";
+		vm.FontColor = "#000000";
 		vm.TextDecoration = "none";
 		vm.Opacity = 1;
 		vm.BackgroundColor = "white";
@@ -157,6 +157,11 @@
 		vm.closeDialog = closeDialog;
 		vm.removePlaceholder = removePlaceholder;
 		vm.addNewAutofillElement = addNewAutofillElement;
+		
+		vm.colorPickerOptions ={ 
+			format: 'hex',
+			alpha: false
+		};
 
 		//warn the user when changing state or refreshing without saving the form
 		$scope.$on('$stateChangeStart', function(event) {
@@ -881,7 +886,7 @@
 			vm.dropdownListName = "";
 			vm.Fontsize = "16px";
 			vm.FontType = "Arial";
-			vm.FontColor = "black";
+			vm.FontColor = "#000000";
 			vm.TextDecoration = "none";
 			vm.Opacity = 1;
 			vm.BackgroundColor = "white";

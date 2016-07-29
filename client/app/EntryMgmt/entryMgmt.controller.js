@@ -125,42 +125,31 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
+            		console.log('wats form ' + JSON.stringify(vm.formdata));
+            		console.log('then length leh? ' + vm.formData.length);
 
             		for(var w = 0; w < vm.formData.length; w++) {
 						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
+						console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
 					}
 					vm.numberOfForms = vm.totalNumberOfPages.length;
 					vm.numberOfPages = vm.totalNumberOfPages[0];
-					console.log('form ' + vm.numberOfForms);
-					console.log('pages ' + vm.numberOfPages);
 					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
             	})
-            	.then(function(){
-		            pdf = new jsPDF();
-		            deferred = $q.defer();
-		            deferred.resolve(1);
-		            p = deferred.promise;
-		            console.log('wats forms ' + vm.numberOfForms);
-		            console.log('wats pages ' + vm.numberOfPages);
-		            for (var c = 1; c <= vm.numberOfForms; c++) {
-			            for (var i = 1; i <= vm.numberOfPages; i++) { 
-			                p = p.then(generateFormTask);
-			                if (p === vm.numberOfForms) { // already looped all the forms in generateFormTask, no need to stay in the loop anymore
-			                	p = p.then(generateImageTask);
-			                	break;
-			                }
-			                p = p.then(generateImageTask);			            
-			            }
-			            if (i === vm.numberOfPages) {
-			               	vm.numberOfPages = vm.totalNumberOfPages[c];
-		            		console.log('smlj here' + vm.numberOfPages);
-			            }
-			        }
-			        // refresh values for next use
-                	vm.numberOfForms = 0;
-                	vm.numberOfPages = 0;
-		            p.then(lastTask);
-		        });
+
+            pdf = new jsPDF();
+            deferred = $q.defer();
+            deferred.resolve(1);
+            p = deferred.promise;
+            console.log('wats forms ' + vm.numberOfForms);
+            console.log('wats pages ' + vm.numberOfPages);
+            for (var c = 1; c <= vm.numberOfForms; c++) {
+	            for (var i = 1; i <= vm.numberOfPages; i++) { 
+	                p = p.then(generateFormTask);
+	                p = p.then(generateImageTask);
+	            }
+	        }
+            p.then(lastTask);
 
             function generateFormTask(formNumber) {
                 return generateForm(formNumber);
@@ -187,7 +176,8 @@ angular.module('app.entryMgmt')
                 });
                 pagesImage = [];
                 vm.selectedRows = [];
-                
+                vm.numberOfPages = 0;
+                vm.numberOfForms = 0;
             }
         }
 
@@ -232,7 +222,6 @@ angular.module('app.entryMgmt')
             }
         }
         function generateForm(formNumber) {
-        	// formnumber not used anywhere
         	var deferred = $q.defer();
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
@@ -251,7 +240,6 @@ angular.module('app.entryMgmt')
 				for(k=1; k<=vm.formData.length; k++){ //k is the form number
 					var form = vm.formData[k-1];
 					var elements = form.elements;
-					console.log('wats k ' + k);
 					for (j = 1; j <= form.numberOfPages; j++) { //j is page number
 						var newPage = newPageTemplate.cloneNode(true);
 						newPage.setAttribute("id", 'form' + k + 'page' + j);
@@ -260,7 +248,6 @@ angular.module('app.entryMgmt')
 					}
 					for (key in elements){
 						var element = elements[key];
-						console.log('element in wat page ' + element.page);
 						if(element.name.startsWith('background_')){
 							node = document.createElement('img');
 							node.src = element.src;	
@@ -401,7 +388,7 @@ angular.module('app.entryMgmt')
 						$compile(node)($scope);
 					}				
 				}		
-				deferred.resolve(k);
+				deferred.resolve(formNumber);
 			});
 			return deferred.promise;
 		}
