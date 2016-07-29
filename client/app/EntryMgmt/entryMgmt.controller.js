@@ -227,6 +227,7 @@ angular.module('app.entryMgmt')
         }
         function generateForm(formNumber) {
         	var deferred = $q.defer();
+        	vm.formData = [];
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
