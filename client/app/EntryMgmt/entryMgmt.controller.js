@@ -112,7 +112,7 @@ angular.module('app.entryMgmt')
 		}
 
 		// 
-		var pagesImage = [];
+		vm.pagesImage = [];
 
 		function downLoadAsOne() {
             var pdf,
@@ -162,13 +162,13 @@ angular.module('app.entryMgmt')
 		            }
 
 		            function lastTask() {
-		                for (var j = 0; j < pagesImage.length; j++) {
-		                    for (var k = 0; k < pagesImage[j].length; k++) {
+		                for (var j = 0; j < vm.pagesImage.length; j++) {
+		                    for (var k = 0; k < vm.pagesImage[j].length; k++) {
 		                        if (j !== 0 || k !== 0) {
 		                            pdf.addPage();
 		                            console.log('did i even come in here');
 		                        }
-		                        pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
+		                        pdf.addImage(vm.pagesImage[j][k], "JPEG", 0, 0);
 		                    }
 		                }
 		                //usSpinnerService.stop('spinner-1');
@@ -177,7 +177,7 @@ angular.module('app.entryMgmt')
 		                pages.forEach(function(item, index) {
 		                    item.parentNode.removeChild(item);
 		                });
-		                pagesImage = [];
+		                vm.pagesImage = [];
 		                vm.selectedRows = [];
 		                vm.numberOfPages = 0;
 		                vm.numberOfForms = 0;
@@ -192,7 +192,7 @@ angular.module('app.entryMgmt')
 		function generateImage(formNumber) {
             var deferred = $q.defer();
             var pageNumber = 1;
-            pagesImage.push([]);
+            vm.pagesImage.push([]);
             var deferred2 = $q.defer();
             deferred2.resolve(1);
             var p2 = deferred2.promise;
@@ -215,7 +215,7 @@ angular.module('app.entryMgmt')
                 rasterizeHTML.drawHTML(code).then(function(renderResult) {
                     context.drawImage(renderResult.image, 0, 0);
                     var imgurl = canvas.toDataURL('image/jpeg', 1);
-                    pagesImage[formNumber - 1].push(imgurl);
+                    vm.pagesImage[formNumber - 1].push(imgurl);
                     if (!document.getElementById('form' + formNumber + "page" + (pageNumber + 1))) { // if page does not exist then switch form
                         deferred.resolve(formNumber + 1);
                         return;
