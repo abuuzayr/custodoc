@@ -142,8 +142,8 @@ angular.module('app.entryMgmt')
 		            p = deferred.promise;
 		            console.log('wats forms ' + vm.numberOfForms);
 		            console.log('wats pages ' + vm.numberOfPages);
-		            for (var forms in vm.numberOfForms) {
-			            for (var page in vm.numberOfPages) { 
+		            for (var c = 1; c <= vm.numberOfForms; c++) {
+			            for (var i = 1; i <= vm.numberOfPages; i++) { 
 			                p = p.then(generateFormTask);
 			                p = p.then(generateImageTask);
 			            }
