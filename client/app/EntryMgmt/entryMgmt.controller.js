@@ -125,6 +125,8 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
+            		console.log('wtf is formdata ' + vm.formData);
+            		console.log('then length leh? ' + vm.formData.length);
             		for(var w = 0; w < vm.formData.length; w++) {
 						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
 					}
@@ -172,6 +174,8 @@ angular.module('app.entryMgmt')
                 });
                 pagesImage = [];
                 vm.selectedRows = [];
+                vm.numberOfPages = 0;
+                vm.numberOfForms = 0;
             }
         }
 
@@ -259,7 +263,7 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							node.setAttribute('ng-value', 'selectedRows.' + newName);				
+							node.setAttribute('ng-value', 'vm.selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
