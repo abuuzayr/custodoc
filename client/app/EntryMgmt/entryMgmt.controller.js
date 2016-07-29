@@ -271,9 +271,6 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							if (!vm.selectedRows.newName) {
-								console.log('is it undefined? ' + vm.selectedRows.newName);
-							}
 							node.setAttribute('ng-value', 'vm.selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
