@@ -159,8 +159,8 @@
 		vm.addNewAutofillElement = addNewAutofillElement;
 		
 		vm.colorPickerOptions ={ 
-			format: ['hex'],
-			alpha: [false]
+			format: 'hex',
+			alpha: false
 		};
 
 		//warn the user when changing state or refreshing without saving the form
