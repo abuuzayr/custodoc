@@ -145,6 +145,10 @@ angular.module('app.entryMgmt')
 		            for (var c = 1; c <= vm.numberOfForms; c++) {
 			            for (var i = 1; i <= vm.numberOfPages; i++) { 
 			                p = p.then(generateFormTask);
+			                if (p === vm.numberOfForms) { // already looped all the forms in generateFormTask, no need to stay in the loop anymore
+			                	p = p.then(generateImageTask);
+			                	break;
+			                }
 			                p = p.then(generateImageTask);			            
 			            }
 			            if (i === vm.numberOfPages) {
@@ -175,6 +179,7 @@ angular.module('app.entryMgmt')
                         pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
                     }
                 }
+                console.log('did i come here wtf');
                 //usSpinnerService.stop('spinner-1');
                 pdf.save();
                 pages = Array.from(document.getElementsByClassName('page'));
@@ -397,7 +402,7 @@ angular.module('app.entryMgmt')
 						$compile(node)($scope);
 					}				
 				}		
-				deferred.resolve(formNumber);
+				deferred.resolve(k);
 			});
 			return deferred.promise;
 		}
