@@ -216,10 +216,12 @@ angular.module('app.entryMgmt')
             }
         }
         function generateForm(formNumber) {
+        	var deferred = $q.defer();
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
 				var node,
+					key,
                     page,
                     option,
                     options,
@@ -384,8 +386,6 @@ angular.module('app.entryMgmt')
 			});
 			return deferred.promise;
 		}
-
-
 
 		/******************************************************/
 
