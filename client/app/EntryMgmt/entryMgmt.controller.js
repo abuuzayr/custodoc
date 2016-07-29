@@ -179,6 +179,7 @@ angular.module('app.entryMgmt')
                         pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
                     }
                 }
+                console.log('did i come here wtf');
                 //usSpinnerService.stop('spinner-1');
                 pdf.save();
                 pages = Array.from(document.getElementsByClassName('page'));
