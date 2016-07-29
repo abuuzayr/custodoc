@@ -125,7 +125,7 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
-            		console.log('wats form ' + JSON.stringify(vm.formdata));
+            		console.log('wats form ' + JSON.stringify(vm.formData));
             		console.log('then length leh? ' + vm.formData.length);
 
             		for(var w = 0; w < vm.formData.length; w++) {
