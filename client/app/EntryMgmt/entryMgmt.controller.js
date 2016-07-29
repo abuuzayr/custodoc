@@ -26,7 +26,7 @@ angular.module('app.entryMgmt')
 		vm.totalNumberOfPages = [];
 		vm.currentFormNumber = 1;
 		vm.numberOfForms = 1;
-		var forms = document.getElementById('forms');
+		
 		vm.selectedRows = {};
 
 		getData();
@@ -227,6 +227,7 @@ angular.module('app.entryMgmt')
         }
         function generateForm(formNumber) {
         	var deferred = $q.defer();
+        	var forms = document.getElementById('forms');
         	vm.formData = [];
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
