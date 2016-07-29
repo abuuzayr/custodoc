@@ -145,20 +145,9 @@ angular.module('app.entryMgmt')
 		            for (var c = 1; c <= vm.numberOfForms; c++) {
 			            for (var i = 1; i <= vm.numberOfPages; i++) { 
 			                p = p.then(generateFormTask);
-			                if (p === vm.numberOfForms) { // already looped all the forms in generateFormTask, no need to stay in the loop anymore
-			                	p = p.then(generateImageTask);
-			                	break;
-			                }
-			                p = p.then(generateImageTask);			            
-			            }
-			            if (i === vm.numberOfPages) {
-			               	vm.numberOfPages = vm.totalNumberOfPages[c];
-		            		console.log('smlj here' + vm.numberOfPages);
+			                p = p.then(generateImageTask);
 			            }
 			        }
-			        // refresh values for next use
-                	vm.numberOfForms = 0;
-                	vm.numberOfPages = 0;
 		            p.then(lastTask);
 		        });
 
@@ -179,7 +168,6 @@ angular.module('app.entryMgmt')
                         pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
                     }
                 }
-                console.log('did i come here wtf');
                 //usSpinnerService.stop('spinner-1');
                 pdf.save();
                 pages = Array.from(document.getElementsByClassName('page'));
@@ -188,7 +176,8 @@ angular.module('app.entryMgmt')
                 });
                 pagesImage = [];
                 vm.selectedRows = [];
-                
+                vm.numberOfPages = 0;
+                vm.numberOfForms = 0;
             }
         }
 
@@ -233,7 +222,6 @@ angular.module('app.entryMgmt')
             }
         }
         function generateForm(formNumber) {
-        	// formnumber not used anywhere
         	var deferred = $q.defer();
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
@@ -252,7 +240,6 @@ angular.module('app.entryMgmt')
 				for(k=1; k<=vm.formData.length; k++){ //k is the form number
 					var form = vm.formData[k-1];
 					var elements = form.elements;
-					console.log('wats k ' + k);
 					for (j = 1; j <= form.numberOfPages; j++) { //j is page number
 						var newPage = newPageTemplate.cloneNode(true);
 						newPage.setAttribute("id", 'form' + k + 'page' + j);
@@ -261,7 +248,6 @@ angular.module('app.entryMgmt')
 					}
 					for (key in elements){
 						var element = elements[key];
-						console.log('element in wat page ' + element.page);
 						if(element.name.startsWith('background_')){
 							node = document.createElement('img');
 							node.src = element.src;	
@@ -279,6 +265,9 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
+							if (!vm.selectedRows.newName) {
+								console.log('is it undefined? ' + vm.selectedRows.newName);
+							}
 							node.setAttribute('ng-value', 'vm.selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
@@ -402,7 +391,7 @@ angular.module('app.entryMgmt')
 						$compile(node)($scope);
 					}				
 				}		
-				deferred.resolve(k);
+				deferred.resolve(formNumber);
 			});
 			return deferred.promise;
 		}
