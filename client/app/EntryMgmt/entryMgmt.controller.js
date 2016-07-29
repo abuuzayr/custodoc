@@ -115,11 +115,11 @@ angular.module('app.entryMgmt')
 		vm.pagesImage = [];
 
 		function downLoadAsOne() {
-            var pdf,
-                pages,
+            var pages,
                 deferred,
                 p;
 
+            var pdf = new jsPDF();
             //usSpinnerService.spin('spinner-1');
             vm.formData = {};
             vm.numberOfPages = 0;
@@ -138,7 +138,7 @@ angular.module('app.entryMgmt')
 					vm.numberOfPages = vm.totalNumberOfPages[0];
 					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];            	
 
-		            pdf = new jsPDF();
+		            
 		            deferred = $q.defer();
 		            deferred.resolve(1);
 		            p = deferred.promise;
