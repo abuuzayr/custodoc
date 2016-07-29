@@ -111,15 +111,13 @@ angular.module('app.entryMgmt')
 			}
 		}
 
-		// 
-		vm.pagesImage = [];
-
 		function downLoadAsOne() {
             var pages,
                 deferred,
                 p;
 
             var pdf = new jsPDF();
+            vm.pagesImage = [];
             //usSpinnerService.spin('spinner-1');
             vm.formData = {};
             vm.numberOfPages = 0;
