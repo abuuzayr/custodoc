@@ -54,7 +54,7 @@
             <button name="Preview" value="Preview" ng-click="vm.previewStart()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Preview</button>
         </div>
         
-        <div id="hidden-pagebar" ng-show="displayPagebar">
+        <div id="hidden-pagebar">
             <label>{{"Current Page: "+vm.currentPageNumber+"/"+ vm.numberOfPages}}</label>
             <label>{{"Current Form: "+vm.currentFormNumber+"/"+ vm.numberOfForms}}</label>
             <form ng-submit="vm.goToPage()" style="display:inline">
