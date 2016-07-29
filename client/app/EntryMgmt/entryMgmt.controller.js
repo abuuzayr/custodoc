@@ -157,7 +157,7 @@ angular.module('app.entryMgmt')
                     item.parentNode.removeChild(item);
                 });
                 pagesImage = [];
-                rows = [];
+                vm.selectedRows = [];
             }
         }
 
