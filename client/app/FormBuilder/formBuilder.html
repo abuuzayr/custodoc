@@ -22,10 +22,13 @@
 				<label>Font Size:<br>
 					<select ng-options="option for option in vm.availableFontsizes" ng-model="vm.Fontsize" class="selectInDialog"></select>
 				</label><br>
+				<div>
 				<label>Font Color:<br>
 					<!--<select ng-options="option for option in vm.colorsArray" ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}" class="selectInDialog"></select>-->
 					<color-picker ng-model="vm.FontColor" ng-style="{'color': vm.FontColor}" options="vm.colorPickerOptions"></color-picker>
-				</label><br>
+				</label>
+				</div>
+				<br>
 				<label>Text Decoration:<br>
 					<select ng-model="vm.TextDecoration" class="selectInDialog">
 						<option value="none">None</option>
@@ -36,10 +39,13 @@
 				</label><br>
 			</div>
 			<div class="mdl-cell mdl-cell--6-col">
+				<div>
 				<label>Background Color:<br>
 					<!--<select ng-options="option for option in vm.colorsArray" ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" class="selectInDialog"></select>-->
 					<color-picker ng-model="vm.BackgroundColor" ng-style="{'background-color': vm.BackgroundColor}" options="vm.colorPickerOptions"></color-picker>
-				</label><br>
+				</label>
+				</div>
+				<br>
 				<label>Opacity: <span ng-style="{opacity: vm.Opacity}">{{vm.Opacity | number:2}}</span><br>
 					<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.Opacity" class="selectInDialog">
 				</label><br>
@@ -57,10 +63,13 @@
 				<label>Border Radius:<br>
 					<select ng-options="option for option in vm.availableBorderRadii" ng-model="vm.BorderRadius" class="selectInDialog"></select>
 				</label><br>
+				<div>
 				<label>Border Color:<br>
 					<!--<select ng-options="option for option in vm.colorsArray" ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" class="selectInDialog"></select>-->
-					<color-picker ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}"></color-picker>
-				</label><br>
+					<color-picker ng-model="vm.BorderColor" ng-style="{'color': vm.BorderColor}" options="vm.colorPickerOptions"></color-picker>
+				</label>
+				</div>
+				<br>
 			</div>
 		</div>
 		<div class="mdl-dialog__actions">
