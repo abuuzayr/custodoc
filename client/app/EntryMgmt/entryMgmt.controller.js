@@ -121,6 +121,9 @@ angular.module('app.entryMgmt')
                 p;
 
             //usSpinnerService.spin('spinner-1');
+            vm.formData = {};
+            vm.numberOfPages = 0;
+            vm.numberOfForms = 0;
             vm.selectedRows = vm.tableOptions.selection.selected[0];
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
