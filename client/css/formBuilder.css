@@ -72,7 +72,7 @@
 
 #border-panel label,
 #font-panel label,
-/*#background-panel label,*/
+#background-panel label,
 #content-panel label {
 	padding: 15px;
 	display: inline-block;
