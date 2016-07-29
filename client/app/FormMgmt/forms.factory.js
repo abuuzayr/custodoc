@@ -11,7 +11,10 @@
         var service = {
             getNewPage: getNewPage,
             getGroups: getGroups,
-            getForms: getForms
+            getForms: getForms,
+            createGroup: createGroup,
+            deleteGroup: deleteGroup,
+            updateGroup: updateGroup
         };
 
         function getNewPage() {
