@@ -126,8 +126,8 @@ angular.module('app.entryMgmt')
             vm.numberOfForms = 0;
             vm.selectedRows = vm.tableOptions.selection.selected[0];
             var res = entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
-            console.log('wats res ' + JSON.stringify(res));
-    		vm.formData = res;
+            console.log('wats res ' + JSON.stringify(res.data));
+    		vm.formData = res.data;
     		console.log('wats form ' + JSON.stringify(vm.formdata));
     		console.log('then length leh? ' + vm.formData.length);
 
