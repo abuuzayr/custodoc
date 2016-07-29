@@ -160,11 +160,11 @@ angular.module('app.entryMgmt')
 		            }
 
 		            function lastTask() {
+		            	console.log('did i even come in here');
 		                for (var j = 0; j < vm.pagesImage.length; j++) {
 		                    for (var k = 0; k < vm.pagesImage[j].length; k++) {
 		                        if (j !== 0 || k !== 0) {
-		                            pdf.addPage();
-		                            console.log('did i even come in here');
+		                            pdf.addPage();	                            
 		                        }
 		                        pdf.addImage(vm.pagesImage[j][k], "JPEG", 0, 0);
 		                    }
