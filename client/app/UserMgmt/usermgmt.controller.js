@@ -18,7 +18,7 @@
         vm.tableOptions = {};
         vm.tableOptions.data = [];
         vm.tableOptions.enableMultiSelect = true;
-        vm.tableOptions.eanblePagination = true;
+        vm.tableOptions.enablePagination = true;
         getUsers();
         vm.tableOptions.columnDefs = [
             { type: 'action', icon: 'edit', action: editUser },
