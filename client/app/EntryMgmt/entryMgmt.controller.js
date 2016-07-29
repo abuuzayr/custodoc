@@ -122,15 +122,29 @@ angular.module('app.entryMgmt')
 
             //usSpinnerService.spin('spinner-1');
             vm.selectedRows = vm.tableOptions.selection.selected[0];
+            entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
+            	.then(function(res){
+            		vm.formData = res.data;
+            		for(var w = 0; w < vm.formData.length; w++) {
+						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
+					}
+					vm.numberOfForms = vm.totalNumberOfPages.length;
+					vm.numberOfPages = vm.totalNumberOfPages[0];
+					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
+            	})
+
             pdf = new jsPDF();
             deferred = $q.defer();
             deferred.resolve(1);
             p = deferred.promise;
-            console.log('wats length ' + vm.selectedRows.length);
-            for (var i = 1; i <= vm.selectedRows.length; i++) {
-                p = p.then(generateFormTask);
-                p = p.then(generateImageTask);
-            }
+            console.log('wats forms ' + vm.numberOfForms);
+            console.log('wats pages ' + vm.numberOfPages);
+            for (var c = 1; c <= vm.numberOfForms; c++) {
+	            for (var i = 1; i <= vm.numberOfPages; i++) { 
+	                p = p.then(generateFormTask);
+	                p = p.then(generateImageTask);
+	            }
+	        }
             p.then(lastTask);
 
             function generateFormTask(formNumber) {
@@ -202,11 +216,12 @@ angular.module('app.entryMgmt')
             }
         }
         function generateForm(formNumber) {
-	        vm.selectedRows = vm.tableOptions.selection.selected[0];
+        	var deferred = $q.defer();
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
 				vm.formData = res.data;
 				var node,
+					key,
                     page,
                     option,
                     options,
@@ -215,12 +230,6 @@ angular.module('app.entryMgmt')
                     label,
                     display,
                     k, j;
-				for(var x = 0; x < vm.formData.length; x++) {
-					vm.totalNumberOfPages[x] = vm.formData[x].numberOfPages;
-				}
-				vm.numberOfForms = vm.totalNumberOfPages.length;
-				vm.numberOfPages = vm.totalNumberOfPages[0];
-				vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
 
 				for(k=1; k<=vm.formData.length; k++){ //k is the form number
 					var form = vm.formData[k-1];
@@ -377,8 +386,6 @@ angular.module('app.entryMgmt')
 			});
 			return deferred.promise;
 		}
-
-
 
 		/******************************************************/
 
