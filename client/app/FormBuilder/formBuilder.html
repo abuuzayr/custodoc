@@ -571,14 +571,14 @@
 					</label>
 				</div>
 				<div class="mdl-tabs__panel" id="background-panel">
+					<label>Opacity:
+						<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
+					</label>
 					<label id="editBackgroundColorLabel">Background Color:
 						<color-picker id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{ 'background-color': vm.element.style.backgroundColor}"></color-picker>
 						<!--<select id="editBackgroundColor" ng-model="vm.element.style.backgroundColor" ng-style="{ 'background-color': vm.element.style.backgroundColor}">
 							<option ng-repeat="option in vm.colorsArray" value="{{option}}">{{option}}</option>
 						</select>-->
-					</label>
-					<label>Opacity:
-						<input id="editOpacity" type="range" max="1" min="0" step="0.01"  ng-model="vm.element.style.opacity">
 					</label>
 				</div>
 				<div class="mdl-tabs__panel" id="content-panel">
