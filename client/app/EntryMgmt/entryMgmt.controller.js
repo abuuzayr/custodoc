@@ -145,7 +145,11 @@ angular.module('app.entryMgmt')
 		            for (var c = 1; c <= vm.numberOfForms; c++) {
 			            for (var i = 1; i <= vm.numberOfPages; i++) { 
 			                p = p.then(generateFormTask);
-			                p = p.then(generateImageTask);
+			                p = p.then(generateImageTask);			            
+			            }
+			            if (i === vm.numberOfPages) {
+			               	vm.numberOfPages = vm.totalNumberOfPages[c];
+		            		console.log('smlj here' + vm.numberOfPages);
 			            }
 			        }
 			        // refresh values for next use
@@ -224,6 +228,7 @@ angular.module('app.entryMgmt')
             }
         }
         function generateForm(formNumber) {
+        	// formnumber not used anywhere
         	var deferred = $q.defer();
 			entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
 			.then(function(res){
@@ -242,6 +247,7 @@ angular.module('app.entryMgmt')
 				for(k=1; k<=vm.formData.length; k++){ //k is the form number
 					var form = vm.formData[k-1];
 					var elements = form.elements;
+					console.log('wats k ' + k);
 					for (j = 1; j <= form.numberOfPages; j++) { //j is page number
 						var newPage = newPageTemplate.cloneNode(true);
 						newPage.setAttribute("id", 'form' + k + 'page' + j);
@@ -250,6 +256,7 @@ angular.module('app.entryMgmt')
 					}
 					for (key in elements){
 						var element = elements[key];
+						console.log('element in wat page ' + element.page);
 						if(element.name.startsWith('background_')){
 							node = document.createElement('img');
 							node.src = element.src;	
@@ -267,9 +274,6 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							if (!vm.selectedRows.newName) {
-								console.log('is it undefined? ' + vm.selectedRows.newName);
-							}
 							node.setAttribute('ng-value', 'vm.selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
