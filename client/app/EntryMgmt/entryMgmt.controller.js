@@ -125,31 +125,34 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
-            		
-            		console.log('then length leh? ' + vm.formData.length);
 
             		for(var w = 0; w < vm.formData.length; w++) {
 						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
-						console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
 					}
 					vm.numberOfForms = vm.totalNumberOfPages.length;
 					vm.numberOfPages = vm.totalNumberOfPages[0];
+					console.log('form ' + vm.numberOfForms);
+					console.log('pages ' + vm.numberOfPages);
 					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
             	})
-
-            pdf = new jsPDF();
-            deferred = $q.defer();
-            deferred.resolve(1);
-            p = deferred.promise;
-            console.log('wats forms ' + vm.numberOfForms);
-            console.log('wats pages ' + vm.numberOfPages);
-            for (var c = 1; c <= vm.numberOfForms; c++) {
-	            for (var i = 1; i <= vm.numberOfPages; i++) { 
-	                p = p.then(generateFormTask);
-	                p = p.then(generateImageTask);
-	            }
-	        }
-            p.then(lastTask);
+            	.then(function(){
+		            pdf = new jsPDF();
+		            deferred = $q.defer();
+		            deferred.resolve(1);
+		            p = deferred.promise;
+		            console.log('wats forms ' + vm.numberOfForms);
+		            console.log('wats pages ' + vm.numberOfPages);
+		            for (var c = 1; c <= vm.numberOfForms; c++) {
+			            for (var i = 1; i <= vm.numberOfPages; i++) { 
+			                p = p.then(generateFormTask);
+			                p = p.then(generateImageTask);
+			            }
+			        }
+			        // refresh values for next use
+                	vm.numberOfForms = 0;
+                	vm.numberOfPages = 0;
+		            p.then(lastTask);
+		        });
 
             function generateFormTask(formNumber) {
                 return generateForm(formNumber);
@@ -176,8 +179,7 @@ angular.module('app.entryMgmt')
                 });
                 pagesImage = [];
                 vm.selectedRows = [];
-                vm.numberOfPages = 0;
-                vm.numberOfForms = 0;
+                
             }
         }
 
@@ -265,6 +267,9 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
+							if (!vm.selectedRows.newName) {
+								console.log('is it undefined? ' + vm.selectedRows.newName);
+							}
 							node.setAttribute('ng-value', 'vm.selectedRows.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
