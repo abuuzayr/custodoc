@@ -125,20 +125,19 @@ angular.module('app.entryMgmt')
             vm.numberOfPages = 0;
             vm.numberOfForms = 0;
             vm.selectedRows = vm.tableOptions.selection.selected[0];
-            entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
-            	.then(function(res){
-            		vm.formData = res.data;
-            		console.log('wats form ' + JSON.stringify(vm.formdata));
-            		console.log('then length leh? ' + vm.formData.length);
+            var res = entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
+            console.log('wats res ' + JSON.stringify(res));
+    		vm.formData = res;
+    		console.log('wats form ' + JSON.stringify(vm.formdata));
+    		console.log('then length leh? ' + vm.formData.length);
 
-            		for(var w = 0; w < vm.formData.length; w++) {
-						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
-						console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
-					}
-					vm.numberOfForms = vm.totalNumberOfPages.length;
-					vm.numberOfPages = vm.totalNumberOfPages[0];
-					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
-            	})
+    		for(var w = 0; w < vm.formData.length; w++) {
+				vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
+				console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
+			}
+			vm.numberOfForms = vm.totalNumberOfPages.length;
+			vm.numberOfPages = vm.totalNumberOfPages[0];
+			vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
 
             pdf = new jsPDF();
             deferred = $q.defer();
