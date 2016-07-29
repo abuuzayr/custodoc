@@ -128,7 +128,6 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
-            		console.log('wats form ' + JSON.stringify(vm.formdata));
             		console.log('then length leh? ' + vm.formData.length);
 
             		for(var w = 0; w < vm.formData.length; w++) {
@@ -166,6 +165,7 @@ angular.module('app.entryMgmt')
 		                    for (var k = 0; k < pagesImage[j].length; k++) {
 		                        if (j !== 0 || k !== 0) {
 		                            pdf.addPage();
+		                            console.log('did i even come in here');
 		                        }
 		                        pdf.addImage(pagesImage[j][k], "JPEG", 0, 0);
 		                    }
