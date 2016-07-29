@@ -145,7 +145,11 @@ angular.module('app.entryMgmt')
 		            for (var c = 1; c <= vm.numberOfForms; c++) {
 			            for (var i = 1; i <= vm.numberOfPages; i++) { 
 			                p = p.then(generateFormTask);
-			                p = p.then(generateImageTask);
+			                p = p.then(generateImageTask);			            
+			            }
+			            if (i === vm.numberOfPages) {
+			               	vm.numberOfPages = vm.totalNumberOfPages[c];
+		            		console.log('smlj here' + vm.numberOfPages);
 			            }
 			        }
 			        // refresh values for next use
