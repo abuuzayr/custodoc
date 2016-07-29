@@ -125,15 +125,14 @@ angular.module('app.entryMgmt')
             entryMgmtServices.getFormGroupData(vm.selectedRows.groupName)
             	.then(function(res){
             		vm.formData = res.data;
-            		console.log('wats form ' + JSON.stringify(vm.formData));
-            		console.log('then length leh? ' + vm.formData.length);
 
             		for(var w = 0; w < vm.formData.length; w++) {
 						vm.totalNumberOfPages[w] = vm.formData[w].numberOfPages;
-						console.log('wtf is formdata pages ' + vm.formData[w].numberOfPages);
 					}
 					vm.numberOfForms = vm.totalNumberOfPages.length;
 					vm.numberOfPages = vm.totalNumberOfPages[0];
+					console.log('form ' + vm.numberOfForms);
+					console.log('pages ' + vm.numberOfPages);
 					vm.numberOfPreviewPages = vm.totalNumberOfPages[0];
             	})
 
