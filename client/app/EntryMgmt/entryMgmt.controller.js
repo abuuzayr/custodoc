@@ -114,7 +114,7 @@ angular.module('app.entryMgmt')
 		// 
 		var pagesImage = [];
 
-		function downloadAsOne() {
+		function downLoadAsOne() {
             var pdf,
                 pages,
                 deferred,
@@ -157,7 +157,7 @@ angular.module('app.entryMgmt')
                     item.parentNode.removeChild(item);
                 });
                 pagesImage = [];
-                rows = [];
+                vm.selectedRows = [];
             }
         }
 
