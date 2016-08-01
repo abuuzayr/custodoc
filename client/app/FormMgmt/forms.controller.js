@@ -267,6 +267,10 @@
             }
         }
 
+
+
+
+
         function deleteForms(rgRows) {
             if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
                 var deferred = $q.defer();
@@ -540,7 +544,8 @@
             var deferred = $q.defer();
             var groupName = rows[formNumber - 1].groupName;
             var formName = rows[formNumber - 1].formName;
-            $http.get(appConfig.API_URL + "/protected/forms/" + groupName + '/' + formName)
+            var formId = rows[formNumber - 1]._id
+            $http.get(appConfig.API_URL + "/protected/forms/" + formId)
                 .then(function(res) {
                     var node,
                         page,
