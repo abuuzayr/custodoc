@@ -112,6 +112,7 @@ angular
 	vm.numberOfPreviewPages = 1;
 
 	autofillServices.getRecords().then(function(res){
+		console.log('did i come here');
 		vm.autofillData = res.data;
 	});
 
@@ -128,7 +129,7 @@ angular
 	/* This long, core function gets the formData from the form database, then parse the formData to form key/value pair in parsedFormData, then
 	create a proper entry data structure, then finally print out the preview of all the forms in the group*/
 
-	vm.getFormData = entryService.getFormElements(vm.groupName)
+	entryService.getFormElements(vm.groupName)
 		.then(function(res){
 		    vm.formData = res.data;
 			for(var x = 0; x < vm.formData.length; x++) {
