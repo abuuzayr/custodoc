@@ -41,7 +41,7 @@
     <top-nav-bar></top-nav-bar>
     <main class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
-        {{vm.autofillData.name}}  
+        {{vm.autofillData[name]}}  
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
