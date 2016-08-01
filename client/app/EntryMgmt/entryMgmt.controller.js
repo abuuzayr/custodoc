@@ -337,7 +337,7 @@ angular.module('app.entryMgmt')
 									var option = document.createElement("input");
 									option.type = "radio";
 									if (variable === JSON.stringify(options[i])) {
-										option.setAttribute('checked');								
+										option.checked = true;							
 									}
 									option.name = element.name;
 									option.value = options[i];
