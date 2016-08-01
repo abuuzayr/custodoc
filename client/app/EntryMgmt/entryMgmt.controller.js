@@ -308,7 +308,7 @@ angular.module('app.entryMgmt')
 								for(var i = 0; i<options.length; i++){
 									var option = document.createElement('option');
 									option.innerHTML=options[i];
-									option.setAttribute('ng-selected', testScope + "==" + JSON.stringify(options[i]));								
+									option.setAttribute('selected', testScope + "==" + JSON.stringify(options[i]));								
 									node.appendChild(option);
 								}
 							}
