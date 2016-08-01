@@ -1,11 +1,12 @@
 <!---------------------------------------- Ng-include nav bars ---------------------------------------->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" ng-controller="entryMgmtCtrl as vm">
     <top-nav-bar></top-nav-bar>
+    <download-ur-mother></download-ur-mother>
     {{vm.selectedRows}}
     <main class="mdl-layout__content">
         <div id="forms" class="page-content">
             <div class="mdl-grid">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" download-ur-mother>download</button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" download-ur-mother/>download</button>
                 <div class="divider"></div>
             </div>
             <div id="top-row-buttons" class="mdl-grid">
