@@ -112,8 +112,8 @@ angular
 	vm.numberOfPreviewPages = 1;
 
 	autofillServices.getRecords().then(function(res){
-		console.log('did i come here');
 		vm.autofillData = res.data;
+		console.log('did i come here' + vm.autofillData.name);
 	});
 
     function slugify(text) {
