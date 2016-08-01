@@ -3,8 +3,8 @@
 angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
-	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout', 'entryMgmtServices', 'autofillServices'];
-	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices, autofillServices){
+	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout', 'entryMgmtServices'];
+	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices){
 		var vm = this;
 		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
 		vm.tableOptions = {};
@@ -60,10 +60,6 @@ angular.module('app.entryMgmt')
 		    .replace(/^-+/, '')             // Trim - from start of text
 		    .replace(/-+$/, '');            // Trim - from end of text
 		}
-
-		autofillServices.getRecords().then(function(res){
-			vm.autofillData = res.data;
-		});
 
 		function getData(){
 			return entryMgmtServices.getData()

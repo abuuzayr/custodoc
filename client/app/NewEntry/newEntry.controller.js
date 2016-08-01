@@ -5,7 +5,8 @@ angular
     	'entryService',
     	'autofillServices', 
     	'formServices',
-    	'formBuilderFactory', 
+    	'formBuilderFactory',
+    	'autofillServices', 
     	'$scope', 
     	'$q',
     	'$compile', 
@@ -21,6 +22,7 @@ angular
     	autofillServices,
     	formServices, 
     	formBuilderFactory,
+    	autofillServices,
     	$scope, 
     	$q, 
     	$compile,
@@ -108,6 +110,10 @@ angular
 
 	vm.currentFormPreview = 1;
 	vm.numberOfPreviewPages = 1;
+
+	autofillServices.getRecords().then(function(res){
+		vm.autofillData = res.data;
+	});
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()

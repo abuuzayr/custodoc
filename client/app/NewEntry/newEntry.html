@@ -37,6 +37,7 @@
 </dialog>
 
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+{{vm.autofillData.companyId}}    
     <!---------------------------------------- Ng-include nav bars ---------------------------------------->
     <top-nav-bar></top-nav-bar>
     <main class="mdl-layout__content">
@@ -136,9 +137,10 @@
                             <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[key.name]}}" />
                         </div>
                     </div>
+                                    
+
                     <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Submit entry</button>
                 </form>
-
             </div>
         </div>
     </main>
