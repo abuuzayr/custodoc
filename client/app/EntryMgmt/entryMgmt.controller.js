@@ -289,6 +289,7 @@ angular.module('app.entryMgmt')
 							var variable = vm.selectedRows[newName];
 							console.log('wats variable ' + variable);
 							checkbox.setAttribute('ng-checked', variable);	
+							checkbox.setAttribute('checked', variable);
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
 							node.appendChild(span);
@@ -308,7 +309,7 @@ angular.module('app.entryMgmt')
 								for(var i = 0; i<options.length; i++){
 									var option = document.createElement('option');
 									option.innerHTML=options[i];
-									option.setAttribute('ng-selected', variable + "==" + JSON.stringify(options[i]));								
+									option.setAttribute('ng-selected', testScope + "==" + JSON.stringify(options[i]));								
 									node.appendChild(option);
 								}
 							}
