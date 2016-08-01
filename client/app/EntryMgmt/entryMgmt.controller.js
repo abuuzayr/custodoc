@@ -326,8 +326,7 @@ angular.module('app.entryMgmt')
 							node = document.createElement('form');
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
-							console.log('wats variable ' + variable);							
-							var testScope = 'vm.entryData.' + newName;						
+							console.log('wats variable ' + variable);												
 							options = element.options;
 							if(options.length>0){
 								if (element.display==="radioInline") var display = "inline";
@@ -336,7 +335,7 @@ angular.module('app.entryMgmt')
 									var label = document.createElement("label");
 									var option = document.createElement("input");
 									option.type = "radio";
-									if (variable === JSON.stringify(options[i])) {
+									if (variable === options[i]) {
 										console.log('am i here');
 										option.checked = true;							
 									}
