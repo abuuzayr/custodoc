@@ -7,13 +7,13 @@ function downloadUrMother($q, $compile, entryMgmtServices) {
 
 	return {
 		restrict: 'EAC',
-		template: '<h3>Hello there</h3>'
-		link: function (scope, element, attrs) { 
-			element.on('click', hey);
+		template: '<h3>Hello there</h3>',
+		// link: function (scope, element, attrs) { 
+		// 	element.on('click', hey);
 
-			function hey() {
-				console.log('ur mother');
-			}
+		// 	function hey() {
+		// 		console.log('ur mother');
+		// 	}
 
 
 			// function downLoadAsOne() {
@@ -301,7 +301,7 @@ function downloadUrMother($q, $compile, entryMgmtServices) {
 			// 	});
 			// 	return deferred.promise;
 			// }
-		}
+		// }
 	};
 }
 	
