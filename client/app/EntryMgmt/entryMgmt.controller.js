@@ -53,7 +53,6 @@ angular.module('app.entryMgmt')
 		/************************************************************/
 
 		function slugify(text) {
-			console.log('hey');
 		  	return text.toString().toLowerCase()
 		    .replace(/\s+/g, '_')           // Replace spaces with -
 		    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
@@ -272,8 +271,9 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							console.log('hey ' + vm.selectedRows.newName);
-							node.setAttribute('value', 'vm.selectedRow.text_texthere');				
+							var testing = 'vm.selectedRows.' + newName;
+							node.setAttribute('value', testing);	
+							//node.setAttribute('ng-value', testing);			
 							node.type='text';
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
