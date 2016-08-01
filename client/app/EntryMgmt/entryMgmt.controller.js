@@ -111,6 +111,8 @@ angular.module('app.entryMgmt')
 			}
 		}
 
+		//TODO: doesnt work for forms that have more than 1 page!!!
+
 		function downLoadAsOne() {
             var pages,
                 deferred,
@@ -142,9 +144,9 @@ angular.module('app.entryMgmt')
 		            p = deferred.promise;
 		            console.log('wats forms ' + vm.numberOfForms);
 		            console.log('wats pages ' + vm.numberOfPages);
+		            p = p.then(generateFormTask);
 		            for (var c = 1; c <= vm.numberOfForms; c++) {
-			            for (var i = 1; i <= vm.numberOfPages; i++) { 
-			                p = p.then(generateFormTask);
+			            for (var i = 1; i <= vm.numberOfPages; i++) { 			                
 			                p = p.then(generateImageTask);
 			            }
 			        }
