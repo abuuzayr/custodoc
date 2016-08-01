@@ -91,7 +91,7 @@ angular.module('app.entryMgmt')
 					delete vm.tableOptions.data[i].data;
 				}
 				
-				vm.tableOptions.columnDefs.push({type:'action', icon:'get_app', action:downLoadUrMother});
+				vm.tableOptions.columnDefs.push({type:'action', icon:'get_app', action:downLoadAsOne});
 			}
 			function ErrorCallback(err){
 				console.log(err);
