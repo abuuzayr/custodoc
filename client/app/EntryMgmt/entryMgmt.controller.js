@@ -312,7 +312,6 @@ angular.module('app.entryMgmt')
 									node.appendChild(option);
 								}
 							}
-							node.value = variable;
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
 							node.style.fontFamily = element.fontFamily;
