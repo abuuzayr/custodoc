@@ -101,8 +101,7 @@
 
         //go to newentry
         function goNewEntry() {
-            var rows = vm.gridOptions.selection.selected;
-            var groupName = rows[0].groupName;
+            var groupName = vm.gridOptions.selection.selected[0].groupName;
             $state.go('newentry', {
                 groupName: groupName
             });
@@ -267,10 +266,6 @@
                 //TOFIX
             }
         }
-
-
-
-
 
         function deleteForms(rgRows) {
             if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
