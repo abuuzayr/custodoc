@@ -337,11 +337,12 @@ angular.module('app.entryMgmt')
 									var option = document.createElement("input");
 									option.type = "radio";
 									if (variable === JSON.stringify(options[i])) {
+										console.log('am i here');
 										option.checked = true;							
 									}
 									option.name = element.name;
 									option.value = options[i];
-									if(options[i]===element.default) option.checked = true;
+									// if(options[i]===element.default) option.checked = true;
 									var span = document.createElement("span");
 									span.innerHTML=options[i]+" ";
 									label.appendChild(option);
