@@ -1,9 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var assert = require('assert');
-
+var ObjectID = require('mongodb').ObjectID;
 var http403 = require('../../utils/403')();
 var connection = require('../../utils/connection.js')();
+var sendError = require('../../utils/errorHandler.js');
 
 var formsRouter = express.Router();
 
@@ -22,200 +23,79 @@ formsRouter.route('/')
             });
         });
     })
-    .put(function(req, res, next) {
+    .post(function(req, res, next) {
+        var formData = req.body.formData;
+        console.log(formData);
+        delete formData._id;
         connection.Do(function(db) {
-            var formData = req.body.formData;
-            db.collection("forms").updateOne({ "formName": formData.formName, "groupName": formData.groupName }, {
-                $set: {
-                    "numberOfPages": formData.numberOfPages,
-                    "elements": formData.elements,
-                    "lastModified": new Date(),
-                    "lastModifiedBy": req.decoded.username
-                }
-            }, function(err, result) {
-                assert.equal(err, null);
-                console.log(result);
-                if (result.matchedCount === 0) res.status(404).send('Not found');
-                else res.send('Saved the form: ' + req.body.formData.formName);
-            });
+            db.collection("forms").find({ formName: formData.formName, groupName: formData.groupName }).limit(1)
+                .next(function(err, item) {
+                    if (err)
+                        return sendError(req, res, 400, err.message, 'Not created');
+                    if (item) {
+                        return sendError(req, res, 400, 'Form already exists', 'Form already exists');
+                    } else {
+                        formData.isImportant = formData.isImportant ? formData.isImportant : 'Normal';
+                        formData.creationDate = new Date();
+                        formData.creator = req.decoded.username;
+                        formData.lastModified = new Date();
+                        formData.lastModifiedBy = req.decoded.username;
+                        formData.numberOfPages = formData.numberOfPages ? formData.numberOfPages : 1;
+
+                        db.collection("forms").insert(formData).then(function(result) {
+                            return res.status(200).send({ formName: formData.formName, groupName: formData.groupName, _id: result.ops[0]._id });
+                        }).catch(function(err) {
+                            return sendError(req, res, 400, err.message, 'Not created');
+                        });
+                    }
+                });
+        });
+    });
+formsRouter.route('/:formId')
+    .get(function(req, res, next) {
+        connection.Do(function(db) {
+            db.collection("forms").find({
+                    _id: ObjectID(req.params.formId)
+                })
+                .limit(1)
+                .next(function(err, item) {
+                    if (err)
+                        return sendError(req, res, 400, err.message, 'Failed to retrieve form');
+                    else if (item) {
+                        res.status(200).send(item);
+                    } else {
+                        return sendError(req, res, 400, 'Form not found', 'Failed to retrieve form');
+                    }
+                });
         });
     })
-    .post(function(req, res, next) {
-        var formName = req.body.formData.formName;
-        var groupName = req.body.formData.groupName;
-        connection.Do(function(db) {
-            db.collection("forms").find({
-                    formName: formName,
-                    groupName: groupName
-                })
-                .limit(1)
-                .next(function(err, item) {
-                    assert.equal(null, err);
-                    if (item) {
-                        res.send("Existed");
-                    } else {
-                        db.collection("forms").find({ groupName: groupName }).toArray(function(err, forms) {
-                            assert.equal(null, err);
-                            if (forms) {
-                                var order = 0;
-                                for (var i = 0; i < forms.length; i++) {
-                                    if (forms[i].order > order) order = forms[i].order;
-                                }
-                                order++;
-                                var formData = {
-                                    formName: formName,
-                                    groupName: groupName,
-                                    elements: {},
-                                    isImportant: 'Normal',
-                                    creationDate: new Date(),
-                                    creator: req.decoded.username,
-                                    lastModified: new Date(),
-                                    lastModifiedBy: req.decoded.username,
-                                    order: order,
-                                    numberOfPages: 1
-                                };
-                                db.collection("forms").insert(formData, function(err, result) {
-                                    assert.equal(err, null);
-                                    res.send({ groupName: groupName, formName: formName });
-                                    console.log("Created new form");
-                                });
-                            }
-                        });
-                    }
-                });
-        });
-    });
-
-
-
-
-
-formsRouter.route('/rename')
     .put(function(req, res, next) {
         connection.Do(function(db) {
-            var originalName = req.body.originalName;
-            var newName = req.body.newName;
-            var groupName = req.body.groupName;
-            db.collection("forms").find({
-                    formName: newName,
-                    groupName: groupName
+            delete req.body.formData._id;
+            db.collection("forms").findOneAndUpdate({
+                    _id: ObjectID(req.params.formId)
+                }, { $set: req.body.formData })
+                .then(function(result) {
+                    if (!result || result.matchedCount === 0)
+                        return sendError(req, res, 400, 'Form not found', 'Not Updated');
+                    return res.status(200).send(result);
                 })
-                .limit(1)
-                .next(function(err, item) {
-                    assert.equal(null, err);
-                    if (item) {
-                        res.send("Existed");
-                    } else {
-                        db.collection("forms").updateOne({ "formName": originalName }, {
-                            $set: {
-                                "formName": newName,
-                                "lastModifiedBy": req.decoded.username
-                            }
-                        }, function(err, result) {
-                            assert.equal(err, null);
-                            console.log("Renamed a form");
-                            res.send('Renamed a group');
-                        });
-                    }
-                });
-        });
-    });
-
-formsRouter.route('/duplicate')
-    .post(function(req, res, next) {
-        connection.Do(function(db) {
-            var duplicateFrom = req.body.duplicateFrom;
-            var formName = req.body.formName;
-            var duplicateName = req.body.duplicateName;
-            var duplicateTo = req.body.duplicateTo;
-            db.collection("forms").find({
-                    formName: formName,
-                    groupName: duplicateFrom
-                })
-                .limit(1)
-                .next(function(err, item) {
-                    if (!item) {
-                        res.send("Cannot find");
-                    } else {
-                        db.collection("forms").find({
-                                formName: duplicateName,
-                                groupName: duplicateTo
-                            })
-                            .limit(1)
-                            .next(function(err, item) {
-                                if (result) {
-                                    res.send('Existed');
-                                } else {
-                                    var newItem = item;
-                                    delete newItem._id;
-                                    newItem.groupName = duplicateTo;
-                                    newItem.formName = duplicateName;
-                                    newItem.isImportant = 'Normal';
-                                    newItem.creator = req.decoded.username;
-                                    newItem.creationDate = new Date();
-                                    newItem.lastModified = new Date();
-                                    newItem.lastModifiedBy = req.decoded.username;
-                                    db.collection("forms").insert(newItem, function(err, result) {
-                                        assert.equal(null, err);
-                                        res.send("Duplicated:" + formName);
-                                        console.log("Duplicated the form");
-                                    });
-                                }
-                            });
-                    }
-                });
-        });
-    });
-
-formsRouter.route('/importance')
-    .put(function(req, res, next) {
-        connection.Do(function(db) {
-            db.collection("forms").updateOne({
-                'formName': req.body.formName,
-                'groupName': req.body.groupName,
-            }, {
-                $set: {
-                    "isImportant": req.body.importance
-                }
-            }, function(err, results) {
-                assert.equal(err, null);
-                console.log(results);
-                res.send(results);
-            });
-        });
-    });
-
-formsRouter.route('/:groupName/:formName')
-    .get(function(req, res, next) {
-        var groupName = req.params.groupName;
-        var formName = req.params.formName;
-        connection.Do(function(db) {
-            db.collection("forms").find({
-                    formName: formName,
-                    groupName: groupName
-                })
-                .limit(1)
-                .next(function(err, item) {
-                    assert.equal(null, err);
-                    if (item) {
-                        res.send(item);
-                    } else {
-                        res.status(404).send({ error: 'Cannot find the form' });
-                    }
+                .catch(function(err) {
+                    return sendError(req, res, 400, err.message, 'Not updated');
                 });
         });
     })
     .delete(function(req, res, next) {
-        var groupName = req.params.groupName;
-        var formName = req.params.formName;
         connection.Do(function(db) {
-            db.collection("forms").deleteOne({ "groupName": groupName, "formName": formName }, function(err, result) {
-                assert.equal(null, err);
-                res.send(groupName + '/' + formName);
-            });
+            db.collection("forms").deleteOne({ _id: ObjectID(req.params.formId) }).then(function(result) {
+                    if (!result || result.matchedCount === 0)
+                        return sendError(req, res, 400, 'Form not found', 'Not deleted');
+                    return res.status(200).send('ok');
+                })
+                .catch(function(err) {
+                    return sendError(req, res, 400, err.message, 'Not deleted');
+                });
         });
     });
-
-
 
 module.exports = formsRouter;
