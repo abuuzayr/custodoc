@@ -288,7 +288,7 @@ angular.module('app.entryMgmt')
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
 							console.log('wats variable ' + variable);
-							checkbox.setAttribute('value', variable);	
+							checkbox.setAttribute('checked', variable);	
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
 							node.appendChild(span);
@@ -302,8 +302,7 @@ angular.module('app.entryMgmt')
 							node = document.createElement('select');
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
-							console.log('wats variable ' + variable);							
-							node.setAttribute('value', variable);	
+							console.log('wats variable ' + variable);								
 							options = element.options;
 							if(options.length>0){
 								for(var i = 0; i<options.length; i++){
@@ -313,7 +312,7 @@ angular.module('app.entryMgmt')
 									node.appendChild(option);
 								}
 							}
-							node.value = element.default;
+							node.value = variable;
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
 							node.style.fontFamily = element.fontFamily;
