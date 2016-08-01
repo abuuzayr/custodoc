@@ -1,6 +1,6 @@
 <!---------------------------------------- Dialog for newForm ---------------------------------------->
 <dialog id="newForm" class="mdl-dialog">
-    <form id="createForm-form" ng-submit="vm.createForm()">
+    <form id="createForm-form" ng-submit="vm.addNewForm()">
         <div class="mdl-dialog__content">
             <label class="mdl-selectfield__label">Select form group</label>
             <select class="selectInDialog" ng-model="vm.newFormGroup" required>
@@ -133,7 +133,7 @@
                     <li class="mdl-menu__item mdl-navigation__link" ng-click="vm.openDialog('deleteGroup')"><i class="material-icons">delete</i> Delete group</li>
                 </ul>
                 <div class="divider"></div>
-                <button ng-click="vm.goNewEntry()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()"><i class="material-icons" role="presentation">add</i> New Entry</button>
+                <button ng-click="vm.toNewEntry()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.showNewEntry()"><i class="material-icons" role="presentation">add</i> New Entry</button>
                 <div class="divider"></div>
                 <button id="downloadMenu" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" ng-show="vm.gridOptions.selection.selectedId.length"><i class="material-icons">vertical_align_bottom</i> Download</button>
                 <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="downloadMenu">
@@ -152,7 +152,7 @@
             </div>
             <custom-mdl-data-table table-options='vm.gridOptions' dt-row-per-page-options='[5,10,15]' />
             <!-- Snack Bar -->
-            <div id="forms-snackbarContainer" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
+            <div id="forms-feedback" aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-js-snackbar mdl-snackbar">
                 <div class="mdl-snackbar__text"></div>
                 <button class="mdl-snackbar__action" type="button"></button>
             </div>
