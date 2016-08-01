@@ -269,19 +269,17 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							console.log('wats there ' + JSON.stringify(vm.selectedRows));
-							console.log('wat here ' + vm.selectedRows[newName]);
-							var testing = 'vm.selectedRows[' + newName + ']';
-							var variable = vm.selectedRows[newName];
-							node.setAttribute('value', variable);	
-							//node.setAttribute('ng-value', testing);
-							node.type='text';
-							node.style.color = element.color;
-							node.style.backgroundColor = element.backgroundColor;
-							node.style.fontFamily = element.fontFamily;
-							node.style.fontSize = element.fontSize;
-							node.style.textDecoration = element.textDecoration;
-							node.style.zIndex="1";
+							if(!vm.selectedRows[newName]) {
+								var variable = vm.selectedRows[newName];
+								node.setAttribute('value', variable);	
+								node.type='text';
+								node.style.color = element.color;
+								node.style.backgroundColor = element.backgroundColor;
+								node.style.fontFamily = element.fontFamily;
+								node.style.fontSize = element.fontSize;
+								node.style.textDecoration = element.textDecoration;
+								node.style.zIndex="1";
+							}
 						}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 							node = document.createElement('label');
 							span = document.createElement('span');
