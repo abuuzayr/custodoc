@@ -367,10 +367,10 @@ angular.module('app.entryMgmt')
 						}else if (element.name.startsWith('image_')) {
 							node = document.createElement('img');
 							var newName = slugify(element.name);
-							var variable = vm.selectedRows[newName];
+							var variable = vm.selectedRows[newName].base64;
 							console.log('wtf is image ' + variable);
 							node.setAttribute('ng-model', testScope);
-							var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
+							var testImageString = 'data:image/png;base64,' + variable;
 							node.setAttribute('ng-src', testImageString); 
 							node.setAttribute('ng-click', 'vm.openImageModal(' + '"' + newName + '"' + ')');
 							node.style.backgroundColor = element.backgroundColor;
