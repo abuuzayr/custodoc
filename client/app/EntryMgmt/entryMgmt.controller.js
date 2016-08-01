@@ -355,7 +355,8 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('signature_')){
 							node = document.createElement('img');
 							var newName = slugify(element.name);
-							var testScope = 'vm.entryData.' + newName;
+							var variable = vm.selectedRows[newName];
+							console.log('wtf is signature ' + variable);
 							node.setAttribute('ng-model', testScope);
 							var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
 							node.setAttribute('ng-src', testImageString);
@@ -365,7 +366,8 @@ angular.module('app.entryMgmt')
 						}else if (element.name.startsWith('image_')) {
 							node = document.createElement('img');
 							var newName = slugify(element.name);
-							var testScope = 'vm.entryData.' + newName + '.base64';
+							var variable = vm.selectedRows[newName];
+							console.log('wtf is image ' + variable);
 							node.setAttribute('ng-model', testScope);
 							var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
 							node.setAttribute('ng-src', testImageString); 
