@@ -370,11 +370,11 @@ angular.module('app.entryMgmt')
 							node = document.createElement('img');
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName].base64;
-							console.log('wtf is image ' + variable);
-							node.setAttribute('ng-model', testScope);
-							var testImageString = 'data:image/png;base64,' + variable;
-							node.setAttribute('ng-src', testImageString); 
-							node.setAttribute('ng-click', 'vm.openImageModal(' + '"' + newName + '"' + ')');
+							if (variable !== "undefined") {
+								console.log('wtf is image ' + variable);
+								var testImageString = 'data:image/png;base64,' + variable;
+								node.setAttribute('ng-src', testImageString); 
+							}
 							node.style.backgroundColor = element.backgroundColor;
 							node.style.zIndex="1";
 						}
