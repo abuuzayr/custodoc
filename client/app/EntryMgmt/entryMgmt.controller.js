@@ -359,11 +359,12 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('signature_')){
 							node = document.createElement('img');
 							var newName = slugify(element.name);
-							var variable = vm.selectedRows[newName];
-							console.log('wtf is signature ' + variable);
-							var testImageString = 'data:image/png;base64,' + variable;
-							node.setAttribute('ng-src', testImageString);
-							node.setAttribute('ng-click', 'vm.openModal(' + '"' + newName + '"' + ')');
+							if (vm.selectedRows[newName] !== undefined) {
+								var variable = vm.selectedRows[newName];
+								console.log('wtf is signature ' + variable);
+								var testImageString = 'data:image/png;base64,' + variable;
+								node.setAttribute('ng-src', testImageString);
+							}
 							node.style.backgroundColor = element.backgroundColor;
 							node.style.zIndex="1";
 						}else if (element.name.startsWith('image_')) {
