@@ -1,5 +1,14 @@
 angular.module('app.entryMgmt')
-	.directive('downloadUrMother', ['$q, $compile', function($q, $compile) {
+	.directive('downloadUrMother', downloadUrMother);
+
+downloadUrMother.$inject = ['$q', '$compile'];
+
+function downloadUrMother($q, $compile) {
+
+	return {
+		restrict: 'EA',
+		link: downloadAsOne(scope)
+	};
 
 	function downLoadAsOne(scope) {
         var pages,
@@ -286,10 +295,5 @@ angular.module('app.entryMgmt')
 		});
 		return deferred.promise;
 	}
-
-	return {
-		restrict: 'EA',
-		link: downloadAsOne(scope)
-	}
-
-}]);	
+}
+	
