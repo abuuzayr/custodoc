@@ -1,9 +1,9 @@
 angular.module('app.entryMgmt')
 	.directive('downloadUrMother', downloadUrMother);
 
-downloadUrMother.$inject = ['$q', '$compile'];
+downloadUrMother.$inject = ['$q', '$compile', 'jsPDF'];
 
-function downloadUrMother($q, $compile) {
+function downloadUrMother($q, $compile, jsPDF) {
 
 	return {
 		restrict: 'EA',
