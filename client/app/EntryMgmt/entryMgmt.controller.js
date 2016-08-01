@@ -272,7 +272,8 @@ angular.module('app.entryMgmt')
 							console.log('wats there ' + JSON.stringify(vm.selectedRows));
 							console.log('wat here ' + vm.selectedRows[newName]);
 							var testing = 'vm.selectedRows[' + newName + ']';
-							node.setAttribute('value', testing);	
+							var variable = vm.selectedRows[newName];
+							node.setAttribute('value', variable);	
 							//node.setAttribute('ng-value', testing);
 							node.type='text';
 							node.style.color = element.color;
