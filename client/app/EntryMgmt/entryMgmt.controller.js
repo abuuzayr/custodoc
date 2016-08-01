@@ -272,7 +272,7 @@ angular.module('app.entryMgmt')
 							node = document.createElement('input');
 							var newName = slugify(element.name);
 							console.log('hey ' + vm.selectedRows.newName);
-							node.setAttribute('value', vm.selectedRow.newName);				
+							node.setAttribute('value', 'vm.selectedRow.' + newName);				
 							node.type='text';
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
