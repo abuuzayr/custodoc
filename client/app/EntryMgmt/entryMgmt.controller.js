@@ -359,8 +359,7 @@ angular.module('app.entryMgmt')
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
 							console.log('wtf is signature ' + variable);
-							node.setAttribute('ng-model', testScope);
-							var testImageString = 'data:image/png;base64,' + '{{' + testScope + '}}';
+							var testImageString = 'data:image/png;base64,' + '{{' + variable + '}}';
 							node.setAttribute('ng-src', testImageString);
 							node.setAttribute('ng-click', 'vm.openModal(' + '"' + newName + '"' + ')');
 							node.style.backgroundColor = element.backgroundColor;
