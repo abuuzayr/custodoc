@@ -36,6 +36,7 @@ module.exports = function() {
         var config = require('../config.js');
         var jwt = require('jsonwebtoken');
         jwt.sign({
+            userId: req.decoded._id,
             username: req.decoded.username,
             email: req.decoded.email,
             usertype: req.decoded.usertype
@@ -68,16 +69,13 @@ module.exports = function() {
     function decodeAccessInfo(req, res, next) {
         var crypto = require('crypto');
         var config = require('../config.js');
-        var algorithm = 'aes-256-ctr';
-        console.log('decodeing access info'); //TOFIX	
+        var algorithm = 'aes-256-ctr';  
         var ecodedAccessInfo = req.decoded.application;
-        console.log(ecodedAccessInfo); //TOFIX
         var decipher = crypto.createDecipher(algorithm, config.appSecret);
         try {
             var decodedAccessInfo = decipher.update(ecodedAccessInfo, 'hex', 'utf8');
             decodedAccessInfo += decipher.final('utf8');
             req.accessInfo = JSON.parse(decodedAccessInfo);
-            console.log(req.accessInfo); //TOFIX
             return next();
         } catch (err) {
             console.log(err); //TOFIX
