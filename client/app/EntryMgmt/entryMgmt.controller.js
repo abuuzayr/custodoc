@@ -273,7 +273,7 @@ angular.module('app.entryMgmt')
 							var newName = slugify(element.name);
 							var testing = 'vm.selectedRows.' + newName;
 							//node.setAttribute('value', testing);	
-							node.setAttribute('ng-value', testing);			
+							node.setAttribute('ng-model', testing);			
 							node.type='text';
 							node.style.color = element.color;
 							node.style.backgroundColor = element.backgroundColor;
