@@ -269,17 +269,16 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_text') || element.name.startsWith('text_')){
 							node = document.createElement('input');
 							var newName = slugify(element.name);
-							if(!vm.selectedRows[newName]) {
-								var variable = vm.selectedRows[newName];
-								node.setAttribute('value', variable);	
-								node.type='text';
-								node.style.color = element.color;
-								node.style.backgroundColor = element.backgroundColor;
-								node.style.fontFamily = element.fontFamily;
-								node.style.fontSize = element.fontSize;
-								node.style.textDecoration = element.textDecoration;
-								node.style.zIndex="1";
-							}
+							var variable = vm.selectedRows[newName];
+							node.setAttribute('value', variable);	
+							//node.setAttribute('ng-value', testing);
+							node.type='text';
+							node.style.color = element.color;
+							node.style.backgroundColor = element.backgroundColor;
+							node.style.fontFamily = element.fontFamily;
+							node.style.fontSize = element.fontSize;
+							node.style.textDecoration = element.textDecoration;
+							node.style.zIndex="1";
 						}else if(element.name.startsWith('auto_checkbox') || element.name.startsWith('checkbox_')){
 							node = document.createElement('label');
 							span = document.createElement('span');
@@ -287,8 +286,8 @@ angular.module('app.entryMgmt')
 							checkbox.type="checkbox";
 							//checkbox.setAttribute('checked', 'rows.' + element.name); //TODO: HERE										
 							var newName = slugify(element.name);
-							var testScope = 'vm.entryData.' + newName;
-							checkbox.setAttribute("ng-model", testScope);
+							var variable = vm.selectedRows[newName];
+							checkbox.setAttribute('value', variable);	
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
 							node.appendChild(span);
@@ -301,8 +300,8 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_dropdown') || element.name.startsWith('dropdown_')){
 							node = document.createElement('select');
 							var newName = slugify(element.name);
-							var testScope = 'vm.entryData.' + newName;
-							node.setAttribute('ng-value', testScope);
+							var variable = vm.selectedRows[newName];
+							node.setAttribute('value', variable);	
 							options = element.options;
 							if(options.length>0){
 								for(var i = 0; i<options.length; i++){
