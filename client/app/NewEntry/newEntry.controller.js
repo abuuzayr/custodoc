@@ -113,7 +113,7 @@ angular
 
 	autofillServices.getRecords().then(function(res){
 		vm.autofillData = res.data;
-		console.log('did i come here' + vm.autofillData[name]);
+		console.log('did i come here' + vm.autofillData[0].name);
 	});
 
     function slugify(text) {
