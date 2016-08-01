@@ -270,7 +270,7 @@ angular.module('app.entryMgmt')
 							node = document.createElement('input');
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
-							if (variable === "undefined") {								
+							if (variable === undefined) {								
 								node.setAttribute('value', ' ');
 							} else {
 								node.setAttribute('value', variable);
