@@ -287,6 +287,7 @@ angular.module('app.entryMgmt')
 							//checkbox.setAttribute('checked', 'rows.' + element.name); //TODO: HERE										
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
+							console.log('wats variable ' + variable);
 							checkbox.setAttribute('value', variable);	
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
@@ -301,6 +302,7 @@ angular.module('app.entryMgmt')
 							node = document.createElement('select');
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
+							console.log('wats variable ' + variable);							
 							node.setAttribute('value', variable);	
 							options = element.options;
 							if(options.length>0){
@@ -321,6 +323,8 @@ angular.module('app.entryMgmt')
 						}else if(element.name.startsWith('auto_radio') || element.name.startsWith('radio')){
 							node = document.createElement('form');
 							var newName = slugify(element.name);
+							var variable = vm.selectedRows[newName];
+							console.log('wats variable ' + variable);							
 							var testScope = 'vm.entryData.' + newName;						
 							options = element.options;
 							if(options.length>0){
