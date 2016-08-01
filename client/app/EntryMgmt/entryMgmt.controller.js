@@ -3,8 +3,8 @@
 angular.module('app.entryMgmt')
 .controller('entryMgmtCtrl',entryMgmtCtrl);
 
-	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout','entryMgmtServices', 'downloadUrMother'];
-	function entryMgmtCtrl($scope, $q, $compile, $timeout, entryMgmtServices, downloadUrMother){
+	entryMgmtCtrl.$inject = ['$scope','$q', '$compile', '$timeout', 'downloadUrMother', 'entryMgmtServices'];
+	function entryMgmtCtrl($scope, $q, $compile, $timeout, downloadUrMother, entryMgmtServices){
 		var vm = this;
 		var fieldArray = ['groupName','formName','createdAt','createdBy','lastModifiedAt','lastModifiedBy','_id'];
 		vm.tableOptions = {};
