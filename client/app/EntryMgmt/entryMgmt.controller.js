@@ -369,7 +369,7 @@ angular.module('app.entryMgmt')
 						}else if (element.name.startsWith('image_')) {
 							node = document.createElement('img');
 							var newName = slugify(element.name);
-							if (vm.selectedRows[newName].base64 !== "undefined") {
+							if (!vm.selectedRows[newName].base64) {
 								var variable = vm.selectedRows[newName].base64;						
 								console.log('wtf is image ' + variable);
 								var testImageString = 'data:image/png;base64,' + variable;
