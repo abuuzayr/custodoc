@@ -288,7 +288,7 @@ angular.module('app.entryMgmt')
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
 							console.log('wats variable ' + variable);
-							checkbox.setAttribute('checked', variable);	
+							checkbox.setAttribute('ng-checked', variable);	
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
 							node.appendChild(span);
@@ -308,7 +308,7 @@ angular.module('app.entryMgmt')
 								for(var i = 0; i<options.length; i++){
 									var option = document.createElement('option');
 									option.innerHTML=options[i];
-									option.setAttribute('ng-selected', testScope + "==" + JSON.stringify(options[i]));								
+									option.setAttribute('ng-selected', variable + "==" + JSON.stringify(options[i]));								
 									node.appendChild(option);
 								}
 							}
@@ -333,8 +333,8 @@ angular.module('app.entryMgmt')
 									var label = document.createElement("label");
 									var option = document.createElement("input");
 									option.type = "radio";
-									option.setAttribute('ng-value', testScope);
-									option.setAttribute('ng-checked', testScope + "==" + JSON.stringify(options[i]));								
+									option.setAttribute('ng-value', variable);
+									option.setAttribute('ng-checked', variable + "==" + JSON.stringify(options[i]));								
 									option.name = element.name;
 									option.value = options[i];
 									if(options[i]===element.default) option.checked = true;
