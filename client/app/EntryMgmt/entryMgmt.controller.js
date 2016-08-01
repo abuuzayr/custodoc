@@ -272,7 +272,7 @@ angular.module('app.entryMgmt')
 							var variable = vm.selectedRows[newName];
 							if (variable !== "undefined") {								
 								node.setAttribute('value', variable);
-							} else {
+							} else if (variable === "undefined") {
 								console.log('did i come in here??????');
 								node.setAttribute('value', '');
 							}
