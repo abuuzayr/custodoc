@@ -1,18 +1,21 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('app.formMgmt')
         .controller('formsCtrl', formsCtrl);
 
-    formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'formServices', '$state', 'usSpinnerService', 'appConfig', 'feedbackServices'];
+    formsCtrl.$inject = ['$compile', '$scope', '$q', '$location', '$timeout', '$http', 'formServices', '$state', 'usSpinnerService', 'appConfig', 'feedbackServices',
+        'dialogServices'
+    ];
 
-    function formsCtrl($compile, $scope, $q, $location, $timeout, $http, formServices, $state, usSpinnerService, appConfig, feedbackServices) {
+    function formsCtrl($compile, $scope, $q, $location, $timeout, $http, formServices, $state, usSpinnerService, appConfig, feedbackServices,
+        dialogServices) {
         /* jshint validthis: true */
         var vm = this;
 
-        // var forms = document.getElementById('forms');
-        // var snackbarContainer = document.getElementById("snackbarContainer");
+        var forms = document.getElementById('forms');
+        var snackbarContainer = document.getElementById("snackbarContainer");
         var originalData = [];
 
         vm.gridOptions = {};
@@ -24,53 +27,50 @@
             fieldName: 'groupName',
             displayName: 'Group Name',
         }, {
-                type: 'link',
-                fieldName: 'formName',
-                displayName: 'Form Name',
-                action: goEditForm,
-            }, {
-                type: 'toggle',
-                fieldName: 'isImportant',
-                displayName: 'Important',
-                iconTrue: 'bookmark',
-                iconFalse: 'bookmark_border',
-                true: 'Important',
-                false: 'Normal',
-                action: toggleImportance
-            }, {
-                type: 'date',
-                fieldName: 'creationDate',
-                displayName: 'Creation Date',
-                format: 'EEEE MMM d, y h:mm:ss a'
-            }, {
-                type: 'default',
-                fieldName: 'creator',
-                displayName: 'Create By'
-            }, {
-                type: 'date',
-                fieldName: 'lastRecord',
-                displayName: 'Last Record',
-                format: 'EEEE MMM d, y h:mm:ss a'
-            }, {
-                type: 'date',
-                fieldName: 'lastModified',
-                displayName: 'Last Modified',
-                format: 'EEEE MMM d, y h:mm:ss a'
-            }, {
-                type: 'default',
-                fieldName: 'lastModifiedBy',
-                displayName: 'Last Modified By'
-            }];
-
+            type: 'link',
+            fieldName: 'formName',
+            displayName: 'Form Name',
+            action: goEditForm,
+        }, {
+            type: 'toggle',
+            fieldName: 'isImportant',
+            displayName: 'Important',
+            iconTrue: 'bookmark',
+            iconFalse: 'bookmark_border',
+            true: 'Important',
+            false: 'Normal',
+            action: toggleImportance
+        }, {
+            type: 'date',
+            fieldName: 'creationDate',
+            displayName: 'Creation Date',
+            format: 'EEEE MMM d, y h:mm:ss a'
+        }, {
+            type: 'default',
+            fieldName: 'creator',
+            displayName: 'Create By'
+        }, {
+            type: 'date',
+            fieldName: 'lastRecord',
+            displayName: 'Last Record',
+            format: 'EEEE MMM d, y h:mm:ss a'
+        }, {
+            type: 'date',
+            fieldName: 'lastModified',
+            displayName: 'Last Modified',
+            format: 'EEEE MMM d, y h:mm:ss a'
+        }, {
+            type: 'default',
+            fieldName: 'lastModifiedBy',
+            displayName: 'Last Modified By'
+        }];
+        getFormData();
         vm.gridOptions.deleteFunc = deleteForms;
 
         vm.addNewGroup = addNewGroup;
         vm.deleteGroup = deleteGroup;
-        vm.createForm = createForm;
-        vm.getGroupData = getGroupData;
-        vm.getFormData = getFormData;
-        vm.deleteForms = deleteForms;
         vm.renameGroup = renameGroup;
+        vm.addNewForm = addNewForm;
         vm.renameForm = renameForm;
         vm.duplicateForm = duplicateForm;
         vm.showRecent = showRecent;
@@ -94,7 +94,8 @@
         function goEditForm(row) {
             $state.go('formBuilder', {
                 groupName: row.groupName,
-                formName: row.formName
+                formName: row.formName,
+                formId: row._id
             });
         }
 
@@ -140,16 +141,17 @@
 
             function SuccessCallback(res) {
                 if (res.data === "Existed") {
-                    feedbackServices.errorFeedback('Group name already exists', 'forms-snackbarContainer');
+                    alert("This group name already exists");
                 } else {
-                    vm.getGroupData();
-                    feedbackServices.successFeedback('Added new group', 'forms-snackbarContainer');
+                    getGroupData();
+                    snackbarContainer.MaterialSnackbar.showSnackbar({
+                        message: "Added new group"
+                    });
                 }
             }
 
             function ErrorCallback(argument) {
                 // body...
-                feedbackServices.errorFeedback('Adding new group failed', 'forms-snackbarContainer');
             }
         }
 
@@ -161,8 +163,8 @@
             }
 
             function SuccessCallback() {
-                vm.getGroupData();
-                vm.getFormData();
+                getGroupData();
+                getFormData();
             }
 
             function ErrorCallback(argument) {
@@ -172,28 +174,234 @@
 
         function renameGroup() {
             $http.put(appConfig.API_URL + "/protected/groups", {
-                originalName: vm.renameGroupOld,
-                newName: vm.renameGroupNew
-            }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    originalName: vm.renameGroupOld,
+                    newName: vm.renameGroupNew
                 })
-                .then(function (res) {
+                .then(function(res) {
                     if (res.data === "Existed") {
-                        feedbackServices.errorFeedback('Adding new group failed', 'forms-snackbarContainer');
+                        alert("This group name already exists");
                     } else {
-                        vm.gridApi.selection.clearSelectedRows();
-                        vm.getGroupData();
-                        vm.getFormData();
-                        feedbackServices.successFeedback('Renamed group successfully', 'forms-snackbarContainer');
+                        getGroupData();
+                        getFormData();
+                        snackbarContainer.MaterialSnackbar.showSnackbar({
+                            message: "Renamed the group"
+                        });
                     }
                 });
         }
 
         //form management
+        function addNewForm(){
+            var formData = {
+                groupName: vm.newFormGroup,
+                formName: vm.newFormName
+            };
+            createForm(formData);
+        }
 
-        vm.getFormData();
+        function duplicateForm() {
+            var formId = vm.gridOptions.selection.selectedId[0];
+            var formData = null;
+            getOneForm(formId).then(resolve);
+            console.log(formData);
+
+
+            function resolve(result) {
+                formData = result;
+                if (formData) {
+                    delete formData._id;
+                    formData.formName = vm.duplicateName;
+                    formData.groupName = vm.duplicateTo;
+                    console.log(formData);
+                    return createForm(formData);
+                }
+            }
+        }
+
+        function renameForm() {
+            var formData = {
+                _id: vm.gridOptions.selection.selected[0]._id,
+                formName: vm.renameFormNew
+            };
+            updateForm(formData);
+            
+        }
+
+
+
+
+        function getFormData() {
+            return formServices.getForms().then(SuccessCallback).catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                vm.gridOptions.data = [];
+                for (var i = 0; i < res.data.length; i++) {
+                    var formData = res.data[i];
+                    vm.gridOptions.data.push(res.data[i]);
+                }
+            }
+
+            function ErrorCallback(err) {
+                console.log("error: ", err); //TOFIX
+            }
+        }
+
+        function createForm(formData) {
+            return formServices.createForm(formData)
+                .then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+                if (res.data === "Existed") {
+                    alert("This form name already exists in the selected group.");
+                } else {
+                    $state.go('formBuilder', {
+                        groupName: res.data.groupName,
+                        formName: res.data.formName,
+                        formId: res.data._id
+                    });
+                }
+            }
+
+            function ErrorCallback(err) {
+                //TOFIX
+            }
+        }
+
+
+
+
+
+        function deleteForms(rgRows) {
+            if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
+                var deferred = $q.defer();
+                var deletePromises = [];
+                for (var i = 0; i < rgRows.length; i++) {
+                    deletePromises.push(deleteOne(rgRows[i]));
+                }
+
+                $q.all(deletePromises).then(SuccessCallback).catch(ErrorCallback);
+
+                return deferred.promise;
+
+            }
+
+            function SuccessCallback() {
+                deferred.resolve();
+            }
+
+            function ErrorCallback(err) {
+                deferred.reject(err);
+            }
+        }
+
+        function deleteOne(formData) {
+            console.log(formData);
+            var deferred = $q.defer();
+
+            formServices.deleteForm(formData).then(SuccessCallback).catch(ErrorCallback);
+            return deferred.promise;
+
+            function SuccessCallback(res) {
+                vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(formData), 1);
+                deferred.resolve();
+            }
+
+            function ErrorCallback(err) {
+                deferred.reject(err);
+            }
+        }
+
+
+        function updateForm(formData){
+            formServices.updateForm(formData).then(SuccessCallback)
+                .catch(ErrorCallback);
+
+            function SuccessCallback(res) {
+
+                vm.closeDialog('renameForm');
+                getFormData();
+                snackbarContainer.MaterialSnackbar.showSnackbar({
+                    message: "Renamed the form"
+                });
+            }
+
+            function ErrorCallback(err) {
+                //TOFIX
+            }
+        }
+
+
+
+        function getOneForm(formId) {
+            var deferred = $q.defer();
+            formServices.getOneForm(formId).then(SuccessCallback).catch(ErrorCallback);
+            return deferred.promise;
+
+
+            function SuccessCallback(res) {
+                deferred.resolve(res.data);
+            }
+
+            function ErrorCallback(err) {
+                deferred.reject(err);
+                //TODO
+            }
+        }
+
+
+
+        function toggleImportance(row) {
+            var formData = {
+                _id: row._id,
+                isImportant: row.isImportant.toLowerCase() === 'important' ? 'Normal' : 'Important'
+            };
+            return formServices.updateForm(formData).catch(ErrorCallback);
+
+            function ErrorCallback(err) {
+                getFormData();
+            }
+        }
+
+        function showRecent() {
+            var filteredData = [];
+            originalData = vm.gridOptions.data;
+            vm.gridOptions.data = [];
+            for (var i = 0; i < originalData.length; i++) {
+                //604800000 = 1 week in milisec
+                if (Date.now() - new Date(originalData[i].lastModified).getTime() < 604800000)
+                    filteredData.push(originalData[i]);
+            }
+            vm.gridOptions.data = filteredData;
+        }
+
+        function showImportant() {
+            var filteredData = [];
+            originalData = vm.gridOptions.data;
+            vm.gridOptions.data = [];
+            for (var i = 0; i < originalData.length; i++) {
+                if (originalData[i].isImportant.toLowerCase() === 'important')
+                    filteredData.push(originalData[i]);
+            }
+            vm.gridOptions.data = filteredData;
+        }
+
+        /* =========================================== Dialog =========================================== */
+
+        // Check if form name is duplicated. If yes, display feedback. Else, change name and close dialog.
+        vm.openDialog = function(dialogName) {
+            var dialog = document.querySelector('#' + dialogName);
+            if (!dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.showModal();
+        };
+
+        vm.closeDialog = function(dialogName) {
+            var dialog = document.querySelector('#' + dialogName);
+            dialog.close();
+        };
+
         var pagesImage = [];
         var rows = [];
 
@@ -235,7 +443,7 @@
                 }
                 usSpinnerService.stop('spinner-1');
                 var pages = Array.from(document.getElementsByClassName('page'));
-                pages.forEach(function (item, index) {
+                pages.forEach(function(item, index) {
                     item.parentNode.removeChild(item);
                 });
                 pagesImage = [];
@@ -281,7 +489,7 @@
                 usSpinnerService.stop('spinner-1');
                 pdf.save();
                 pages = Array.from(document.getElementsByClassName('page'));
-                pages.forEach(function (item, index) {
+                pages.forEach(function(item, index) {
                     item.parentNode.removeChild(item);
                 });
                 pagesImage = [];
@@ -312,7 +520,7 @@
                 canvas.style.height = '1123px';
                 var context = canvas.getContext('2d');
                 var code = document.getElementById('form' + formNumber + "page" + pageNumber).innerHTML;
-                rasterizeHTML.drawHTML(code).then(function (renderResult) {
+                rasterizeHTML.drawHTML(code).then(function(renderResult) {
                     context.drawImage(renderResult.image, 0, 0);
                     var
 
@@ -338,7 +546,7 @@
             var groupName = rows[formNumber - 1].groupName;
             var formName = rows[formNumber - 1].formName;
             $http.get(appConfig.API_URL + "/protected/forms/" + groupName + '/' + formName)
-                .then(function (res) {
+                .then(function(res) {
                     var node,
                         page,
                         option,
@@ -469,168 +677,14 @@
                     }
                     deferred.resolve(formNumber);
 
-                }, function (res) {
-                    feedbackServices.errorFeedback('Failed to load form', 'forms-snackbarContainer');
+                }, function(res) {
+                    snackbarContainer.sanSnackbar.showSnackbar({
+                        message: "Failed to load the form"
+                    });
                 });
             return deferred.promise;
         }
 
-        function getFormData() {
-            vm.gridOptions.data = [];
-            $http.get(appConfig.API_URL + "/protected/forms")
-                .then(function (result) {
-                    for (var i = 0; i < result.data.length; i++) {
-                        var formData = result.data[i];
-                        vm.gridOptions.data.push(result.data[i]);
-                    }
-                }, function (err) {
-                    console.log("error: ", err);
-                });
-        }
 
-        function createForm() {
-            var formData = {
-                groupName: vm.newFormGroup,
-                formName: vm.newFormName
-            };
-            $http.post(appConfig.API_URL + "/protected/forms", {
-                formData: formData
-            }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function (res) {
-                    if (res.data === "Existed") {
-                        alert("This form name already exists in the selected group.");
-                    } else {
-                        $state.go('formBuilder', {
-                            groupName: res.data.groupName,
-                            formName: res.data.formName
-                        });
-                    }
-                });
-        }
-
-        function deleteForms(rgRows) {
-            if (confirm("This will delete all the entries record of the selected forms. Do you want to continue?")) {
-                angular.forEach(rgRows, function (data, index) {
-                    $http.delete(appConfig.API_URL + "/protected/forms/" + data.groupName + '/' + data.formName)
-                        .then(function (res) {
-                            vm.gridOptions.data.splice(vm.gridOptions.data.lastIndexOf(data), 1);
-                            if (index === vm.gridOptions.selection.selectedId.length - 1) {
-                                vm.getFormData();
-                            }
-                        });
-                });
-            }
-        }
-
-        function renameForm() {
-            var groupName = vm.gridOptions.selection.selectedId[0].groupName;
-            var renameFormOld = vm.gridOptions.selection.selectedId[0].formName;
-            $http.put(appConfig.API_URL + "/protected/forms/rename", {
-                groupName: groupName,
-                originalName: renameFormOld,
-                newName: vm.renameFormNew
-            }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function (res) {
-                    if (res.data === "Existed") {
-                        alert("This group name already exists");
-                    } else {
-                        vm.closeDialog('renameForm');
-                        vm.getFormData();
-                        feedbackServices.successFeedback('Renamed form successfully', 'forms-snackbarContainer');
-                    }
-                });
-        }
-
-        function duplicateForm() {
-            var duplicateFrom = vm.gridOptions.selection.selectedId[0].groupName;
-            var formName = vm.gridOptions.selection.selectedId[0].formName;
-            $http.post(appConfig.API_URL + "/protected/forms/duplicate", {
-                duplicateFrom: duplicateFrom,
-                formName: formName,
-                duplicateName: vm.duplicateName,
-                duplicateTo: vm.duplicateTo
-            }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function (res) {
-                    if (res.data === "Existed") {
-                        alert("This form name already exists.");
-                    } else if (res.data === "Cannot find") {
-                        alert("Cannot find the original form data");
-                    } else {
-                        vm.getFormData();
-                        vm.closeDialog('duplicateForm');
-                        vm.gridApi.selection.clearSelectedRows();
-                        feedbackServices.successFeedback('Form duplicated successfully', 'forms-snackbarContainer');
-                    }
-                });
-        }
-
-        function toggleImportance(row) {
-            var importance = row.isImportant.toLowerCase() === 'important' ? 'Normal' : 'Important';
-            $http.put(appConfig.API_URL + "/protected/forms/importance", {
-                groupName: row.groupName,
-                formName: row.formName,
-                importance: importance
-            }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .catch(ErrorCallback);
-
-            function ErrorCallback(err) {
-                vm.getFormData();
-            }
-        }
-
-        function showRecent() {
-            var filteredData = [];
-            originalData = vm.gridOptions.data;
-            vm.gridOptions.data = [];
-            for (var i = 0; i < originalData.length; i++) {
-                //604800000 = 1 week in milisec
-                if (Date.now() - new Date(originalData[i].lastModified).getTime() < 604800000)
-                    filteredData.push(originalData[i]);
-            }
-            vm.gridOptions.data = filteredData;
-        }
-
-        function showImportant() {
-            var filteredData = [];
-            originalData = vm.gridOptions.data;
-            vm.gridOptions.data = [];
-            for (var i = 0; i < originalData.length; i++) {
-                if (originalData[i].isImportant.toLowerCase() === 'important')
-                    filteredData.push(originalData[i]);
-            }
-            vm.gridOptions.data = filteredData;
-        }
-
-        /* =========================================== Dialog =========================================== */
-
-        // Check if form name is duplicated. If yes, display feedback. Else, change name and close dialog.
-        vm.openDialog = function (dialogName) {
-            var dialog = document.querySelector('#' + dialogName);
-            if (!dialog.showModal) {
-                dialogPolyfill.registerDialog(dialog);
-            }
-            dialog.showModal();
-        };
-
-        vm.closeDialog = function (dialogName) {
-            var dialog = document.querySelector('#' + dialogName);
-            dialog.close();
-        };
     }
 })();
