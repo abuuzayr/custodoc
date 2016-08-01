@@ -288,7 +288,6 @@ angular.module('app.entryMgmt')
 							var newName = slugify(element.name);
 							var variable = vm.selectedRows[newName];
 							console.log('wats variable ' + variable);
-							checkbox.setAttribute('ng-checked', variable);	
 							checkbox.setAttribute('checked', variable);
 							span.innerHTML = element.label;
 							node.appendChild(checkbox);
