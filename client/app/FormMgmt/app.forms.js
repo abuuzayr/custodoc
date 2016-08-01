@@ -5,6 +5,7 @@
         .module('app.formMgmt', [
             'angularSpinner',
             'dataTable',
-            'app.core'
+            'app.core',
+            'app.shared'
         ]);
 })();
