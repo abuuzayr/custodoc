@@ -101,6 +101,7 @@
                 templateUrl: 'app/FormBuilder/formBuilder.html',
                 controller: 'formBuilderCtrl',
                 controllerAs: 'vm',
+                params: {formId: null},
                 resolve: {
                     security: ['$q', 'authServices', function ($q, authServices) {
                         if (authServices.getToken() && (authServices.getUserInfo().usertype === "Admin" || authServices.getUserInfo().usertype === "User+")) {

@@ -272,9 +272,6 @@ angular.module('app.entryMgmt')
 							var variable = vm.selectedRows[newName];
 							if (variable !== "undefined") {								
 								node.setAttribute('value', variable);
-							} else if (variable === "undefined") {
-								console.log('did i come in here??????');
-								node.setAttribute('value', '');
 							}
 							//node.setAttribute('ng-value', testing);
 							node.type='text';
@@ -357,6 +354,7 @@ angular.module('app.entryMgmt')
 							node.style.fontSize = element.fontSize;
 							node.style.textDecoration = element.textDecoration;
 							node.style.zIndex="1";
+							variable = '';
 						}else if(element.name.startsWith('signature_')){
 							node = document.createElement('img');
 							var newName = slugify(element.name);
