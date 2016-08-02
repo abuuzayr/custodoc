@@ -145,7 +145,10 @@
 
         <form>
             <div ng-repeat="key in vm.autofillData">
-            {{key}}
+                <div ng-repeat="name in key.name">
+                    {{name}}
+                </div>
+            </div>
         </form>
 
     </main>
