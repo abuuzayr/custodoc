@@ -151,10 +151,8 @@
 
                 <form>
                     <div ng-repeat="key in vm.autofillData">
-                        <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options="key as key.name for key in vm.autofillData"></select>
-
+                        <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options="option for option in vm.autofillData"></select>
                     </div>
-                    {{key.name}}
                 </form>
 
             </div>
