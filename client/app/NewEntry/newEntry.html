@@ -41,7 +41,6 @@
     <top-nav-bar></top-nav-bar>
     <main class="mdl-layout__content">
         <div id="pagebar" class="mdl-grid">
-        {{vm.autofillData[0].name}}  
             <button name="toPreviousPage" value="Previous Page" ng-click="vm.toPreviousPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_up</i> Previous page</button>
             <div class="divider"></div>
             <button name="toNextPage" value="Next Page" ng-click="vm.toNextPage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">keyboard_arrow_down</i> Next page</button>
@@ -137,10 +136,19 @@
                             <img width="90%" ng-src="data:image/png;base64,{{vm.entryData[key.name]}}" />
                         </div>
                     </div>
-                                    
 
                     <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Submit entry</button>
                 </form>
+
+                <form>
+                    <div ng-repeat="key in vm.autofillData">
+                    {{key}}
+                       <!--  <div id="{{key.label}}">
+                            <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options=""
+                        </div>
+                    </div> -->
+                </form>
+
             </div>
         </div>
     </main>
