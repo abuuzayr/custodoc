@@ -140,16 +140,13 @@
                     <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Submit entry</button>
                 </form>
 
-                <form>
-                    <div ng-repeat="key in vm.autofillData">
-                    {{key}}
-                       <!--  <div id="{{key.label}}">
-                            <select form="form" class="mdl-selectfield__select" ng-model="vm.entryData[key.name]" ng-options=""
-                        </div>
-                    </div> -->
-                </form>
-
             </div>
         </div>
+
+        <form>
+            <div ng-repeat="key in vm.autofillData">
+            {{key}}
+        </form>
+
     </main>
 </div>
