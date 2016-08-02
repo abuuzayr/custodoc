@@ -72,6 +72,8 @@ formsRouter.route('/:formId')
     .put(function(req, res, next) {
         connection.Do(function(db) {
             delete req.body.formData._id;
+            req.body.formData.lastModified = new Date();
+            req.body.formData.lastModifiedBy = req.decoded.username;
             db.collection("forms").findOneAndUpdate({
                     _id: ObjectID(req.params.formId)
                 }, { $set: req.body.formData })
