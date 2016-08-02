@@ -9,6 +9,10 @@ p {
     margin-left: 0px;
 }
 
+.material-icons.icon-14 {
+    vertical-align: text-top;
+    font-size: 14px;
+}
 
 #table-toolbar-search,
 #table-toolbar-search:focus {
@@ -19,16 +23,16 @@ p {
 }
 
 .mdl-progress {
-    width:100%;
+    width: 100%;
 }
 
 .mdl-card {
-  overflow: auto;
-  width: 100%;
-  padding: 0,0,0,0;
-  margin: 0,0,0,0;
-  height: auto;
-  min-height: 10px;
+    overflow: auto;
+    width: 100%;
+    padding: 0, 0, 0, 0;
+    margin: 0, 0, 0, 0;
+    height: auto;
+    min-height: 10px;
 }
 
 .mdl-menu {
@@ -40,7 +44,7 @@ p {
 
 .menu-wrapper {
     position: relative;
-    min-height: 36px 
+    min-height: 36px
 }
 
 .mdl-dialog__content {
@@ -48,39 +52,42 @@ p {
     overflow-y: auto;
 }
 
-.mdl-data-table{
-	min-width: 100%;
-	margin: 0,0,0,0;
+.mdl-data-table {
+    min-width: 100%;
+    margin: 0, 0, 0, 0;
 }
 
-.table-cell-no-stretch{
-	white-space:nowrap;
-	min-width:24px;
-	max-width:24px;
-	padding-left: 0px; 
+.table-cell-no-stretch {
+    white-space: nowrap;
+    min-width: 24px;
+    max-width: 24px;
+    padding-left: 0px;
 }
 
 #table-toolbar {
     height: 50px;
 }
 
-#item-info-text,#table-toolbar-search,#table-toolbar-search:focus{
-	padding-top: 8px;
-	padding-bottom: 8px;
+#item-info-text,
+#table-toolbar-search,
+#table-toolbar-search:focus {
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .table-header-text-link {
-	text-decoration: none;
+    text-decoration: none;
 }
-.table-header-text-link:active{
-	color: red;
+
+.table-header-text-link:active {
+    color: red;
 }
 
 .table-cell-icon-link:hover {
-	color: red;
-  cursor: pointer;
+    color: red;
+    cursor: pointer;
 }
 
-.mdl-data-table tbody tr.row-in-edit{
-  background-color:#E0F7FA;
+.mdl-data-table tbody tr.row-in-edit {
+    background-color: #E0F7FA;
 }

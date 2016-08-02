@@ -9,6 +9,7 @@
         //VARIABLES
         var isDataLoaded = false;
         var idLookup = {};
+
         //$SCOPE FUNCTIONS
         $scope.sort = sort;
         $scope.getTimes = getTimes;
@@ -22,7 +23,7 @@
         $scope.$watch('tableOptions.data', dataWatcher, true);
 
         function dataWatcher(newVal, oldVal) {
-            if (newVal !== null && typeof newVal !== 'undefined' && newVal.length !== 0) {
+            if (newVal !== null && typeof newVal !== 'undefined' && newVal.length !== 0 && ( typeof oldVal === 'undefined' || oldVal.length !== newVal.length ) ) {
                 isDataLoaded = true;
                 initScope();
                 idLookup = {};
@@ -79,7 +80,6 @@
                 sortBy: $scope.tableOptions.columnDefs[0].fieldName ? $scope.tableOptions.columnDefs[0].fieldName : null,
                 sortReverse: true
             };
-
             if ($scope.tableOptions.enablePagination) {
                 $scope.toFirstPage = toFirstPage;
                 $scope.toLastPage = toLastPage;
@@ -281,10 +281,7 @@
         function sort(col) {
             $scope.sorting.sortBy = col.fieldName;
             $scope.sorting.sortReverse = !$scope.sorting.sortReverse;
-            if (col.type === 'default')
-                $scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
-            else
-                $scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
+            $scope.tableOptions.data = $filter('orderBy')($scope.tableOptions.data, $scope.sorting.sortBy, $scope.sorting.sortReverse);
             renderSelectionOnChange();
         }
 
