@@ -1,8 +1,17 @@
+
+var dbhost;
+
+if (process.env.NODE_ENV === 'production') {
+  dbhost = 'mongodb';
+} else {
+  dbhost = 'localhost';
+}
+
 module.exports = {
 	port : process.env.PORT || 8080,
 	environment : process.env.NODE_ENV,
 	//dbURL :'mongodb://localhost:27017/test',
-	dbURL: process.env.MONGO_DB || 'mongodb://localhost:27017/bulletform',
+	dbURL: 'mongodb://' + dbhost + ':27017/bulletform',
 	superSecret : 'ilovescotchscotchyscotchscotch',
 	appSecret: 'secret_for_bulletform',
 	ObjectId : require('mongodb').ObjectID
