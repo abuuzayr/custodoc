@@ -85,8 +85,11 @@
                 <td class="mdl-data-table__cell--non-numeric" ng-repeat="textCol in textCols = (tableOptions.columnDefs | filter: filterTextCol ) track by $index">
                     <p ng-if="textCol.type === 'default'">{{row[textCol.fieldName]}}</p>
                     <p ng-if="textCol.type === 'date'">{{row[textCol.fieldName] | date: textCol.format}}</p>
-                    <p ng-if="textCol.type === 'link'">
+                    <p ng-if="textCol.type === 'link' && !row.isDuplicate">
                         <a class='table-cell-icon-link' ng-click='textCol.action(row)'>{{row[textCol.fieldName]}}</a>
+                    </p>
+                    <p ng-if="textCol.type === 'link' && row.isDuplicate">
+                        {{row[textCol.fieldName]}}
                     </p>
                     <p ng-if="textCol.type === 'toggle'">
                         <a ng-click='textCol.action(row);toggleIcon(row,textCol);'><i class="mdl-icon-toggle__label material-icons">{{row[textCol.fieldName] === textCol.true ? textCol.iconTrue : textCol.iconFalse}}</i></a>

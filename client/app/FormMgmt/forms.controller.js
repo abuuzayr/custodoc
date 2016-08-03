@@ -211,6 +211,7 @@
                     delete formData._id;
                     formData.formName = vm.duplicateName;
                     formData.groupName = vm.duplicateTo;
+                    formData.isDuplicate = true;
                     console.log(formData);
                     return createForm(formData);
                 }
