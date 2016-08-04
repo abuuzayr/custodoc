@@ -82,6 +82,20 @@ angular
 	/* this entryData stores the final data structure for an entry, which contains the groupName  
 		and the relevant fields obtained from the form database	*/
 	vm.entryData = {};  
+	vm.tryStuff = {};
+
+	/********************* AUTOFILL VARIABLES ***********************/
+
+	vm.tableOptions = {};
+	vm.tableOptions.data = [];
+	vm.tableOptions.columnDefs = [];
+	vm.tableOptions.enableMultiSelect = false;
+	vm.tableOptions.enablePagination = true;
+	vm.tableOptions.enableEdit = true;
+	vm.tableOptions.enableDelete = true;
+	init();
+	vm.autofillList = [];
+
 
 	/********************** PREVIEW FUNCTIONS ************************/
 	
@@ -112,9 +126,81 @@ angular
 	vm.numberOfPreviewPages = 1;
 
 	autofillServices.getRecords().then(function(res){
+		var object;
 		vm.autofillData = res.data;
-		console.log('did i come here' + vm.autofillData[0].name);
+		for (object in vm.tableOptions.columnDefs) {
+			if (vm.tableOptions.columnDefs[object].fieldName) {
+				vm.autofillList.push(vm.tableOptions.columnDefs[object].fieldName);
+			}
+		}
 	});
+
+	/********************** MDL DATA TABLE ************************/
+
+	function getDataHeader() {
+		vm.tableOptions.columnDefs = [];
+		return autofillServices.getElement()
+			.then(function SuccessCallback(res) {
+				for (var i = 0; i < res.data.length; i++) {
+					vm.tableOptions.columnDefs.push({
+						type: 'default',
+						displayName: res.data[i].fieldName.toUpperCase(),
+						fieldName: res.data[i].fieldName,
+						enableEdit: true
+					});
+				}
+				vm.tableOptions.columnDefs.push({
+					type: 'action',
+					icon: 'delete',
+					action: function (row) {
+						// console.log('row');
+						// console.log(row);
+					}
+				});
+			}).catch(function ErrorCallback(err) {
+				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+			});
+	}
+
+	function getDataBody() {
+		vm.tableOptions.data = [];
+		return autofillServices.getRecords()
+			.then(function SuccessCallback(res) {
+				for (var i = 0; i < res.data.length; i++) {
+					vm.tableOptions.data.push(res.data[i]);
+				}
+			}).catch(function ErrorCallback(err) {
+				return feedbackServices.errorFeedback(err.data, 'autofill-feedbackMessage');
+			});
+	}
+
+	function init() {
+		getDataBody();
+		getDataHeader();
+	}
+
+	// this function adds the 'auto_text_' prefix in front of the autofill keys and adds the autofill data into the entry
+	vm.putDataUsingSelected = function() {
+		var data = vm.tableOptions.selection.selected[0];
+		var e, f;
+		
+		for (e = 0; e < vm.parsedFormData.length; e++) {
+			for (f = 0; f < vm.autofillList.length; f++) {
+				if (vm.autofillList[f] == vm.parsedFormData[e].label) {
+					for (item in data) {			
+						if (item !== '_id') {
+							var newItem = 'auto_text_' + item;
+							console.log(data[item]);
+							vm.entryData[newItem] = data[item];
+						}
+					}
+				}
+			}
+		}
+		return data;
+	}
+
+	/*****************************************************/
 
     function slugify(text) {
 	  	return text.toString().toLowerCase()
