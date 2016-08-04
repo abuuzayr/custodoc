@@ -139,13 +139,14 @@
 
                     <button id="submit-button" type="submit" class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect">Submit entry</button>
                 </form>
-                <div>
-                    <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
-                </div>
 
-                <button ng-click="vm.tryStuff = vm.putDataUsingSelected()" ng-model="vm.entryData[auto_Name]">Click here</button>
-                
             </div>
-        </div>     
+            <div>
+                <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
+                <button ng-click="vm.tryStuff = vm.putDataUsingSelected()" ng-model="vm.entryData[auto_Name]">Click here</button>
+
+            </div>
+        </div>
+        
     </main>
 </div>
