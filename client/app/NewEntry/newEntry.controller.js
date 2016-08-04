@@ -120,6 +120,8 @@ angular
 	vm.currentFormNumber = 1;
 	vm.numberOfForms = 1;
 
+	vm.showAutofill = false;
+
 	/*****************************************************************/
 
 	vm.currentFormPreview = 1;
@@ -136,6 +138,14 @@ angular
 	});
 
 	/********************** MDL DATA TABLE ************************/
+
+	vm.buttonPress = function() {
+		if (vm.showAutofill === true) {
+			vm.showAutofill = false;
+		} else {
+			vm.showAutofill = true;
+		}
+	}
 
 	function getDataHeader() {
 		vm.tableOptions.columnDefs = [];
