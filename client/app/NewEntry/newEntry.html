@@ -141,11 +141,15 @@
                 </form>
 
             </div>
-            <div>
+
+        </div>
+
+        <div id="elements-drawer" class="mdl-card mdl-cell mdl-cell--3-col">
+                <div id="elements-heading" class="mdl-card__title mdl-color--accent mdl-color-text--white">
+                    <h1 class="mdl-card__title-text">Autofill</h1>
+                </div>
                 <custom-mdl-data-table table-options='vm.tableOptions' dt-row-per-page-options='[5,10,15]' />
                 <button ng-click="vm.tryStuff = vm.putDataUsingSelected()" ng-model="vm.entryData[auto_Name]">Click here</button>
-
-            </div>
         </div>
         
     </main>
