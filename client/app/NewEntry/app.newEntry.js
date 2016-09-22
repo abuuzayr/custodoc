@@ -1,4 +1,4 @@
 angular
 	.module('app.newEntry', [
-		'naif.base64'
+		'naif.base64', 'dataTable'
 	]);
